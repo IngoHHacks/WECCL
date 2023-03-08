@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <ReleaseVersion>1.0.0</ReleaseVersion>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DebugType>full</DebugType>
+
+        <OutputPath Condition=" '$(SolutionDir)' != '' ">$(SolutionDir)bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+        <OutputPath Condition=" '$(SolutionDir)' == '' ">$(ProjectDir)bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <PackageId>WrestlingEmpireAPI</PackageId>
+        <RootNamespace>WrestlingEmpireAPI</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="UnityEngine.Modules" Version="2020.3.43" IncludeAssets="compile" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="lib" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Assembly-CSharp">
+        <HintPath>lib\Assembly-CSharp_public.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>
