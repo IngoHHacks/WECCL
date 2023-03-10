@@ -30,10 +30,10 @@ namespace WECCL
         internal ConfigEntry<bool> AllowImportingCharacters { get; set; }
         internal ConfigEntry<bool> DeleteImportedCharacters { get; set; }
 
-        internal static DirectoryInfo AssetsDir = new DirectoryInfo(Path.Combine(PluginPath, "Assets"));
-        internal static DirectoryInfo ExportDir = new DirectoryInfo(Path.Combine(PluginPath, "Export"));
-        internal static DirectoryInfo ImportDir = new DirectoryInfo(Path.Combine(PluginPath, "Import"));
-        internal static DirectoryInfo OverrideDir = new DirectoryInfo(Path.Combine(PluginPath, "Overrides"));
+        internal static DirectoryInfo AssetsDir;
+        internal static DirectoryInfo ExportDir;
+        internal static DirectoryInfo ImportDir;
+        internal static DirectoryInfo OverrideDir;
         
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -47,102 +47,159 @@ namespace WECCL
         
         private void Awake()
         {
-            Plugin.Log = base.Logger;
-            PluginPath = Path.GetDirectoryName(Info.Location) ?? string.Empty;
-            CustomContentSavePath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
-            
-            Instance = this;
-            
-            List<DirectoryInfo> AllModsAssetsDirs = new();
-            List<DirectoryInfo> AllModsOverridesDirs = new();
-            List<DirectoryInfo> AllModsImportDirs = new();
-            foreach (var modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
+            try
             {
-                FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
-            }
-            if (!AllModsAssetsDirs.Contains(AssetsDir))
-            {
-                AllModsAssetsDirs.Add(AssetsDir);
-            }
-            if (!AllModsOverridesDirs.Contains(OverrideDir))
-            {
-                AllModsOverridesDirs.Add(OverrideDir);
-            }
-            if (!AllModsImportDirs.Contains(ImportDir))
-            {
-                AllModsImportDirs.Add(ImportDir);
-            }
+                Plugin.Log = base.Logger;
+                PluginPath = Path.GetDirectoryName(Info.Location) ?? string.Empty;
+                CustomContentSavePath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
+                
+                AssetsDir = new(Path.Combine(PluginPath, "Assets"));
+                if (!AssetsDir.Exists)
+                {
+                    AssetsDir.Create();
+                }
+                OverrideDir = new(Path.Combine(PluginPath, "Overrides"));
+                if (!OverrideDir.Exists)
+                {
+                    OverrideDir.Create();
+                }
+                ImportDir = new(Path.Combine(PluginPath, "Import"));
+                if (!ImportDir.Exists)
+                {
+                    ImportDir.Create();
+                }
+                ExportDir = new(Path.Combine(PluginPath, "Export"));
+                if (!ExportDir.Exists)
+                {
+                    ExportDir.Create();
+                }
 
-            if (AllModsAssetsDirs.Count > 0)
-            {
-                Plugin.Log.LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
-            }
-            if (AllModsOverridesDirs.Count > 0)
-            {
-                Plugin.Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
-            }
-            if (AllModsImportDirs.Count > 0)
-            {
-                Plugin.Log.LogInfo($"Found {AllModsImportDirs.Count} mod(s) with Import directories.");
-            }
-            
-            AutoExportCharacters = Config.Bind("General", "AutoExportCharacters", true, "Automatically export characters to /Export when the game is saved.");
-            EnableOverrides = Config.Bind("General", "EnableOverrides", true, "Enable custom content overrides from /Overrides.");
-            EnableCustomContent = Config.Bind("General", "EnableCustomContent", true, "Enable custom content loading from /Assets.");
-            AllowImportingCharacters = Config.Bind("General", "AllowImportingCharacters", true, "Allow importing characters from /Import");
-            DeleteImportedCharacters = Config.Bind("General", "DeleteImportedCharacters", true, "Delete imported characters from /Import after importing them (and saving the game).");
-            
-            if (EnableCustomContent.Value)
-            {
-                foreach (var modAssetsDir in AllModsAssetsDirs)
+
+                Instance = this;
+
+                List<DirectoryInfo> AllModsAssetsDirs = new();
+                List<DirectoryInfo> AllModsOverridesDirs = new();
+                List<DirectoryInfo> AllModsImportDirs = new();
+                foreach (var modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
                 {
-                    LoadAudioClips(modAssetsDir);
-                    LoadCostumes(modAssetsDir);
+                    FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
+                }
+
+                if (!AllModsAssetsDirs.Contains(AssetsDir))
+                {
+                    AllModsAssetsDirs.Add(AssetsDir);
+                }
+
+                if (!AllModsOverridesDirs.Contains(OverrideDir))
+                {
+                    AllModsOverridesDirs.Add(OverrideDir);
+                }
+
+                if (!AllModsImportDirs.Contains(ImportDir))
+                {
+                    AllModsImportDirs.Add(ImportDir);
+                }
+
+                if (AllModsAssetsDirs.Count > 0)
+                {
+                    Plugin.Log.LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
+                }
+
+                if (AllModsOverridesDirs.Count > 0)
+                {
+                    Plugin.Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
+                }
+
+                if (AllModsImportDirs.Count > 0)
+                {
+                    Plugin.Log.LogInfo($"Found {AllModsImportDirs.Count} mod(s) with Import directories.");
+                }
+
+                AutoExportCharacters = Config.Bind("General", "AutoExportCharacters", true,
+                    "Automatically export characters to /Export when the game is saved.");
+                EnableOverrides = Config.Bind("General", "EnableOverrides", true,
+                    "Enable custom content overrides from /Overrides.");
+                EnableCustomContent = Config.Bind("General", "EnableCustomContent", true,
+                    "Enable custom content loading from /Assets.");
+                AllowImportingCharacters = Config.Bind("General", "AllowImportingCharacters", true,
+                    "Allow importing characters from /Import");
+                DeleteImportedCharacters = Config.Bind("General", "DeleteImportedCharacters", true,
+                    "Delete imported characters from /Import after importing them (and saving the game).");
+
+                if (EnableCustomContent.Value)
+                {
+                    foreach (var modAssetsDir in AllModsAssetsDirs)
+                    {
+                        LoadAudioClips(modAssetsDir);
+                        LoadCostumes(modAssetsDir);
+                    }
+                }
+
+                if (EnableOverrides.Value)
+                {
+                    foreach (var modOverridesDir in AllModsOverridesDirs)
+                    {
+                        LoadOverrides(modOverridesDir);
+                    }
+                }
+
+                if (AllowImportingCharacters.Value)
+                {
+                    foreach (var modImportDir in AllModsImportDirs)
+                    {
+                        ImportCharacters(modImportDir);
+                    }
                 }
             }
-            if (EnableOverrides.Value)
+            catch (Exception e)
             {
-                foreach (var modOverridesDir in AllModsOverridesDirs)
-                {
-                    LoadOverrides(modOverridesDir);
-                }
-            }
-            if (AllowImportingCharacters.Value)
-            {
-                foreach (var modImportDir in AllModsImportDirs)
-                {
-                    ImportCharacters(modImportDir);
-                }
+                Plugin.Log.LogError(e);
             }
         }
-        
-        private static void FindContent(string modPath, ref List<DirectoryInfo> AllModsAssetsDirs, ref List<DirectoryInfo> AllModsOverridesDirs, ref List<DirectoryInfo> AllModsImportDirs)
+
+        private static void FindContent(string modPath, ref List<DirectoryInfo> AllModsAssetsDirs,
+            ref List<DirectoryInfo> AllModsOverridesDirs, ref List<DirectoryInfo> AllModsImportDirs)
         {
-            bool shouldCheckSubDirs = true;
-            var modAssetsDir = new DirectoryInfo(Path.Combine(modPath, "Assets"));
-            if (modAssetsDir.Exists)
+            try
             {
-                AllModsAssetsDirs.Add(modAssetsDir);
-                shouldCheckSubDirs = false;
-            }
-            var modOverridesDir = new DirectoryInfo(Path.Combine(modPath, "Overrides"));
-            if (modOverridesDir.Exists)
-            {
-                AllModsOverridesDirs.Add(modOverridesDir);
-                shouldCheckSubDirs = false;
-            }
-            var modImportDir = new DirectoryInfo(Path.Combine(modPath, "Import"));
-            if (modImportDir.Exists)
-            {
-                AllModsImportDirs.Add(modImportDir);
-                shouldCheckSubDirs = false;
-            }
-            if (shouldCheckSubDirs)
-            {
-                foreach (var subDir in Directory.GetDirectories(modPath))
+                if (modPath == null)
                 {
-                    FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
+                    return;
                 }
+                bool shouldCheckSubDirs = true;
+                var modAssetsDir = new DirectoryInfo(Path.Combine(modPath, "Assets"));
+                if (modAssetsDir.Exists)
+                {
+                    AllModsAssetsDirs.Add(modAssetsDir);
+                    shouldCheckSubDirs = false;
+                }
+
+                var modOverridesDir = new DirectoryInfo(Path.Combine(modPath, "Overrides"));
+                if (modOverridesDir.Exists)
+                {
+                    AllModsOverridesDirs.Add(modOverridesDir);
+                    shouldCheckSubDirs = false;
+                }
+
+                var modImportDir = new DirectoryInfo(Path.Combine(modPath, "Import"));
+                if (modImportDir.Exists)
+                {
+                    AllModsImportDirs.Add(modImportDir);
+                    shouldCheckSubDirs = false;
+                }
+
+                if (shouldCheckSubDirs)
+                {
+                    foreach (var subDir in Directory.GetDirectories(modPath))
+                    {
+                        FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.LogError(e);
             }
         }
 
