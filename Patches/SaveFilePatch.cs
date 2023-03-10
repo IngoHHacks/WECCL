@@ -15,15 +15,15 @@ public class SaveFilePatch
     public static void FPNEAHPFCHF_OLAGCFPPEPB(int IHLLJIMFJEN)
     {
         PatchCustomContent(ref FPNEAHPFCHF.GPFFEHKLNLD, IHLLJIMFJEN);
-        FPNEAHPFCHF.GPFFEHKLNLD.FGMMAKKGCOG(IHLLJIMFJEN);
         foreach (var importedCharacter in CustomContent.ImportedCharacters)
         {
             var id = importedCharacter.id;
             var name = importedCharacter.name;
-            var oldCharacterName = Characters.c[id].name;
-            Characters.c[id] = importedCharacter;
+            var oldCharacterName = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id].name;
+            FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id] = importedCharacter;
             Plugin.Log.LogInfo($"Imported character with id {id} and name {name}, overwriting character with name {oldCharacterName}.");
         }
+        FPNEAHPFCHF.GPFFEHKLNLD.FGMMAKKGCOG(IHLLJIMFJEN);
     }
     
     [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.ICAMLDGDPHC))]
@@ -31,7 +31,11 @@ public class SaveFilePatch
     public static void FPNEAHPFCHF_ICAMLDGDPHC(int IHLLJIMFJEN)
     {
         SaveCurrentMap();
-        ModdedCharacterManager.SaveAllCharacters();
+        if (Plugin.Instance.AutoExportCharacters.Value)
+        {
+            ModdedCharacterManager.SaveAllCharacters();
+        }
+
         foreach (string file in CustomContent.FilesToDeleteOnSave)
         {
             File.Delete(file);

@@ -1,4 +1,5 @@
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using System;
@@ -17,9 +18,17 @@ namespace WECCL
     [HarmonyPatch]
     public class Plugin : BaseUnityPlugin
     {
+        internal static Plugin Instance { get; private set; }
+        
         public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
         public const string PluginName = "Wrestling Empire Custom Content Loader";
         public const string PluginVer = "1.0.0";
+        
+        internal ConfigEntry<bool> AutoExportCharacters { get; set; }
+        internal ConfigEntry<bool> EnableOverrides { get; set; }
+        internal ConfigEntry<bool> EnableCustomContent { get; set; }
+        internal ConfigEntry<bool> AllowImportingCharacters { get; set; }
+
 
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -39,10 +48,26 @@ namespace WECCL
             PluginPath = Path.GetDirectoryName(Info.Location) ?? string.Empty;
             CustomContentSavePath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
             
-            LoadAudioClips();
-            LoadCostumes();
-            LoadOverrides();
-            ImportCharacters();
+            Instance = this;
+            
+            AutoExportCharacters = Config.Bind("General", "AutoExportCharacters", true, "Automatically export characters to BepInEx/Export when the game is saved.");
+            EnableOverrides = Config.Bind("General", "EnableOverrides", true, "Enable custom content overrides from BepInEx/Overrides.");
+            EnableCustomContent = Config.Bind("General", "EnableCustomContent", true, "Enable custom content loading from BepInEx/Assets.");
+            AllowImportingCharacters = Config.Bind("General", "AllowImportingCharacters", true, "Allow importing characters from BepInEx/Import");
+
+            if (EnableCustomContent.Value)
+            {
+                LoadAudioClips();
+                LoadCostumes();
+            }
+            if (EnableOverrides.Value)
+            {
+                LoadOverrides();
+            }
+            if (AllowImportingCharacters.Value)
+            {
+                ImportCharacters();
+            }
         }
 
         internal static void LoadAudioClips()

@@ -42,7 +42,7 @@ internal class CustomContentSaveFile
         var path = Plugin.CustomContentSavePath;
         var json = JsonConvert.SerializeObject(this, Formatting.Indented);
         System.IO.File.WriteAllText(path, json);
-        Plugin.Log.LogInfo($"Saved custom content map to {path}.");
+        Plugin.Log.LogDebug($"Saved custom content map to {path}.");
     }
 
     public static CustomContentSaveFile Load()
