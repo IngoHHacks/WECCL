@@ -22,7 +22,7 @@ namespace WECCL
         
         public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
         public const string PluginName = "Wrestling Empire Custom Content Loader";
-        public const string PluginVer = "1.0.0";
+        public const string PluginVer = "1.0.1";
         
         internal ConfigEntry<bool> AutoExportCharacters { get; set; }
         internal ConfigEntry<bool> EnableOverrides { get; set; }
