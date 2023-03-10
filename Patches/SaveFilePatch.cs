@@ -18,9 +18,17 @@ public class SaveFilePatch
         foreach (var importedCharacter in CustomContent.ImportedCharacters)
         {
             var id = importedCharacter.id;
+            var oldCharacter = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id];
             var name = importedCharacter.name;
-            var oldCharacterName = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id].name;
+            var oldCharacterName = oldCharacter.name;
             FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id] = importedCharacter;
+            if (importedCharacter.fed != oldCharacter.fed)
+            {
+                FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
+                FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id;
+                FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[oldCharacter.fed].HKNHEJHIJLL(id);
+                
+            }
             Plugin.Log.LogInfo($"Imported character with id {id} and name {name}, overwriting character with name {oldCharacterName}.");
         }
         FPNEAHPFCHF.GPFFEHKLNLD.FGMMAKKGCOG(IHLLJIMFJEN);
