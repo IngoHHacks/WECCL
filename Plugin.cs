@@ -28,8 +28,13 @@ namespace WECCL
         internal ConfigEntry<bool> EnableOverrides { get; set; }
         internal ConfigEntry<bool> EnableCustomContent { get; set; }
         internal ConfigEntry<bool> AllowImportingCharacters { get; set; }
+        internal ConfigEntry<bool> DeleteImportedCharacters { get; set; }
 
-
+        internal static DirectoryInfo AssetsDir = new DirectoryInfo(Path.Combine(PluginPath, "Assets"));
+        internal static DirectoryInfo ExportDir = new DirectoryInfo(Path.Combine(PluginPath, "Export"));
+        internal static DirectoryInfo ImportDir = new DirectoryInfo(Path.Combine(PluginPath, "Import"));
+        internal static DirectoryInfo OverrideDir = new DirectoryInfo(Path.Combine(PluginPath, "Overrides"));
+        
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
 
@@ -50,33 +55,105 @@ namespace WECCL
             
             Instance = this;
             
-            AutoExportCharacters = Config.Bind("General", "AutoExportCharacters", true, "Automatically export characters to BepInEx/Export when the game is saved.");
-            EnableOverrides = Config.Bind("General", "EnableOverrides", true, "Enable custom content overrides from BepInEx/Overrides.");
-            EnableCustomContent = Config.Bind("General", "EnableCustomContent", true, "Enable custom content loading from BepInEx/Assets.");
-            AllowImportingCharacters = Config.Bind("General", "AllowImportingCharacters", true, "Allow importing characters from BepInEx/Import");
+            List<DirectoryInfo> AllModsAssetsDirs = new();
+            List<DirectoryInfo> AllModsOverridesDirs = new();
+            List<DirectoryInfo> AllModsImportDirs = new();
+            foreach (var modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
+            {
+                FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
+            }
+            if (!AllModsAssetsDirs.Contains(AssetsDir))
+            {
+                AllModsAssetsDirs.Add(AssetsDir);
+            }
+            if (!AllModsOverridesDirs.Contains(OverrideDir))
+            {
+                AllModsOverridesDirs.Add(OverrideDir);
+            }
+            if (!AllModsImportDirs.Contains(ImportDir))
+            {
+                AllModsImportDirs.Add(ImportDir);
+            }
 
+            if (AllModsAssetsDirs.Count > 0)
+            {
+                Plugin.Log.LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
+            }
+            if (AllModsOverridesDirs.Count > 0)
+            {
+                Plugin.Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
+            }
+            if (AllModsImportDirs.Count > 0)
+            {
+                Plugin.Log.LogInfo($"Found {AllModsImportDirs.Count} mod(s) with Import directories.");
+            }
+            
+            AutoExportCharacters = Config.Bind("General", "AutoExportCharacters", true, "Automatically export characters to /Export when the game is saved.");
+            EnableOverrides = Config.Bind("General", "EnableOverrides", true, "Enable custom content overrides from /Overrides.");
+            EnableCustomContent = Config.Bind("General", "EnableCustomContent", true, "Enable custom content loading from /Assets.");
+            AllowImportingCharacters = Config.Bind("General", "AllowImportingCharacters", true, "Allow importing characters from /Import");
+            DeleteImportedCharacters = Config.Bind("General", "DeleteImportedCharacters", true, "Delete imported characters from /Import after importing them (and saving the game).");
+            
             if (EnableCustomContent.Value)
             {
-                LoadAudioClips();
-                LoadCostumes();
+                foreach (var modAssetsDir in AllModsAssetsDirs)
+                {
+                    LoadAudioClips(modAssetsDir);
+                    LoadCostumes(modAssetsDir);
+                }
             }
             if (EnableOverrides.Value)
             {
-                LoadOverrides();
+                foreach (var modOverridesDir in AllModsOverridesDirs)
+                {
+                    LoadOverrides(modOverridesDir);
+                }
             }
             if (AllowImportingCharacters.Value)
             {
-                ImportCharacters();
+                foreach (var modImportDir in AllModsImportDirs)
+                {
+                    ImportCharacters(modImportDir);
+                }
+            }
+        }
+        
+        private static void FindContent(string modPath, ref List<DirectoryInfo> AllModsAssetsDirs, ref List<DirectoryInfo> AllModsOverridesDirs, ref List<DirectoryInfo> AllModsImportDirs)
+        {
+            bool shouldCheckSubDirs = true;
+            var modAssetsDir = new DirectoryInfo(Path.Combine(modPath, "Assets"));
+            if (modAssetsDir.Exists)
+            {
+                AllModsAssetsDirs.Add(modAssetsDir);
+                shouldCheckSubDirs = false;
+            }
+            var modOverridesDir = new DirectoryInfo(Path.Combine(modPath, "Overrides"));
+            if (modOverridesDir.Exists)
+            {
+                AllModsOverridesDirs.Add(modOverridesDir);
+                shouldCheckSubDirs = false;
+            }
+            var modImportDir = new DirectoryInfo(Path.Combine(modPath, "Import"));
+            if (modImportDir.Exists)
+            {
+                AllModsImportDirs.Add(modImportDir);
+                shouldCheckSubDirs = false;
+            }
+            if (shouldCheckSubDirs)
+            {
+                foreach (var subDir in Directory.GetDirectories(modPath))
+                {
+                    FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
+                }
             }
         }
 
-        internal static void LoadAudioClips()
+        internal static void LoadAudioClips(DirectoryInfo dir)
         {
             try
             {
                 int clipsCount = 0;
                 // Load custom audio clips
-                var dir = new DirectoryInfo(Path.Combine(PluginPath, "Assets"));
                 if (!dir.Exists) return;
                 var files = dir.GetFiles("*", SearchOption.AllDirectories)
                     .Where(f => AudioExtensions.Contains(f.Extension.ToLower())).ToArray();
@@ -98,14 +175,14 @@ namespace WECCL
                     if (Time.time - lastProgressUpdate > 1f)
                     {
                         lastProgressUpdate = Time.time;
-                        UpdateConsoleLogLoadingBar("Loading custom audio clips", cur, count);
+                        UpdateConsoleLogLoadingBar($"Loading custom audio clips from {dir.Name}", cur, count);
                     }
 
                 }
 
                 if (clipsCount != 0)
                 {
-                    Log.LogInfo($"Loaded {clipsCount} custom audio clips.");
+                    Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.Name}");
                 }
 
                 if (CustomClips.Count != 0)
@@ -124,15 +201,12 @@ namespace WECCL
             }
         }
 
-        internal static void LoadCostumes()
+        internal static void LoadCostumes(DirectoryInfo dir)
         {
             try
             {
-                if (_costumesLoaded) return;
-                _costumesLoaded = true;
                 int costumeCount = 0;
                 // Load custom costumes
-                var dir = new DirectoryInfo(Path.Combine(PluginPath, "Assets"));
                 if (!dir.Exists) return;
                 var files = dir.GetFiles("*", SearchOption.AllDirectories)
                     .Where(f => ImageExtensions.Contains(f.Extension.ToLower())).ToArray();
@@ -167,13 +241,13 @@ namespace WECCL
                     if (Time.time - lastProgressUpdate > 1f)
                     {
                         lastProgressUpdate = Time.time;
-                        UpdateConsoleLogLoadingBar("Loading custom costumes", cur, count);
+                        UpdateConsoleLogLoadingBar($"Loading custom costumes from {dir.Name}", cur, count);
                     }
                 }
 
                 if (costumeCount != 0)
                 {
-                    Log.LogInfo($"Loaded {costumeCount} custom costumes.");
+                    Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.Name}");
                 }
             }
             catch (Exception e)
@@ -182,13 +256,12 @@ namespace WECCL
             }
         }
 
-        internal static void LoadOverrides()
+        internal static void LoadOverrides(DirectoryInfo dir)
         {
             try
             {
                 int overrideCount = 0;
                 // Load resource overrides
-                var dir = new DirectoryInfo(Path.Combine(PluginPath, "Overrides"));
                 if (!dir.Exists) return;
                 var files = dir.GetFiles("*", SearchOption.AllDirectories).Where(f =>
                         ImageExtensions.Contains(f.Extension.ToLower()) ||
@@ -230,13 +303,13 @@ namespace WECCL
                     if (Time.time - lastProgressUpdate > 1f)
                     {
                         lastProgressUpdate = Time.time;
-                        UpdateConsoleLogLoadingBar("Loading resource overrides", cur, count);
+                        UpdateConsoleLogLoadingBar($"Loading resource overrides from {dir.Name}", cur, count);
                     }
                 }
 
                 if (overrideCount != 0)
                 {
-                    Log.LogInfo($"Loaded {overrideCount} resource overrides.");
+                    Log.LogInfo($"Loaded {overrideCount} resource overrides from {dir.Name}");
                 }
             }
             catch (Exception e)
@@ -245,11 +318,10 @@ namespace WECCL
             }
         }
         
-        internal static void ImportCharacters()
+        internal static void ImportCharacters(DirectoryInfo dir)
         {
             try
             {
-                var dir = new DirectoryInfo(Path.Combine(PluginPath, "Import"));
                 if (!dir.Exists) return;
                 var files = dir.GetFiles("*", SearchOption.AllDirectories).Where(f => f.Extension.ToLower() == ".json")
                     .ToArray();
@@ -270,7 +342,14 @@ namespace WECCL
                         ImportedCharacters.Add(character);
                         FilesToDeleteOnSave.Add(file.FullName);
                     }
+                    cur++;
+                    if (Time.time - lastProgressUpdate > 1f)
+                    {
+                        lastProgressUpdate = Time.time;
+                        UpdateConsoleLogLoadingBar($"Importing characters from {dir.Name}", cur, count);
+                    }
                 }
+                Plugin.Log.LogInfo($"Imported {ImportedCharacters.Count} characters from {dir.Name}");
             }
             catch (Exception e)
             {

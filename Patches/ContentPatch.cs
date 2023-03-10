@@ -62,7 +62,6 @@ namespace WECCL.Patches
             VanillaCounts.KneepadCount = IINHFOHEAJB.MKKEAAPOJMC;
             VanillaCounts.IsInitialized = true;
             
-            Plugin.LoadCostumes();
             _internalCostumeCounts[CustomCostumes["legs_material"].InternalPrefix] = IINHFOHEAJB.CEJEFCFAEOB[1];
             IINHFOHEAJB.CEJEFCFAEOB[1] += CustomCostumes["legs_material"].Count;
             CustomContentSaveFile.ContentMap.MaterialNameMap[1].AddRange(CustomCostumes["legs_material"].CustomObjects.Select(c => c.Item1));

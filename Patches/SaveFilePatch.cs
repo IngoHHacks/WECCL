@@ -36,9 +36,12 @@ public class SaveFilePatch
             ModdedCharacterManager.SaveAllCharacters();
         }
 
-        foreach (string file in CustomContent.FilesToDeleteOnSave)
+        if (Plugin.Instance.DeleteImportedCharacters.Value)
         {
-            File.Delete(file);
+            foreach (string file in CustomContent.FilesToDeleteOnSave)
+            {
+                File.Delete(file);
+            }
         }
     }
 
