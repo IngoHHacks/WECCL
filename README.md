@@ -34,31 +34,31 @@ To install WECCL you simply need to copy `WECCL.dll` from releases to `Wrestling
 ## Adding Content
 You can add content by inserting images and audio files into `Wrestling Empire/BepInEx/plugins/Assets`. Any audio file here will be considered a theme. Image files must either be in a subfolder or prefixed by the costume texture name.
 
-|Supported Texture Names|
-|---|
-|arms_elbow_pad|
-|arms_flesh|
-|arms_glove|
-|arms_material|
-|arms_wristband|
-|body_collar|
-|body_flesh_female|
-|body_flesh_male|
-|body_material|
-|body_pattern|
-|face_beard|
-|face_female|
-|face_male|
-|face_mask|
-|hair_shave|
-|hair_texture_solid|
-|hair_texture_transparent|
-|legs_flesh|
-|legs_footwear|
-|legs_kneepad|
-|legs_laces|
-|legs_material|
-|legs_pattern|
+| Supported Texture Names  |
+|--------------------------|
+| arms_elbow_pad           |
+| arms_flesh               |
+| arms_glove               |
+| arms_material            |
+| arms_wristband           |
+| body_collar              |
+| body_flesh_female        |
+| body_flesh_male          |
+| body_material            |
+| body_pattern             |
+| face_beard               |
+| face_female              |
+| face_male                |
+| face_mask                |
+| hair_shave               |
+| hair_texture_solid       |
+| hair_texture_transparent |
+| legs_flesh               |
+| legs_footwear            |
+| legs_kneepad             |
+| legs_laces               |
+| legs_material            |
+| legs_pattern             |
 
 ## Overriding content
 You can override content by placing any image or audio file inside `Wrestling Empire/BepInEx/plugins/Overrides` referenced by the internal name. A zip file containing all the overridable files can be found in the [Modding Discord](https://discord.gg/mH56AhUwPR)

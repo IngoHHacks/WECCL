@@ -42,8 +42,6 @@ namespace WECCL
 
         internal static string CustomContentSavePath;
         
-        private static bool _costumesLoaded = false;
-        
         private static readonly List<string> ImageExtensions = new() { ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".gif" };
         private static readonly List<string> AudioExtensions = new() { ".ogg", ".wav", ".mp3", ".aif", ".aiff", ".mod", ".xm", ".it", ".s3m" };
         
@@ -331,7 +329,7 @@ namespace WECCL
                 foreach (var file in files)
                 {
                     var character = ModdedCharacterManager.ImportCharacter(file.FullName);
-                    if (character == null || character.name == null || character.id == null)
+                    if (character == null || character.name == null || character.id == 0)
                     {
                         Log.LogError($"Failed to import character from {file.FullName}.");
                         continue;

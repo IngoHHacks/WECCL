@@ -7,7 +7,7 @@ public class ModdedCharacterManager
 {
     public static void SaveAllCharacters()
     {
-        var exportPath = Path.Combine(Plugin.PluginPath, "Export");
+        var exportPath = Plugin.ExportDir.FullName;
         var characters = Characters.c;
         if (Directory.Exists(exportPath))
         {
