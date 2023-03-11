@@ -53,6 +53,9 @@ internal class CustomContentSaveFile
             return new CustomContentSaveFile();
         }
         var json = System.IO.File.ReadAllText(path);
-        return JsonConvert.DeserializeObject<CustomContentSaveFile>(json);
+        return JsonConvert.DeserializeObject<CustomContentSaveFile>(json, new JsonSerializerSettings
+        {
+            ObjectCreationHandling = ObjectCreationHandling.Replace
+        });
     }
 }

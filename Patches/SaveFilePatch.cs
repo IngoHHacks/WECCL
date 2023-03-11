@@ -103,7 +103,7 @@ public class SaveFilePatch
                             var oldIndex = costume.texture[i] - VanillaCounts.MaterialCounts[i] - 1;
                             if (oldIndex >= savedMap.MaterialNameMap[i].Count)
                             {
-                                Plugin.Log.LogWarning($"Custom material index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
+                                Plugin.Log.LogWarning($"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.MaterialCounts[i];
                                 changed = true;
                                 continue;
@@ -125,7 +125,7 @@ public class SaveFilePatch
                             var oldIndex = -costume.texture[i] - VanillaCounts.FaceFemaleCount - 1;
                             if (oldIndex >= savedMap.FaceFemaleNameMap.Count)
                             {
-                                Plugin.Log.LogWarning($"Custom material index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
+                                Plugin.Log.LogWarning($"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.MaterialCounts[i];
                                 changed = true;
                                 continue;
@@ -147,7 +147,7 @@ public class SaveFilePatch
                             var oldIndex = -costume.texture[i] - VanillaCounts.SpecialFootwearCount - 1;
                             if (oldIndex >= savedMap.SpecialFootwearNameMap.Count)
                             {
-                                Plugin.Log.LogWarning($"Custom material index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
+                                Plugin.Log.LogWarning($"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.MaterialCounts[i];
                                 changed = true;
                                 continue;
@@ -169,7 +169,7 @@ public class SaveFilePatch
                             var oldIndex = -costume.texture[i] - VanillaCounts.SpecialFootwearCount - 1;
                             if (oldIndex >= savedMap.SpecialFootwearNameMap.Count)
                             {
-                                Plugin.Log.LogWarning($"Custom material index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
+                                Plugin.Log.LogWarning($"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.MaterialCounts[i];
                                 changed = true;
                                 continue;
@@ -191,7 +191,7 @@ public class SaveFilePatch
                             var oldIndex = -costume.texture[i] - VanillaCounts.TransparentHairMaterialCount - 1;
                             if (oldIndex >= savedMap.TransparentHairMaterialNameMap.Count)
                             {
-                                Plugin.Log.LogWarning($"Custom material index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
+                                Plugin.Log.LogWarning($"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.MaterialCounts[i];
                                 changed = true;
                                 continue;
@@ -213,7 +213,7 @@ public class SaveFilePatch
                             var oldIndex = -costume.texture[i] - VanillaCounts.KneepadCount - 1;
                             if (oldIndex >= savedMap.KneepadNameMap.Count)
                             {
-                                Plugin.Log.LogWarning($"Custom material index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
+                                Plugin.Log.LogWarning($"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.MaterialCounts[i];
                                 changed = true;
                                 continue;
@@ -235,7 +235,7 @@ public class SaveFilePatch
                             var oldIndex = -costume.texture[i] - VanillaCounts.KneepadCount - 1;
                             if (oldIndex >= savedMap.KneepadNameMap.Count)
                             {
-                                Plugin.Log.LogWarning($"Custom material index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
+                                Plugin.Log.LogWarning($"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.MaterialCounts[i];
                                 changed = true;
                                 continue;

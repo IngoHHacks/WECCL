@@ -22,7 +22,7 @@ namespace WECCL
         
         public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
         public const string PluginName = "Wrestling Empire Custom Content Loader";
-        public const string PluginVer = "1.0.1";
+        public const string PluginVer = "1.0.2";
         
         internal ConfigEntry<bool> AutoExportCharacters { get; set; }
         internal ConfigEntry<bool> EnableOverrides { get; set; }
@@ -273,7 +273,7 @@ namespace WECCL
                     var fileName = file.Name;
                     foreach (var pair in CustomCostumes)
                     {
-                        if (fileName.StartsWith(pair.Key + "_") || file.Directory?.Name == pair.Key)
+                        if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
                         {
                             var costumeData = pair.Value;
                             if (costumeData.Type != typeof(Texture2D) || costumeData.InternalPrefix == "custom")
