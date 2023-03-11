@@ -26,16 +26,18 @@ public class ModdedCharacterManager
             File.WriteAllText(path, json);
         }
     }
-    
-    public static Character ImportCharacter(string path)
+
+    public static Character ImportCharacter(string path, out string overrideMode)
     {
         var json = File.ReadAllText(path);
         var character = JsonConvert.DeserializeObject<CharacterWithModdedData>(json);
         if (character != null)
         {
             var internalCharacter = character.ModdedToCharacter();
+            overrideMode = character.OverrideMode;
             return internalCharacter;
         }
+        overrideMode = null;
         return null;
     }
 }

@@ -67,6 +67,13 @@ You can override content by placing any image or audio file inside `Wrestling Em
 ## Exporting Characters
 Characters are automatically exported to `Wrestling Empire/BepInEx/plugins/Exports` when the game is saved.
 
+## Importing Characters
+Characters can be imported by placing a JSON file inside `Wrestling Empire/BepInEx/plugins/Imports`. Make sure to set the `overrideMode` property to the desired mode.  
+`append` will add the imported character.  
+`override` will override the character with the same `id`.  
+`merge` will replace all non-default values of the character referenced by the `id`.
+Imported JSON files will be automatically deleted after the game is saved (unless the config option `DeleteImportedCharacters` is set to `false`).
+
 ## Modding Discord
 Join the [Modding Discord](https://discord.gg/mH56AhUwPR) to receive support and talk with other modders and content creators!
 

@@ -22,7 +22,7 @@ namespace WECCL
         
         public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
         public const string PluginName = "Wrestling Empire Custom Content Loader";
-        public const string PluginVer = "1.0.2";
+        public const string PluginVer = "1.1.0";
         
         internal ConfigEntry<bool> AutoExportCharacters { get; set; }
         internal ConfigEntry<bool> EnableOverrides { get; set; }
@@ -385,18 +385,14 @@ namespace WECCL
                 int cur = 0;
                 foreach (var file in files)
                 {
-                    var character = ModdedCharacterManager.ImportCharacter(file.FullName);
-                    if (character == null || character.name == null || character.id == 0)
+                    var character = ModdedCharacterManager.ImportCharacter(file.FullName, out string overrideMode);
+                    if (character == null || character.name == null || (character.id == 0 && overrideMode.ToLower() == "override"))
                     {
                         Log.LogError($"Failed to import character from {file.FullName}.");
                         continue;
                     }
-
-                    if (character != null)
-                    {
-                        ImportedCharacters.Add(character);
-                        FilesToDeleteOnSave.Add(file.FullName);
-                    }
+                    ImportedCharacters.Add(new Tuple<string, Character>(overrideMode, character));
+                    FilesToDeleteOnSave.Add(file.FullName);
                     cur++;
                     if (Time.time - lastProgressUpdate > 1f)
                     {

@@ -2,36 +2,189 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 using WECCL.Content;
 using WECCL.Saves;
 
 namespace WECCL.Patches;
 
 [HarmonyPatch]
-public class SaveFilePatch
+internal class SaveFilePatch
 {
+    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.OLAGCFPPEPB))]
+    [HarmonyPrefix]
+    public static void FixCharSize(int IHLLJIMFJEN)
+    {
+        try
+        {
+            var save = Application.persistentDataPath + "/Save.bytes";
+            if (!File.Exists(save))
+            {
+                return;
+            }
+            FileStream fileStream = new FileStream(save, FileMode.Open);
+            SaveData data = new BinaryFormatter().Deserialize(fileStream) as SaveData;
+            Characters.no_chars = data!.savedChars.Length - 1;
+            int[] fedCharCount = new int[Characters.no_feds + 1];
+            foreach (var c in data.savedChars)
+            {
+                if (c != null) fedCharCount[c.fed]++;
+            }
+
+            Characters.fedLimit = Math.Max(48, fedCharCount.Max() + 1);
+            Array.Resize(ref Characters.c, Characters.no_chars + 1);
+            Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
+            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds != null)
+            {
+                for (int i = 1; i <= Characters.no_feds; i++)
+                {
+                    if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[i] != null)
+                    {
+                        FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[i].size = fedCharCount[i] + 1;
+                    }
+                }
+            }
+
+            fileStream.Close();
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError(e);
+        }
+    }
+    
+    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.NOKFJAECIGL))]
+    [HarmonyPostfix]
+    public static void FPNEAHPFCHF_NOKFJAECIGL()
+    {
+        try
+        {
+            Characters.no_chars = 350;
+            Characters.fedLimit = 48;
+            Array.Resize(ref Characters.c, Characters.no_chars + 1);
+            Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedChars, Characters.no_chars + 1);
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError(e);
+        }
+    }
+
     [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.OLAGCFPPEPB))]
     [HarmonyPostfix]
     public static void FPNEAHPFCHF_OLAGCFPPEPB(int IHLLJIMFJEN)
     {
-        PatchCustomContent(ref FPNEAHPFCHF.GPFFEHKLNLD, IHLLJIMFJEN);
-        foreach (var importedCharacter in CustomContent.ImportedCharacters)
+        try
         {
-            var id = importedCharacter.id;
-            var oldCharacter = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id];
-            var name = importedCharacter.name;
-            var oldCharacterName = oldCharacter.name;
-            FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id] = importedCharacter;
-            if (importedCharacter.fed != oldCharacter.fed)
+            PatchCustomContent(ref FPNEAHPFCHF.GPFFEHKLNLD, IHLLJIMFJEN);
+            foreach (var pair in CustomContent.ImportedCharacters)
             {
-                FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
-                FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id;
-                FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[oldCharacter.fed].HKNHEJHIJLL(id);
-                
+                Plugin.Log.LogInfo($"Importing character {pair.Item2.name} with id {pair.Item2.id}.");
+                var overrideMode = pair.Item1;
+                var importedCharacter = pair.Item2;
+                switch (overrideMode.ToLower())
+                {
+                    case "override":
+                        var id = importedCharacter.id;
+                        var oldCharacter = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id];
+                        var name = importedCharacter.name;
+                        var oldCharacterName = oldCharacter.name;
+                        FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id] = importedCharacter;
+                        if (importedCharacter.fed != oldCharacter.fed)
+                        {
+                            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
+                            {
+                                Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
+                                if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
+                            }
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
+                                .roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id;
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[oldCharacter.fed].HKNHEJHIJLL(id);
+                        }
+
+                        Plugin.Log.LogInfo(
+                            $"Imported character with id {id} and name {name}, overwriting character with name {oldCharacterName}.");
+                        break;
+                    case "append":
+                        var id2 = Characters.no_chars + 1;
+                        importedCharacter.id = id2;
+                        if (FPNEAHPFCHF.GPFFEHKLNLD.savedChars.Length <= id2)
+                        {
+                            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedChars, id2 + 1);
+                            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, id2 + 1);
+                            Array.Resize(ref Characters.c, id2 + 1);
+                            Array.Resize(ref Progress.charUnlock, id2 + 1);
+                            FPNEAHPFCHF.GPFFEHKLNLD.charUnlock[id2] = 1;
+                            Progress.charUnlock[id2] = 1;
+                        }
+                        else
+                        {
+                            Plugin.Log.LogWarning(
+                                $"The array of characters is larger than the number of characters. This should not happen. The character {FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id2].name} will be overwritten.");
+                        }
+
+                        FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id2] = importedCharacter;
+                        if (importedCharacter.fed != 0)
+                        {
+                            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
+                            {
+                                Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
+                                if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
+                            }
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
+                                .roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id2;
+                        }
+
+                        Characters.no_chars++;
+                        Plugin.Log.LogInfo(
+                            $"Imported character with id {id2} and name {importedCharacter.name}. Incremented number of characters to {Characters.no_chars}.");
+                        break;
+                    case "merge":
+                        var id3 = importedCharacter.id;
+                        var oldCharacter2 = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id3];
+                        var name2 = importedCharacter.name;
+                        var oldCharacterName2 = oldCharacter2.name;
+                        foreach (var field in typeof(Character).GetFields())
+                        {
+                            if (field.GetValue(importedCharacter) != default)
+                            {
+                                field.SetValue(oldCharacter2, field.GetValue(importedCharacter));
+                            }
+                        }
+
+                        FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id3] = oldCharacter2;
+                        if (importedCharacter.fed != oldCharacter2.fed)
+                        {
+                            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
+                            {
+                                Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
+                                if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
+                            }
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
+                                .roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id3;
+                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[oldCharacter2.fed].HKNHEJHIJLL(id3);
+                        }
+
+                        Plugin.Log.LogInfo(
+                            $"Imported character with id {id3} and name {name2}, merging with character with name {oldCharacterName2}.");
+                        break;
+                }
+
             }
-            Plugin.Log.LogInfo($"Imported character with id {id} and name {name}, overwriting character with name {oldCharacterName}.");
+            FPNEAHPFCHF.GPFFEHKLNLD.FGMMAKKGCOG(IHLLJIMFJEN);
         }
-        FPNEAHPFCHF.GPFFEHKLNLD.FGMMAKKGCOG(IHLLJIMFJEN);
+        catch (Exception e)
+        {
+            Plugin.Log.LogError(e);
+        }
     }
     
     [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.ICAMLDGDPHC))]

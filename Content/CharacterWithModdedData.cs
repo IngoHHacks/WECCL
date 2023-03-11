@@ -27,6 +27,8 @@ public class CharacterWithModdedData
 
     public string CustomThemeName { get; set; }
     
+    public string OverrideMode { get; set; } = "append";
+    
     public bool IsModded => CustomMaterials.Exists(x => x != null) || CustomFlesh.Exists(x => x != null) ||
                             CustomShapes.Exists(x => x != null) || CustomFemaleBody != null ||
                             CustomFemaleFace != null || CustomSpecialFootwear != null ||

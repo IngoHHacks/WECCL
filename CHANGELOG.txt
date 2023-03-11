@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+## 1.1.0
+- Added support for increasing the character and roster limit
+- Added support adding and merging custom characters instead of replacing them
+
 ## 1.0.2
 - Fixed content map incorrectly loading
 - Removed the extra `_` requirement for asset prefixes
