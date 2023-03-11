@@ -27,9 +27,9 @@ Experimental features:
 Automatic installation is not supported until the game is added to Thunderstore. This will happen in the upcoming weeks.
 
 ### Installation (Manual)
-To install this mod, you first need to install BepInEx as a mod loader for Wrestling Empire. A guide for this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex). Wrestling Empire needs the x64 Mono version.
+To install this mod manually, you first need to install BepInEx as a mod loader for Wrestling Empire. A guide for this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex). Wrestling Empire needs the x64 Mono version.
 
-To install WECCL you simply need to copy `WECCL.dll` from releases to `Wrestling Empire/BepInEx/plugins`.
+To install WECCL, you simply need to copy `WECCL.dll` from releases to `Wrestling Empire/BepInEx/plugins`.
 
 ## Adding Content
 You can add content by inserting images and audio files into `Wrestling Empire/BepInEx/plugins/Assets`. Any audio file here will be considered a theme. Image files must either be in a subfolder or prefixed by the costume texture name.  
