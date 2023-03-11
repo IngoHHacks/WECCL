@@ -32,7 +32,8 @@ To install this mod, you first need to install BepInEx as a mod loader for Wrest
 To install WECCL you simply need to copy `WECCL.dll` from releases to `Wrestling Empire/BepInEx/plugins`.
 
 ## Adding Content
-You can add content by inserting images and audio files into `Wrestling Empire/BepInEx/plugins/Assets`. Any audio file here will be considered a theme. Image files must either be in a subfolder or prefixed by the costume texture name.
+You can add content by inserting images and audio files into `Wrestling Empire/BepInEx/plugins/Assets`. Any audio file here will be considered a theme. Image files must either be in a subfolder or prefixed by the costume texture name.  
+Example: `body_material_abc.png` or `body_material/abc.png` (`_` before 01 is required; `abc` can be anything)
 
 | Supported Texture Names  |
 |--------------------------|
