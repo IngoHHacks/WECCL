@@ -29,6 +29,8 @@ namespace WECCL
         internal ConfigEntry<bool> EnableCustomContent { get; set; }
         internal ConfigEntry<bool> AllowImportingCharacters { get; set; }
         internal ConfigEntry<bool> DeleteImportedCharacters { get; set; }
+        internal ConfigEntry<bool> EnableGameUnityLog { get; set; }
+        internal ConfigEntry<string> GameUnityLogLevel { get; set; }
 
         internal static DirectoryInfo AssetsDir;
         internal static DirectoryInfo ExportDir;
@@ -125,6 +127,11 @@ namespace WECCL
                     "Allow importing characters from /Import");
                 DeleteImportedCharacters = Config.Bind("General", "DeleteImportedCharacters", true,
                     "Delete imported characters from /Import after importing them (and saving the game).");
+                EnableGameUnityLog = Config.Bind("General", "EnableGameUnityLog", true,
+                    "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
+                GameUnityLogLevel = Config.Bind("General", "GameUnityLogLevel", "Warning",
+                    new ConfigDescription("The log level for Unity log messages sent by the game itself. If you don't know what this is, leave it at Warning.",
+                        new AcceptableValueList<string>("Error", "Warning", "Info")));
 
                 if (EnableCustomContent.Value)
                 {

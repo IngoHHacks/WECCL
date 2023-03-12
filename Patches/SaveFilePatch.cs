@@ -79,6 +79,11 @@ internal class SaveFilePatch
     [HarmonyPostfix]
     public static void FPNEAHPFCHF_OLAGCFPPEPB(int IHLLJIMFJEN)
     {
+        var save = Application.persistentDataPath + "/Save.bytes";
+        if (!File.Exists(save))
+        {
+            return;
+        }
         try
         {
             PatchCustomContent(ref FPNEAHPFCHF.GPFFEHKLNLD, IHLLJIMFJEN);
