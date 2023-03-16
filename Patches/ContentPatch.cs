@@ -203,6 +203,20 @@ namespace WECCL.Patches
             CustomContentSaveFile.ContentMap.MaterialNameMap[32].AddRange(CustomCostumes["arms_elbow_pad"].CustomObjects.Select(c => c.Item1));
             IINHFOHEAJB.CEJEFCFAEOB[33] += CustomCostumes["arms_wristband"].Count;
             CustomContentSaveFile.ContentMap.MaterialNameMap[33].AddRange(CustomCostumes["arms_wristband"].CustomObjects.Select(c => c.Item1));
+            
+            
+            if (Plugin.AllModsImportDirs.Count > 0)
+            {
+                Plugin.Log.LogInfo($"Found {Plugin.AllModsImportDirs.Count} mod(s) with Import directories.");
+            }
+
+            if (Plugin.Instance.AllowImportingCharacters.Value)
+            {
+                foreach (var modImportDir in Plugin.AllModsImportDirs)
+                {
+                    Plugin.ImportCharacters(modImportDir);
+                }
+            }
         }
         
         [HarmonyPatch(typeof(AssetBundle), "LoadAsset", typeof(string), typeof(Type))]

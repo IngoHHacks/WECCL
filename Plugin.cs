@@ -22,7 +22,7 @@ namespace WECCL
         
         public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
         public const string PluginName = "Wrestling Empire Custom Content Loader";
-        public const string PluginVer = "1.1.0";
+        public const string PluginVer = "1.1.1";
         
         internal ConfigEntry<bool> AutoExportCharacters { get; set; }
         internal ConfigEntry<bool> EnableOverrides { get; set; }
@@ -36,6 +36,8 @@ namespace WECCL
         internal static DirectoryInfo ExportDir;
         internal static DirectoryInfo ImportDir;
         internal static DirectoryInfo OverrideDir;
+        
+        internal static List<DirectoryInfo> AllModsImportDirs = new();
         
         internal static ManualLogSource Log;
         internal readonly static Harmony Harmony = new(PluginGuid);
@@ -81,7 +83,7 @@ namespace WECCL
 
                 List<DirectoryInfo> AllModsAssetsDirs = new();
                 List<DirectoryInfo> AllModsOverridesDirs = new();
-                List<DirectoryInfo> AllModsImportDirs = new();
+
                 foreach (var modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
                 {
                     FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
@@ -111,12 +113,7 @@ namespace WECCL
                 {
                     Plugin.Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
                 }
-
-                if (AllModsImportDirs.Count > 0)
-                {
-                    Plugin.Log.LogInfo($"Found {AllModsImportDirs.Count} mod(s) with Import directories.");
-                }
-
+                
                 AutoExportCharacters = Config.Bind("General", "AutoExportCharacters", true,
                     "Automatically export characters to /Export when the game is saved.");
                 EnableOverrides = Config.Bind("General", "EnableOverrides", true,
@@ -147,14 +144,6 @@ namespace WECCL
                     foreach (var modOverridesDir in AllModsOverridesDirs)
                     {
                         LoadOverrides(modOverridesDir);
-                    }
-                }
-
-                if (AllowImportingCharacters.Value)
-                {
-                    foreach (var modImportDir in AllModsImportDirs)
-                    {
-                        ImportCharacters(modImportDir);
                     }
                 }
             }
