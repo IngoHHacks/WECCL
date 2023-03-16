@@ -15,6 +15,10 @@ namespace WECCL.Patches
     {
         private static Dictionary<string, int> _internalCostumeCounts = new();
 
+        /*
+         * KILNEHBPDGI.AMPMBILAJNM loads an object from an AssetBundle.
+         * This patch is used to load custom objects from the Assets folder(s).
+         */
         [HarmonyPatch(typeof(KILNEHBPDGI), nameof(KILNEHBPDGI.AMPMBILAJNM))]
         [HarmonyPrefix]
         public static bool KILNEHBPDGI_AMPMBILAJNM(ref Object __result, string JJGJAHCHODI, string AGKNLHFIEBO)
@@ -47,6 +51,10 @@ namespace WECCL.Patches
             return true;
         }
         
+        /*
+         * IINHFOHEAJB.CGHJPFMGCAO is called when the game loads the vanilla content constants.
+         * This patch is used to update the vanilla content constants with the custom content counts.
+         */
         [HarmonyPatch(typeof(IINHFOHEAJB), nameof(IINHFOHEAJB.CGHJPFMGCAO))]
         [HarmonyPostfix]
         public static void IINHFOHEAJB_CGHJPFMGCAO()
@@ -219,6 +227,9 @@ namespace WECCL.Patches
             }
         }
         
+        /*
+         * This is a patch to override the textures of the game with ones in the Overrides folder.
+         */
         [HarmonyPatch(typeof(AssetBundle), "LoadAsset", typeof(string), typeof(Type))]
         [HarmonyPostfix]
         public static void AssetBundle_LoadAsset(ref Object __result, string name)

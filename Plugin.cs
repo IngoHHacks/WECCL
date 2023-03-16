@@ -22,7 +22,7 @@ namespace WECCL
         
         public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
         public const string PluginName = "Wrestling Empire Custom Content Loader";
-        public const string PluginVer = "1.1.2";
+        public const string PluginVer = "1.1.3";
         
         internal ConfigEntry<bool> AutoExportCharacters { get; set; }
         internal ConfigEntry<bool> EnableOverrides { get; set; }
@@ -31,6 +31,7 @@ namespace WECCL
         internal ConfigEntry<bool> DeleteImportedCharacters { get; set; }
         internal ConfigEntry<bool> EnableGameUnityLog { get; set; }
         internal ConfigEntry<string> GameUnityLogLevel { get; set; }
+        internal ConfigEntry<int> MaxBackups { get; set; }
 
         internal static DirectoryInfo AssetsDir;
         internal static DirectoryInfo ExportDir;
@@ -55,6 +56,12 @@ namespace WECCL
             {
                 Plugin.Log = base.Logger;
                 PluginPath = Path.GetDirectoryName(Info.Location) ?? string.Empty;
+
+                Instance = this;
+                MaxBackups = Config.Bind("General", "MaxBackups", -1, "The maximum number of backups to keep. Set to 0 to disable backups. Set to -1 to keep all backups.");
+                
+                CreateBackups();
+                
                 CustomContentSavePath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
                 
                 AssetsDir = new(Path.Combine(PluginPath, "Assets"));
@@ -77,9 +84,6 @@ namespace WECCL
                 {
                     ExportDir.Create();
                 }
-
-
-                Instance = this;
 
                 List<DirectoryInfo> AllModsAssetsDirs = new();
                 List<DirectoryInfo> AllModsOverridesDirs = new();
@@ -432,6 +436,33 @@ namespace WECCL
             }
             bar += "]";
             Log.LogInfo($"{message}: {bar} {current}/{total}");
+        }
+
+        internal static void CreateBackups()
+        {
+            if (Instance.MaxBackups.Value == 0) return;
+            var save = Application.persistentDataPath + "/Save.bytes";
+            if (!File.Exists(save))
+            {
+                return;
+            }
+            var backup = Path.Combine(Application.persistentDataPath, "backups", DateTime.Now.ToString("Save-yyyy-MM-dd_HH-mm-ss") + ".bytes");
+            var bd = Path.GetDirectoryName(backup);
+            if (!Directory.Exists(bd))
+            {
+                Directory.CreateDirectory(bd!);
+            }
+            File.Copy(save, backup);
+            var files = Directory.GetFiles(bd, "Save-*.bytes");
+            if (Instance.MaxBackups.Value < 0) return;
+            if (files.Length > Instance.MaxBackups.Value)
+            {
+                Array.Sort(files);
+                for (int i = 0; i < files.Length - Instance.MaxBackups.Value; i++)
+                {
+                    File.Delete(files[i]);
+                }
+            }
         }
     }
 }

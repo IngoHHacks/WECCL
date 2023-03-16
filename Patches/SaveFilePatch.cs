@@ -13,9 +13,46 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class SaveFilePatch
 {
+       
+    /*
+     * FPNEAHPFCHF.NOKFJAECIGL is called when the game restores the default data
+     * This patch resets the character and federation counts.
+     * It also resets the star (wrestler) and booker to 1 if they are greater than the new character count.
+     */
+    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.NOKFJAECIGL))]
+    [HarmonyPostfix]
+    public static void FPNEAHPFCHF_NOKFJAECIGL()
+    {
+        try
+        {
+            Characters.no_chars = 350;
+            Characters.fedLimit = 48;
+            if (Characters.star > 350)
+            {
+                Characters.star = 1;
+            }
+            if (Characters.booker > 350)
+            {
+                Characters.booker = 1;
+            }
+            Array.Resize(ref Characters.c, Characters.no_chars + 1);
+            Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedChars, Characters.no_chars + 1);
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError(e);
+        }
+    }
+    
+    /*
+     * FPNEAHPFCHF.OLAGCFPPEPB is called when the game loads the save file.
+     * This prefex patch is used to update character counts and arrays to accommodate the custom content.
+     */
     [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.OLAGCFPPEPB))]
     [HarmonyPrefix]
-    public static void FixCharSize(int IHLLJIMFJEN)
+    public static void FPNEAHPFCHF_OLAGCFPPEPB_PRE(int IHLLJIMFJEN)
     {
         try
         {
@@ -55,29 +92,13 @@ internal class SaveFilePatch
             Plugin.Log.LogError(e);
         }
     }
-    
-    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.NOKFJAECIGL))]
-    [HarmonyPostfix]
-    public static void FPNEAHPFCHF_NOKFJAECIGL()
-    {
-        try
-        {
-            Characters.no_chars = 350;
-            Characters.fedLimit = 48;
-            Array.Resize(ref Characters.c, Characters.no_chars + 1);
-            Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedChars, Characters.no_chars + 1);
-        }
-        catch (Exception e)
-        {
-            Plugin.Log.LogError(e);
-        }
-    }
 
+    /*
+     * This postfix patch is used to remap any custom content that has moved, and also add the imported characters.
+     */
     [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.OLAGCFPPEPB))]
     [HarmonyPostfix]
-    public static void FPNEAHPFCHF_OLAGCFPPEPB(int IHLLJIMFJEN)
+    public static void FPNEAHPFCHF_OLAGCFPPEPB_POST(int IHLLJIMFJEN)
     {
         var save = Application.persistentDataPath + "/Save.bytes";
         if (!File.Exists(save))
@@ -86,7 +107,7 @@ internal class SaveFilePatch
         }
         try
         {
-            PatchCustomContent(ref FPNEAHPFCHF.GPFFEHKLNLD, IHLLJIMFJEN);
+            PatchCustomContent(ref FPNEAHPFCHF.GPFFEHKLNLD);
             foreach (var pair in CustomContent.ImportedCharacters)
             {
                 Plugin.Log.LogInfo($"Importing character {pair.Item2.name} with id {pair.Item2.id}.");
@@ -192,6 +213,10 @@ internal class SaveFilePatch
         }
     }
     
+    /*
+     * FPNEAHPFCHF.ICAMLDGDPHC is called when the player saves the game.
+     * This patch saves the current custom content map and exports all characters.
+     */
     [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.ICAMLDGDPHC))]
     [HarmonyPostfix]
     public static void FPNEAHPFCHF_ICAMLDGDPHC(int IHLLJIMFJEN)
@@ -221,7 +246,7 @@ internal class SaveFilePatch
     TransparentHairHairstyle is negative Shape[17]
     Kneepad is negative Material[24] and [25]
      */
-    internal static void PatchCustomContent(ref SaveData saveData, int IHLLJIMFJEN)
+    internal static void PatchCustomContent(ref SaveData saveData)
     {
         var newMap = CustomContentSaveFile.ContentMap;
         var savedMap = LoadPreviousMap();

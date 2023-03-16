@@ -11,13 +11,20 @@ internal class MenuPatch
     private static int _lastFed = 1;
     private static Dictionary<int, Tuple<int, int, float, int, int>> _optimalLayouts = new();
     
+    private static int _expectedNextId = -1;
+    
     [HarmonyPatch(typeof(Characters), "NBBPIGNONKO")]
     [HarmonyPrefix]
     public static void Characters_NBBPIGNONKO(int FODHPJLILOD)
     {
         _lastFed = FODHPJLILOD;
+        _expectedNextId = 0;
     }
     
+    /*
+     * OMNHIAMJHKF.GHGPDLAMLFL is called when the player opens the editor (including the fed editor)
+     * This patch is used to resize the character editor to fit the roster size if it is larger than 48 (vanilla max)
+     */
     [HarmonyPatch(typeof(OMNHIAMJHKF), "GHGPDLAMLFL")]
     [HarmonyPrefix]
     public static void OMNHIAMJHKF_GHGPDLAMLFL(int PPPEMNOKLLL, string DOCHPFFDDHL, ref float PLPIOEGOEOP, ref float FFMFHEJFJHO, ref float GJKLLIOBLBN, ref float LALIOOHGONN)
@@ -33,7 +40,16 @@ internal class MenuPatch
             if (fedSize > 48)
             {
                 int actualIndex = (((int)PLPIOEGOEOP + 525) / 210) + ((-(int)FFMFHEJFJHO + 110) / 60 * 6);
-                
+
+                if (actualIndex != _expectedNextId)
+                {
+                    return;
+                }
+                else
+                {
+                    _expectedNextId++;
+                }
+
                 int rows;
                 int columns;
                 float scale;
