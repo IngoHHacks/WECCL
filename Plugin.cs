@@ -22,7 +22,7 @@ namespace WECCL
         
         public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
         public const string PluginName = "Wrestling Empire Custom Content Loader";
-        public const string PluginVer = "1.1.1";
+        public const string PluginVer = "1.1.2";
         
         internal ConfigEntry<bool> AutoExportCharacters { get; set; }
         internal ConfigEntry<bool> EnableOverrides { get; set; }
@@ -236,10 +236,10 @@ namespace WECCL
                     Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.Name}");
                 }
 
+                VanillaCounts.MusicCount = CKAMIAJJDBP.GGICEBAECGK;
                 if (CustomClips.Count != 0)
                 {
                     // Update the number of audio clips in the game
-                    VanillaCounts.MusicCount = CKAMIAJJDBP.GGICEBAECGK;
                     CKAMIAJJDBP.GGICEBAECGK += CustomClips.Count;
                     CKAMIAJJDBP.CKEJAMLGLAL = new AudioClip[CKAMIAJJDBP.GGICEBAECGK + 1];
                 }

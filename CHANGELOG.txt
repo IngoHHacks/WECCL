@@ -1,5 +1,8 @@
 ﻿# Changelog
 
+## 1.1.2
+- Fixed music remapping breaking if no custom music is present
+
 ## 1.1.1
 - The game's log is now enabled by default. Info level is disabled by default, but can be enabled in the config.
 - Fixed loading order of imported characters with custom assets
