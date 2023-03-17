@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace WECCL.Content;
+﻿namespace WECCL.Content;
 
 public class VanillaCounts
 {

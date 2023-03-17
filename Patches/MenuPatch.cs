@@ -1,9 +1,4 @@
-﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace WECCL.Patches;
+﻿namespace WECCL.Patches;
 
 [HarmonyPatch]
 internal class MenuPatch
@@ -22,12 +17,12 @@ internal class MenuPatch
     }
     
     /*
-     * OMNHIAMJHKF.GHGPDLAMLFL is called when the player opens the editor (including the fed editor)
+     * GameMenus.GHGPDLAMLFL is called when the player opens the editor (including the fed editor)
      * This patch is used to resize the character editor to fit the roster size if it is larger than 48 (vanilla max)
      */
-    [HarmonyPatch(typeof(OMNHIAMJHKF), "GHGPDLAMLFL")]
+    [HarmonyPatch(typeof(GameMenus), "GHGPDLAMLFL")]
     [HarmonyPrefix]
-    public static void OMNHIAMJHKF_GHGPDLAMLFL(int PPPEMNOKLLL, string DOCHPFFDDHL, ref float PLPIOEGOEOP, ref float FFMFHEJFJHO, ref float GJKLLIOBLBN, ref float LALIOOHGONN)
+    public static void GameMenus_GHGPDLAMLFL(int PPPEMNOKLLL, string DOCHPFFDDHL, ref float PLPIOEGOEOP, ref float FFMFHEJFJHO, ref float GJKLLIOBLBN, ref float LALIOOHGONN)
     {
         try
         {

@@ -1,9 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace WECCL.Content;
+﻿namespace WECCL.Content;
 
 public class CustomContent
 {

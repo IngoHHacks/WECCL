@@ -1,12 +1,3 @@
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEngine;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;

@@ -1,10 +1,4 @@
-﻿using HarmonyLib;
-using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using UnityEngine;
+﻿using System.Runtime.Serialization.Formatters.Binary;
 using WECCL.Content;
 using WECCL.Saves;
 
@@ -15,13 +9,13 @@ internal class SaveFilePatch
 {
        
     /*
-     * FPNEAHPFCHF.NOKFJAECIGL is called when the game restores the default data
+     * GameSaveFile.NOKFJAECIGL is called when the game restores the default data
      * This patch resets the character and federation counts.
      * It also resets the star (wrestler) and booker to 1 if they are greater than the new character count.
      */
-    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.NOKFJAECIGL))]
+    [HarmonyPatch(typeof(GameSaveFile), nameof(GameSaveFile.NOKFJAECIGL))]
     [HarmonyPostfix]
-    public static void FPNEAHPFCHF_NOKFJAECIGL()
+    public static void SaveFile_NOKFJAECIGL()
     {
         try
         {
@@ -37,8 +31,8 @@ internal class SaveFilePatch
             }
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedChars, Characters.no_chars + 1);
+            Array.Resize(ref GameSaveFile.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref GameSaveFile.GPFFEHKLNLD.savedChars, Characters.no_chars + 1);
         }
         catch (Exception e)
         {
@@ -47,12 +41,12 @@ internal class SaveFilePatch
     }
     
     /*
-     * FPNEAHPFCHF.OLAGCFPPEPB is called when the game loads the save file.
+     * GameSaveFile.OLAGCFPPEPB is called when the game loads the save file.
      * This prefex patch is used to update character counts and arrays to accommodate the custom content.
      */
-    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.OLAGCFPPEPB))]
+    [HarmonyPatch(typeof(GameSaveFile), nameof(GameSaveFile.OLAGCFPPEPB))]
     [HarmonyPrefix]
-    public static void FPNEAHPFCHF_OLAGCFPPEPB_PRE(int IHLLJIMFJEN)
+    public static void GameSaveFile_OLAGCFPPEPB_PRE(int IHLLJIMFJEN)
     {
         try
         {
@@ -73,14 +67,14 @@ internal class SaveFilePatch
             Characters.fedLimit = Math.Max(48, fedCharCount.Max() + 1);
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
-            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds != null)
+            Array.Resize(ref GameSaveFile.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
+            if (GameSaveFile.GPFFEHKLNLD.savedFeds != null)
             {
                 for (int i = 1; i <= Characters.no_feds; i++)
                 {
-                    if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[i] != null)
+                    if (GameSaveFile.GPFFEHKLNLD.savedFeds[i] != null)
                     {
-                        FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[i].size = fedCharCount[i] + 1;
+                        GameSaveFile.GPFFEHKLNLD.savedFeds[i].size = fedCharCount[i] + 1;
                     }
                 }
             }
@@ -96,9 +90,9 @@ internal class SaveFilePatch
     /*
      * This postfix patch is used to remap any custom content that has moved, and also add the imported characters.
      */
-    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.OLAGCFPPEPB))]
+    [HarmonyPatch(typeof(GameSaveFile), nameof(GameSaveFile.OLAGCFPPEPB))]
     [HarmonyPostfix]
-    public static void FPNEAHPFCHF_OLAGCFPPEPB_POST(int IHLLJIMFJEN)
+    public static void GameSaveFile_OLAGCFPPEPB_POST(int IHLLJIMFJEN)
     {
         var save = Application.persistentDataPath + "/Save.bytes";
         if (!File.Exists(save))
@@ -107,7 +101,7 @@ internal class SaveFilePatch
         }
         try
         {
-            PatchCustomContent(ref FPNEAHPFCHF.GPFFEHKLNLD);
+            PatchCustomContent(ref GameSaveFile.GPFFEHKLNLD);
             foreach (var pair in CustomContent.ImportedCharacters)
             {
                 Plugin.Log.LogInfo($"Importing character {pair.Item2.name} with id {pair.Item2.id}.");
@@ -117,21 +111,21 @@ internal class SaveFilePatch
                 {
                     case "override":
                         var id = importedCharacter.id;
-                        var oldCharacter = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id];
+                        var oldCharacter = GameSaveFile.GPFFEHKLNLD.savedChars[id];
                         var name = importedCharacter.name;
                         var oldCharacterName = oldCharacter.name;
-                        FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id] = importedCharacter;
+                        GameSaveFile.GPFFEHKLNLD.savedChars[id] = importedCharacter;
                         if (importedCharacter.fed != oldCharacter.fed)
                         {
-                            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
+                            if (GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
                             {
-                                Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
-                                if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
+                                Array.Resize(ref GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
+                                if (GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
                             }
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
-                                .roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id;
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[oldCharacter.fed].HKNHEJHIJLL(id);
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
+                                .roster[GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id;
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[oldCharacter.fed].HKNHEJHIJLL(id);
                         }
 
                         Plugin.Log.LogInfo(
@@ -140,32 +134,32 @@ internal class SaveFilePatch
                     case "append":
                         var id2 = Characters.no_chars + 1;
                         importedCharacter.id = id2;
-                        if (FPNEAHPFCHF.GPFFEHKLNLD.savedChars.Length <= id2)
+                        if (GameSaveFile.GPFFEHKLNLD.savedChars.Length <= id2)
                         {
-                            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedChars, id2 + 1);
-                            Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.charUnlock, id2 + 1);
+                            Array.Resize(ref GameSaveFile.GPFFEHKLNLD.savedChars, id2 + 1);
+                            Array.Resize(ref GameSaveFile.GPFFEHKLNLD.charUnlock, id2 + 1);
                             Array.Resize(ref Characters.c, id2 + 1);
                             Array.Resize(ref Progress.charUnlock, id2 + 1);
-                            FPNEAHPFCHF.GPFFEHKLNLD.charUnlock[id2] = 1;
+                            GameSaveFile.GPFFEHKLNLD.charUnlock[id2] = 1;
                             Progress.charUnlock[id2] = 1;
                         }
                         else
                         {
                             Plugin.Log.LogWarning(
-                                $"The array of characters is larger than the number of characters. This should not happen. The character {FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id2].name} will be overwritten.");
+                                $"The array of characters is larger than the number of characters. This should not happen. The character {GameSaveFile.GPFFEHKLNLD.savedChars[id2].name} will be overwritten.");
                         }
 
-                        FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id2] = importedCharacter;
+                        GameSaveFile.GPFFEHKLNLD.savedChars[id2] = importedCharacter;
                         if (importedCharacter.fed != 0)
                         {
-                            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
+                            if (GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
                             {
-                                Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
-                                if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
+                                Array.Resize(ref GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
+                                if (GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
                             }
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
-                                .roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id2;
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
+                                .roster[GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id2;
                         }
 
                         Characters.no_chars++;
@@ -174,7 +168,7 @@ internal class SaveFilePatch
                         break;
                     case "merge":
                         var id3 = importedCharacter.id;
-                        var oldCharacter2 = FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id3];
+                        var oldCharacter2 = GameSaveFile.GPFFEHKLNLD.savedChars[id3];
                         var name2 = importedCharacter.name;
                         var oldCharacterName2 = oldCharacter2.name;
                         foreach (var field in typeof(Character).GetFields())
@@ -185,18 +179,18 @@ internal class SaveFilePatch
                             }
                         }
 
-                        FPNEAHPFCHF.GPFFEHKLNLD.savedChars[id3] = oldCharacter2;
+                        GameSaveFile.GPFFEHKLNLD.savedChars[id3] = oldCharacter2;
                         if (importedCharacter.fed != oldCharacter2.fed)
                         {
-                            if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
+                            if (GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 1 == GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length)
                             {
-                                Array.Resize(ref FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
-                                if (FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
+                                Array.Resize(ref GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster, GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size + 2);
+                                if (GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].roster.Length > Characters.fedLimit) Characters.fedLimit++;
                             }
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
-                                .roster[FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id3;
-                            FPNEAHPFCHF.GPFFEHKLNLD.savedFeds[oldCharacter2.fed].HKNHEJHIJLL(id3);
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size++;
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed]
+                                .roster[GameSaveFile.GPFFEHKLNLD.savedFeds[importedCharacter.fed].size] = id3;
+                            GameSaveFile.GPFFEHKLNLD.savedFeds[oldCharacter2.fed].HKNHEJHIJLL(id3);
                         }
 
                         Plugin.Log.LogInfo(
@@ -205,7 +199,7 @@ internal class SaveFilePatch
                 }
 
             }
-            FPNEAHPFCHF.GPFFEHKLNLD.FGMMAKKGCOG(IHLLJIMFJEN);
+            GameSaveFile.GPFFEHKLNLD.FGMMAKKGCOG(IHLLJIMFJEN);
         }
         catch (Exception e)
         {
@@ -214,12 +208,12 @@ internal class SaveFilePatch
     }
     
     /*
-     * FPNEAHPFCHF.ICAMLDGDPHC is called when the player saves the game.
+     * GameSaveFile.ICAMLDGDPHC is called when the player saves the game.
      * This patch saves the current custom content map and exports all characters.
      */
-    [HarmonyPatch(typeof(FPNEAHPFCHF), nameof(FPNEAHPFCHF.ICAMLDGDPHC))]
+    [HarmonyPatch(typeof(GameSaveFile), nameof(GameSaveFile.ICAMLDGDPHC))]
     [HarmonyPostfix]
-    public static void FPNEAHPFCHF_ICAMLDGDPHC(int IHLLJIMFJEN)
+    public static void GameSaveFile_ICAMLDGDPHC(int IHLLJIMFJEN)
     {
         SaveCurrentMap();
         if (Plugin.Instance.AutoExportCharacters.Value)

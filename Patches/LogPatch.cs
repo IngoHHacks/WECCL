@@ -1,7 +1,4 @@
-﻿using HarmonyLib;
-using UnityEngine;
-
-namespace WECCL.Patches;
+﻿namespace WECCL.Patches;
 
 [HarmonyPatch]
 public class LogPatch
@@ -9,9 +6,9 @@ public class LogPatch
     /*
      * This patch is used to enable the game's unity logger if the user has enabled it in the config.
      */
-    [HarmonyPatch(typeof(KILNEHBPDGI), "LJPKMABIAME")]
+    [HarmonyPatch(typeof(GameUtils), "LJPKMABIAME")]
     [HarmonyPostfix]
-    public static void KILNEHBPDGI_LJPKMABIAME()
+    public static void GameUtils_LJPKMABIAME()
     {
         Debug.unityLogger.logEnabled = Plugin.Instance.EnableGameUnityLog.Value;
         Debug.unityLogger.filterLogType = Plugin.Instance.GameUnityLogLevel.Value.ToLower() == "error" ? LogType.Error :
