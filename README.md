@@ -65,7 +65,7 @@ Example: `body_material_abc.png` or `body_material/abc.png` (`_` before 01 is no
 You can override content by placing any image or audio file inside `Wrestling Empire/BepInEx/plugins/Overrides` referenced by the internal name. A zip file containing all the overridable files can be found in the [Modding Discord](https://discord.gg/mH56AhUwPR)
 
 ## Exporting Characters
-Characters are automatically exported to `Wrestling Empire/BepInEx/plugins/Exports` when the game is saved.
+Characters are automatically exported to `Wrestling Empire/BepInEx/plugins/Export` when the game is saved.
 
 ## Importing Characters
 Characters can be imported by placing a JSON file inside `Wrestling Empire/BepInEx/plugins/Import`. Make sure to set the `overrideMode` property to the desired mode.  
