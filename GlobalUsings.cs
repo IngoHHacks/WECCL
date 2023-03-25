@@ -4,7 +4,6 @@ global using GameSaveFile = FPNEAHPFCHF;
 global using GameUtils = KILNEHBPDGI;
 global using GameTextures = IINHFOHEAJB;
 global using GameMenus = OMNHIAMJHKF;
-
 global using HarmonyLib;
 global using System;
 global using System.Collections.Generic;
@@ -14,3 +13,5 @@ global using BepInEx.Configuration;
 global using BepInEx.Logging;
 global using System.IO;
 global using UnityEngine;
+global using static WECCL.Utils.TextureUtils;
+global using static WECCL.Content.CustomContent;

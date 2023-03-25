@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+## 1.1.4
+- Better support for overriding textures
+- Code cleanup
+
 ## 1.1.3
 - Added automatic backups of the game's save file.
 - Fixed federation editor menu sizes being affected by the roster size
