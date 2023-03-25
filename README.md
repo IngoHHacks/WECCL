@@ -35,7 +35,7 @@ Automatic installation is not supported until the game is added to Thunderstore.
 
 ### Installation (Manual)
 
-To install this mod manually, you first need to install BepInEx as a mod loader for Wrestling Empire. A guide for this
+To install this mod manually, you first need to install BepInEx 5.4.21 as a mod loader for Wrestling Empire. A guide for this
 can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex).
 Wrestling Empire needs the x64 Mono version.
 
