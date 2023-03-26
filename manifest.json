@@ -1,6 +1,6 @@
 {
   "namespace": "IngoH",
-  "name": "Wrestling Empire Custom Content Loader",
+  "name": "WECCL",
   "description": "Loads custom content for Wrestling Empire",
   "version_number": "1.0.0",
   "dependencies": [
