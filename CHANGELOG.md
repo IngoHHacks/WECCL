@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 ## Release 1.0.1
 - Fix for theme count being incorrect when using multiple mods.
