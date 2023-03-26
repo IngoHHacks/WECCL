@@ -58,6 +58,7 @@ public class Plugin : BaseUnityPlugin
     internal ConfigEntry<bool> DeleteImportedCharacters { get; set; }
     internal ConfigEntry<bool> EnableGameUnityLog { get; set; }
     internal ConfigEntry<string> GameUnityLogLevel { get; set; }
+    internal ConfigEntry<int> BaseFedLimit { get; set; }
     internal ConfigEntry<int> MaxBackups { get; set; }
 
     private void Awake()
@@ -68,7 +69,25 @@ public class Plugin : BaseUnityPlugin
             PluginPath = Path.GetDirectoryName(this.Info.Location) ?? string.Empty;
 
             Instance = this;
-            this.MaxBackups = this.Config.Bind("General", "MaxBackups", -1,
+            this.AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
+                "Automatically export characters to /Export when the game is saved.");
+            this.EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
+                "Enable custom content overrides from /Overrides.");
+            this.EnableCustomContent = this.Config.Bind("General", "EnableCustomContent", true,
+                "Enable custom content loading from /Assets.");
+            this.AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
+                "Allow importing characters from /Import");
+            this.DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
+                "Delete imported characters from /Import after importing them (and saving the game).");
+            this.EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
+                "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
+            this.GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
+                new ConfigDescription(
+                    "The log level for Unity log messages sent by the game itself. If you don't know what this is, leave it at Warning.",
+                    new AcceptableValueList<string>("Error", "Warning", "Info")));
+            this.BaseFedLimit = this.Config.Bind("General", "BaseFedLimit", 48,
+                "The base limit for the number of characters that can be fed's roster. This actual limit may be increased if characters are imported.");
+            this.MaxBackups = this.Config.Bind("General", "MaxBackups", 100,
                 "The maximum number of backups to keep. Set to 0 to disable backups. Set to -1 to keep all backups.");
 
             CreateBackups();
@@ -131,23 +150,6 @@ public class Plugin : BaseUnityPlugin
             {
                 Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
             }
-
-            this.AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
-                "Automatically export characters to /Export when the game is saved.");
-            this.EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
-                "Enable custom content overrides from /Overrides.");
-            this.EnableCustomContent = this.Config.Bind("General", "EnableCustomContent", true,
-                "Enable custom content loading from /Assets.");
-            this.AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
-                "Allow importing characters from /Import");
-            this.DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
-                "Delete imported characters from /Import after importing them (and saving the game).");
-            this.EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
-                "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
-            this.GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
-                new ConfigDescription(
-                    "The log level for Unity log messages sent by the game itself. If you don't know what this is, leave it at Warning.",
-                    new AcceptableValueList<string>("Error", "Warning", "Info")));
 
             if (this.EnableCustomContent.Value)
             {
@@ -254,7 +256,15 @@ public class Plugin : BaseUnityPlugin
                 while (!wr.isDone) { }
 
                 AudioClip clip = DownloadHandlerAudioClip.GetContent(wr);
-                clip.name = file.Name;
+                
+                var fileName = file.Name;
+                var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                if (modGuid != null && modGuid != "plugins")
+                {
+                    fileName = $"{modGuid}/{fileName}";
+                }
+                
+                clip.name = fileName;
                 CustomClips.Add(clip);
                 clipsCount++;
                 cur++;
@@ -320,6 +330,11 @@ public class Plugin : BaseUnityPlugin
                             Texture2D tex = new(2, 2);
                             tex.LoadImage(bytes);
                             tex.name = fileName;
+                            var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                            if (modGuid != null && modGuid != "plugins")
+                            {
+                                fileName = $"{modGuid}/{fileName}";
+                            }
                             costumeData.AddCustomObject(fileName, tex);
                             costumeCount++;
                         }
@@ -374,6 +389,10 @@ public class Plugin : BaseUnityPlugin
                     Texture2D tex = new(2, 2);
                     tex.LoadImage(bytes);
                     tex.name = fileName;
+                    if (ResourceOverridesTextures.ContainsKey(fileNameWithoutExtension.Replace(".", "/")))
+                    {
+                        Log.LogWarning($"Duplicate resource override found: {fileNameWithoutExtension}");
+                    }
                     ResourceOverridesTextures[fileNameWithoutExtension.Replace(".", "/")] = tex;
                     overrideCount++;
                 }
@@ -389,6 +408,10 @@ public class Plugin : BaseUnityPlugin
 
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(wr);
                     clip.name = fileName;
+                    if (ResourceOverridesAudio.ContainsKey(fileNameWithoutExtension.Replace(".", "/")))
+                    {
+                        Log.LogWarning($"Duplicate resource override found: {fileNameWithoutExtension}");
+                    }
                     ResourceOverridesAudio[fileNameWithoutExtension.Replace(".", "/")] = clip;
                     overrideCount++;
                 }
@@ -436,8 +459,15 @@ public class Plugin : BaseUnityPlugin
                     Log.LogError($"Failed to import character from {file.FullName}.");
                     continue;
                 }
-
-                ImportedCharacters.Add(new Tuple<string, Character>(overrideMode, character));
+                
+                var name = file.Name;
+                var guid = Directory.GetParent(file.DirectoryName!)?.Name;
+                if (guid != null && guid != "plugins")
+                {
+                    name = $"{guid}/{name}";
+                }
+                
+                ImportedCharacters.Add(new Tuple<string, string, Character>(name, overrideMode, character));
                 FilesToDeleteOnSave.Add(file.FullName);
                 cur++;
                 if (Time.time - lastProgressUpdate > 1f)

@@ -1,7 +1,7 @@
 ﻿// Global using directives
 
 global using GameSaveFile = FPNEAHPFCHF;
-global using GameUtils = KILNEHBPDGI;
+global using GameGlobals = KILNEHBPDGI;
 global using GameTextures = IINHFOHEAJB;
 global using GameMenus = OMNHIAMJHKF;
 global using HarmonyLib;

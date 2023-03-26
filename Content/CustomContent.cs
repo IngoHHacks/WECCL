@@ -45,6 +45,6 @@ public static class CustomContent
     internal static Dictionary<string, Texture2D> ResourceOverridesTextures = new();
     internal static Dictionary<string, AudioClip> ResourceOverridesAudio = new();
 
-    internal static List<Tuple<string, Character>> ImportedCharacters = new();
+    internal static List<Tuple<string, string, Character>> ImportedCharacters = new();
     internal static List<string> FilesToDeleteOnSave = new();
 }

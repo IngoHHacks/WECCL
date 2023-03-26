@@ -35,6 +35,10 @@ internal class CustomContentSaveFile
     public List<string> KneepadNameMap { get; set; } = new();
 
     public List<string> MusicNameMap { get; set; } = new();
+    
+    public List<string> PreviouslyImportedCharacters { get; set; } = new();
+    
+    public List<int> PreviouslyImportedCharacterIds { get; set; } = new();
 
     public void Save()
     {
@@ -55,5 +59,16 @@ internal class CustomContentSaveFile
         string json = File.ReadAllText(path);
         return JsonConvert.DeserializeObject<CustomContentSaveFile>(json,
             new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+    }
+    
+    public void AddPreviouslyImportedCharacter(string name, int id)
+    {
+        if (this.PreviouslyImportedCharacters.Contains(name))
+        {
+            return;
+        }
+        
+        this.PreviouslyImportedCharacters.Add(name);
+        this.PreviouslyImportedCharacterIds.Add(id);
     }
 }

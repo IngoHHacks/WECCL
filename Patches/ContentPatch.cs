@@ -11,12 +11,12 @@ internal class ContentPatch
     private static readonly Dictionary<string, int> _internalCostumeCounts = new();
 
     /*
-     * GameUtils.AMPMBILAJNM loads an object from an AssetBundle.
+     * GameGlobals.AMPMBILAJNM loads an object from an AssetBundle.
      * This patch is used to load custom objects from the Assets folder(s).
      */
-    [HarmonyPatch(typeof(GameUtils), nameof(GameUtils.AMPMBILAJNM))]
+    [HarmonyPatch(typeof(GameGlobals), nameof(GameGlobals.AMPMBILAJNM))]
     [HarmonyPrefix]
-    public static bool GameUtils_AMPMBILAJNM(ref Object __result, string JJGJAHCHODI, string AGKNLHFIEBO)
+    public static bool GameGlobals_AMPMBILAJNM(ref Object __result, string JJGJAHCHODI, string AGKNLHFIEBO)
     {
         if (JJGJAHCHODI.StartsWith("Music"))
         {
