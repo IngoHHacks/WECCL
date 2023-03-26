@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+## Release 1.0.1
+- Fix for theme count being incorrect when using multiple mods.
+- Change CHANGELOG.txt to CHANGELOG.md
+
 ## Release 1.0.0
 - Initial Thunderstore release
 - Added duplicate import prevention

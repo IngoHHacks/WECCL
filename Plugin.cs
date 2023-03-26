@@ -150,6 +150,8 @@ public class Plugin : BaseUnityPlugin
             {
                 Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
             }
+            
+            VanillaCounts.MusicCount = CKAMIAJJDBP.GGICEBAECGK;
 
             if (this.EnableCustomContent.Value)
             {
@@ -280,11 +282,10 @@ public class Plugin : BaseUnityPlugin
                 Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.Name}");
             }
 
-            VanillaCounts.MusicCount = CKAMIAJJDBP.GGICEBAECGK;
             if (CustomClips.Count != 0)
             {
                 // Update the number of audio clips in the game
-                CKAMIAJJDBP.GGICEBAECGK += CustomClips.Count;
+                CKAMIAJJDBP.GGICEBAECGK = VanillaCounts.MusicCount + CustomClips.Count;
                 CKAMIAJJDBP.CKEJAMLGLAL = new AudioClip[CKAMIAJJDBP.GGICEBAECGK + 1];
             }
 
