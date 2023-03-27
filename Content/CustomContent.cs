@@ -44,20 +44,23 @@ public static class CustomContent
 
     internal static readonly Dictionary<string, Dictionary<string,Texture2D>> ResourceOverridesTextures = new();
     internal static readonly Dictionary<string, Dictionary<string,AudioClip>> ResourceOverridesAudio = new();
+    
+    public static bool HasConflictingOverrides = false;
 
-    private static List<string> Prefixes = new();
+    internal static List<string> Prefixes = new();
     
     public static void AddResourceOverride(string texName, string name, Texture2D texture)
     {
         var split = name.Split('/');
-        var prefix = split.Length > 1 ? split[1] : "manual";
+        var prefix = split.Length > 1 ? split[0] : "manual";
         if (!ResourceOverridesTextures.ContainsKey(texName))
         {
-            ResourceOverridesTextures.Add(texName, new Dictionary<string, Texture2D>());
+            ResourceOverridesTextures.Add(texName, new Dictionary<string, Texture2D>{ { name, texture } });
         }
-        if (!ResourceOverridesTextures[texName].ContainsKey(name))
+        else if (!ResourceOverridesTextures[texName].ContainsKey(name))
         {
             ResourceOverridesTextures[texName].Add(name, texture);
+            HasConflictingOverrides = true;
         }
         else
         {
@@ -72,14 +75,15 @@ public static class CustomContent
     public static void AddResourceOverride(string texName, string name, AudioClip audioClip)
     {
         var split = name.Split('/');
-        var prefix = split.Length > 1 ? split[1] : "manual";
+        var prefix = split.Length > 1 ? split[0] : "manual";
         if (!ResourceOverridesAudio.ContainsKey(texName))
         {
-            ResourceOverridesAudio.Add(texName, new Dictionary<string, AudioClip>());
+            ResourceOverridesAudio.Add(texName, new Dictionary<string, AudioClip>{ { name, audioClip } });
         }
-        if (!ResourceOverridesAudio[texName].ContainsKey(name))
+        else if (!ResourceOverridesAudio[texName].ContainsKey(name))
         {
             ResourceOverridesAudio[texName].Add(name, audioClip);
+            HasConflictingOverrides = true;
         }
         else
         {
@@ -107,7 +111,7 @@ public static class CustomContent
         foreach (var audioClip in audioClips)
         {
             var split = audioClip.Key.Split('/');
-            var prefix = split.Length > 1 ? split[1] : "manual";
+            var prefix = split.Length > 1 ? split[0] : "manual";
             var priority = 0;
             priority = -Prefixes.IndexOf(prefix) + Prefixes.Count;
             if (priority > highestPriority)
@@ -132,7 +136,7 @@ public static class CustomContent
         foreach (var texture in textures)
         {
             var split = texture.Key.Split('/');
-            var prefix = split.Length > 1 ? split[1] : "manual";
+            var prefix = split.Length > 1 ? split[0] : "manual";
             var priority = 0;
             priority = -Prefixes.IndexOf(prefix) + Prefixes.Count;
             if (priority > highestPriority)
@@ -157,7 +161,7 @@ public static class CustomContent
         foreach (var textureKey in textures)
         {
             var split = textureKey.Key.Split('/');
-            var prefix = split.Length > 1 ? split[1] : "manual";
+            var prefix = split.Length > 1 ? split[0] : "manual";
             var priority = 0;
             priority = -Prefixes.IndexOf(prefix) + Prefixes.Count;
             if (priority > highestPriority)

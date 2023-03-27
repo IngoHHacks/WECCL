@@ -260,7 +260,7 @@ public class Plugin : BaseUnityPlugin
                 AudioClip clip = DownloadHandlerAudioClip.GetContent(wr);
                 
                 var fileName = file.Name;
-                var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                var modGuid = FindPluginName(file.DirectoryName);
                 if (modGuid != null && modGuid != "plugins")
                 {
                     fileName = $"{modGuid}/{fileName}";
@@ -331,7 +331,7 @@ public class Plugin : BaseUnityPlugin
                             Texture2D tex = new(2, 2);
                             tex.LoadImage(bytes);
                             tex.name = fileName;
-                            var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                            var modGuid = FindPluginName(file.DirectoryName);
                             if (modGuid != null && modGuid != "plugins")
                             {
                                 fileName = $"{modGuid}/{fileName}";
@@ -391,7 +391,7 @@ public class Plugin : BaseUnityPlugin
                     tex.LoadImage(bytes);
                     tex.name = fileName;
                     
-                    var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                    var modGuid = FindPluginName(file.DirectoryName);
                     if (modGuid != null && modGuid != "plugins")
                     {
                         fileName = $"{modGuid}/{fileName}";
@@ -414,7 +414,7 @@ public class Plugin : BaseUnityPlugin
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(wr);
                     clip.name = fileName;
                     
-                    var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                    var modGuid = FindPluginName(file.DirectoryName);
                     if (modGuid != null && modGuid != "plugins")
                     {
                         fileName = $"{modGuid}/{fileName}";
@@ -442,6 +442,22 @@ public class Plugin : BaseUnityPlugin
         {
             Log.LogError(e);
         }
+    }
+
+    private static string FindPluginName(string fileDirectoryName)
+    {
+        var dir = new DirectoryInfo(fileDirectoryName);
+        var child = dir;
+        while (dir != null && dir.Name != "plugins")
+        {
+            child = dir;
+            dir = dir.Parent;
+        }
+        if (dir == null)
+        {
+            throw new Exception($"Could not find 'plugins' directory for {fileDirectoryName}");
+        }
+        return child.Name;
     }
 
     internal static void ImportCharacters(DirectoryInfo dir)
