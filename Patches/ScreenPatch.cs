@@ -27,6 +27,18 @@ public class ScreenPatch
             __instance.gLicense.SetActive(value: false);
             KPGIEHHDIDA.DGMLHKKIPEC.SetActive(value: false);
             Object.Destroy(GameObject.Find("Logo"));
+            
+            var obj = Object.Instantiate(BNNAONOIMBL.KCPCEFMNNNJ[1]);
+            obj.transform.position = new Vector3(0f, 315f, 0f);
+            obj.transform.localScale = new Vector3(2f, 2f, 1f);
+            obj.transform.SetParent(KPGIEHHDIDA.APACKAAEEAH.transform, worldPositionStays: false);
+            Object.Destroy(obj.transform.Find("Background").gameObject);
+            Object.Destroy(obj.transform.Find("Border").gameObject);
+            Object.Destroy(obj.transform.Find("Sheen").gameObject);
+            Object.Destroy(obj.transform.Find("Corners").gameObject);
+            obj.transform.Find("Title").gameObject.GetComponent<Text>().text = "Order the override mods by the desired priority:";
+            
+
             _initialized = true;
         }
     }
@@ -50,7 +62,7 @@ public class ScreenPatch
                 KPGIEHHDIDA.NAGCDENHJNE = 0;
                 _dd = 10;
                 dir = 0;
-                BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
+                if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
             }
             
             if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 1)
@@ -59,7 +71,7 @@ public class ScreenPatch
                 List<string> prefixes = new();
                 for (int i = 1; i < Prefixes.Count + 1; i++)
                 {
-                    var text = KPGIEHHDIDA.KFGOFBAGLDH[i].JDAHAFDKBJG.transform.Find("Title").gameObject.GetComponent<Text>().text;
+                    var text = KPGIEHHDIDA.KFGOFBAGLDH[i].JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>().text;
                     prefixes.Add(text);
                 }
                 Prefixes = prefixes;
@@ -81,8 +93,8 @@ public class ScreenPatch
                     if (foc > 1)
                     {
                         var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc-1];
-                        var text1 = menu.JDAHAFDKBJG.transform.Find("Title").gameObject.GetComponent<Text>();
-                        var text2 = menu2.JDAHAFDKBJG.transform.Find("Title").gameObject.GetComponent<Text>();
+                        var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
+                        var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
                         menu2.IBOAEEIDBGL = text1.text;
                         menu.IBOAEEIDBGL = text2.text;
                         (text1.text, text2.text) = (text2.text, text1.text);
@@ -99,10 +111,8 @@ public class ScreenPatch
                     if (foc < KPGIEHHDIDA.KFGOFBAGLDH.Length - 2)
                     {
                         var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc+1];
-                        var text1 = menu.JDAHAFDKBJG.transform.Find("Title").gameObject.GetComponent<Text>();
-                        var text2 = menu2.JDAHAFDKBJG.transform.Find("Title").gameObject.GetComponent<Text>();
-                        menu2.IBOAEEIDBGL = text1.text;
-                        menu.IBOAEEIDBGL = text2.text;
+                        var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
+                        var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
                         (text1.text, text2.text) = (text2.text, text1.text);
                         if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
                         _menu = menu2;
@@ -140,7 +150,8 @@ public class ScreenPatch
                 KPGIEHHDIDA.IHCMEHJGDGH();
                 var x = startX + (index % columns * 210 * scale);
                 var y = startY - (index / columns * 50 * scale);
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, prefix, x, y, scale, scale);
+                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(6, "#" + (index + 1) + (index == 0 ? " (highest)" : index == Prefixes.Count - 1 ? " (lowest)" : ""), x, y, scale, scale);
+                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>().text = prefix;
                 BNNAONOIMBL.AJEPIKJNHMP(KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
                 index++;
             }
