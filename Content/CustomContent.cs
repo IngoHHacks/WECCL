@@ -1,4 +1,6 @@
-﻿namespace WECCL.Content;
+﻿using WECCL.Saves;
+
+namespace WECCL.Content;
 
 public static class CustomContent
 {
@@ -171,5 +173,35 @@ public static class CustomContent
             }
         }
         ResourceOverridesTextures[name][highestPriorityKey ?? name] = texture;
+    }
+
+    internal static void LoadPrefixes()
+    {
+        var orderedP = CustomConfigsSaveFile.Config.PrefixPriorityOrder;
+        if (orderedP.Count > 0)
+        {
+            var newPrefixes = new List<string>();
+            foreach (var prefix in orderedP)
+            {
+                if (!newPrefixes.Contains(prefix) && Prefixes.Contains(prefix))
+                {
+                    newPrefixes.Add(prefix);
+                }
+            }
+            foreach (var prefix in Prefixes)
+            {
+                if (!newPrefixes.Contains(prefix))
+                {
+                    newPrefixes.Add(prefix);
+                }
+            }
+            Prefixes = newPrefixes;
+        }
+    }
+    
+    internal static void SavePrefixes()
+    {
+        CustomConfigsSaveFile.Config.PrefixPriorityOrder = Prefixes;
+        CustomConfigsSaveFile.Config.Save();
     }
 }

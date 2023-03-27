@@ -47,6 +47,7 @@ public class ScreenPatch
             else if (Input.GetMouseButtonUp(0))
             {
                 foc = 0;
+                KPGIEHHDIDA.NAGCDENHJNE = 0;
                 _dd = 10;
                 dir = 0;
                 BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
@@ -56,12 +57,13 @@ public class ScreenPatch
             {
                 CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
                 List<string> prefixes = new();
-                for (int i = 2; i < Prefixes.Count + 1; i++)
+                for (int i = 1; i < Prefixes.Count + 1; i++)
                 {
                     var text = KPGIEHHDIDA.KFGOFBAGLDH[i].JDAHAFDKBJG.transform.Find("Title").gameObject.GetComponent<Text>().text;
                     prefixes.Add(text);
                 }
                 Prefixes = prefixes;
+                SavePrefixes();
                 CKAMIAJJDBP.ILIKOLOBLBN.Stop();
                 CKAMIAJJDBP.CKEJAMLGLAL[0] = GameGlobals.AMPMBILAJNM("Music", "Theme00") as AudioClip;
                 CKAMIAJJDBP.ILIKOLOBLBN.clip = CKAMIAJJDBP.CKEJAMLGLAL[0];

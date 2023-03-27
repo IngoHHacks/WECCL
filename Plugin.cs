@@ -25,6 +25,8 @@ public class Plugin : BaseUnityPlugin
     internal static string PluginPath;
 
     internal static string CustomContentSavePath;
+    
+    internal static string CustomConfigsSavePath;
 
     private static readonly List<string> ImageExtensions = new()
     {
@@ -69,6 +71,7 @@ public class Plugin : BaseUnityPlugin
             PluginPath = Path.GetDirectoryName(this.Info.Location) ?? string.Empty;
 
             Instance = this;
+            
             this.AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
                 "Automatically export characters to /Export when the game is saved.");
             this.EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
@@ -89,10 +92,11 @@ public class Plugin : BaseUnityPlugin
                 "The base limit for the number of characters that can be fed's roster. This actual limit may be increased if characters are imported.");
             this.MaxBackups = this.Config.Bind("General", "MaxBackups", 100,
                 "The maximum number of backups to keep. Set to 0 to disable backups. Set to -1 to keep all backups.");
-
+            
             CreateBackups();
 
             CustomContentSavePath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
+            CustomConfigsSavePath = Path.Combine(PluginPath, "CustomConfigsSaveFile.json");
 
             AssetsDir = new DirectoryInfo(Path.Combine(PluginPath, "Assets"));
             if (!AssetsDir.Exists)
@@ -169,6 +173,8 @@ public class Plugin : BaseUnityPlugin
                     LoadOverrides(modOverridesDir);
                 }
             }
+            
+            LoadPrefixes();
         }
         catch (Exception e)
         {
