@@ -390,11 +390,15 @@ public class Plugin : BaseUnityPlugin
                     Texture2D tex = new(2, 2);
                     tex.LoadImage(bytes);
                     tex.name = fileName;
-                    if (ResourceOverridesTextures.ContainsKey(fileNameWithoutExtension.Replace(".", "/")))
+                    
+                    var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                    if (modGuid != null && modGuid != "plugins")
                     {
-                        Log.LogWarning($"Duplicate resource override found: {fileNameWithoutExtension}");
+                        fileName = $"{modGuid}/{fileName}";
                     }
-                    ResourceOverridesTextures[fileNameWithoutExtension.Replace(".", "/")] = tex;
+
+                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, tex);
+                    
                     overrideCount++;
                 }
 
@@ -409,11 +413,15 @@ public class Plugin : BaseUnityPlugin
 
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(wr);
                     clip.name = fileName;
-                    if (ResourceOverridesAudio.ContainsKey(fileNameWithoutExtension.Replace(".", "/")))
+                    
+                    var modGuid = Directory.GetParent(file.DirectoryName!)?.Name;
+                    if (modGuid != null && modGuid != "plugins")
                     {
-                        Log.LogWarning($"Duplicate resource override found: {fileNameWithoutExtension}");
+                        fileName = $"{modGuid}/{fileName}";
                     }
-                    ResourceOverridesAudio[fileNameWithoutExtension.Replace(".", "/")] = clip;
+                    
+                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, clip);
+
                     overrideCount++;
                 }
 

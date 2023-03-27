@@ -290,20 +290,22 @@ internal class ContentPatch
         {
             if (__result is Texture2D texture)
             {
-                Texture2D overrideTexture = ResourceOverridesTextures[name];
+                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name);
                 if (texture.width != overrideTexture.width || texture.height != overrideTexture.height)
                 {
                     overrideTexture = ResizeTexture(overrideTexture, texture.width, texture.height);
+                    SetHighestPriorityTextureOverride(name, overrideTexture);
                 }
 
                 __result = overrideTexture;
             }
             else if (__result is Sprite sprite)
             {
-                Texture2D overrideTexture = ResourceOverridesTextures[name];
+                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name);
                 if (sprite.texture.width != overrideTexture.width || sprite.texture.height != overrideTexture.height)
                 {
                     overrideTexture = ResizeTexture(overrideTexture, sprite.texture.width, sprite.texture.height);
+                    SetHighestPriorityTextureOverride(name, overrideTexture);
                 }
 
                 __result = Sprite.Create(overrideTexture, sprite.rect, sprite.pivot, sprite.pixelsPerUnit);
@@ -318,7 +320,7 @@ internal class ContentPatch
         {
             if (__result is AudioClip)
             {
-                __result = ResourceOverridesAudio[name];
+                __result = GetHighestPriorityAudioOverride(name);
             }
             else
             {
@@ -340,15 +342,15 @@ internal class ContentPatch
                 {
                     if (ResourceOverridesTextures.ContainsKey(material.mainTexture?.name ?? ""))
                     {
-                        if (material.mainTexture.width != ResourceOverridesTextures[material.mainTexture.name].width ||
-                            material.mainTexture.height != ResourceOverridesTextures[material.mainTexture.name].height)
+                        var tex = GetHighestPriorityTextureOverride(material.mainTexture.name);
+                        if (material.mainTexture.width != tex.width ||
+                            material.mainTexture.height != tex.height)
                         {
-                            ResourceOverridesTextures[material.mainTexture.name] = ResizeTexture(
-                                ResourceOverridesTextures[material.mainTexture.name], material.mainTexture.width,
-                                material.mainTexture.height);
+                            tex = ResizeTexture(tex, material.mainTexture.width, material.mainTexture.height);
+                            SetHighestPriorityTextureOverride(material.mainTexture.name, tex);
                         }
 
-                        material.mainTexture = ResourceOverridesTextures[material.mainTexture.name];
+                        material.mainTexture = tex;
                     }
                 }
             }
@@ -359,9 +361,9 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void Image(ref Image __instance)
     {
-        if (__instance.m_Sprite != null && ResourceOverridesTextures.ContainsKey(__instance.m_Sprite.name ?? ""))
+        if (__instance.m_Sprite != null && ResourceOverridesTextures.ContainsKey(__instance.m_Sprite.name))
         {
-            Texture2D overrideTexture = ResourceOverridesTextures[__instance.m_Sprite.name];
+            Texture2D overrideTexture = GetHighestPriorityTextureOverride(__instance.m_Sprite.name);
             if (__instance.m_Sprite.texture.width != overrideTexture.width ||
                 __instance.m_Sprite.texture.height != overrideTexture.height)
             {

@@ -2,9 +2,9 @@
 
 public static class CustomContent
 {
-    internal static List<AudioClip> CustomClips = new();
+    internal static readonly List<AudioClip> CustomClips = new();
 
-    internal static Dictionary<string, CostumeData> CustomCostumes = new()
+    internal static readonly Dictionary<string, CostumeData> CustomCostumes = new()
     {
         { "legs_material", new CostumeData("legs_material", "legs", typeof(Texture2D)) },
         { "legs_flesh", new CostumeData("legs_flesh", typeof(Texture2D)) },
@@ -42,9 +42,130 @@ public static class CustomContent
         { "arms_wristband", new CostumeData("arms_wristband", "wristband", typeof(Texture2D)) }
     };
 
-    internal static Dictionary<string, Texture2D> ResourceOverridesTextures = new();
-    internal static Dictionary<string, AudioClip> ResourceOverridesAudio = new();
+    internal static readonly Dictionary<string, Dictionary<string,Texture2D>> ResourceOverridesTextures = new();
+    internal static readonly Dictionary<string, Dictionary<string,AudioClip>> ResourceOverridesAudio = new();
+
+    private static List<string> Prefixes = new();
+    
+    public static void AddResourceOverride(string texName, string name, Texture2D texture)
+    {
+        var split = name.Split('/');
+        var prefix = split.Length > 1 ? split[1] : "manual";
+        if (!ResourceOverridesTextures.ContainsKey(texName))
+        {
+            ResourceOverridesTextures.Add(texName, new Dictionary<string, Texture2D>());
+        }
+        if (!ResourceOverridesTextures[texName].ContainsKey(name))
+        {
+            ResourceOverridesTextures[texName].Add(name, texture);
+        }
+        else
+        {
+            Plugin.Log.LogWarning($"Duplicate texture override for {name}!");
+        }
+        if (!Prefixes.Contains(prefix))
+        {
+            Prefixes.Add(prefix);
+        }
+    }
+    
+    public static void AddResourceOverride(string texName, string name, AudioClip audioClip)
+    {
+        var split = name.Split('/');
+        var prefix = split.Length > 1 ? split[1] : "manual";
+        if (!ResourceOverridesAudio.ContainsKey(texName))
+        {
+            ResourceOverridesAudio.Add(texName, new Dictionary<string, AudioClip>());
+        }
+        if (!ResourceOverridesAudio[texName].ContainsKey(name))
+        {
+            ResourceOverridesAudio[texName].Add(name, audioClip);
+        }
+        else
+        {
+            Plugin.Log.LogWarning($"Duplicate audio override for {name}!");
+        }
+        if (!Prefixes.Contains(prefix))
+        {
+            Prefixes.Add(prefix);
+        }
+    }
 
     internal static List<Tuple<string, string, Character>> ImportedCharacters = new();
     internal static List<string> FilesToDeleteOnSave = new();
+    
+    public static AudioClip GetHighestPriorityAudioOverride(string name)
+    {
+        if (!ResourceOverridesAudio.ContainsKey(name))
+        {
+            return null;
+        }
+        
+        var audioClips = ResourceOverridesAudio[name];
+        var highestPriority = 0;
+        AudioClip highestPriorityClip = null;
+        foreach (var audioClip in audioClips)
+        {
+            var split = audioClip.Key.Split('/');
+            var prefix = split.Length > 1 ? split[1] : "manual";
+            var priority = 0;
+            priority = -Prefixes.IndexOf(prefix) + Prefixes.Count;
+            if (priority > highestPriority)
+            {
+                highestPriority = priority;
+                highestPriorityClip = audioClip.Value;
+            }
+        }
+        return highestPriorityClip;
+    }
+    
+    public static Texture2D GetHighestPriorityTextureOverride(string name)
+    {
+        if (!ResourceOverridesTextures.ContainsKey(name))
+        {
+            return null;
+        }
+        
+        var textures = ResourceOverridesTextures[name];
+        var highestPriority = 0;
+        Texture2D highestPriorityTexture = null;
+        foreach (var texture in textures)
+        {
+            var split = texture.Key.Split('/');
+            var prefix = split.Length > 1 ? split[1] : "manual";
+            var priority = 0;
+            priority = -Prefixes.IndexOf(prefix) + Prefixes.Count;
+            if (priority > highestPriority)
+            {
+                highestPriority = priority;
+                highestPriorityTexture = texture.Value;
+            }
+        }
+        return highestPriorityTexture;
+    }
+    
+    public static void SetHighestPriorityTextureOverride(string name, Texture2D texture)
+    {
+        if (!ResourceOverridesTextures.ContainsKey(name))
+        {
+            ResourceOverridesTextures.Add(name, new Dictionary<string, Texture2D>());
+        }
+        
+        var textures = ResourceOverridesTextures[name];
+        var highestPriority = 0;
+        string highestPriorityKey = null;
+        foreach (var textureKey in textures)
+        {
+            var split = textureKey.Key.Split('/');
+            var prefix = split.Length > 1 ? split[1] : "manual";
+            var priority = 0;
+            priority = -Prefixes.IndexOf(prefix) + Prefixes.Count;
+            if (priority > highestPriority)
+            {
+                highestPriority = priority;
+                highestPriorityKey = textureKey.Key;
+            }
+        }
+        ResourceOverridesTextures[name][highestPriorityKey ?? name] = texture;
+    }
 }
