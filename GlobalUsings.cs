@@ -14,4 +14,5 @@ global using BepInEx.Logging;
 global using System.IO;
 global using UnityEngine;
 global using static WECCL.Utils.TextureUtils;
+global using static WECCL.Utils.MenuUtils;
 global using static WECCL.Content.CustomContent;
