@@ -21,11 +21,11 @@ internal class CostumeData
     internal string FilePrefix { get; set; }
     internal string InternalPrefix { get; set; }
     internal Type Type { get; set; }
-    internal List<Tuple<string, Object>> CustomObjects { get; set; } = new();
+    internal List<Tuple<string, Object, List<Tuple<string, string>>>> CustomObjects { get; set; } = new();
 
     internal int Count => this.CustomObjects.Count;
 
-    internal void AddCustomObject(string name, Object obj)
+    internal void AddCustomObject(string name, Object obj, List<Tuple<string, string>> meta)
     {
         if (obj.GetType() != this.Type)
         {
@@ -33,6 +33,6 @@ internal class CostumeData
                 $"Object type {obj.GetType()} of {obj.name} does not match expected type {this.Type}.");
         }
 
-        this.CustomObjects.Add(new Tuple<string, Object>(name, obj));
+        this.CustomObjects.Add(new Tuple<string, Object, List<Tuple<string, string>>>(name, obj, meta));
     }
 }

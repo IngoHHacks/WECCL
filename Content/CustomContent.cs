@@ -1,4 +1,6 @@
-﻿namespace WECCL.Content;
+using System.Globalization;
+
+namespace WECCL.Content;
 
 public static class CustomContent
 {
@@ -171,5 +173,59 @@ public static class CustomContent
             }
         }
         ResourceOverridesTextures[name][highestPriorityKey ?? name] = texture;
+    }
+
+    internal static void LoadPrefixes()
+    {
+        var orderedP = CustomConfigsSaveFile.Config.PrefixPriorityOrder;
+        if (orderedP.Count > 0)
+        {
+            var newPrefixes = new List<string>();
+            foreach (var prefix in orderedP)
+            {
+                if (!newPrefixes.Contains(prefix) && Prefixes.Contains(prefix))
+                {
+                    newPrefixes.Add(prefix);
+                }
+            }
+            foreach (var prefix in Prefixes)
+            {
+                if (!newPrefixes.Contains(prefix))
+                {
+                    newPrefixes.Add(prefix);
+                }
+            }
+            Prefixes = newPrefixes;
+        }
+    }
+    
+    internal static void SavePrefixes()
+    {
+        CustomConfigsSaveFile.Config.PrefixPriorityOrder = Prefixes;
+        CustomConfigsSaveFile.Config.Save();
+    }
+
+    public static Color GetSkinColor(int index)
+    {
+        List<Tuple<string, string>> tuples;
+        if (index > 0)
+        {
+            index -= VanillaCounts.MaterialCounts[3] + 1;
+            tuples = CustomCostumes["face_male"].CustomObjects[index].Item3;
+        }
+        else
+        {
+            index = -index - (VanillaCounts.FaceFemaleCount + 1);
+            tuples = CustomCostumes["face_female"].CustomObjects[index].Item3;
+        }
+
+        if (tuples.Any(t => t.Item1 == "skin_color" || t.Item1 == "skin_colour" || t.Item1 == "skin_tone"))
+        {
+            var color = tuples.First(t => t.Item1 == "skin_color" || t.Item1 == "skin_colour" || t.Item1 == "skin_tone").Item2;
+            var split = color.Split(',');
+            var nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            return new Color(float.Parse(split[0], nfi), float.Parse(split[1], nfi), float.Parse(split[2], nfi));
+        }
+        return Color.white;
     }
 }

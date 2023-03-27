@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.0.2
+- Added the option to include metadata files with assets.
+
 ## Release 1.0.1
 - Fix for theme count being incorrect when using multiple mods.
 - Change CHANGELOG.txt to CHANGELOG.md
