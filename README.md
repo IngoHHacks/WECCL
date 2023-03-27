@@ -80,7 +80,7 @@ Example: `body_material_abc.png` or `body_material/abc.png` (`_` before 01 is no
 ### Metadata
 
 Metadata files can be used to add additional information to assets, e.g. skin tone. Metadata files must be named the same as the asset, but with the `.meta` extension.
-Example: `abc.png` and `abc.png.meta`.
+Example: `abc.png` and `abc.meta`.
 Meta files must be a newline-separated list of key-value pairs in the format `key: value` (space is optional).
 The following keys are supported:
 
