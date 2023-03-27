@@ -194,6 +194,7 @@ public static class CustomContent
                 if (!newPrefixes.Contains(prefix))
                 {
                     newPrefixes.Add(prefix);
+                    CustomConfigsSaveFile.Config.HideNextTime = false;
                 }
             }
             Prefixes = newPrefixes;

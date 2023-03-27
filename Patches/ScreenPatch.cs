@@ -1,4 +1,5 @@
 ﻿using UnityEngine.UI;
+using WECCL.Saves;
 using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
@@ -17,7 +18,7 @@ public class ScreenPatch
     [HarmonyPostfix]
     public static void SceneTitles_Start(Scene_Titles __instance)
     {
-        if (!_initialized && HasConflictingOverrides)
+        if (!_initialized && HasConflictingOverrides && !CustomConfigsSaveFile.Config.HideNextTime)
         {
             KPGIEHHDIDA.CGLNPGPJPJE();
             KPGIEHHDIDA.LHOICDLLMID = 1001;
@@ -65,8 +66,13 @@ public class ScreenPatch
                 if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
             }
             
-            if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 1)
+            if (KPGIEHHDIDA.NAGCDENHJNE >= Prefixes.Count + 1)
             {
+                if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 2)
+                {
+                    CustomConfigsSaveFile.Config.HideNextTime = true;
+                }
+                
                 CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
                 List<string> prefixes = new();
                 for (int i = 1; i < Prefixes.Count + 1; i++)
@@ -157,7 +163,9 @@ public class ScreenPatch
             }
             
             KPGIEHHDIDA.IHCMEHJGDGH();
-            KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", 0f, -280, 1.5f, 1.5f);
+            KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", -150f, -280, 1.25f, 1.25f);
+            KPGIEHHDIDA.IHCMEHJGDGH();
+            KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
         }
     }
 }

@@ -9,7 +9,8 @@ public class CustomConfigsSaveFile
     internal static CustomConfigsSaveFile Config => _instance ??= Load();
     
     public List<string> PrefixPriorityOrder { get; set; } = new();
-    
+    public bool HideNextTime { get; set; } = false;
+
     public void Save()
     {
         string path = Plugin.CustomConfigsSavePath;
