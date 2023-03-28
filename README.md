@@ -161,4 +161,9 @@ creators!
 
 ## Donations
 
-Donations are always appreciated. You can donate on my [Ko-fi page](https://ko-fi.com/IngoH).
+Donations are always appreciated. You can donate on my [Ko-fi page](https://ko-fi.com/IngoH).  
+
+## Special Thanks
+**Mat Dickie** for generously donating €1,000  
+**All the Discord Testers**  
+**Everyone who published mods using WECCL**
