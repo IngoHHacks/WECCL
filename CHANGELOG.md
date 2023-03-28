@@ -3,6 +3,7 @@
 ## Release 1.0.2
 - Added a GUI to set the priority of override mods in case of conflicts.
 - Added the option to include metadata files with assets.
+- Added a warning to manually back up the game's save file before running any mods on first launch.
 
 ## Release 1.0.1
 - Fix for theme count being incorrect when using multiple mods.
