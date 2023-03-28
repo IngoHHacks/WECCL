@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.0.3
+- Temporarily removed the warning about the game's save file being backed up on first launch.
+
 ## Release 1.0.2
 - Added a GUI to set the priority of override mods in case of conflicts.
 - Added the option to include metadata files with assets.

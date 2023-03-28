@@ -18,7 +18,7 @@ public class ScreenPatch
     [HarmonyPostfix]
     public static void SceneTitles_Start(Scene_Titles __instance)
     {
-        if (CustomConfigsSaveFile.Config.FirstLaunch)
+        /*if (CustomConfigsSaveFile.Config.FirstLaunch)
         {
             KPGIEHHDIDA.CGLNPGPJPJE();
             KPGIEHHDIDA.LHOICDLLMID = 1002;
@@ -40,7 +40,9 @@ public class ScreenPatch
             Object.Destroy(obj.transform.Find("Corners").gameObject);
             obj.transform.Find("Title").gameObject.GetComponent<Text>().text = "<color=#EF0000>IMPORTANT NOTICE</color>\n While WECCL tries its best to keep modded save files stable and consistent between game updates and mod changes, you may still encounter issues. WECCL automatically creates backups (up to 100 by default). However, it is recommended to manually create backups of your save file. The save file can be found in %USERPROFILE%/AppData/LocalLow/MDickie/Wrestling Empire. If you encounter any issues, please report them in the Wrestling Empire Modding Discord server.";
         }
-        else if (!_initialized && HasConflictingOverrides && !CustomConfigsSaveFile.Config.HidePriorityScreenNextTime)
+        else
+        */
+        if (!_initialized && HasConflictingOverrides && !CustomConfigsSaveFile.Config.HidePriorityScreenNextTime)
         {
             KPGIEHHDIDA.CGLNPGPJPJE();
             KPGIEHHDIDA.LHOICDLLMID = 1001;
@@ -157,6 +159,7 @@ public class ScreenPatch
             KPGIEHHDIDA.CMFJNCPCPIO = KPGIEHHDIDA.NAGCDENHJNE;
             
             _delay--;
+            KPGIEHHDIDA.OCPGHHJILBD();
             return false;
         }
         if (KPGIEHHDIDA.LHOICDLLMID == 1002)
@@ -171,6 +174,7 @@ public class ScreenPatch
                 CustomConfigsSaveFile.Config.Save();
                 KPGIEHHDIDA.BANOJFCLKIM(1);
             }
+            KPGIEHHDIDA.OCPGHHJILBD();
             return false;
         }
 
@@ -178,38 +182,82 @@ public class ScreenPatch
     }
 
     [HarmonyPatch(typeof(KPGIEHHDIDA), "GHGPDLAMLFL")]
-    [HarmonyPostfix]
-    public static void KPGIEHHDIDA_GHGPDLAMLFL()
+    [HarmonyPrefix]
+    public static bool KPGIEHHDIDA_GHGPDLAMLFL(int HCOECEPAHDL)
     {
-        if (KPGIEHHDIDA.LHOICDLLMID == 1001)
+        if (KPGIEHHDIDA.LHOICDLLMID > 1000)
         {
-            int rows;
-            int columns;
-            float scale;
-            int startX;
-            int startY;
-            FindBestFit(Prefixes.Count, -450, -200, 450, 250, out rows, out columns, out scale, out startX, out startY);
-            int index = 0;
-            foreach (var prefix in Prefixes)
+            KPGIEHHDIDA.CGLNPGPJPJE();
+            KPGIEHHDIDA.NAGCDENHJNE = 0;
+            KPGIEHHDIDA.FPCGMGGJBKD = HCOECEPAHDL;
+            KPGIEHHDIDA.KFGOFBAGLDH = new OMNHIAMJHKF[KPGIEHHDIDA.FPCGMGGJBKD + 1];
+            for (KPGIEHHDIDA.NNABMMELIOG = 1; KPGIEHHDIDA.NNABMMELIOG <= KPGIEHHDIDA.FPCGMGGJBKD; KPGIEHHDIDA.NNABMMELIOG++)
+            {
+                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.NNABMMELIOG] = new OMNHIAMJHKF();
+                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.NNABMMELIOG].OHOPCKPFIOO= KPGIEHHDIDA.NNABMMELIOG;
+            }
+            KPGIEHHDIDA.NONALLHCFMG = 0f;
+            KPGIEHHDIDA.FCHACKAPBJJ = 0f;
+            KPGIEHHDIDA.KNBMMGLEGFG = 0f;
+            KPGIEHHDIDA.EDNJGHNOKBG = 0f;
+            float num = 0f;
+            float num2 = 0f;
+            float num3 = 80f;
+            float num4 = 1.6f;
+            if (KPGIEHHDIDA.LHOICDLLMID == 1001)
+            {
+                int rows;
+                int columns;
+                float scale;
+                int startX;
+                int startY;
+                FindBestFit(Prefixes.Count, -450, -200, 450, 250, out rows, out columns, out scale, out startX,
+                    out startY);
+                int index = 0;
+                foreach (var prefix in Prefixes)
+                {
+                    KPGIEHHDIDA.IHCMEHJGDGH();
+                    var x = startX + (index % columns * 210 * scale);
+                    var y = startY - (index / columns * 50 * scale);
+                    KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(6,
+                        "#" + (index + 1) +
+                        (index == 0 ? " (highest)" : index == Prefixes.Count - 1 ? " (lowest)" : ""), x, y, scale,
+                        scale);
+                    KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].JDAHAFDKBJG.transform.Find("Value").gameObject
+                        .GetComponent<Text>().text = prefix;
+                    BNNAONOIMBL.AJEPIKJNHMP(KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].ENKGCMNBJMP, 0.8f, 0.8f,
+                        0.8f);
+                    index++;
+                }
+
+                KPGIEHHDIDA.IHCMEHJGDGH();
+                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", -150f, -280, 1.25f, 1.25f);
+                KPGIEHHDIDA.IHCMEHJGDGH();
+                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD]
+                    .GHGPDLAMLFL(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
+            }
+            else if (KPGIEHHDIDA.LHOICDLLMID == 1002)
             {
                 KPGIEHHDIDA.IHCMEHJGDGH();
-                var x = startX + (index % columns * 210 * scale);
-                var y = startY - (index / columns * 50 * scale);
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(6, "#" + (index + 1) + (index == 0 ? " (highest)" : index == Prefixes.Count - 1 ? " (lowest)" : ""), x, y, scale, scale);
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>().text = prefix;
-                BNNAONOIMBL.AJEPIKJNHMP(KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
-                index++;
+                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", 0f, -280, 1.25f, 1.25f);
             }
             
-            KPGIEHHDIDA.IHCMEHJGDGH();
-            KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", -150f, -280, 1.25f, 1.25f);
-            KPGIEHHDIDA.IHCMEHJGDGH();
-            KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
+            KPGIEHHDIDA.IKOBGOKFEOO();
+            if (KPGIEHHDIDA.AOFCBMJJODG() > 0 && KPGIEHHDIDA.FPCGMGGJBKD > 0 && foc == 0)
+            {
+                foc = 1;
+            }
+            KPGIEHHDIDA.CMFJNCPCPIO = foc;
+            KPGIEHHDIDA.LJOAGMEDLPI = 0;
+            LAOMLMMCODM.GGNCBEPBHCG = 0;
+            KPGIEHHDIDA.NGLMFGEBDJJ = 0;
+            KPGIEHHDIDA.ABJNEMANHBK = 0;
+            KPGIEHHDIDA.LDLDCBDAGLP = 0;
+            KPGIEHHDIDA.JOFJJPBIAEK = 0f;
+            JINPJBLJOMA.ALBIPGOEJLM = 10f;
+            return false;
         }
-        else if (KPGIEHHDIDA.LHOICDLLMID == 1002)
-        {
-            KPGIEHHDIDA.IHCMEHJGDGH();
-            KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", 0f, -280, 1.25f, 1.25f);
-        }
+
+        return true;
     }
 }

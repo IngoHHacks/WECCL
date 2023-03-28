@@ -10,7 +10,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.0.2";
+    public const string PluginVer = "1.0.3";
 
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
