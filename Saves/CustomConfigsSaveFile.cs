@@ -9,7 +9,9 @@ public class CustomConfigsSaveFile
     internal static CustomConfigsSaveFile Config => _instance ??= Load();
     
     public List<string> PrefixPriorityOrder { get; set; } = new();
-    public bool HideNextTime { get; set; } = false;
+    public bool HidePriorityScreenNextTime { get; set; } = false;
+    
+    public bool FirstLaunch { get; set; } = true;
 
     public void Save()
     {
