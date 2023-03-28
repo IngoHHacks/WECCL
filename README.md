@@ -33,9 +33,11 @@ Experimental features:
 
 This is the recommended way to install the mods.
 
-- Download and install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager) or [r2modman](https://timberborn.thunderstore.io/package/ebkr/r2modman/)
+**NOTICE: Automatic installation is currently not officially released at the time of writing. You'll have to use [this version](https://www.dropbox.com/s/tq14cdi5qv6er4c/r2modman-3.1.39-win.zip?dl=1), which is an unofficial build.**
+
+<strike>- Download and install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager) or [r2modman](https://github.com/ebkr/r2modmanPlus/releases)
 - Click the `Install with Mod Manager` button on top of the [page](https://thunderstore.io/c/wrestling-empire/p/IngoH/WECCL/) (or install it through the mod manager directly)
-- Run the game via the mod manager
+- Run the game via the mod manager</strike>
 
 ### Installation (Manual)
 
