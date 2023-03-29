@@ -18,7 +18,11 @@ public class ScreenPatch
     [HarmonyPostfix]
     public static void SceneTitles_Start(Scene_Titles __instance)
     {
-        /*if (CustomConfigsSaveFile.Config.FirstLaunch)
+        foc = 0;
+        dir = 0;
+        _delay = 0;
+        _dd = 10;
+        if (CustomConfigsSaveFile.Config.FirstLaunch)
         {
             KPGIEHHDIDA.CGLNPGPJPJE();
             KPGIEHHDIDA.LHOICDLLMID = 1002;
@@ -40,9 +44,7 @@ public class ScreenPatch
             Object.Destroy(obj.transform.Find("Corners").gameObject);
             obj.transform.Find("Title").gameObject.GetComponent<Text>().text = "<color=#EF0000>IMPORTANT NOTICE</color>\n While WECCL tries its best to keep modded save files stable and consistent between game updates and mod changes, you may still encounter issues. WECCL automatically creates backups (up to 100 by default). However, it is recommended to manually create backups of your save file. The save file can be found in %USERPROFILE%/AppData/LocalLow/MDickie/Wrestling Empire. If you encounter any issues, please report them in the Wrestling Empire Modding Discord server.";
         }
-        else
-        */
-        if (!_initialized && HasConflictingOverrides && !CustomConfigsSaveFile.Config.HidePriorityScreenNextTime)
+        else if (!_initialized && HasConflictingOverrides && !CustomConfigsSaveFile.Config.HidePriorityScreenNextTime)
         {
             KPGIEHHDIDA.CGLNPGPJPJE();
             KPGIEHHDIDA.LHOICDLLMID = 1001;
@@ -74,108 +76,139 @@ public class ScreenPatch
     [HarmonyPrefix]
     public static bool SceneTitles_Update()
     {
-        if (KPGIEHHDIDA.LHOICDLLMID == 1001)
+        try
         {
-            JINPJBLJOMA.BOOMMCGAEEO();
-            KPGIEHHDIDA.FFKDNJEKKNG();
+            if (KPGIEHHDIDA.LHOICDLLMID == 1001)
+            {
+                JINPJBLJOMA.BOOMMCGAEEO();
+                KPGIEHHDIDA.FFKDNJEKKNG();
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                foc = KPGIEHHDIDA.NAGCDENHJNE;
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                foc = 0;
-                KPGIEHHDIDA.NAGCDENHJNE = 0;
-                _dd = 10;
-                dir = 0;
-                if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
-            }
-            
-            if (KPGIEHHDIDA.NAGCDENHJNE >= Prefixes.Count + 1)
-            {
-                if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 2)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    CustomConfigsSaveFile.Config.HidePriorityScreenNextTime = true;
+                    foc = KPGIEHHDIDA.NAGCDENHJNE;
                 }
-                
-                CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
-                List<string> prefixes = new();
-                for (int i = 1; i < Prefixes.Count + 1; i++)
+                else if (Input.GetMouseButtonUp(0))
                 {
-                    var text = KPGIEHHDIDA.KFGOFBAGLDH[i].JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>().text;
-                    prefixes.Add(text);
+                    foc = 0;
+                    KPGIEHHDIDA.NAGCDENHJNE = 0;
+                    _dd = 10;
+                    dir = 0;
+                    if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
                 }
-                Prefixes = prefixes;
-                SavePrefixes();
-                CKAMIAJJDBP.ILIKOLOBLBN.Stop();
-                CKAMIAJJDBP.CKEJAMLGLAL[0] = GameGlobals.AMPMBILAJNM("Music", "Theme00") as AudioClip;
-                CKAMIAJJDBP.ILIKOLOBLBN.clip = CKAMIAJJDBP.CKEJAMLGLAL[0];
-                CKAMIAJJDBP.ILIKOLOBLBN.time = 0f;
-                CKAMIAJJDBP.ILIKOLOBLBN.Play();
-                KPGIEHHDIDA.BANOJFCLKIM(1);
-            }
-            else if (foc > 0 && _delay <= 0)
-            {
-                
-                var menu = KPGIEHHDIDA.KFGOFBAGLDH[foc];
-                if (dir == 0) dir = menu.AIIODMAGBKI >= 0 ? 1 : -1;
-                if (dir < 0)
+
+                if (KPGIEHHDIDA.LJOAGMEDLPI == 5 && KPGIEHHDIDA.NAGCDENHJNE >= Prefixes.Count + 1)
                 {
-                    if (foc > 1)
+                    if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 2)
                     {
-                        var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc-1];
-                        var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
-                        var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
-                        menu2.IBOAEEIDBGL = text1.text;
-                        menu.IBOAEEIDBGL = text2.text;
-                        (text1.text, text2.text) = (text2.text, text1.text);
-                        if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
-                        _menu = menu2;
-                        BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.3f, 0.9f, 0.3f);
-                        KPGIEHHDIDA.NAGCDENHJNE--;
-                        _delay = _dd;
-                        if (_dd > 1) _dd -= 1;
-                        foc--;
+                        CustomConfigsSaveFile.Config.HidePriorityScreenNextTime = true;
                     }
-                } else if (dir > 0)
-                {
-                    if (foc < KPGIEHHDIDA.KFGOFBAGLDH.Length - 2)
+
+                    CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
+                    List<string> prefixes = new();
+                    for (int i = 1; i < Prefixes.Count + 1; i++)
                     {
-                        var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc+1];
-                        var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
-                        var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
-                        (text1.text, text2.text) = (text2.text, text1.text);
-                        if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
-                        _menu = menu2;
-                        BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.9f, 0.3f, 0.3f);
-                        KPGIEHHDIDA.NAGCDENHJNE++;
-                        _delay = _dd;
-                        if (_dd > 1) _dd -= 1;
-                        foc++;
+                        var text = KPGIEHHDIDA.KFGOFBAGLDH[i].JDAHAFDKBJG.transform.Find("Value").gameObject
+                            .GetComponent<Text>().text;
+                        prefixes.Add(text);
+                    }
+
+                    Prefixes = prefixes;
+                    SavePrefixes();
+                    CKAMIAJJDBP.ILIKOLOBLBN.Stop();
+                    CKAMIAJJDBP.CKEJAMLGLAL[0] = GameGlobals.AMPMBILAJNM("Music", "Theme00") as AudioClip;
+                    CKAMIAJJDBP.ILIKOLOBLBN.clip = CKAMIAJJDBP.CKEJAMLGLAL[0];
+                    CKAMIAJJDBP.ILIKOLOBLBN.time = 0f;
+                    CKAMIAJJDBP.ILIKOLOBLBN.Play();
+                    KPGIEHHDIDA.BANOJFCLKIM(1);
+                }
+                else if (foc > 0 && _delay <= 0)
+                {
+
+                    var menu = KPGIEHHDIDA.KFGOFBAGLDH[foc];
+                    if (dir == 0) dir = menu.AIIODMAGBKI >= 0 ? 1 : -1;
+                    if (dir < 0)
+                    {
+                        if (foc > 1)
+                        {
+                            var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc - 1];
+                            var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
+                            var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
+                            menu2.IBOAEEIDBGL = text1.text;
+                            menu.IBOAEEIDBGL = text2.text;
+                            (text1.text, text2.text) = (text2.text, text1.text);
+                            if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
+                            _menu = menu2;
+                            BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.3f, 0.9f, 0.3f);
+                            KPGIEHHDIDA.NAGCDENHJNE--;
+                            _delay = _dd;
+                            if (_dd > 1) _dd -= 1;
+                            foc--;
+                        }
+                    }
+                    else if (dir > 0)
+                    {
+                        if (foc < Prefixes.Count)
+                        {
+                            var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc + 1];
+                            var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
+                            var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
+                            (text1.text, text2.text) = (text2.text, text1.text);
+                            if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
+                            _menu = menu2;
+                            BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.9f, 0.3f, 0.3f);
+                            KPGIEHHDIDA.NAGCDENHJNE++;
+                            _delay = _dd;
+                            if (_dd > 1) _dd -= 1;
+                            foc++;
+                        }
                     }
                 }
+
+                KPGIEHHDIDA.CMFJNCPCPIO = KPGIEHHDIDA.NAGCDENHJNE;
+
+                _delay--;
+
+                return false;
             }
-            KPGIEHHDIDA.CMFJNCPCPIO = KPGIEHHDIDA.NAGCDENHJNE;
-            
-            _delay--;
-            //KPGIEHHDIDA.OCPGHHJILBD();
-            return false;
+
+            if (KPGIEHHDIDA.LHOICDLLMID == 1002)
+            {
+                JINPJBLJOMA.BOOMMCGAEEO();
+                KPGIEHHDIDA.FFKDNJEKKNG();
+
+                for (int num = 1; num <= KPGIEHHDIDA.FPCGMGGJBKD; num++)
+                {
+                    if (KPGIEHHDIDA.KFGOFBAGLDH[num].AIIODMAGBKI != 0f && KPGIEHHDIDA.LJOAGMEDLPI == 0 &&
+                        KPGIEHHDIDA.JOFJJPBIAEK > 10f && JINPJBLJOMA.ALBIPGOEJLM == 0f)
+                    {
+                        if (KPGIEHHDIDA.KFGOFBAGLDH[num].EFBHEMABMOH > 0)
+                        {
+                            CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH);
+                            KPGIEHHDIDA.LJOAGMEDLPI = 1;
+                        }
+                        else if (JINPJBLJOMA.ALBIPGOEJLM == 0f)
+                        {
+                            CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.GNHIAENOPLP, 1f);
+                            JINPJBLJOMA.ALBIPGOEJLM = 10f;
+                        }
+                    }
+                }
+
+                if (KPGIEHHDIDA.LJOAGMEDLPI == 5 && KPGIEHHDIDA.NAGCDENHJNE > 0)
+                {
+                    CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
+                    CustomConfigsSaveFile.Config.FirstLaunch = false;
+                    CustomConfigsSaveFile.Config.Save();
+                    KPGIEHHDIDA.BANOJFCLKIM(1);
+                }
+
+                KPGIEHHDIDA.OCPGHHJILBD();
+                return false;
+            }
         }
-        if (KPGIEHHDIDA.LHOICDLLMID == 1002)
+        catch (Exception e)
         {
-            JINPJBLJOMA.BOOMMCGAEEO();
-            KPGIEHHDIDA.FFKDNJEKKNG();
-
-            if (KPGIEHHDIDA.NAGCDENHJNE >= Prefixes.Count + 1)
-            {
-                CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
-                CustomConfigsSaveFile.Config.FirstLaunch = false;
-                CustomConfigsSaveFile.Config.Save();
-                KPGIEHHDIDA.BANOJFCLKIM(1);
-            }
-            KPGIEHHDIDA.OCPGHHJILBD();
-            return false;
+            Plugin.Log.LogError(e);
         }
 
         return true;

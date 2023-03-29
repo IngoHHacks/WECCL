@@ -1,5 +1,10 @@
 # Changelog
 
+## Release 1.0.5
+- Loaded folders are now logged using their full path.
+- Fixed and added back the warning about the game's save file being backed up on first launch.
+- Fixed the loading bars not showing up in the log.
+
 ## Release 1.0.4
 - Fixed prefix priority screen.
 

@@ -10,7 +10,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.0.4";
+    public const string PluginVer = "1.0.5";
 
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
@@ -254,7 +254,7 @@ public class Plugin : BaseUnityPlugin
             FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
                 .Where(f => AudioExtensions.Contains(f.Extension.ToLower())).ToArray();
             int count = files.Length;
-            float lastProgressUpdate = Time.time;
+            long lastProgressUpdate = DateTime.Now.Ticks;
             int cur = 0;
             foreach (FileInfo file in files)
             {
@@ -276,16 +276,18 @@ public class Plugin : BaseUnityPlugin
                 CustomClips.Add(clip);
                 clipsCount++;
                 cur++;
-                if (Time.time - lastProgressUpdate > 1f)
+                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
                 {
-                    lastProgressUpdate = Time.time;
-                    UpdateConsoleLogLoadingBar($"Loading custom audio clips from {dir.Name}", cur, count);
+                    lastProgressUpdate = DateTime.Now.Ticks;
+                    UpdateConsoleLogLoadingBar($"Loading custom audio clips from {dir.FullName}", cur, count);
                 }
+                wr.Dispose();
+                GC.Collect();
             }
 
             if (clipsCount != 0)
             {
-                Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.Name}");
+                Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.FullName}");
             }
 
             if (CustomClips.Count != 0)
@@ -317,7 +319,7 @@ public class Plugin : BaseUnityPlugin
             FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
                 .Where(f => ImageExtensions.Contains(f.Extension.ToLower())).ToArray();
             int count = files.Length;
-            float lastProgressUpdate = Time.time;
+            long lastProgressUpdate = DateTime.Now.Ticks;
             int cur = 0;
             foreach (FileInfo file in files)
             {
@@ -370,21 +372,22 @@ public class Plugin : BaseUnityPlugin
                             }
 
                             costumeCount++;
+                            GC.Collect();
                         }
                     }
                 }
 
                 cur++;
-                if (Time.time - lastProgressUpdate > 1f)
+                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
                 {
-                    lastProgressUpdate = Time.time;
-                    UpdateConsoleLogLoadingBar($"Loading custom costumes from {dir.Name}", cur, count);
+                    lastProgressUpdate = DateTime.Now.Ticks;
+                    UpdateConsoleLogLoadingBar($"Loading custom costumes from {dir.FullName}", cur, count);
                 }
             }
 
             if (costumeCount != 0)
             {
-                Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.Name}");
+                Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.FullName}");
             }
         }
         catch (Exception e)
@@ -409,7 +412,7 @@ public class Plugin : BaseUnityPlugin
                     AudioExtensions.Contains(f.Extension.ToLower()))
                 .ToArray();
             int count = files.Length;
-            float lastProgressUpdate = Time.time;
+            long lastProgressUpdate = DateTime.Now.Ticks;
             int cur = 0;
 
             foreach (FileInfo file in files)
@@ -432,6 +435,7 @@ public class Plugin : BaseUnityPlugin
                     AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, tex);
                     
                     overrideCount++;
+                    GC.Collect();
                 }
 
                 if (AudioExtensions.Contains(file.Extension.ToLower()))
@@ -455,19 +459,20 @@ public class Plugin : BaseUnityPlugin
                     AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, clip);
 
                     overrideCount++;
+                    GC.Collect();
                 }
 
                 cur++;
-                if (Time.time - lastProgressUpdate > 1f)
+                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
                 {
-                    lastProgressUpdate = Time.time;
-                    UpdateConsoleLogLoadingBar($"Loading resource overrides from {dir.Name}", cur, count);
+                    lastProgressUpdate = DateTime.Now.Ticks;
+                    UpdateConsoleLogLoadingBar($"Loading resource overrides from {dir.FullName}", cur, count);
                 }
             }
 
             if (overrideCount != 0)
             {
-                Log.LogInfo($"Loaded {overrideCount} resource overrides from {dir.Name}");
+                Log.LogInfo($"Loaded {overrideCount} resource overrides from {dir.FullName}");
             }
         }
         catch (Exception e)
@@ -505,7 +510,7 @@ public class Plugin : BaseUnityPlugin
                 .Where(f => f.Extension.ToLower() == ".json")
                 .ToArray();
             int count = files.Length;
-            float lastProgressUpdate = Time.time;
+            long lastProgressUpdate = DateTime.Now.Ticks;
             int cur = 0;
             foreach (FileInfo file in files)
             {
@@ -527,14 +532,14 @@ public class Plugin : BaseUnityPlugin
                 ImportedCharacters.Add(new Tuple<string, string, Character>(name, overrideMode, character));
                 FilesToDeleteOnSave.Add(file.FullName);
                 cur++;
-                if (Time.time - lastProgressUpdate > 1f)
+                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
                 {
-                    lastProgressUpdate = Time.time;
-                    UpdateConsoleLogLoadingBar($"Importing characters from {dir.Name}", cur, count);
+                    lastProgressUpdate = DateTime.Now.Ticks;
+                    UpdateConsoleLogLoadingBar($"Importing characters from {dir.FullName}", cur, count);
                 }
             }
 
-            Log.LogInfo($"Imported {ImportedCharacters.Count} characters from {dir.Name}");
+            Log.LogInfo($"Imported {ImportedCharacters.Count} characters from {dir.FullName}");
         }
         catch (Exception e)
         {
