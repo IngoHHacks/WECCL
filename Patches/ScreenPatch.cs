@@ -96,7 +96,7 @@ public class ScreenPatch
                     if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
                 }
 
-                if (KPGIEHHDIDA.LJOAGMEDLPI == 5 && KPGIEHHDIDA.NAGCDENHJNE >= Prefixes.Count + 1)
+                if (KPGIEHHDIDA.NAGCDENHJNE >= Prefixes.Count + 1)
                 {
                     if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 2)
                     {
