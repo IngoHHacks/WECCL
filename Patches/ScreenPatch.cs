@@ -159,7 +159,7 @@ public class ScreenPatch
             KPGIEHHDIDA.CMFJNCPCPIO = KPGIEHHDIDA.NAGCDENHJNE;
             
             _delay--;
-            KPGIEHHDIDA.OCPGHHJILBD();
+            //KPGIEHHDIDA.OCPGHHJILBD();
             return false;
         }
         if (KPGIEHHDIDA.LHOICDLLMID == 1002)
