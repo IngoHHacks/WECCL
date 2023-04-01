@@ -1,5 +1,10 @@
 # Changelog
 
+## Release 1.1.0
+- Resource overrides for textures with duplicate names can now be prefixed by the GameObject name (e.g. `Steps_Texture.png`).
+- Fixed pivots not being set correctly for some assets.
+- Fixed an exception due to texture rectangle sizes not being rounded.
+
 ## Release 1.0.6
 - Fix for priority screen proceed button not working.
 

@@ -282,6 +282,7 @@ internal class ContentPatch
     /*
      * This is a patch to override the textures of the game with ones in the Overrides folder.
      */
+    
     [HarmonyPatch(typeof(AssetBundle), "LoadAsset", typeof(string), typeof(Type))]
     [HarmonyPostfix]
     public static void AssetBundle_LoadAsset(ref Object __result, string name)
@@ -307,8 +308,12 @@ internal class ContentPatch
                     overrideTexture = ResizeTexture(overrideTexture, sprite.texture.width, sprite.texture.height);
                     SetHighestPriorityTextureOverride(name, overrideTexture);
                 }
+                
+                var relativePivot = new Vector2(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height);
 
-                __result = Sprite.Create(overrideTexture, sprite.rect, sprite.pivot, sprite.pixelsPerUnit);
+                var rect = new Rect(Mathf.Round(sprite.rect.x), Mathf.Round(sprite.rect.y), Mathf.Round(sprite.rect.width), Mathf.Round(sprite.rect.height));
+                
+                __result = Sprite.Create(overrideTexture, rect, relativePivot, sprite.pixelsPerUnit);
             }
             else
             {
@@ -328,7 +333,7 @@ internal class ContentPatch
             }
         }
     }
-
+    
     [HarmonyPatch(typeof(Object), "Internal_CloneSingle", typeof(Object))]
     [HarmonyPostfix]
     public static void Object_CloneSingle(ref Object __result)
@@ -340,7 +345,11 @@ internal class ContentPatch
             {
                 foreach (Material material in renderer.materials)
                 {
-                    if (ResourceOverridesTextures.ContainsKey(material.mainTexture?.name ?? ""))
+                    if (material.mainTexture == null)
+                    {
+                        continue;
+                    }
+                    if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name) || ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)","").Trim() + "_" + material.mainTexture))
                     {
                         var tex = GetHighestPriorityTextureOverride(material.mainTexture.name);
                         if (material.mainTexture.width != tex.width ||
@@ -356,7 +365,7 @@ internal class ContentPatch
             }
         }
     }
-
+    
     [HarmonyPatch(typeof(Image), "OnPopulateMesh")]
     [HarmonyPostfix]
     public static void Image(ref Image __instance)
@@ -371,7 +380,14 @@ internal class ContentPatch
                     __instance.m_Sprite.texture.height);
             }
 
-            __instance.m_Sprite = Sprite.Create(overrideTexture, __instance.m_Sprite.rect, __instance.m_Sprite.pivot,
+            var relativePivot = new Vector2(__instance.m_Sprite.pivot.x / __instance.m_Sprite.rect.width,
+                __instance.m_Sprite.pivot.y / __instance.m_Sprite.rect.height);
+
+            var rect = new Rect(Mathf.Round(__instance.m_Sprite.rect.x),
+                Mathf.Round(__instance.m_Sprite.rect.y), Mathf.Round(__instance.m_Sprite.rect.width),
+                Mathf.Round(__instance.m_Sprite.rect.height));
+
+            __instance.m_Sprite = Sprite.Create(overrideTexture, rect, relativePivot,
                 __instance.m_Sprite.pixelsPerUnit);
         }
     }
