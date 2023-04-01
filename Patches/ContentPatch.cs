@@ -363,6 +363,18 @@ internal class ContentPatch
                     }
                 }
             }
+            AudioSource[] audioSources = gameObject.GetComponentsInChildren<AudioSource>(true);
+            foreach (AudioSource audioSource in audioSources)
+            {
+                if (audioSource.clip == null)
+                {
+                    continue;
+                }
+                if (ResourceOverridesAudio.ContainsKey(audioSource.clip.name))
+                {
+                    audioSource.clip = GetHighestPriorityAudioOverride(audioSource.clip.name);
+                }
+            }
         }
     }
     
