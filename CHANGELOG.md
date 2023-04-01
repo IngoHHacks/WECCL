@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.1.1
+- Added missing audio overrides.
+
 ## Release 1.1.0
 - Resource overrides for textures with duplicate names can now be prefixed by the GameObject name (e.g. `Steps_Texture.png`).
 - Fixed pivots not being set correctly for some assets.
