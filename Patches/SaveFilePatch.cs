@@ -20,7 +20,7 @@ internal class SaveFilePatch
         try
         {
             Characters.no_chars = 350;
-            Characters.fedLimit = Plugin.Instance.BaseFedLimit.Value;
+            Characters.fedLimit = Plugin.BaseFedLimit.Value;
             
             if (Characters.star > 350)
             {
@@ -74,7 +74,7 @@ internal class SaveFilePatch
                 }
             }
 
-            Characters.fedLimit = Math.Max(Plugin.Instance.BaseFedLimit.Value, fedCharCount.Max() + 1);
+            Characters.fedLimit = Math.Max(Plugin.BaseFedLimit.Value, fedCharCount.Max() + 1);
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GameSaveFile.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
@@ -253,9 +253,9 @@ internal class SaveFilePatch
     [HarmonyPostfix]
     public static void Roster_ENFAGKBOOAN(Roster __instance)
     {
-        if (Plugin.Instance.BaseFedLimit.Value >= 48 && __instance.roster.Length == 49)
+        if (Plugin.BaseFedLimit.Value >= 48 && __instance.roster.Length == 49)
         {
-            Array.Resize(ref __instance.roster, Plugin.Instance.BaseFedLimit.Value + 1);
+            Array.Resize(ref __instance.roster, Plugin.BaseFedLimit.Value + 1);
         }
     }
     
@@ -280,12 +280,12 @@ internal class SaveFilePatch
     public static void GameSaveFile_ICAMLDGDPHC(int IHLLJIMFJEN)
     {
         SaveCurrentMap();
-        if (Plugin.Instance.AutoExportCharacters.Value)
+        if (Plugin.AutoExportCharacters.Value)
         {
             ModdedCharacterManager.SaveAllCharacters();
         }
 
-        if (Plugin.Instance.DeleteImportedCharacters.Value)
+        if (Plugin.DeleteImportedCharacters.Value)
         {
             foreach (string file in FilesToDeleteOnSave)
             {

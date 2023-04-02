@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.1.2
+- Fixed arm materials.
+
 ## Release 1.1.1
 - Added missing audio overrides.
 

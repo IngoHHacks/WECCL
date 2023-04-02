@@ -10,12 +10,14 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.1.1";
+    public const string PluginVer = "1.1.3";
 
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
     internal static DirectoryInfo ImportDir;
     internal static DirectoryInfo OverrideDir;
+    
+    internal static DirectoryInfo DebugFilesDir;
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
 
@@ -53,15 +55,17 @@ public class Plugin : BaseUnityPlugin
 
     internal static Plugin Instance { get; private set; }
 
-    internal ConfigEntry<bool> AutoExportCharacters { get; set; }
-    internal ConfigEntry<bool> EnableOverrides { get; set; }
-    internal ConfigEntry<bool> EnableCustomContent { get; set; }
-    internal ConfigEntry<bool> AllowImportingCharacters { get; set; }
-    internal ConfigEntry<bool> DeleteImportedCharacters { get; set; }
-    internal ConfigEntry<bool> EnableGameUnityLog { get; set; }
-    internal ConfigEntry<string> GameUnityLogLevel { get; set; }
-    internal ConfigEntry<int> BaseFedLimit { get; set; }
-    internal ConfigEntry<int> MaxBackups { get; set; }
+    internal static ConfigEntry<bool> AutoExportCharacters { get; set; }
+    internal static ConfigEntry<bool> EnableOverrides { get; set; }
+    internal static ConfigEntry<bool> EnableCustomContent { get; set; }
+    internal static ConfigEntry<bool> AllowImportingCharacters { get; set; }
+    internal static ConfigEntry<bool> DeleteImportedCharacters { get; set; }
+    internal static ConfigEntry<bool> EnableGameUnityLog { get; set; }
+    internal static ConfigEntry<string> GameUnityLogLevel { get; set; }
+    internal static ConfigEntry<int> BaseFedLimit { get; set; }
+    internal static ConfigEntry<int> MaxBackups { get; set; }
+    
+    internal static ConfigEntry<bool> Debug { get; set; }
 
     private void Awake()
     {
@@ -72,31 +76,35 @@ public class Plugin : BaseUnityPlugin
 
             Instance = this;
             
-            this.AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
+            AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
                 "Automatically export characters to /Export when the game is saved.");
-            this.EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
+            EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
                 "Enable custom content overrides from /Overrides.");
-            this.EnableCustomContent = this.Config.Bind("General", "EnableCustomContent", true,
+            EnableCustomContent = this.Config.Bind("General", "EnableCustomContent", true,
                 "Enable custom content loading from /Assets.");
-            this.AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
+            AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
                 "Allow importing characters from /Import");
-            this.DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
+            DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
                 "Delete imported characters from /Import after importing them (and saving the game).");
-            this.EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
+            EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
                 "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
-            this.GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
+            GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
                 new ConfigDescription(
                     "The log level for Unity log messages sent by the game itself. If you don't know what this is, leave it at Warning.",
                     new AcceptableValueList<string>("Error", "Warning", "Info")));
-            this.BaseFedLimit = this.Config.Bind("General", "BaseFedLimit", 48,
-                "The base limit for the number of characters that can be fed's roster. This actual limit may be increased if characters are imported.");
-            this.MaxBackups = this.Config.Bind("General", "MaxBackups", 100,
+            BaseFedLimit = this.Config.Bind("General", "BaseFedLimit", 48,
+                "The base limit for the number of characters that can be fed's roster. This actual limit may be increased if characters are imported (Experimental).");
+            MaxBackups = this.Config.Bind("General", "MaxBackups", 100,
                 "The maximum number of backups to keep. Set to 0 to disable backups. Set to -1 to keep all backups.");
+            Debug = this.Config.Bind("General", "Debug", false,
+                "Enable debug mode. This will create debugging files in the /Debug folder.");
             
             CreateBackups();
 
             CustomContentSavePath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
             CustomConfigsSavePath = Path.Combine(PluginPath, "CustomConfigsSaveFile.json");
+            
+            DebugFilesDir = new DirectoryInfo(Path.Combine(PluginPath, "Debug"));
 
             AssetsDir = new DirectoryInfo(Path.Combine(PluginPath, "Assets"));
             if (!AssetsDir.Exists)
@@ -157,7 +165,7 @@ public class Plugin : BaseUnityPlugin
             
             VanillaCounts.MusicCount = CKAMIAJJDBP.GGICEBAECGK;
 
-            if (this.EnableCustomContent.Value)
+            if (EnableCustomContent.Value)
             {
                 foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
                 {
@@ -166,7 +174,7 @@ public class Plugin : BaseUnityPlugin
                 }
             }
 
-            if (this.EnableOverrides.Value)
+            if (EnableOverrides.Value)
             {
                 foreach (DirectoryInfo modOverridesDir in AllModsOverridesDirs)
                 {
@@ -568,7 +576,7 @@ public class Plugin : BaseUnityPlugin
 
     internal static void CreateBackups()
     {
-        if (Instance.MaxBackups.Value == 0)
+        if (MaxBackups.Value == 0)
         {
             return;
         }
@@ -589,15 +597,15 @@ public class Plugin : BaseUnityPlugin
 
         File.Copy(save, backup);
         string[] files = Directory.GetFiles(bd, "Save-*.bytes");
-        if (Instance.MaxBackups.Value < 0)
+        if (MaxBackups.Value < 0)
         {
             return;
         }
 
-        if (files.Length > Instance.MaxBackups.Value)
+        if (files.Length > MaxBackups.Value)
         {
             Array.Sort(files);
-            for (int i = 0; i < files.Length - Instance.MaxBackups.Value; i++)
+            for (int i = 0; i < files.Length - MaxBackups.Value; i++)
             {
                 File.Delete(files[i]);
             }

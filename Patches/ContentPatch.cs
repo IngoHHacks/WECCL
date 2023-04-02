@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UI;
 using WECCL.Content;
 using WECCL.Saves;
+using WECCL.Updates;
 using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
@@ -73,6 +74,11 @@ internal class ContentPatch
         VanillaCounts.TransparentHairHairstyleCount = GameTextures.CMCOJECKMOG;
         VanillaCounts.KneepadCount = GameTextures.MKKEAAPOJMC;
         VanillaCounts.IsInitialized = true;
+        
+        if (Plugin.Debug.Value)
+        {
+            VersionData.WriteVersionData();
+        }
 
         _internalCostumeCounts[CustomCostumes["legs_material"].InternalPrefix] = GameTextures.CEJEFCFAEOB[1];
         GameTextures.CEJEFCFAEOB[1] += CustomCostumes["legs_material"].Count;
@@ -221,6 +227,8 @@ internal class ContentPatch
         CustomContentSaveFile.ContentMap.MaterialNameMap[22]
             .AddRange(CustomCostumes["face_mask"].CustomObjects.Select(c => c.Item1));
         GameTextures.CEJEFCFAEOB[23] += CustomCostumes["body_pattern"].Count;
+        CustomContentSaveFile.ContentMap.MaterialNameMap[23]
+            .AddRange(CustomCostumes["body_pattern"].CustomObjects.Select(c => c.Item1));
         _internalCostumeCounts[CustomCostumes["body_pattern"].InternalPrefix] = GameTextures.CEJEFCFAEOB[24];
         GameTextures.CEJEFCFAEOB[24] += CustomCostumes["body_pattern"].Count;
         CustomContentSaveFile.ContentMap.MaterialNameMap[24]
@@ -270,7 +278,7 @@ internal class ContentPatch
             Plugin.Log.LogInfo($"Found {Plugin.AllModsImportDirs.Count} mod(s) with Import directories.");
         }
 
-        if (Plugin.Instance.AllowImportingCharacters.Value)
+        if (Plugin.AllowImportingCharacters.Value)
         {
             foreach (DirectoryInfo modImportDir in Plugin.AllModsImportDirs)
             {
