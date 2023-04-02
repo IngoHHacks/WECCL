@@ -24,43 +24,43 @@ public class CharacterWithModdedData
 
                 if (costume.texture[i] > VanillaCounts.MaterialCounts[i])
                 {
-                    string name = CustomContentSaveFile.ContentMap.MaterialNameMap[i][
+                    string name = ContentMappings.ContentMap.MaterialNameMap[i][
                         costume.texture[i] - VanillaCounts.MaterialCounts[i] - 1];
                     this.CustomMaterials.Add(name);
                 }
                 else if (i == 3 && costume.texture[i] < -VanillaCounts.FaceFemaleCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.FaceFemaleNameMap[
+                    string name = ContentMappings.ContentMap.FaceFemaleNameMap[
                         -costume.texture[i] - VanillaCounts.FaceFemaleCount - 1];
                     this.CustomFemaleFace = name;
                 }
                 else if (i == 14 && costume.texture[i] < -VanillaCounts.SpecialFootwearCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.SpecialFootwearNameMap[
+                    string name = ContentMappings.ContentMap.SpecialFootwearNameMap[
                         -costume.texture[i] - VanillaCounts.SpecialFootwearCount - 1];
                     this.CustomSpecialFootwear = name;
                 }
                 else if (i == 15 && costume.texture[i] < -VanillaCounts.SpecialFootwearCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.SpecialFootwearNameMap[
+                    string name = ContentMappings.ContentMap.SpecialFootwearNameMap[
                         -costume.texture[i] - VanillaCounts.SpecialFootwearCount - 1];
                     this.CustomSpecialFootwear = name;
                 }
                 else if (i == 17 && costume.texture[i] < -VanillaCounts.TransparentHairMaterialCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.TransparentHairMaterialNameMap[
+                    string name = ContentMappings.ContentMap.TransparentHairMaterialNameMap[
                         -costume.texture[i] - VanillaCounts.TransparentHairMaterialCount - 1];
                     this.CustomTransparentHairMaterial = name;
                 }
                 else if (i == 24 && costume.texture[i] < -VanillaCounts.KneepadCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.KneepadNameMap[
+                    string name = ContentMappings.ContentMap.KneepadNameMap[
                         -costume.texture[i] - VanillaCounts.KneepadCount - 1];
                     this.CustomKneepad = name;
                 }
                 else if (i == 25 && costume.texture[i] < -VanillaCounts.KneepadCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.KneepadNameMap[
+                    string name = ContentMappings.ContentMap.KneepadNameMap[
                         -costume.texture[i] - VanillaCounts.KneepadCount - 1];
                     this.CustomKneepad = name;
                 }
@@ -80,13 +80,13 @@ public class CharacterWithModdedData
 
                 if (costume.flesh[i] > VanillaCounts.FleshCounts[i])
                 {
-                    string name = CustomContentSaveFile.ContentMap.FleshNameMap[i][
+                    string name = ContentMappings.ContentMap.FleshNameMap[i][
                         costume.flesh[i] - VanillaCounts.FleshCounts[i] - 1];
                     this.CustomFlesh.Add(name);
                 }
                 else if (i == 2 && costume.flesh[i] < -VanillaCounts.BodyFemaleCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.BodyFemaleNameMap[
+                    string name = ContentMappings.ContentMap.BodyFemaleNameMap[
                         -costume.flesh[i] - VanillaCounts.BodyFemaleCount - 1];
                     this.CustomFemaleBody = name;
                 }
@@ -106,13 +106,13 @@ public class CharacterWithModdedData
 
                 if (costume.shape[i] > VanillaCounts.ShapeCounts[i])
                 {
-                    string name = CustomContentSaveFile.ContentMap.ShapeNameMap[i][
+                    string name = ContentMappings.ContentMap.ShapeNameMap[i][
                         costume.shape[i] - VanillaCounts.ShapeCounts[i] - 1];
                     this.CustomShapes.Add(name);
                 }
                 else if (i == 17 && costume.shape[i] < -VanillaCounts.TransparentHairHairstyleCount)
                 {
-                    string name = CustomContentSaveFile.ContentMap.TransparentHairHairstyleNameMap[
+                    string name = ContentMappings.ContentMap.TransparentHairHairstyleNameMap[
                         -costume.shape[i] - VanillaCounts.TransparentHairHairstyleCount - 1];
                     this.CustomTransparentHairHairstyle = name;
                 }
@@ -125,7 +125,7 @@ public class CharacterWithModdedData
 
         if (character.music > VanillaCounts.MusicCount)
         {
-            string name = CustomContentSaveFile.ContentMap.MusicNameMap[
+            string name = ContentMappings.ContentMap.MusicNameMap[
                 character.music - VanillaCounts.MusicCount - 1];
             this.CustomThemeName = name;
         }
@@ -181,10 +181,10 @@ public class CharacterWithModdedData
             {
                 if (this.CustomMaterials[j] != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.MaterialNameMap[j].Contains(this.CustomMaterials[j]))
+                    if (ContentMappings.ContentMap.MaterialNameMap[j].Contains(this.CustomMaterials[j]))
                     {
                         character.costume[i].texture[j] =
-                            CustomContentSaveFile.ContentMap.MaterialNameMap[j].IndexOf(this.CustomMaterials[j]) +
+                            ContentMappings.ContentMap.MaterialNameMap[j].IndexOf(this.CustomMaterials[j]) +
                             VanillaCounts.MaterialCounts[j] + 1;
                     }
                     else
@@ -197,10 +197,10 @@ public class CharacterWithModdedData
 
                 if (j == 3 && this.CustomFemaleFace != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.FaceFemaleNameMap.Contains(this.CustomFemaleFace))
+                    if (ContentMappings.ContentMap.FaceFemaleNameMap.Contains(this.CustomFemaleFace))
                     {
                         character.costume[i].texture[j] =
-                            -CustomContentSaveFile.ContentMap.FaceFemaleNameMap.IndexOf(this.CustomFemaleFace) -
+                            -ContentMappings.ContentMap.FaceFemaleNameMap.IndexOf(this.CustomFemaleFace) -
                             VanillaCounts.FaceFemaleCount - 1;
                     }
                     else
@@ -212,10 +212,10 @@ public class CharacterWithModdedData
 
                 if (j == 14 && this.CustomSpecialFootwear != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.SpecialFootwearNameMap.Contains(this.CustomSpecialFootwear))
+                    if (ContentMappings.ContentMap.SpecialFootwearNameMap.Contains(this.CustomSpecialFootwear))
                     {
                         character.costume[i].texture[j] =
-                            -CustomContentSaveFile.ContentMap.SpecialFootwearNameMap
+                            -ContentMappings.ContentMap.SpecialFootwearNameMap
                                 .IndexOf(this.CustomSpecialFootwear) -
                             VanillaCounts.SpecialFootwearCount - 1;
                     }
@@ -228,10 +228,10 @@ public class CharacterWithModdedData
 
                 if (j == 15 && this.CustomSpecialFootwear != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.SpecialFootwearNameMap.Contains(this.CustomSpecialFootwear))
+                    if (ContentMappings.ContentMap.SpecialFootwearNameMap.Contains(this.CustomSpecialFootwear))
                     {
                         character.costume[i].texture[j] =
-                            -CustomContentSaveFile.ContentMap.SpecialFootwearNameMap
+                            -ContentMappings.ContentMap.SpecialFootwearNameMap
                                 .IndexOf(this.CustomSpecialFootwear) -
                             VanillaCounts.SpecialFootwearCount - 1;
                     }
@@ -244,11 +244,11 @@ public class CharacterWithModdedData
 
                 if (j == 17 && this.CustomTransparentHairMaterial != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.TransparentHairMaterialNameMap.Contains(
+                    if (ContentMappings.ContentMap.TransparentHairMaterialNameMap.Contains(
                             this.CustomTransparentHairMaterial))
                     {
                         character.costume[i].texture[j] =
-                            -CustomContentSaveFile.ContentMap.TransparentHairMaterialNameMap.IndexOf(
+                            -ContentMappings.ContentMap.TransparentHairMaterialNameMap.IndexOf(
                                 this.CustomTransparentHairMaterial) -
                             VanillaCounts.TransparentHairMaterialCount - 1;
                     }
@@ -261,10 +261,10 @@ public class CharacterWithModdedData
 
                 if (j == 24 && this.CustomKneepad != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.KneepadNameMap.Contains(this.CustomKneepad))
+                    if (ContentMappings.ContentMap.KneepadNameMap.Contains(this.CustomKneepad))
                     {
                         character.costume[i].texture[j] =
-                            -CustomContentSaveFile.ContentMap.KneepadNameMap.IndexOf(this.CustomKneepad) -
+                            -ContentMappings.ContentMap.KneepadNameMap.IndexOf(this.CustomKneepad) -
                             VanillaCounts.KneepadCount - 1;
                     }
                     else
@@ -276,10 +276,10 @@ public class CharacterWithModdedData
 
                 if (j == 25 && this.CustomKneepad != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.KneepadNameMap.Contains(this.CustomKneepad))
+                    if (ContentMappings.ContentMap.KneepadNameMap.Contains(this.CustomKneepad))
                     {
                         character.costume[i].texture[j] =
-                            -CustomContentSaveFile.ContentMap.KneepadNameMap.IndexOf(this.CustomKneepad) -
+                            -ContentMappings.ContentMap.KneepadNameMap.IndexOf(this.CustomKneepad) -
                             VanillaCounts.KneepadCount - 1;
                     }
                     else
@@ -294,10 +294,10 @@ public class CharacterWithModdedData
             {
                 if (this.CustomShapes[j] != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.ShapeNameMap[j].Contains(this.CustomShapes[j]))
+                    if (ContentMappings.ContentMap.ShapeNameMap[j].Contains(this.CustomShapes[j]))
                     {
                         character.costume[i].shape[j] =
-                            CustomContentSaveFile.ContentMap.ShapeNameMap[j].IndexOf(this.CustomShapes[j]) +
+                            ContentMappings.ContentMap.ShapeNameMap[j].IndexOf(this.CustomShapes[j]) +
                             VanillaCounts.ShapeCounts[j] + 1;
                     }
                     else
@@ -310,11 +310,11 @@ public class CharacterWithModdedData
 
                 if (j == 17 && this.CustomTransparentHairHairstyle != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.TransparentHairHairstyleNameMap.Contains(
+                    if (ContentMappings.ContentMap.TransparentHairHairstyleNameMap.Contains(
                             this.CustomTransparentHairHairstyle))
                     {
                         character.costume[i].shape[j] =
-                            -CustomContentSaveFile.ContentMap.TransparentHairHairstyleNameMap.IndexOf(
+                            -ContentMappings.ContentMap.TransparentHairHairstyleNameMap.IndexOf(
                                 this.CustomTransparentHairHairstyle) -
                             VanillaCounts.TransparentHairHairstyleCount - 1;
                     }
@@ -330,10 +330,10 @@ public class CharacterWithModdedData
             {
                 if (this.CustomShapes[j] != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.ShapeNameMap[j].Contains(this.CustomShapes[j]))
+                    if (ContentMappings.ContentMap.ShapeNameMap[j].Contains(this.CustomShapes[j]))
                     {
                         character.costume[i].shape[j] =
-                            CustomContentSaveFile.ContentMap.ShapeNameMap[j].IndexOf(this.CustomShapes[j]) +
+                            ContentMappings.ContentMap.ShapeNameMap[j].IndexOf(this.CustomShapes[j]) +
                             VanillaCounts.ShapeCounts[j] + 1;
                     }
                     else
@@ -346,11 +346,11 @@ public class CharacterWithModdedData
 
                 if (j == 17 && this.CustomTransparentHairHairstyle != null)
                 {
-                    if (CustomContentSaveFile.ContentMap.TransparentHairHairstyleNameMap.Contains(
+                    if (ContentMappings.ContentMap.TransparentHairHairstyleNameMap.Contains(
                             this.CustomTransparentHairHairstyle))
                     {
                         character.costume[i].shape[j] =
-                            -CustomContentSaveFile.ContentMap.TransparentHairHairstyleNameMap.IndexOf(
+                            -ContentMappings.ContentMap.TransparentHairHairstyleNameMap.IndexOf(
                                 this.CustomTransparentHairHairstyle) -
                             VanillaCounts.TransparentHairHairstyleCount - 1;
                     }
@@ -364,9 +364,9 @@ public class CharacterWithModdedData
 
             if (this.CustomThemeName != null)
             {
-                if (CustomContentSaveFile.ContentMap.MusicNameMap.Contains(this.CustomThemeName))
+                if (ContentMappings.ContentMap.MusicNameMap.Contains(this.CustomThemeName))
                 {
-                    character.music = CustomContentSaveFile.ContentMap.MusicNameMap.IndexOf(this.CustomThemeName) +
+                    character.music = ContentMappings.ContentMap.MusicNameMap.IndexOf(this.CustomThemeName) +
                                       VanillaCounts.MusicCount + 1;
                 }
                 else

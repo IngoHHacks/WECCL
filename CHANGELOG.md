@@ -1,5 +1,10 @@
 # Changelog
 
+## Release 1.1.3
+- Renamed `CustomContentSaveData` to `ContentMappings` and `CustomConfigSaveData` to `MetaFile` to better reflect their purpose.
+- Added placeholders in code for automatic remapping of custom content after game updates.
+- Added last used game version to MetaFile.
+
 ## Release 1.1.2
 - Fixed arm materials.
 

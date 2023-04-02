@@ -2,35 +2,37 @@
 
 namespace WECCL.Saves;
 
-public class CustomConfigsSaveFile
+public class MetaFile
 {
-    private static CustomConfigsSaveFile _instance;
+    private static MetaFile _instance;
 
-    internal static CustomConfigsSaveFile Config => _instance ??= Load();
+    internal static MetaFile Data => _instance ??= Load();
     
     public List<string> PrefixPriorityOrder { get; set; } = new();
     public bool HidePriorityScreenNextTime { get; set; } = false;
     
     public bool FirstLaunch { get; set; } = true;
+    
+    public float GameVersion { get; set; } = Plugin.GameVersion;
 
     public void Save()
     {
-        string path = Plugin.CustomConfigsSavePath;
+        string path = Plugin.MetaFilePath;
         string json = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(path, json);
-        Plugin.Log.LogDebug($"Saved custom config file to {path}.");
+        Plugin.Log.LogDebug($"Saved meta file to {path}.");
     }
 
-    public static CustomConfigsSaveFile Load()
+    public static MetaFile Load()
     {
-        string path = Plugin.CustomConfigsSavePath;
+        string path = Plugin.MetaFilePath;
         if (!File.Exists(path))
         {
-            return new CustomConfigsSaveFile();
+            return new MetaFile();
         }
 
         string json = File.ReadAllText(path);
-        return JsonConvert.DeserializeObject<CustomConfigsSaveFile>(json,
+        return JsonConvert.DeserializeObject<MetaFile>(json,
             new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
     }
 }

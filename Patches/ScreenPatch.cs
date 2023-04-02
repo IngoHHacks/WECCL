@@ -22,7 +22,7 @@ public class ScreenPatch
         dir = 0;
         _delay = 0;
         _dd = 10;
-        if (CustomConfigsSaveFile.Config.FirstLaunch)
+        if (MetaFile.Data.FirstLaunch)
         {
             KPGIEHHDIDA.CGLNPGPJPJE();
             KPGIEHHDIDA.LHOICDLLMID = 1002;
@@ -44,7 +44,7 @@ public class ScreenPatch
             Object.Destroy(obj.transform.Find("Corners").gameObject);
             obj.transform.Find("Title").gameObject.GetComponent<Text>().text = "<color=#EF0000>IMPORTANT NOTICE</color>\n While WECCL tries its best to keep modded save files stable and consistent between game updates and mod changes, you may still encounter issues. WECCL automatically creates backups (up to 100 by default). However, it is recommended to manually create backups of your save file. The save file can be found in %USERPROFILE%/AppData/LocalLow/MDickie/Wrestling Empire. If you encounter any issues, please report them in the Wrestling Empire Modding Discord server.";
         }
-        else if (!_initialized && HasConflictingOverrides && !CustomConfigsSaveFile.Config.HidePriorityScreenNextTime)
+        else if (!_initialized && HasConflictingOverrides && !MetaFile.Data.HidePriorityScreenNextTime)
         {
             KPGIEHHDIDA.CGLNPGPJPJE();
             KPGIEHHDIDA.LHOICDLLMID = 1001;
@@ -100,7 +100,7 @@ public class ScreenPatch
                 {
                     if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 2)
                     {
-                        CustomConfigsSaveFile.Config.HidePriorityScreenNextTime = true;
+                        MetaFile.Data.HidePriorityScreenNextTime = true;
                     }
 
                     CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
@@ -197,8 +197,8 @@ public class ScreenPatch
                 if (KPGIEHHDIDA.LJOAGMEDLPI == 5 && KPGIEHHDIDA.NAGCDENHJNE > 0)
                 {
                     CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
-                    CustomConfigsSaveFile.Config.FirstLaunch = false;
-                    CustomConfigsSaveFile.Config.Save();
+                    MetaFile.Data.FirstLaunch = false;
+                    MetaFile.Data.Save();
                     KPGIEHHDIDA.BANOJFCLKIM(1);
                 }
 

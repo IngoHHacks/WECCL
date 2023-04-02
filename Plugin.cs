@@ -26,9 +26,9 @@ public class Plugin : BaseUnityPlugin
 
     internal static string PluginPath;
 
-    internal static string CustomContentSavePath;
+    internal static string ContentMappingsPath;
     
-    internal static string CustomConfigsSavePath;
+    internal static string MetaFilePath;
 
     private static readonly List<string> ImageExtensions = new()
     {
@@ -67,6 +67,8 @@ public class Plugin : BaseUnityPlugin
     
     internal static ConfigEntry<bool> Debug { get; set; }
 
+    public static float GameVersion => Characters.latestVersion;
+
     private void Awake()
     {
         try
@@ -100,9 +102,21 @@ public class Plugin : BaseUnityPlugin
                 "Enable debug mode. This will create debugging files in the /Debug folder.");
             
             CreateBackups();
+            
+            var oldContentMappingsPath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
+            var oldMetaFilePath = Path.Combine(PluginPath, "CustomConfigsSaveFile.json");
 
-            CustomContentSavePath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
-            CustomConfigsSavePath = Path.Combine(PluginPath, "CustomConfigsSaveFile.json");
+            ContentMappingsPath = Path.Combine(PluginPath, "ContentMappings.json");
+            MetaFilePath = Path.Combine(PluginPath, "Meta.json");
+            
+            if (File.Exists(oldContentMappingsPath))
+            {
+                File.Move(oldContentMappingsPath, ContentMappingsPath);
+            }
+            if (File.Exists(oldMetaFilePath))
+            {
+                File.Move(oldMetaFilePath, MetaFilePath);
+            }
             
             DebugFilesDir = new DirectoryInfo(Path.Combine(PluginPath, "Debug"));
 
@@ -305,7 +319,7 @@ public class Plugin : BaseUnityPlugin
                 CKAMIAJJDBP.CKEJAMLGLAL = new AudioClip[CKAMIAJJDBP.GGICEBAECGK + 1];
             }
 
-            CustomContentSaveFile.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
+            ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
         }
         catch (Exception e)
         {

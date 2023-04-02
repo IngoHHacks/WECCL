@@ -2,11 +2,11 @@
 
 namespace WECCL.Saves;
 
-internal class CustomContentSaveFile
+internal class ContentMappings
 {
-    private static CustomContentSaveFile _instance;
+    private static ContentMappings _instance;
 
-    internal CustomContentSaveFile()
+    internal ContentMappings()
     {
         for (int i = 0; i < 40; i++)
         {
@@ -16,7 +16,7 @@ internal class CustomContentSaveFile
         }
     }
 
-    internal static CustomContentSaveFile ContentMap => _instance ??= new CustomContentSaveFile();
+    internal static ContentMappings ContentMap => _instance ??= new ContentMappings();
 
     public List<List<string>> MaterialNameMap { get; set; } = new();
     public List<List<string>> FleshNameMap { get; set; } = new();
@@ -42,22 +42,22 @@ internal class CustomContentSaveFile
 
     public void Save()
     {
-        string path = Plugin.CustomContentSavePath;
+        string path = Plugin.ContentMappingsPath;
         string json = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(path, json);
         Plugin.Log.LogDebug($"Saved custom content map to {path}.");
     }
 
-    public static CustomContentSaveFile Load()
+    public static ContentMappings Load()
     {
-        string path = Plugin.CustomContentSavePath;
+        string path = Plugin.ContentMappingsPath;
         if (!File.Exists(path))
         {
-            return new CustomContentSaveFile();
+            return new ContentMappings();
         }
 
         string json = File.ReadAllText(path);
-        return JsonConvert.DeserializeObject<CustomContentSaveFile>(json,
+        return JsonConvert.DeserializeObject<ContentMappings>(json,
             new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
     }
     

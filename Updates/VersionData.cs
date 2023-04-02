@@ -3,7 +3,7 @@ using WECCL.Content;
 
 namespace WECCL.Updates;
 
-public class VersionData
+internal class VersionData
 {
     public static void WriteVersionData()
     {

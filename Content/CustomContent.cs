@@ -178,7 +178,7 @@ public static class CustomContent
 
     internal static void LoadPrefixes()
     {
-        var orderedP = CustomConfigsSaveFile.Config.PrefixPriorityOrder;
+        var orderedP = MetaFile.Data.PrefixPriorityOrder;
         if (orderedP.Count > 0)
         {
             var newPrefixes = new List<string>();
@@ -194,7 +194,7 @@ public static class CustomContent
                 if (!newPrefixes.Contains(prefix))
                 {
                     newPrefixes.Add(prefix);
-                    CustomConfigsSaveFile.Config.HidePriorityScreenNextTime = false;
+                    MetaFile.Data.HidePriorityScreenNextTime = false;
                 }
             }
             Prefixes = newPrefixes;
@@ -203,8 +203,8 @@ public static class CustomContent
     
     internal static void SavePrefixes()
     {
-        CustomConfigsSaveFile.Config.PrefixPriorityOrder = Prefixes;
-        CustomConfigsSaveFile.Config.Save();
+        MetaFile.Data.PrefixPriorityOrder = Prefixes;
+        MetaFile.Data.Save();
     }
 
     public static Color GetSkinColor(int index)
