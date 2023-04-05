@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using System.Security.Cryptography;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;
@@ -10,13 +12,13 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.1.3";
+    public const string PluginVer = "1.1.4";
 
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
     internal static DirectoryInfo ImportDir;
     internal static DirectoryInfo OverrideDir;
-    
+    internal static DirectoryInfo CacheDir;
     internal static DirectoryInfo DebugFilesDir;
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
@@ -65,6 +67,8 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<int> BaseFedLimit { get; set; }
     internal static ConfigEntry<int> MaxBackups { get; set; }
     
+    internal static ConfigEntry<bool> CacheEnabled { get; set; }
+    
     internal static ConfigEntry<bool> Debug { get; set; }
 
     public static float GameVersion => Characters.latestVersion;
@@ -98,6 +102,8 @@ public class Plugin : BaseUnityPlugin
                 "The base limit for the number of characters that can be fed's roster. This actual limit may be increased if characters are imported (Experimental).");
             MaxBackups = this.Config.Bind("General", "MaxBackups", 100,
                 "The maximum number of backups to keep. Set to 0 to disable backups. Set to -1 to keep all backups.");
+            CacheEnabled = this.Config.Bind("General", "CacheEnabled", true,
+                "Enable caching of custom content. This will speed up loading times with the downside of more disk space usage. The cache is stored in the .cache folder, which is hidden by default. Disabling this will automatically delete the cache on startup.");
             Debug = this.Config.Bind("General", "Debug", false,
                 "Enable debug mode. This will create debugging files in the /Debug folder.");
             
@@ -142,6 +148,17 @@ public class Plugin : BaseUnityPlugin
             if (!ExportDir.Exists)
             {
                 ExportDir.Create();
+            }
+            
+            CacheDir = new DirectoryInfo(Path.Combine(PluginPath, ".cache"));
+            if (CacheEnabled.Value && !CacheDir.Exists)
+            {
+                CacheDir.Create();
+                CacheDir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+                CacheDir.Refresh();
+            } else if (!CacheEnabled.Value && CacheDir.Exists)
+            {
+                CacheDir.Delete(true);
             }
 
             List<DirectoryInfo> AllModsAssetsDirs = new();
@@ -280,21 +297,30 @@ public class Plugin : BaseUnityPlugin
             int cur = 0;
             foreach (FileInfo file in files)
             {
-                UnityWebRequest wr = new(file.FullName);
-                wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
-                wr.SendWebRequest();
-                while (!wr.isDone) { }
-
-                AudioClip clip = DownloadHandlerAudioClip.GetContent(wr);
-                
+                                
                 var fileName = file.Name;
                 var modGuid = FindPluginName(file.DirectoryName);
                 if (modGuid != null && modGuid != "plugins")
                 {
                     fileName = $"{modGuid}/{fileName}";
                 }
-                
+
+                if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time) || file.LastWriteTimeUtc.Ticks != time)
+                {
+
+                    UnityWebRequest wr = new(file.FullName);
+                    wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
+                    wr.SendWebRequest();
+                    while (!wr.isDone) { }
+
+                    clip = DownloadHandlerAudioClip.GetContent(wr);
+                    wr.Dispose();
+                    clip.name = fileName;
+                    CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks);
+                }
+
                 clip.name = fileName;
+
                 CustomClips.Add(clip);
                 clipsCount++;
                 cur++;
@@ -303,7 +329,6 @@ public class Plugin : BaseUnityPlugin
                     lastProgressUpdate = DateTime.Now.Ticks;
                     UpdateConsoleLogLoadingBar($"Loading custom audio clips from {dir.FullName}", cur, count);
                 }
-                wr.Dispose();
                 GC.Collect();
             }
 
@@ -325,6 +350,54 @@ public class Plugin : BaseUnityPlugin
         {
             Log.LogError(e);
         }
+    }
+
+    private static void CacheAudioClip(AudioClip clip, long ticks)
+    {
+        var floatArray = new float[clip.samples * clip.channels];
+        clip.GetData(floatArray, 0);
+        var byteArray = new byte[floatArray.Length * 4];
+        Buffer.BlockCopy(floatArray, 0, byteArray, 0, byteArray.Length);
+        var fileName = clip.name.Replace("/","_") + ".audioclip";
+        File.WriteAllBytes(Path.Combine(CacheDir.FullName, fileName), byteArray);
+        var meta = "channels: " + clip.channels + "\n" +
+                   "frequency: " + clip.frequency + "\n" +
+                   "length: " + clip.length + "\n" +
+                   "samples: " + clip.samples + "\n" +
+                   "time: " + ticks;
+        File.WriteAllText(Path.Combine(CacheDir.FullName, clip.name.Replace("/","_") + ".meta"), meta);
+    }
+    
+    private static bool TryLoadAudioFromCache(string name, out AudioClip clip, out long time)
+    {
+        name = name.Replace("/", "_");
+        var fileName = name + ".audioclip";
+        var path = Path.Combine(CacheDir.FullName, fileName);
+        if (!File.Exists(path))
+        {
+            clip = null;
+            time = 0;
+            return false;
+        }
+        var bytes = File.ReadAllBytes(path);
+        var floatArray = new float[bytes.Length / 4];
+        Buffer.BlockCopy(bytes, 0, floatArray, 0, bytes.Length);
+        if (!File.Exists(Path.Combine(CacheDir.FullName, name + ".meta")))
+        {
+            clip = null;
+            time = 0;
+            return false;
+        }
+        var meta = File.ReadAllText(Path.Combine(CacheDir.FullName, name + ".meta"));
+        var lines = meta.Split('\n');
+        var channels = int.Parse(lines[0].Split(' ')[1]);
+        var frequency = int.Parse(lines[1].Split(' ')[1]);
+        var length = float.Parse(lines[2].Split(' ')[1]);
+        var samples = int.Parse(lines[3].Split(' ')[1]);
+        time = long.Parse(lines[4].Split(' ')[1]);
+        clip = AudioClip.Create(name, samples, channels, frequency, false);
+        clip.SetData(floatArray, 0);
+        return true;
     }
 
     internal static void LoadCostumes(DirectoryInfo dir)
@@ -464,19 +537,28 @@ public class Plugin : BaseUnityPlugin
                 {
                     string fileName = file.Name;
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-                    UnityWebRequest wr = new(file.FullName);
-                    wr.downloadHandler = new DownloadHandlerAudioClip(fileName, AudioType.UNKNOWN);
-                    wr.SendWebRequest();
-                    while (!wr.isDone) { }
-
-                    AudioClip clip = DownloadHandlerAudioClip.GetContent(wr);
-                    clip.name = fileName;
-                    
+                                        
                     var modGuid = FindPluginName(file.DirectoryName);
                     if (modGuid != null && modGuid != "plugins")
                     {
                         fileName = $"{modGuid}/{fileName}";
                     }
+
+
+                    if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time))
+                    {
+
+                        UnityWebRequest wr = new(file.FullName);
+                        wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
+                        wr.SendWebRequest();
+                        while (!wr.isDone) { }
+                        clip = DownloadHandlerAudioClip.GetContent(wr);
+                        wr.Dispose();
+                        clip.name = fileName;
+                        CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks);
+                    }
+
+                    clip.name = fileName;
                     
                     AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, clip);
 

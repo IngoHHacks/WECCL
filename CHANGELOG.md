@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.1.4
+- Added caching of loaded audio clips to improve performance.
+
 ## Release 1.1.3
 - Renamed `CustomContentSaveData` to `ContentMappings` and `CustomConfigSaveData` to `MetaFile` to better reflect their purpose.
 - Added placeholders in code for automatic remapping of custom content after game updates.
