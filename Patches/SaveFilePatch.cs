@@ -47,6 +47,8 @@ internal class SaveFilePatch
         }
     }
 
+    private static int[] fedCharCount;
+    
     /*
      * GameSaveFile.OLAGCFPPEPB is called when the game loads the save file.
      * This prefix patch is used to update character counts and arrays to accommodate the custom content.
@@ -66,7 +68,7 @@ internal class SaveFilePatch
             FileStream fileStream = new(save, FileMode.Open);
             SaveData data = new BinaryFormatter().Deserialize(fileStream) as SaveData;
             Characters.no_chars = data!.savedChars.Length - 1;
-            int[] fedCharCount = new int[Characters.no_feds + 1];
+            fedCharCount = new int[Characters.no_feds + 1];
             foreach (Character c in data.savedChars)
             {
                 if (c != null)
@@ -79,16 +81,6 @@ internal class SaveFilePatch
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GameSaveFile.GPFFEHKLNLD.charUnlock, Characters.no_chars + 1);
-            if (GameSaveFile.GPFFEHKLNLD.savedFeds != null)
-            {
-                for (int i = 1; i <= Characters.no_feds; i++)
-                {
-                    if (GameSaveFile.GPFFEHKLNLD.savedFeds[i] != null)
-                    {
-                        GameSaveFile.GPFFEHKLNLD.savedFeds[i].size = fedCharCount[i] + 1;
-                    }
-                }
-            }
 
             fileStream.Close();
         }
@@ -109,6 +101,22 @@ internal class SaveFilePatch
         if (!File.Exists(save))
         {
             return;
+        }
+        if (fedCharCount != null && GameSaveFile.GPFFEHKLNLD.savedFeds != null)
+        {
+            for (int i = 1; i <= Characters.no_feds; i++)
+            {
+                var count = Plugin.BaseFedLimit.Value <= 48 ? fedCharCount[i] + 1 : Plugin.BaseFedLimit.Value + 1;
+                if (GameSaveFile.GPFFEHKLNLD.savedFeds[i] != null)
+                {
+                    GameSaveFile.GPFFEHKLNLD.savedFeds[i].size = fedCharCount[i] + 1;
+                    if (count > GameSaveFile.GPFFEHKLNLD.savedFeds[i].roster.Length)
+                    {
+                        Array.Resize(ref GameSaveFile.GPFFEHKLNLD.savedFeds[i].roster, count);
+                    }
+                }
+                Array.Resize(ref Characters.fedData[i].roster, count);
+            }
         }
 
         try
@@ -249,17 +257,18 @@ internal class SaveFilePatch
             Plugin.Log.LogError(e);
         }
     }
-    
+
     [HarmonyPatch(typeof(Roster), nameof(Roster.ENFAGKBOOAN))]
     [HarmonyPostfix]
     public static void Roster_ENFAGKBOOAN(Roster __instance)
     {
-        if (Plugin.BaseFedLimit.Value >= 48 && __instance.roster.Length == 49)
+        if (Plugin.BaseFedLimit.Value > 48 && __instance.roster.Length < Plugin.BaseFedLimit.Value + 1)
         {
             Array.Resize(ref __instance.roster, Plugin.BaseFedLimit.Value + 1);
         }
     }
-    
+
+
     private static bool CheckIfPreviouslyImported(string nameWithGuid)
     {
         return ContentMappings.ContentMap.PreviouslyImportedCharacters.Contains(nameWithGuid);

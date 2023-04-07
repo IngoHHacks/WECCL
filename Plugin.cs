@@ -1,5 +1,4 @@
-using JetBrains.Annotations;
-using System.Security.Cryptography;
+using System.Collections;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;
@@ -12,7 +11,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.1.4";
+    public const string PluginVer = "1.1.5";
 
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
@@ -161,59 +160,7 @@ public class Plugin : BaseUnityPlugin
                 CacheDir.Delete(true);
             }
 
-            List<DirectoryInfo> AllModsAssetsDirs = new();
-            List<DirectoryInfo> AllModsOverridesDirs = new();
-
-            foreach (string modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
-            {
-                FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
-            }
-
-            if (!AllModsAssetsDirs.Contains(AssetsDir))
-            {
-                AllModsAssetsDirs.Add(AssetsDir);
-            }
-
-            if (!AllModsOverridesDirs.Contains(OverrideDir))
-            {
-                AllModsOverridesDirs.Add(OverrideDir);
-            }
-
-            if (!AllModsImportDirs.Contains(ImportDir))
-            {
-                AllModsImportDirs.Add(ImportDir);
-            }
-
-            if (AllModsAssetsDirs.Count > 0)
-            {
-                Log.LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
-            }
-
-            if (AllModsOverridesDirs.Count > 0)
-            {
-                Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
-            }
-            
-            VanillaCounts.MusicCount = CKAMIAJJDBP.GGICEBAECGK;
-
-            if (EnableCustomContent.Value)
-            {
-                foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
-                {
-                    LoadAudioClips(modAssetsDir);
-                    LoadCostumes(modAssetsDir);
-                }
-            }
-
-            if (EnableOverrides.Value)
-            {
-                foreach (DirectoryInfo modOverridesDir in AllModsOverridesDirs)
-                {
-                    LoadOverrides(modOverridesDir);
-                }
-            }
-            
-            LoadPrefixes();
+            StartCoroutine(LoadContent.Load());
         }
         catch (Exception e)
         {
@@ -233,7 +180,7 @@ public class Plugin : BaseUnityPlugin
         this.Logger.LogInfo($"Unloaded {PluginName}!");
     }
 
-    private static void FindContent(string modPath, ref List<DirectoryInfo> AllModsAssetsDirs,
+    internal static void FindContent(string modPath, ref List<DirectoryInfo> AllModsAssetsDirs,
         ref List<DirectoryInfo> AllModsOverridesDirs, ref List<DirectoryInfo> AllModsImportDirs)
     {
         try
@@ -279,33 +226,42 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static void LoadAudioClips(DirectoryInfo dir)
+    internal static IEnumerator LoadAudioClips(DirectoryInfo dir)
     {
-        try
+        int clipsCount = 0;
+        // Load custom audio clips
+        if (!dir.Exists)
         {
-            int clipsCount = 0;
-            // Load custom audio clips
-            if (!dir.Exists)
-            {
-                return;
-            }
+            yield break;
+        }
 
-            FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
-                .Where(f => AudioExtensions.Contains(f.Extension.ToLower())).ToArray();
-            int count = files.Length;
-            long lastProgressUpdate = DateTime.Now.Ticks;
-            int cur = 0;
-            foreach (FileInfo file in files)
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => AudioExtensions.Contains(f.Extension.ToLower())).ToArray();
+        int count = files.Length;
+        long lastProgressUpdate = DateTime.Now.Ticks;
+        int cur = 0;
+        foreach (FileInfo file in files)
+        {
+            var fileName = file.Name;
+            try
             {
-                                
-                var fileName = file.Name;
                 var modGuid = FindPluginName(file.DirectoryName);
                 if (modGuid != null && modGuid != "plugins")
                 {
                     fileName = $"{modGuid}/{fileName}";
                 }
 
-                if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time) || file.LastWriteTimeUtc.Ticks != time)
+                LoadContent._lastItemLoaded = fileName;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(e);
+            }
+            yield return null;
+            try
+            {
+                if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time) ||
+                    file.LastWriteTimeUtc.Ticks != time)
                 {
 
                     UnityWebRequest wr = new(file.FullName);
@@ -329,27 +285,30 @@ public class Plugin : BaseUnityPlugin
                     lastProgressUpdate = DateTime.Now.Ticks;
                     UpdateConsoleLogLoadingBar($"Loading custom audio clips from {dir.FullName}", cur, count);
                 }
-                GC.Collect();
             }
-
-            if (clipsCount != 0)
+            catch (Exception e)
             {
-                Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.FullName}");
+                Log.LogError(e);
             }
 
-            if (CustomClips.Count != 0)
-            {
-                // Update the number of audio clips in the game
-                CKAMIAJJDBP.GGICEBAECGK = VanillaCounts.MusicCount + CustomClips.Count;
-                CKAMIAJJDBP.CKEJAMLGLAL = new AudioClip[CKAMIAJJDBP.GGICEBAECGK + 1];
-            }
-
-            ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
+            GC.Collect();
+            LoadContent._loadedAssets++;
+            yield return null;
         }
-        catch (Exception e)
+
+        if (clipsCount != 0)
         {
-            Log.LogError(e);
+            Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.FullName}");
         }
+
+        if (CustomClips.Count != 0)
+        {
+            // Update the number of audio clips in the game
+            CKAMIAJJDBP.GGICEBAECGK = VanillaCounts.MusicCount + CustomClips.Count;
+            CKAMIAJJDBP.CKEJAMLGLAL = new AudioClip[CKAMIAJJDBP.GGICEBAECGK + 1];
+        }
+
+        ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
     }
 
     private static void CacheAudioClip(AudioClip clip, long ticks)
@@ -366,6 +325,7 @@ public class Plugin : BaseUnityPlugin
                    "samples: " + clip.samples + "\n" +
                    "time: " + ticks;
         File.WriteAllText(Path.Combine(CacheDir.FullName, clip.name.Replace("/","_") + ".meta"), meta);
+        GC.Collect();
     }
     
     private static bool TryLoadAudioFromCache(string name, out AudioClip clip, out long time)
@@ -400,30 +360,31 @@ public class Plugin : BaseUnityPlugin
         return true;
     }
 
-    internal static void LoadCostumes(DirectoryInfo dir)
+    internal static IEnumerator LoadCostumes(DirectoryInfo dir)
     {
-        try
+        int costumeCount = 0;
+        // Load custom costumes
+        if (!dir.Exists)
         {
-            int costumeCount = 0;
-            // Load custom costumes
-            if (!dir.Exists)
-            {
-                return;
-            }
+            yield break;
+        }
 
-            FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
-                .Where(f => ImageExtensions.Contains(f.Extension.ToLower())).ToArray();
-            int count = files.Length;
-            long lastProgressUpdate = DateTime.Now.Ticks;
-            int cur = 0;
-            foreach (FileInfo file in files)
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => ImageExtensions.Contains(f.Extension.ToLower())).ToArray();
+        int count = files.Length;
+        long lastProgressUpdate = DateTime.Now.Ticks;
+        int cur = 0;
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
             {
-                string fileName = file.Name;
-                foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
+                if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
                 {
-                    if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
+                    CostumeData costumeData = pair.Value;
+                    Texture2D tex = new(2, 2);
+                    try
                     {
-                        CostumeData costumeData = pair.Value;
                         if (costumeData.Type != typeof(Texture2D) || costumeData.InternalPrefix == "custom")
                         {
                             Log.LogError($"Custom {costumeData.FilePrefix} costumes are currently not supported.");
@@ -431,7 +392,6 @@ public class Plugin : BaseUnityPlugin
                         else
                         {
                             byte[] bytes = File.ReadAllBytes(file.FullName);
-                            Texture2D tex = new(2, 2);
                             tex.LoadImage(bytes);
                             tex.name = fileName;
                             var modGuid = FindPluginName(file.DirectoryName);
@@ -439,80 +399,95 @@ public class Plugin : BaseUnityPlugin
                             {
                                 fileName = $"{modGuid}/{fileName}";
                             }
-                            
-                            var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
-                            if (File.Exists(Path.Combine(file.DirectoryName, meta)))
-                            {
 
-                                List<string> metaLines =
-                                    File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
-                                List<Tuple<string, string>> metaTuples = new();
-                                foreach (string line in metaLines)
-                                {
-                                    string[] split = line.Split(new[] { ':' }, 2);
-                                    if (split.Length == 2)
-                                    {
-                                        metaTuples.Add(new(split[0].Trim(), split[1].Trim()));
-                                    }
-                                    else if (split.Length == 1)
-                                    {
-                                        metaTuples.Add(new(split[0].Trim(), ""));
-                                    }
-                                }
-                                costumeData.AddCustomObject(fileName, tex, metaTuples);
-                            }
-                            else
-                            {
-                                costumeData.AddCustomObject(fileName, tex, new());
-                            }
-
-                            costumeCount++;
-                            GC.Collect();
+                            LoadContent._lastItemLoaded = fileName;
                         }
                     }
-                }
+                    catch (Exception e)
+                    {
+                        Log.LogError(e);
+                    }
 
-                cur++;
-                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
-                {
-                    lastProgressUpdate = DateTime.Now.Ticks;
-                    UpdateConsoleLogLoadingBar($"Loading custom costumes from {dir.FullName}", cur, count);
+                    yield return null;
+                    try
+                    {
+                        var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
+                        if (File.Exists(Path.Combine(file.DirectoryName, meta)))
+                        {
+
+                            List<string> metaLines =
+                                File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
+                            List<Tuple<string, string>> metaTuples = new();
+                            foreach (string line in metaLines)
+                            {
+                                string[] split = line.Split(new[] { ':' }, 2);
+                                if (split.Length == 2)
+                                {
+                                    metaTuples.Add(new(split[0].Trim(), split[1].Trim()));
+                                }
+                                else if (split.Length == 1)
+                                {
+                                    metaTuples.Add(new(split[0].Trim(), ""));
+                                }
+                            }
+
+                            costumeData.AddCustomObject(fileName, tex, metaTuples);
+                        }
+                        else
+                        {
+                            costumeData.AddCustomObject(fileName, tex, new());
+                        }
+
+                        costumeCount++;
+                    } catch (Exception e)
+                    {
+                        Log.LogError(e);
+                    }
                 }
             }
 
-            if (costumeCount != 0)
+            cur++;
+            if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
             {
-                Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.FullName}");
+                lastProgressUpdate = DateTime.Now.Ticks;
+                UpdateConsoleLogLoadingBar($"Loading custom costumes from {dir.FullName}", cur, count);
             }
+            
+            GC.Collect();
+            LoadContent._loadedAssets++;
+            yield return null;
         }
-        catch (Exception e)
+
+
+
+        if (costumeCount != 0)
         {
-            Log.LogError(e);
+            Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.FullName}");
         }
     }
 
-    internal static void LoadOverrides(DirectoryInfo dir)
+    internal static IEnumerator LoadOverrides(DirectoryInfo dir)
     {
-        try
+        int overrideCount = 0;
+        // Load resource overrides
+        if (!dir.Exists)
         {
-            int overrideCount = 0;
-            // Load resource overrides
-            if (!dir.Exists)
-            {
-                return;
-            }
+            yield break;
+        }
 
-            FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories).Where(f =>
-                    ImageExtensions.Contains(f.Extension.ToLower()) ||
-                    AudioExtensions.Contains(f.Extension.ToLower()))
-                .ToArray();
-            int count = files.Length;
-            long lastProgressUpdate = DateTime.Now.Ticks;
-            int cur = 0;
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories).Where(f =>
+                ImageExtensions.Contains(f.Extension.ToLower()) ||
+                AudioExtensions.Contains(f.Extension.ToLower()))
+            .ToArray();
+        int count = files.Length;
+        long lastProgressUpdate = DateTime.Now.Ticks;
+        int cur = 0;
 
-            foreach (FileInfo file in files)
+        foreach (FileInfo file in files)
+        {
+            if (ImageExtensions.Contains(file.Extension.ToLower()))
             {
-                if (ImageExtensions.Contains(file.Extension.ToLower()))
+                try
                 {
                     string fileName = file.Name;
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
@@ -520,31 +495,47 @@ public class Plugin : BaseUnityPlugin
                     Texture2D tex = new(2, 2);
                     tex.LoadImage(bytes);
                     tex.name = fileName;
-                    
+
                     var modGuid = FindPluginName(file.DirectoryName);
                     if (modGuid != null && modGuid != "plugins")
                     {
                         fileName = $"{modGuid}/{fileName}";
                     }
 
+                    LoadContent._lastItemLoaded = fileName;
                     AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, tex);
-                    
-                    overrideCount++;
-                    GC.Collect();
+                }
+                catch (Exception e)
+                {
+                    Log.LogError(e);
                 }
 
-                if (AudioExtensions.Contains(file.Extension.ToLower()))
+                overrideCount++;
+                GC.Collect();
+                LoadContent._loadedAssets++;
+                yield return null;
+            }
+            else if (AudioExtensions.Contains(file.Extension.ToLower()))
+            {
+                string fileName = file.Name;
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                try
                 {
-                    string fileName = file.Name;
-                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-                                        
+
                     var modGuid = FindPluginName(file.DirectoryName);
                     if (modGuid != null && modGuid != "plugins")
                     {
                         fileName = $"{modGuid}/{fileName}";
                     }
 
-
+                    LoadContent._lastItemLoaded = fileName;
+                } catch (Exception e)
+                {
+                    Log.LogError(e);
+                }
+                yield return null;
+                try
+                {
                     if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time))
                     {
 
@@ -552,6 +543,7 @@ public class Plugin : BaseUnityPlugin
                         wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
                         wr.SendWebRequest();
                         while (!wr.isDone) { }
+
                         clip = DownloadHandlerAudioClip.GetContent(wr);
                         wr.Dispose();
                         clip.name = fileName;
@@ -559,29 +551,30 @@ public class Plugin : BaseUnityPlugin
                     }
 
                     clip.name = fileName;
-                    
+
                     AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, clip);
 
                     overrideCount++;
-                    GC.Collect();
                 }
-
+                catch (Exception e)
+                {
+                    Log.LogError(e);
+                }
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
                 {
                     lastProgressUpdate = DateTime.Now.Ticks;
                     UpdateConsoleLogLoadingBar($"Loading resource overrides from {dir.FullName}", cur, count);
                 }
-            }
-
-            if (overrideCount != 0)
-            {
-                Log.LogInfo($"Loaded {overrideCount} resource overrides from {dir.FullName}");
+                GC.Collect();
+                LoadContent._loadedAssets++;
+                yield return null;
             }
         }
-        catch (Exception e)
+
+        if (overrideCount != 0)
         {
-            Log.LogError(e);
+            Log.LogInfo($"Loaded {overrideCount} resource overrides from {dir.FullName}");
         }
     }
 
@@ -706,5 +699,26 @@ public class Plugin : BaseUnityPlugin
                 File.Delete(files[i]);
             }
         }
+    }
+
+    public static int CountFiles(List<DirectoryInfo> dirs, LoadContent.ContentType type)
+    {
+        int count = 0;
+        foreach (DirectoryInfo dir in dirs)
+        {
+            List<string> extensions = new();
+            if ((int)type % 2 == 1)
+            {
+                extensions.AddRange(ImageExtensions);
+            }
+            if ((int)type / 2 == 1)
+            {
+                extensions.AddRange(AudioExtensions);
+            }
+            count += dir
+                .GetFiles("*", SearchOption.AllDirectories)
+                .Count(f => extensions.Contains(f.Extension.ToLower()));
+        }
+        return count;
     }
 }
