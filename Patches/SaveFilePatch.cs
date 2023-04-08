@@ -109,7 +109,7 @@ internal class SaveFilePatch
                 var count = Plugin.BaseFedLimit.Value <= 48 ? fedCharCount[i] + 1 : Plugin.BaseFedLimit.Value + 1;
                 if (GameSaveFile.GPFFEHKLNLD.savedFeds[i] != null)
                 {
-                    GameSaveFile.GPFFEHKLNLD.savedFeds[i].size = fedCharCount[i] + 1;
+                    GameSaveFile.GPFFEHKLNLD.savedFeds[i].size = fedCharCount[i];
                     if (count > GameSaveFile.GPFFEHKLNLD.savedFeds[i].roster.Length)
                     {
                         Array.Resize(ref GameSaveFile.GPFFEHKLNLD.savedFeds[i].roster, count);
