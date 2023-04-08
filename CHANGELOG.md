@@ -1,5 +1,10 @@
 # Changelog
 
+## Release 1.1.5
+- Added in-game loading bar and information about the current content being loaded.
+- Fixed fed roster size limit not being applied correctly.
+- Fixed assets not being loaded from the root folder if the mod is installed via Thunderstore.
+
 ## Release 1.1.4
 - Added caching of loaded audio clips to improve performance.
 
