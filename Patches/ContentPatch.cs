@@ -216,7 +216,7 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void OCOFGNPADGM_BBKEGFNNMGF(ref OCOFGNPADGM __instance, int AAIJMJLPAFC)
     {
-        if (AAIJMJLPAFC == 4 && (__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > 50 && __instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] % 10 == 0)) return;
+        if (AAIJMJLPAFC == 4 && (__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > 50 && __instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] % 10 == 0) || VanillaCounts.ShapeCounts[AAIJMJLPAFC] == 0) return;
         try {
             if (__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > VanillaCounts.ShapeCounts[AAIJMJLPAFC] || (AAIJMJLPAFC == 17 &&
                     -__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > VanillaCounts.TransparentHairHairstyleCount))
@@ -227,7 +227,7 @@ internal class ContentPatch
                     if (mesh != null)
                     {
                         __instance.AEHENPKDKEG[AAIJMJLPAFC].GetComponent<MeshFilter>().mesh = mesh;
-                        __instance.AEHENPKDKEG[AAIJMJLPAFC].transform.localScale = new Vector3(15f, 15f, 15f);
+                        __instance.AEHENPKDKEG[AAIJMJLPAFC].transform.localScale = new Vector3(0.5f, 0.5f, 0.45f);
                     }
                 }
             }
@@ -242,32 +242,44 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void IINHFOHEAJB_NDIGGJPCLCL(OCOFGNPADGM NMOJJPKABCC)
     {
+        FixMeshes(NMOJJPKABCC);
+    }
+    
+    [HarmonyPatch(typeof(OCOFGNPADGM), "LFHLBFPLLNB")]
+    [HarmonyPostfix]
+    public static void OCOFGNPADGM_LFHLBFPLLNB(OCOFGNPADGM __instance)
+    {
+        FixMeshes(__instance);
+    }
+
+    private static void FixMeshes(OCOFGNPADGM player)
+    {
         try
         {
             for (IINHFOHEAJB.AAIJMJLPAFC = 1;
                  IINHFOHEAJB.AAIJMJLPAFC <= IINHFOHEAJB.KPEKAODDBPN;
                  IINHFOHEAJB.AAIJMJLPAFC++)
                 {
-                    if (IINHFOHEAJB.AAIJMJLPAFC == 4 && NMOJJPKABCC.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > 50 && NMOJJPKABCC.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] % 10 == 0 || NMOJJPKABCC.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC] == null)
+                    if (IINHFOHEAJB.AAIJMJLPAFC == 4 && player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > 50 && player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] % 10 == 0 || player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC] == null|| VanillaCounts.ShapeCounts[IINHFOHEAJB.AAIJMJLPAFC] == 0)
                     {
                         continue;
                     }
-                    if (NMOJJPKABCC.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > VanillaCounts.ShapeCounts[IINHFOHEAJB.AAIJMJLPAFC]
-                        || (IINHFOHEAJB.AAIJMJLPAFC == 17 && -NMOJJPKABCC.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > VanillaCounts.TransparentHairHairstyleCount))
+                    if (player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > VanillaCounts.ShapeCounts[IINHFOHEAJB.AAIJMJLPAFC]
+                        || (IINHFOHEAJB.AAIJMJLPAFC == 17 && -player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > VanillaCounts.TransparentHairHairstyleCount))
                     {
-                    var mesh = NMOJJPKABCC.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshFilter>().mesh;
-                    if (NMOJJPKABCC.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().materials.Length <
+                    var mesh = player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshFilter>().mesh;
+                    if (player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().materials.Length <
                         mesh.subMeshCount)
                     {
                         var materials = new Material[mesh.subMeshCount];
-                        materials[0] = NMOJJPKABCC.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().material;
+                        materials[0] = player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().material;
                         for (int i = 1; i < materials.Length; i++)
                         {
-                            materials[i] = new Material(NMOJJPKABCC.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().material);
-                            materials[i].color = Color.black;;
+                            materials[i] = new Material(player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().material);
+                            materials[i].color = Color.yellow;
                         }
 
-                        NMOJJPKABCC.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().materials =
+                        player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().materials =
                             materials;
                     }
                 }
@@ -276,7 +288,7 @@ internal class ContentPatch
         catch (Exception e)
         {
             Plugin.Log.LogError(e);
-            Plugin.Log.LogError("AAIJMJLPAFC: " + IINHFOHEAJB.AAIJMJLPAFC + " (" + NMOJJPKABCC.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] + ")");
+            Plugin.Log.LogError("AAIJMJLPAFC: " + IINHFOHEAJB.AAIJMJLPAFC + " (" + player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] + ")");
         }
     }
 }
