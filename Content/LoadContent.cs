@@ -85,6 +85,7 @@ public static class LoadContent
             {
                 yield return Plugin.LoadAudioClips(modAssetsDir);
                 yield return Plugin.LoadCostumes(modAssetsDir);
+                yield return Plugin.LoadMeshes(modAssetsDir);
             }
         }
 
