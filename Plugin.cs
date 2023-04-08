@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System.Collections;
 using System.Security.Cryptography;
 using UnityEngine.Networking;
 using WECCL.Content;
@@ -490,8 +491,100 @@ public class Plugin : BaseUnityPlugin
             Log.LogError(e);
         }
     }
+    
+    internal static IEnumerator LoadMeshes(DirectoryInfo dir)
+    {
+        int meshCount = 0;
+        // Load custom meshes
+        if (!dir.Exists)
+        {
+            yield break;
+        }
 
-    internal static void LoadOverrides(DirectoryInfo dir)
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => f.Extension == "").ToArray();
+        long lastProgressUpdate = DateTime.Now.Ticks;
+        int cur = 0;
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
+            {
+                if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
+                {
+                    CostumeData costumeData = pair.Value;
+                    Mesh mesh = null;
+                    try
+                    {
+                        if (costumeData.Type != typeof(Mesh))
+                        {
+                            Log.LogError($"{costumeData.FilePrefix} is not a mesh.");
+                        }
+                        else
+                        {
+                            mesh = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<Mesh>().First();
+                            mesh.name = fileName;
+                            var modGuid = FindPluginName(file.DirectoryName);
+                            if (modGuid != null && modGuid != "plugins")
+                            {
+                                fileName = $"{modGuid}/{fileName}";
+                            }
+
+                            LoadContent._lastItemLoaded = fileName;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.LogError(e);
+                    }
+
+                    yield return null;
+                    try
+                    {
+                        var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
+                        if (File.Exists(Path.Combine(file.DirectoryName, meta)))
+                        {
+
+                            List<string> metaLines =
+                                File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
+                            List<Tuple<string, string>> metaTuples = new();
+                            foreach (string line in metaLines)
+                            {
+                                string[] split = line.Split(new[] { ':' }, 2);
+                                if (split.Length == 2)
+                                {
+                                    metaTuples.Add(new(split[0].Trim(), split[1].Trim()));
+                                }
+                                else if (split.Length == 1)
+                                {
+                                    metaTuples.Add(new(split[0].Trim(), ""));
+                                }
+                            }
+
+                            costumeData.AddCustomObject(fileName, mesh, metaTuples);
+                        }
+                        else
+                        {
+                            costumeData.AddCustomObject(fileName, mesh, new());
+                        }
+
+                        meshCount++;
+                    } catch (Exception e)
+                    {
+                        Log.LogError(e);
+                    }
+                }
+            }
+            cur++;
+            if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
+            {
+                lastProgressUpdate = DateTime.Now.Ticks;
+                UpdateConsoleLogLoadingBar($"Loading custom meshes from {dir.FullName}", cur, files.Length);
+            }
+        }
+    }
+
+    internal static IEnumerator LoadOverrides(DirectoryInfo dir)
     {
         try
         {
