@@ -1,4 +1,4 @@
-using System.Globalization;
+using static WECCL.Utils.NumberFormatUtils;
 using WECCL.Saves;
 
 namespace WECCL.Content;
@@ -233,24 +233,23 @@ public static class CustomContent
 
     public static Color GetSkinColor(int index)
     {
-        List<Tuple<string, string>> tuples;
+        Dictionary<string, string> dict;
         if (index > 0)
         {
             index -= VanillaCounts.MaterialCounts[3] + 1;
-            tuples = CustomCostumes["face_male"].CustomObjects[index].Item3;
+            dict = CustomCostumes["face_male"].CustomObjects[index].Item3;
         }
         else
         {
             index = -index - (VanillaCounts.FaceFemaleCount + 1);
-            tuples = CustomCostumes["face_female"].CustomObjects[index].Item3;
+            dict = CustomCostumes["face_female"].CustomObjects[index].Item3;
         }
 
-        if (tuples.Any(t => t.Item1 == "skin_color" || t.Item1 == "skin_colour" || t.Item1 == "skin_tone"))
+        if (dict.Keys.Any(t => t == "skin_color" || t == "skin_colour" || t == "skin_tone"))
         {
-            var color = tuples.First(t => t.Item1 == "skin_color" || t.Item1 == "skin_colour" || t.Item1 == "skin_tone").Item2;
+            var color = dict.First(t => t.Key == "skin_color" || t.Key == "skin_colour" || t.Key == "skin_tone").Value;
             var split = color.Split(',');
-            var nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            return new Color(float.Parse(split[0], nfi), float.Parse(split[1], nfi), float.Parse(split[2], nfi));
+            return new Color(float.Parse(split[0], Nfi), float.Parse(split[1], Nfi), float.Parse(split[2], Nfi));
         }
         return Color.white;
     }

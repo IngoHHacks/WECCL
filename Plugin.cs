@@ -352,7 +352,6 @@ public class Plugin : BaseUnityPlugin
         var lines = meta.Split('\n');
         var channels = int.Parse(lines[0].Split(' ')[1]);
         var frequency = int.Parse(lines[1].Split(' ')[1]);
-        var length = float.Parse(lines[2].Split(' ')[1]);
         var samples = int.Parse(lines[3].Split(' ')[1]);
         time = long.Parse(lines[4].Split(' ')[1]);
         clip = AudioClip.Create(name, samples, channels, frequency, false);
@@ -417,21 +416,21 @@ public class Plugin : BaseUnityPlugin
 
                             List<string> metaLines =
                                 File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
-                            List<Tuple<string, string>> metaTuples = new();
+                            Dictionary<string, string> metaDict = new();
                             foreach (string line in metaLines)
                             {
                                 string[] split = line.Split(new[] { ':' }, 2);
                                 if (split.Length == 2)
                                 {
-                                    metaTuples.Add(new(split[0].Trim(), split[1].Trim()));
+                                    metaDict.Add(split[0].Trim(), split[1].Trim());
                                 }
                                 else if (split.Length == 1)
                                 {
-                                    metaTuples.Add(new(split[0].Trim(), ""));
+                                    metaDict.Add(split[0].Trim(), "");
                                 }
                             }
 
-                            costumeData.AddCustomObject(fileName, tex, metaTuples);
+                            costumeData.AddCustomObject(fileName, tex, metaDict);
                         }
                         else
                         {
@@ -497,6 +496,7 @@ public class Plugin : BaseUnityPlugin
                         {
                             mesh = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<Mesh>().First();
                             mesh.name = fileName;
+
                             var modGuid = FindPluginName(file.DirectoryName);
                             if (modGuid != null && modGuid != "plugins")
                             {
@@ -520,21 +520,21 @@ public class Plugin : BaseUnityPlugin
 
                             List<string> metaLines =
                                 File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
-                            List<Tuple<string, string>> metaTuples = new();
+                            Dictionary<string, string> metaDict = new();
                             foreach (string line in metaLines)
                             {
                                 string[] split = line.Split(new[] { ':' }, 2);
                                 if (split.Length == 2)
                                 {
-                                    metaTuples.Add(new(split[0].Trim(), split[1].Trim()));
+                                    metaDict.Add(split[0].Trim(), split[1].Trim());
                                 }
                                 else if (split.Length == 1)
                                 {
-                                    metaTuples.Add(new(split[0].Trim(), ""));
+                                    metaDict.Add(split[0].Trim(), "");
                                 }
                             }
 
-                            costumeData.AddCustomObject(fileName, mesh, metaTuples);
+                            costumeData.AddCustomObject(fileName, mesh, metaDict);
                         }
                         else
                         {
