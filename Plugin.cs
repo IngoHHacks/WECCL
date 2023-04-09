@@ -31,6 +31,8 @@ public class Plugin : BaseUnityPlugin
     
     internal static string MetaFilePath;
 
+    private static long _nextProgressUpdate = DateTime.Now.Ticks;
+
     private static readonly List<string> ImageExtensions = new()
     {
         ".png",
@@ -257,7 +259,11 @@ public class Plugin : BaseUnityPlugin
             {
                 Log.LogError(e);
             }
-            yield return null;
+            if (DateTime.Now.Ticks > _nextProgressUpdate)
+            {
+                _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                yield return null;
+            }
             try
             {
                 if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time) ||
@@ -293,7 +299,11 @@ public class Plugin : BaseUnityPlugin
 
             GC.Collect();
             LoadContent._loadedAssets++;
-            yield return null;
+            if (DateTime.Now.Ticks > _nextProgressUpdate)
+            {
+                _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                yield return null;
+            }
         }
 
         if (clipsCount != 0)
@@ -408,7 +418,11 @@ public class Plugin : BaseUnityPlugin
                         Log.LogError(e);
                     }
 
-                    yield return null;
+                    if (DateTime.Now.Ticks > _nextProgressUpdate)
+                    {
+                        _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                        yield return null;
+                    }
                     try
                     {
                         var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
@@ -455,7 +469,11 @@ public class Plugin : BaseUnityPlugin
             
             GC.Collect();
             LoadContent._loadedAssets++;
-            yield return null;
+            if (DateTime.Now.Ticks > _nextProgressUpdate)
+            {
+                _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                yield return null;
+            }
         }
 
 
@@ -513,7 +531,11 @@ public class Plugin : BaseUnityPlugin
                 overrideCount++;
                 GC.Collect();
                 LoadContent._loadedAssets++;
-                yield return null;
+                if (DateTime.Now.Ticks > _nextProgressUpdate)
+                {
+                    _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                    yield return null;
+                }
             }
             else if (AudioExtensions.Contains(file.Extension.ToLower()))
             {
@@ -533,7 +555,11 @@ public class Plugin : BaseUnityPlugin
                 {
                     Log.LogError(e);
                 }
-                yield return null;
+                if (DateTime.Now.Ticks > _nextProgressUpdate)
+                {
+                    _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                    yield return null;
+                }
                 try
                 {
                     if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time))
@@ -568,7 +594,11 @@ public class Plugin : BaseUnityPlugin
                 }
                 GC.Collect();
                 LoadContent._loadedAssets++;
-                yield return null;
+                if (DateTime.Now.Ticks > _nextProgressUpdate)
+                {
+                    _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                    yield return null;
+                }
             }
         }
 
