@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.1.6
+- Fix for roster sizes being incorrect.
+
 ## Release 1.1.5
 - Added in-game loading bar and information about the current content being loaded.
 - Fixed fed roster size limit not being applied correctly.
