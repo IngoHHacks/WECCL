@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.1.7
+- Patch to show stack traces.
+
 ## Release 1.1.6
 - Fix for roster sizes being incorrect.
 
