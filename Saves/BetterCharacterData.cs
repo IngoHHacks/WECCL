@@ -129,7 +129,7 @@ public class BetterCharacterData
 
     public int? possessive;
 
-    public static BetterCharacterData FromRegularCharacterData(Character character, Character[] allCharacters)
+    public static BetterCharacterData FromRegularCharacter(Character character, Character[] allCharacters)
     {
         BetterCharacterData bcd =
             JsonConvert.DeserializeObject<BetterCharacterData>(JsonConvert.SerializeObject(character))!;
@@ -154,5 +154,41 @@ public class BetterCharacterData
             bcd.musicC = "Vanilla/" + character.music;
         }
         return bcd;
+    }
+
+    public Character ToRegularCharacter(Character[] allCharacters)
+    {
+        Character character = JsonConvert.DeserializeObject<Character>(JsonConvert.SerializeObject(this))!;
+        character.costume = new Costume[costumeC.Length];
+        for (int i = 0; i < costumeC.Length; i++)
+        {
+            character.costume[i] = costumeC[i].ToRegularCostume();
+        }
+        character.relationship = new int[relationshipC.Length];
+        for (int i = 0; i < relationshipC.Length; i++)
+        {
+            var split = relationshipC[i].Split('@');
+            var name = split[0];
+            try
+            {
+                character.relationship[i] = allCharacters.Single(c => c.name == name).id;
+            }
+            catch (Exception e)
+            {
+                character.relationship[i] = int.Parse(split[1]);
+                Plugin.Log.LogWarning("Failed to find character with name " + name + ", using id instead.");
+            }
+        }
+        if (musicC.StartsWith("Custom/"))
+        {
+            var music = musicC.Substring(7);
+            var index = ContentMappings.ContentMap.MusicNameMap.IndexOf(music);
+            character.music = index + VanillaCounts.MusicCount + 1;
+        }
+        else
+        {
+            character.music = int.Parse(musicC.Substring(8));
+        }
+        return character;
     }
 }
