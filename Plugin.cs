@@ -11,7 +11,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.1.6";
+    public const string PluginVer = "1.2.0";
 
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
@@ -53,6 +53,8 @@ public class Plugin : BaseUnityPlugin
         ".it",
         ".s3m"
     };
+
+    private static readonly List<string> MeshExtensions = new() { ".mesh", "" };
 
     internal static Plugin Instance { get; private set; }
 
@@ -474,7 +476,7 @@ public class Plugin : BaseUnityPlugin
             yield break;
         }
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
-            .Where(f => f.Extension == "").ToArray();
+            .Where(f => MeshExtensions.Contains(f.Extension.ToLower())).ToArray();
         long lastProgressUpdate = DateTime.Now.Ticks;
         int cur = 0;
         foreach (FileInfo file in files)
@@ -798,13 +800,17 @@ public class Plugin : BaseUnityPlugin
         foreach (DirectoryInfo dir in dirs)
         {
             List<string> extensions = new();
-            if ((int)type % 2 == 1)
+            if ((type & LoadContent.ContentType.Costume) != 0)
             {
                 extensions.AddRange(ImageExtensions);
             }
-            if ((int)type / 2 == 1)
+            if ((type & LoadContent.ContentType.Audio) != 0)
             {
                 extensions.AddRange(AudioExtensions);
+            }
+            if ((type & LoadContent.ContentType.Mesh) != 0)
+            {
+                extensions.AddRange(MeshExtensions);
             }
             count += dir
                 .GetFiles("*", SearchOption.AllDirectories)

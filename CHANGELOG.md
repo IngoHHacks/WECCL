@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.2.0
+- Added support for meshes.
+
 ## Release 1.1.6
 - Fix for roster sizes being incorrect.
 

@@ -16,11 +16,14 @@ public static class LoadContent
     
     internal static float _progress => _totalAssets == 0 ? 1f : (float)_loadedAssets / _totalAssets;
     
+    [Flags]
     public enum ContentType
     {
+        None = 0,
         Costume = 1,
         Audio = 2,
-        All = Costume | Audio
+        Mesh = 4,
+        All = Costume | Audio | Mesh
     }
     
     internal static IEnumerator Load()
