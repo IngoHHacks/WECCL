@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.1.8
+- Fixed characters not being able to exported if their name contains characters that are not allowed in file names.
+
 ## Release 1.1.7
 - Patch to show stack traces.
 
