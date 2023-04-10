@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using WECCL.Utils;
 
 namespace WECCL.Content;
 
@@ -23,7 +24,7 @@ public class ModdedCharacterManager
 
             CharacterWithModdedData moddedCharacter = new(character);
             string json = JsonConvert.SerializeObject(moddedCharacter, Formatting.Indented);
-            string path = Path.Combine(exportPath, $"{character.id}_{character.name}.json");
+            string path = Path.Combine(exportPath, $"{character.id}_{FileNameUtils.Escape(character.name)}.json");
             File.WriteAllText(path, json);
         }
     }
