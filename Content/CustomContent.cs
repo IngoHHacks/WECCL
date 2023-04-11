@@ -1,4 +1,4 @@
-using System.Globalization;
+using static WECCL.Utils.NumberFormatUtils;
 using WECCL.Saves;
 
 namespace WECCL.Content;
@@ -11,17 +11,17 @@ public static class CustomContent
     {
         { "legs_material", new CostumeData("legs_material", "legs", typeof(Texture2D)) },
         { "legs_flesh", new CostumeData("legs_flesh", typeof(Texture2D)) },
-        { "legs_shape", new CostumeData("legs_shape", "custom", typeof(Mesh)) },
+        { "legs_shape", new CostumeData("legs_shape", "shape4;shape6", typeof(Mesh)) },
         { "body_material", new CostumeData("body_material", "body", typeof(Texture2D)) },
         { "body_flesh_male", new CostumeData("body_flesh_male", "body_flesh", typeof(Texture2D)) },
         { "body_flesh_female", new CostumeData("body_flesh_female", "body_female", typeof(Texture2D)) },
-        { "body_shape", new CostumeData("body_shape", "custom", typeof(Mesh)) },
+        { "body_shape", new CostumeData("body_shape", "shape2", typeof(Mesh)) },
         { "face_female", new CostumeData("face_female", typeof(Texture2D)) },
         { "face_male", new CostumeData("face_male", "face", typeof(Texture2D)) },
-        { "face_shape", new CostumeData("face_shape", "custom", typeof(Mesh)) },
+        { "face_shape", new CostumeData("face_shape", "shape3", typeof(Mesh)) },
         { "arms_material", new CostumeData("arms_material", "arm", typeof(Texture2D)) },
         { "arms_flesh", new CostumeData("arms_flesh", "arm_flesh", typeof(Texture2D)) },
-        { "arms_shape", new CostumeData("arms_shape", "custom", typeof(Mesh)) },
+        { "arms_shape", new CostumeData("arms_shape", "shape9;shape12", typeof(Mesh)) },
         { "arms_glove", new CostumeData("arms_glove", "glove", typeof(Texture2D)) },
         { "legs_footwear_special", new CostumeData("legs_footwear_special", "custom", typeof(Texture2D)) },
         { "legs_footwear", new CostumeData("legs_footwear", "shoes", typeof(Texture2D)) },
@@ -30,9 +30,9 @@ public static class CustomContent
             "hair_texture_transparent", new CostumeData("hair_texture_transparent", "hair_alpha", typeof(Texture2D))
         },
         { "hair_texture_solid", new CostumeData("hair_texture_solid", "hair", typeof(Texture2D)) },
-        { "hair_hairstyle_solid", new CostumeData("hair_hairstyle_solid", "custom", typeof(Mesh)) },
-        { "hair_hairstyle_transparent", new CostumeData("hair_hairstyle_transparent", "custom", typeof(Mesh)) },
-        { "hair_extension", new CostumeData("hair_extension", "custom", typeof(Mesh)) },
+        { "hair_hairstyle_solid", new CostumeData("hair_hairstyle_solid", "shape17", typeof(Mesh)) },
+        { "hair_hairstyle_transparent", new CostumeData("hair_hairstyle_transparent", "shape-17", typeof(Mesh)) },
+        { "hair_extension", new CostumeData("hair_extension", "shape18", typeof(Mesh)) },
         { "hair_shave", new CostumeData("hair_shave", "shave", typeof(Texture2D)) },
         { "face_beard", new CostumeData("face_beard", "beard", typeof(Texture2D)) },
         { "face_mask", new CostumeData("face_mask", "mask", typeof(Texture2D)) },
@@ -40,13 +40,14 @@ public static class CustomContent
         { "legs_kneepad", new CostumeData("legs_kneepad", "kneepads", typeof(Texture2D)) },
         { "legs_pattern", new CostumeData("legs_pattern", typeof(Texture2D)) },
         { "legs_laces", new CostumeData("legs_laces", "lace", typeof(Texture2D)) },
-        { "face_headwear", new CostumeData("face_headwear", "custom", typeof(Mesh)) },
+        { "face_headwear", new CostumeData("face_headwear", "shape28;shape31", typeof(Mesh)) },
         { "arms_elbow_pad", new CostumeData("arms_elbow_pad", "pad", typeof(Texture2D)) },
         { "arms_wristband", new CostumeData("arms_wristband", "wristband", typeof(Texture2D)) }
     };
 
     internal static readonly Dictionary<string, Dictionary<string,Texture2D>> ResourceOverridesTextures = new();
     internal static readonly Dictionary<string, Dictionary<string,AudioClip>> ResourceOverridesAudio = new();
+    internal static readonly Dictionary<string, Dictionary<string,Mesh>> ResourceOverridesMeshes = new();
     
     public static bool HasConflictingOverrides = false;
 
@@ -91,6 +92,29 @@ public static class CustomContent
         else
         {
             Plugin.Log.LogWarning($"Duplicate audio override for {name}!");
+        }
+        if (!Prefixes.Contains(prefix))
+        {
+            Prefixes.Add(prefix);
+        }
+    }
+    
+    public static void AddResourceOverride(string texName, string name, Mesh mesh)
+    {
+        var split = name.Split('/');
+        var prefix = split.Length > 1 ? split[0] : "manual";
+        if (!ResourceOverridesMeshes.ContainsKey(texName))
+        {
+            ResourceOverridesMeshes.Add(texName, new Dictionary<string, Mesh>{ { name, mesh } });
+        }
+        else if (!ResourceOverridesMeshes[texName].ContainsKey(name))
+        {
+            ResourceOverridesMeshes[texName].Add(name, mesh);
+            HasConflictingOverrides = true;
+        }
+        else
+        {
+            Plugin.Log.LogWarning($"Duplicate mesh override for {name}!");
         }
         if (!Prefixes.Contains(prefix))
         {
@@ -150,7 +174,7 @@ public static class CustomContent
         }
         return highestPriorityTexture;
     }
-    
+
     public static void SetHighestPriorityTextureOverride(string name, Texture2D texture)
     {
         if (!ResourceOverridesTextures.ContainsKey(name))
@@ -209,24 +233,23 @@ public static class CustomContent
 
     public static Color GetSkinColor(int index)
     {
-        List<Tuple<string, string>> tuples;
+        Dictionary<string, string> dict;
         if (index > 0)
         {
             index -= VanillaCounts.MaterialCounts[3] + 1;
-            tuples = CustomCostumes["face_male"].CustomObjects[index].Item3;
+            dict = CustomCostumes["face_male"].CustomObjects[index].Item3;
         }
         else
         {
             index = -index - (VanillaCounts.FaceFemaleCount + 1);
-            tuples = CustomCostumes["face_female"].CustomObjects[index].Item3;
+            dict = CustomCostumes["face_female"].CustomObjects[index].Item3;
         }
 
-        if (tuples.Any(t => t.Item1 == "skin_color" || t.Item1 == "skin_colour" || t.Item1 == "skin_tone"))
+        if (dict.Keys.Any(t => t == "skin_color" || t == "skin_colour" || t == "skin_tone"))
         {
-            var color = tuples.First(t => t.Item1 == "skin_color" || t.Item1 == "skin_colour" || t.Item1 == "skin_tone").Item2;
+            var color = dict.First(t => t.Key == "skin_color" || t.Key == "skin_colour" || t.Key == "skin_tone").Value;
             var split = color.Split(',');
-            var nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            return new Color(float.Parse(split[0], nfi), float.Parse(split[1], nfi), float.Parse(split[2], nfi));
+            return new Color(float.Parse(split[0], Nfi), float.Parse(split[1], Nfi), float.Parse(split[2], Nfi));
         }
         return Color.white;
     }

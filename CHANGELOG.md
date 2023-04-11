@@ -1,5 +1,8 @@
 # Changelog
 
+## Release 1.2.0
+- Added support for meshes.
+
 ## Release 1.1.8
 - Fixed characters not being able to exported if their name contains characters that are not allowed in file names.
 

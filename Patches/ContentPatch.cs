@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UI;
 using WECCL.Content;
 using WECCL.Updates;
+using static WECCL.Utils.NumberFormatUtils;
 using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
@@ -206,6 +207,122 @@ internal class ContentPatch
 
             __instance.m_Sprite = Sprite.Create(overrideTexture, rect, relativePivot,
                 __instance.m_Sprite.pixelsPerUnit);
+        }
+    }
+    
+    /*
+     * BBKEGFNNMGF is the method that is called when the game applies the meshes to the player.
+     */
+    [HarmonyPatch(typeof(OCOFGNPADGM), "BBKEGFNNMGF")]
+    [HarmonyPostfix]
+    public static void OCOFGNPADGM_BBKEGFNNMGF(ref OCOFGNPADGM __instance, int AAIJMJLPAFC)
+    {
+        if (AAIJMJLPAFC == 4 && (__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > 50 && __instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] % 10 == 0) || VanillaCounts.ShapeCounts[AAIJMJLPAFC] == 0) return;
+        try {
+            if (__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > VanillaCounts.ShapeCounts[AAIJMJLPAFC] || (AAIJMJLPAFC == 17 &&
+                    -__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > VanillaCounts.TransparentHairHairstyleCount))
+            {
+                var shape = __instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] > 0 ? __instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] - VanillaCounts.ShapeCounts[AAIJMJLPAFC] - 1: -__instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] - VanillaCounts.TransparentHairHairstyleCount - 1;
+                if (CustomCostumes.Values.Any(x => x.InternalPrefix.Contains("shape" + AAIJMJLPAFC)))
+                {
+                    var c = CustomCostumes.Values.First(x => x.InternalPrefix.Contains("shape" + AAIJMJLPAFC))
+                        .CustomObjects[shape];
+                    ;
+                    var mesh = c.Item2 as Mesh;
+                    var meta = c.Item3;
+                    if (mesh != null)
+                    {
+                        __instance.AEHENPKDKEG[AAIJMJLPAFC].GetComponent<MeshFilter>().mesh = mesh;
+                        if (meta.ContainsKey("scale"))
+                        {
+                            if (meta["scale"].Contains(",")) {
+                                var scale = meta["scale"].Split(',');
+                                __instance.AEHENPKDKEG[AAIJMJLPAFC].transform.localScale = new Vector3(float.Parse(scale[0], Nfi), float.Parse(scale[1], Nfi), float.Parse(scale[2], Nfi));
+                            } else {
+                                __instance.AEHENPKDKEG[AAIJMJLPAFC].transform.localScale = new Vector3(float.Parse(meta["scale"], Nfi), float.Parse(meta["scale"], Nfi), float.Parse(meta["scale"], Nfi));
+                            }
+                        }
+                        if (meta.ContainsKey("position"))
+                        {
+                            var position = meta["position"].Split(',');
+                            __instance.AEHENPKDKEG[AAIJMJLPAFC].transform.localPosition = new Vector3(float.Parse(position[0], Nfi), float.Parse(position[1], Nfi), float.Parse(position[2], Nfi));
+                        }
+                        if (meta.ContainsKey("rotation"))
+                        {
+                            var rotation = meta["rotation"].Split(','); 
+                            __instance.AEHENPKDKEG[AAIJMJLPAFC].transform.localRotation = Quaternion.Euler(float.Parse(rotation[0], Nfi), float.Parse(rotation[1], Nfi), float.Parse(rotation[2], Nfi));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            Plugin.Log.LogError(e);
+            Plugin.Log.LogError("AAIJMJLPAFC: " + AAIJMJLPAFC + " (" + __instance.LAFFIDJJGIE.shape[AAIJMJLPAFC] + ")");
+        }
+    }
+
+    [HarmonyPatch(typeof(IINHFOHEAJB), "NDIGGJPCLCL")]
+    [HarmonyPostfix]
+    public static void IINHFOHEAJB_NDIGGJPCLCL(OCOFGNPADGM NMOJJPKABCC)
+    {
+        FixMeshes(NMOJJPKABCC);
+    }
+    
+    [HarmonyPatch(typeof(OCOFGNPADGM), "LFHLBFPLLNB")]
+    [HarmonyPostfix]
+    public static void OCOFGNPADGM_LFHLBFPLLNB(OCOFGNPADGM __instance)
+    {
+        FixMeshes(__instance);
+    }
+
+    private static void FixMeshes(OCOFGNPADGM player)
+    {
+        try
+        {
+            for (IINHFOHEAJB.AAIJMJLPAFC = 1;
+                 IINHFOHEAJB.AAIJMJLPAFC <= IINHFOHEAJB.KPEKAODDBPN;
+                 IINHFOHEAJB.AAIJMJLPAFC++)
+                {
+                    if (IINHFOHEAJB.AAIJMJLPAFC == 4 && player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > 50 && player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] % 10 == 0 || player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC] == null|| VanillaCounts.ShapeCounts[IINHFOHEAJB.AAIJMJLPAFC] == 0)
+                    {
+                        continue;
+                    }
+                    if (player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > VanillaCounts.ShapeCounts[IINHFOHEAJB.AAIJMJLPAFC]
+                        || (IINHFOHEAJB.AAIJMJLPAFC == 17 && -player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > VanillaCounts.TransparentHairHairstyleCount))
+                    {
+                    var mesh = player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshFilter>().mesh;
+                    if (player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().materials.Length <
+                        mesh.subMeshCount)
+                    {
+                        var shape = player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] > 0 ? player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] - VanillaCounts.ShapeCounts[IINHFOHEAJB.AAIJMJLPAFC] - 1: -player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] - VanillaCounts.TransparentHairHairstyleCount - 1;
+                        var meta = new Dictionary<string, string>();
+                        if (CustomCostumes.Values.Any(x => x.InternalPrefix.Contains("shape" + IINHFOHEAJB.AAIJMJLPAFC)))
+                        {
+                            meta = CustomCostumes.Values
+                                .First(x => x.InternalPrefix.Contains("shape" + IINHFOHEAJB.AAIJMJLPAFC))
+                                .CustomObjects[shape]
+                                .Item3;
+                        }
+
+                        var materials = new Material[mesh.subMeshCount];
+                        materials[0] = player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().material;
+                        for (int i = 1; i < materials.Length; i++)
+                        {
+                            materials[i] = new Material(player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().material);
+                            materials[i].color = meta.ContainsKey("submesh" + i + "color") ? ColorUtility.TryParseHtmlString(meta["submesh" + i + "color"], out var color) ? color : Color.white : Color.white;
+                        }
+
+                        player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().materials =
+                            materials;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError(e);
+            Plugin.Log.LogError("AAIJMJLPAFC: " + IINHFOHEAJB.AAIJMJLPAFC + " (" + player.LAFFIDJJGIE.shape[IINHFOHEAJB.AAIJMJLPAFC] + ")");
         }
     }
 }
