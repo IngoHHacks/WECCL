@@ -32,7 +32,7 @@ public class ModdedCharacterManager
                 overrideMode = "append"
             };
             string json = JsonConvert.SerializeObject(file, Formatting.Indented);
-            string path = Path.Combine(exportPath, $"{character.id}_{FileNameUtils.Escape(character.name)}.json");
+            string path = Path.Combine(exportPath, $"{character.id}_{FileNameUtils.Escape(character.name)}.character");
             File.WriteAllText(path, json);
         }
     }

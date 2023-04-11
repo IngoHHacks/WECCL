@@ -114,9 +114,12 @@ public class Plugin : BaseUnityPlugin
             
             var oldContentMappingsPath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
             var oldMetaFilePath = Path.Combine(PluginPath, "CustomConfigsSaveFile.json");
+            
+            var oldContentMappingsPath2 = Path.Combine(PluginPath, "ContentMappings.json");
+            var oldMetaFilePath2 = Path.Combine(PluginPath, "Meta.json");
 
-            ContentMappingsPath = Path.Combine(PluginPath, "ContentMappings.json");
-            MetaFilePath = Path.Combine(PluginPath, "Meta.json");
+            ContentMappingsPath = Path.Combine(PluginPath, "ContentMappings.mappings");
+            MetaFilePath = Path.Combine(PluginPath, "Meta.meta");
             
             if (File.Exists(oldContentMappingsPath))
             {
@@ -125,6 +128,14 @@ public class Plugin : BaseUnityPlugin
             if (File.Exists(oldMetaFilePath))
             {
                 File.Move(oldMetaFilePath, MetaFilePath);
+            }
+            if (File.Exists(oldContentMappingsPath2))
+            {
+                File.Move(oldContentMappingsPath2, ContentMappingsPath);
+            }
+            if (File.Exists(oldMetaFilePath2))
+            {
+                File.Move(oldMetaFilePath2, MetaFilePath);
             }
             
             DebugFilesDir = new DirectoryInfo(Path.Combine(PluginPath, "Debug"));
@@ -727,7 +738,7 @@ public class Plugin : BaseUnityPlugin
             }
 
             FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
-                .Where(f => f.Extension.ToLower() == ".json")
+                .Where(f => f.Extension.ToLower() == ".character")
                 .ToArray();
             int count = files.Length;
             long lastProgressUpdate = DateTime.Now.Ticks;

@@ -202,8 +202,8 @@ public class BetterCostumeData
             if (fleshC[i].StartsWith("Custom/"))
             {
                 var material = fleshC[i].Substring(7);
-                var index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                costume.flesh[i] = index + VanillaCounts.MaterialCounts[i] + 1;
+                var index = ContentMappings.ContentMap.FleshNameMap[i].IndexOf(material);
+                costume.flesh[i] = index + VanillaCounts.FleshCounts[i] + 1;
             }
             else if (i == 2 && fleshC[i].StartsWith("Custom/"))
             {
@@ -222,8 +222,8 @@ public class BetterCostumeData
             if (shapeC[i].StartsWith("Custom/"))
             {
                 var material = shapeC[i].Substring(7);
-                var index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                costume.shape[i] = index + VanillaCounts.MaterialCounts[i] + 1;
+                var index = ContentMappings.ContentMap.ShapeNameMap[i].IndexOf(material);
+                costume.shape[i] = index + VanillaCounts.ShapeCounts[i] + 1;
             }
             else if (i == 17 && shapeC[i].StartsWith("Custom/"))
             {
