@@ -2,6 +2,8 @@
 
 ## Release 1.2.0
 - Added support for meshes.
+- Better character exporting and importing. Note: This will break compatibility with older versions of the mod. Future versions will aim to be backwards compatible.
+- Exported characters now have the `.character` extension instead of `.json`, and `Meta` and `ContentMappings` now have the `.meta` and `.mappings` extensions respectively.
 
 ## Release 1.1.8
 - Fixed characters not being able to exported if their name contains characters that are not allowed in file names.
