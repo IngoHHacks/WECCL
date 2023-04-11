@@ -122,19 +122,41 @@ internal class SaveFilePatch
         try
         {
             SaveRemapper.PatchCustomContent(ref GameSaveFile.GPFFEHKLNLD);
-            foreach (Tuple<string,string, Character> triplet in ImportedCharacters)
+            foreach (BetterCharacterDataFile file in ImportedCharacters)
             {
-                Plugin.Log.LogInfo($"Importing character {triplet.Item3.name} with id {triplet.Item3.id}.");
-                string nameWithGuid = triplet.Item1;
-                string overrideMode = triplet.Item2;
-                Character importedCharacter = triplet.Item3;
+                Plugin.Log.LogInfo($"Importing character {file.CharacterData.name} with id {file.CharacterData.id}.");
+                string nameWithGuid = file._guid;
+                string overrideMode = file.OverrideMode;
+                Character importedCharacter =
+                    file.CharacterData.ToRegularCharacter(GameSaveFile.GPFFEHKLNLD.savedChars);
                 
                 bool previouslyImported = CheckIfPreviouslyImported(nameWithGuid);
+
+                overrideMode = overrideMode.ToLower();
                 
-                switch (overrideMode.ToLower())
+                switch (overrideMode)
                 {
-                    case "override":
-                        int id = importedCharacter.id;
+                    case "override-id":
+                    case "override-name":
+                    case "override-name_then_id":
+                        int id = overrideMode.Contains("id") ? importedCharacter.id : -1;
+                        if (overrideMode.Contains("name"))
+                        {
+                            try
+                            {
+                                id = GameSaveFile.GPFFEHKLNLD.savedChars.Single(c => c != null && c.name != null && c.name == importedCharacter.name).id;
+                            }
+                            catch (Exception e)
+                            {
+                                Plugin.Log.LogWarning($"Could not find character with name {importedCharacter.name}, or multiple characters with the same name.");
+                            }
+                        }
+
+                        if (id == -1)
+                        {
+                            Plugin.Log.LogError($"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
+                            break;
+                        }
                         Character oldCharacter = GameSaveFile.GPFFEHKLNLD.savedChars[id];
                         string name = importedCharacter.name;
                         string oldCharacterName = oldCharacter.name;
@@ -208,19 +230,30 @@ internal class SaveFilePatch
                             break;
                         }
                         importedCharacter.id = GetPreviouslyImportedId(nameWithGuid);
-                        goto case "merge";
-                    case "merge":
-                        int id3 = importedCharacter.id;
-                        Character oldCharacter2 = GameSaveFile.GPFFEHKLNLD.savedChars[id3];
-                        string name2 = importedCharacter.name;
-                        string oldCharacterName2 = oldCharacter2.name;
-                        foreach (FieldInfo field in typeof(Character).GetFields())
+                        overrideMode = "merge-name_then_id";
+                        goto case "merge-name_then_id";
+                    case "merge-id":
+                    case "merge-name":
+                    case "merge-name_then_id":
+                        int id3 = (overrideMode.Contains("id") ? importedCharacter.id : -1);
+                        if (overrideMode.Contains("name"))
                         {
-                            if (field.GetValue(importedCharacter) != default)
+                            try
                             {
-                                field.SetValue(oldCharacter2, field.GetValue(importedCharacter));
+                                id3 = GameSaveFile.GPFFEHKLNLD.savedChars.Single(c => c != null && c.name != null && c.name == importedCharacter.name).id;
+                            }
+                            catch (Exception e)
+                            {
+                                Plugin.Log.LogWarning($"Could not find character with name {importedCharacter.name}, or multiple characters with the same name.");
                             }
                         }
+                        if (id3 == -1)
+                        {
+                            Plugin.Log.LogError($"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
+                            break;
+                        }
+                        Character oldCharacter2 = GameSaveFile.GPFFEHKLNLD.savedChars[id3];
+                        file.CharacterData.MergeIntoCharacter(oldCharacter2);
 
                         GameSaveFile.GPFFEHKLNLD.savedChars[id3] = oldCharacter2;
                         if (importedCharacter.fed != oldCharacter2.fed)
@@ -244,7 +277,7 @@ internal class SaveFilePatch
                         }
 
                         Plugin.Log.LogInfo(
-                            $"Imported character with id {id3} and name {name2}, merging with character with name {oldCharacterName2}.");
+                            $"Imported character with id {id3} and name {importedCharacter.name}, merging with existing character: {oldCharacter2.name}.");
                         break;
                 }
                 ContentMappings.ContentMap.AddPreviouslyImportedCharacter(nameWithGuid, importedCharacter.id);

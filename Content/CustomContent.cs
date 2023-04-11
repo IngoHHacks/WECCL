@@ -98,7 +98,7 @@ public static class CustomContent
         }
     }
 
-    internal static List<Tuple<string, string, Character>> ImportedCharacters = new();
+    internal static List<BetterCharacterDataFile> ImportedCharacters = new();
     internal static List<string> FilesToDeleteOnSave = new();
     
     public static AudioClip GetHighestPriorityAudioOverride(string name)

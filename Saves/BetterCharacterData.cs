@@ -5,6 +5,8 @@ namespace WECCL.Saves;
 
 public class BetterCharacterData
 {
+    public string VERSION = "1.0.0";
+    
     public int? id;
 
     public string name;
@@ -79,25 +81,25 @@ public class BetterCharacterData
 
     public int? oldFed;
 
-    public int[] experience;
+    public int[] experience = new int[11];
 
-    public string[] relationshipC;
+    public string[] relationshipC = new string[7];
 
     public int? negotiated;
 
     public int? agreement;
 
-    public int[] moveFront;
+    public int[] moveFront = new int[17];
 
-    public int[] moveBack;
+    public int[] moveBack = new int[9];
 
-    public int[] moveGround;
+    public int[] moveGround = new int[7];
 
-    public int[] moveAttack;
+    public int[] moveAttack = new int[9];
 
-    public int[] moveCrush;
+    public int[] moveCrush = new int[9];
 
-    public int[] taunt;
+    public int[] taunt = new int[4];
 
     public int? stance;
 
@@ -141,7 +143,7 @@ public class BetterCharacterData
         bcd.relationshipC = new string[character.relationship.Length];
         for (int i = 0; i < character.relationship.Length; i++)
         {
-            bcd.relationshipC[i] = allCharacters[character.relationship[i]].name + "@" + character.relationship[i];
+            bcd.relationshipC[i] = character.relationship[i] == 0 ? "0" : allCharacters[character.relationship[i]].name + "@" + character.relationship[i];
         }
         if (character.music > VanillaCounts.MusicCount)
         {
@@ -162,16 +164,26 @@ public class BetterCharacterData
         character.costume = new Costume[costumeC.Length];
         for (int i = 0; i < costumeC.Length; i++)
         {
+            if (costumeC[i] == null)
+            {
+                character.costume[i] = null;
+                continue;
+            }
             character.costume[i] = costumeC[i].ToRegularCostume();
         }
         character.relationship = new int[relationshipC.Length];
         for (int i = 0; i < relationshipC.Length; i++)
         {
+            if (this.relationshipC[i] == "0")
+            {
+                character.relationship[i] = 0;
+                continue;
+            }
             var split = relationshipC[i].Split('@');
             var name = split[0];
             try
             {
-                character.relationship[i] = allCharacters.Single(c => c.name == name).id;
+                character.relationship[i] = allCharacters.Single(c => c != null && c.name != null && c.name == name).id;
             }
             catch (Exception e)
             {
@@ -190,5 +202,10 @@ public class BetterCharacterData
             character.music = int.Parse(musicC.Substring(8));
         }
         return character;
+    }
+    
+    public void MergeIntoCharacter(Character character)
+    {
+        JsonConvert.PopulateObject(JsonConvert.SerializeObject(this), character);
     }
 }

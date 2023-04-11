@@ -11,21 +11,22 @@ public class BetterCostumeData
 
     public int limb;
 
-    public string[] textureC;
+    public string[] textureC = new string[40];
 
-    public float[] r;
+    public float[] r = new float[40];
 
-    public float[] g;
+    public float[] g = new float[40];
 
-    public float[] b;
+    public float[] b = new float[40];
 
-    public string[] fleshC;
+    public string[] fleshC = new string[40];
 
-    public string[] shapeC;
+    public string[] shapeC = new string[40];
 
 
     public static BetterCostumeData FromRegularCostumeData(Costume costume)
     {
+        if (costume == null) return null;
         BetterCostumeData bcd = JsonConvert.DeserializeObject<BetterCostumeData>(JsonConvert.SerializeObject(costume))!;
         for (int i = 0; i < costume.texture.Length; i++)
         {
@@ -73,17 +74,28 @@ public class BetterCostumeData
             else
             {
                 var index = costume.texture[i];
-                var material = ContentMappings.ContentMap.MaterialNameMap[i][index];
-                bcd.textureC[i] = "Vanilla/" + material;
+                bcd.textureC[i] = "Vanilla/" + index;
             }
         }
         for (int i = 0; i < costume.flesh.Length; i++)
         {
-            if (costume.flesh[i] > VanillaCounts.MaterialCounts[i])
+            if (i == 17 && costume.flesh[i] == 100)
             {
-                var index = costume.flesh[i] - VanillaCounts.MaterialCounts[i] - 1;
-                var material = ContentMappings.ContentMap.MaterialNameMap[i][index];
-                bcd.fleshC[i] = "Custom/" + material;
+                var index = costume.flesh[i];
+                bcd.fleshC[i] = "Vanilla/" + index;
+            }
+            else if (costume.flesh[i] > VanillaCounts.FleshCounts[i])
+            {
+                var index = costume.flesh[i] - VanillaCounts.FleshCounts[i] - 1;
+                if (index >= ContentMappings.ContentMap.FleshNameMap[i].Count || index < 0)
+                {
+                    bcd.fleshC[i] = "Vanilla/" + costume.flesh[i];
+                }
+                else
+                {
+                    var material = ContentMappings.ContentMap.FleshNameMap[i][index];
+                    bcd.fleshC[i] = "Custom/" + material;
+                }
             }
             else if (i == 2 && costume.flesh[i] < -VanillaCounts.BodyFemaleCount)
             {
@@ -94,17 +106,28 @@ public class BetterCostumeData
             else
             {
                 var index = costume.flesh[i];
-                var material = ContentMappings.ContentMap.MaterialNameMap[i][index];
-                bcd.fleshC[i] = "Vanilla/" + material;
+                bcd.fleshC[i] = "Vanilla/" + index;
             }
         }
         for (int i = 0; i < costume.shape.Length; i++)
         {
-            if (costume.shape[i] > VanillaCounts.MaterialCounts[i])
+            if ((costume.shape[i] > 50 && costume.shape[i] % 10 == 0) || VanillaCounts.ShapeCounts[i] == 0)
             {
-                var index = costume.shape[i] - VanillaCounts.MaterialCounts[i] - 1;
-                var material = ContentMappings.ContentMap.MaterialNameMap[i][index];
-                bcd.shapeC[i] = "Custom/" + material;
+                var index = costume.shape[i];
+                bcd.shapeC[i] = "Vanilla/" + index;
+            }
+            else if (costume.shape[i] > VanillaCounts.ShapeCounts[i])
+            {
+                var index = costume.shape[i] - VanillaCounts.ShapeCounts[i] - 1;
+                if (index >= ContentMappings.ContentMap.ShapeNameMap[i].Count || index < 0)
+                {
+                    bcd.shapeC[i] = "Vanilla/" + costume.shape[i];
+                }
+                else
+                {
+                    var material = ContentMappings.ContentMap.ShapeNameMap[i][index];
+                    bcd.shapeC[i] = "Custom/" + material;
+                }
             }
             else if (i == 17 && costume.shape[i] < -VanillaCounts.TransparentHairHairstyleCount)
             {
@@ -115,8 +138,7 @@ public class BetterCostumeData
             else
             {
                 var index = costume.shape[i];
-                var material = ContentMappings.ContentMap.MaterialNameMap[i][index];
-                bcd.shapeC[i] = "Vanilla/" + material;
+                bcd.shapeC[i] = "Vanilla/" + index;
             }
         }
         return bcd;
@@ -171,9 +193,8 @@ public class BetterCostumeData
             }
             else
             {
-                var material = textureC[i].Substring(8);
-                var index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                costume.texture[i] = index;
+                var index = textureC[i].Substring(8);
+                costume.texture[i] = int.Parse(index);
             }
         }
         for (int i = 0; i < costume.flesh.Length; i++)
@@ -192,9 +213,8 @@ public class BetterCostumeData
             }
             else
             {
-                var material = fleshC[i].Substring(8);
-                var index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                costume.flesh[i] = index;
+                var index = fleshC[i].Substring(8);
+                costume.flesh[i] = int.Parse(index);
             }
         }
         for (int i = 0; i < costume.shape.Length; i++)
@@ -213,9 +233,8 @@ public class BetterCostumeData
             }
             else
             {
-                var material = shapeC[i].Substring(8);
-                var index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                costume.shape[i] = index;
+                var index = shapeC[i].Substring(8);
+                costume.shape[i] = int.Parse(index);
             }
         }
         return costume;

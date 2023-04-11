@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine.Networking;
 using WECCL.Content;
@@ -641,9 +642,8 @@ public class Plugin : BaseUnityPlugin
             int cur = 0;
             foreach (FileInfo file in files)
             {
-                Character character = ModdedCharacterManager.ImportCharacter(file.FullName, out string overrideMode);
-                if (character == null || character.name == null ||
-                    (character.id == 0 && overrideMode.ToLower() == "override"))
+                BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(File.ReadAllText(file.FullName));
+                if (character == null)
                 {
                     Log.LogError($"Failed to import character from {file.FullName}.");
                     continue;
@@ -656,7 +656,9 @@ public class Plugin : BaseUnityPlugin
                     name = $"{guid}/{name}";
                 }
                 
-                ImportedCharacters.Add(new Tuple<string, string, Character>(name, overrideMode, character));
+                character._guid = name;
+
+                ImportedCharacters.Add(character);
                 FilesToDeleteOnSave.Add(file.FullName);
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
