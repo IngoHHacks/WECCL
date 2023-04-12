@@ -570,6 +570,7 @@ public class Plugin : BaseUnityPlugin
     
     internal static IEnumerator LoadMeshes(DirectoryInfo dir)
     {
+        VanillaCounts.NoLocations = World.no_locations;
         int meshCount = 0;
         // Load custom meshes
         if (!dir.Exists)
@@ -649,6 +650,24 @@ public class Plugin : BaseUnityPlugin
                     {
                         Log.LogError(e);
                     }
+                    break;
+                }
+            }
+
+            if (file.Directory?.Name == "arena")
+            {
+                GameObject arena;
+                try
+                {
+                    arena = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<GameObject>().First();
+                    arena.name = fileName;
+                    CustomArenaPrefabs.Add(arena);
+                    World.no_locations++;
+                    meshCount++;
+                }
+                catch (Exception e)
+                {
+                    Log.LogError(e);
                 }
             }
             cur++;

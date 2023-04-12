@@ -35,4 +35,7 @@ public class VanillaCounts
 
     [JsonProperty]
     public static int MusicCount { get; internal set; }
+    
+    [JsonProperty]
+    public static int NoLocations { get; internal set; }
 }
