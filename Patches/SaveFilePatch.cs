@@ -304,6 +304,15 @@ internal class SaveFilePatch
 
     private static bool CheckIfPreviouslyImported(string nameWithGuid)
     {
+        if (nameWithGuid.EndsWith(".json"))
+        {
+            nameWithGuid = nameWithGuid.Substring(0, nameWithGuid.Length - 5);
+        }
+        else if (nameWithGuid.EndsWith(".character"))
+        {
+            nameWithGuid = nameWithGuid.Substring(0, nameWithGuid.Length - 10);
+        }
+        
         return ContentMappings.ContentMap.PreviouslyImportedCharacters.Contains(nameWithGuid);
     }
     

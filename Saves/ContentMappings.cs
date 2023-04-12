@@ -57,12 +57,34 @@ internal class ContentMappings
         }
 
         string json = File.ReadAllText(path);
-        return JsonConvert.DeserializeObject<ContentMappings>(json,
+        var obj = JsonConvert.DeserializeObject<ContentMappings>(json,
             new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+        
+        for (int i = 0; i < obj.PreviouslyImportedCharacters.Count; i++)
+        {
+            if (obj.PreviouslyImportedCharacters[i].EndsWith(".json"))
+            {
+                obj.PreviouslyImportedCharacters[i] = obj.PreviouslyImportedCharacters[i].Substring(0, obj.PreviouslyImportedCharacters[i].Length - 5);
+            }
+            else if (obj.PreviouslyImportedCharacters[i].EndsWith(".character"))
+            {
+                obj.PreviouslyImportedCharacters[i] = obj.PreviouslyImportedCharacters[i].Substring(0, obj.PreviouslyImportedCharacters[i].Length - 10);
+            }
+        }
+        return obj;
     }
     
     public void AddPreviouslyImportedCharacter(string name, int id)
     {
+        if (name.EndsWith(".json"))
+        {
+            name = name.Substring(0, name.Length - 5);
+        }
+        else if (name.EndsWith(".character"))
+        {
+            name = name.Substring(0, name.Length - 10);
+        }
+        
         if (this.PreviouslyImportedCharacters.Contains(name))
         {
             return;

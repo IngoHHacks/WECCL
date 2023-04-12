@@ -84,9 +84,40 @@ Example: `abc.png` and `abc.meta`.
 Meta files must be a newline-separated list of key-value pairs in the format `key: value` (space is optional).
 The following keys are supported:
 
-| Key | Description                                                                                                                                                                                                                           |
-|-----|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| skin_tone | The skin tone of the character. Must be formatted as `r,g,b` (e.g. `0.5, 0.5, 0.5`). `1.0, 1.0, 1.0` is the default skin tone (white). `0.75, 0.75, 0.75` and `0.5, 0.45, 0.3` are the two other skin tones used in the vanilla game. |
+| Key | Description                                                                                                                                                                                                                                                                       |
+|-----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| skin_tone | The skin tone of the character. Must be formatted as `r,g,b` (e.g. `1.0, 0.0, 0.0`) or an HTML string (e.g. `#FF0000` or `red`). `1.0, 1.0, 1.0` is the default skin tone (white). `0.75, 0.75, 0.75` and `0.5, 0.45, 0.3` are the two other skin tones used in the vanilla game. |
+
+## Meshes
+
+As with textures, meshes can be added by placing them in `Wrestling Empire/BepInEx/plugins/Assets`. Meshes must be in a subfolder by the mesh name.
+Example: `body_mesh/abc`. The extension must be `.mesh` or no extension at all.
+Meshes should be inside an asset bundle with it being the only mesh in the bundle. The first submesh will be the one affected by the game's mesh color setting. Others can be manually set in the metadata file.
+
+| Supported Mesh Names       |
+|----------------------------|
+| arms_shape                 |
+| body_shape                 |
+| face_headwear              |
+| face_shape                 |
+| hair_extension             |
+| hair_hairstyle_solid       |
+| hair_hairstyle_transparent |
+| legs_shape                 |
+
+### Metadata
+
+Metadata files can be used to add additional information to meshes, e.g. mesh color. Metadata files must be named the same as the mesh, but with the `.meta` extension.
+Example: `abc` and `abc.meta`. 
+Meta files must be a newline-separated list of key-value pairs in the format `key: value` (space is optional).
+The following keys are supported:
+
+| Key           | Description                                                                                                                                                                                                         |
+|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| scale         | The scale of the mesh. Must be formatted as `x,y,z` (e.g. `1.0, 1.0, 1.0`). `1.0, 1.0, 1.0` is the default scale.                                                                                                   |
+| position      | The position of the mesh. Must be formatted as `x,y,z` (e.g. `0.0, 0.0, 0.0`). `0.0, 0.0, 0.0` is the default position.                                                                                             |
+| rotation      | The rotation of the mesh. Must be formatted as `x,y,z` (e.g. `0.0, 0.0, 0.0`). `0.0, 0.0, 0.0` is the default rotation.                                                                                             |
+| submeshXcolor | The color of submesh X. Must be formatted as `r,g,b` (e.g. `1,0, 0.0, 0.0`) or an HTML string (e.g. `#FF0000` or `red`). Overriding submesh 0 is not supported, as it is affected by the game's mesh color setting. |
 
 ## Overriding content
 

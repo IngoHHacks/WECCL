@@ -310,7 +310,18 @@ internal class ContentPatch
                         for (int i = 1; i < materials.Length; i++)
                         {
                             materials[i] = new Material(player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().material);
-                            materials[i].color = meta.ContainsKey("submesh" + i + "color") ? ColorUtility.TryParseHtmlString(meta["submesh" + i + "color"], out var color) ? color : Color.white : Color.white;
+
+                            if (meta.ContainsKey("submesh" + i + "color"))
+                            {
+                                var split = meta["submesh" + i + "color"].Split(',');
+                                if (split.Length == 3)
+                                {
+                                    materials[i].color = new Color(float.Parse(split[0], Nfi), float.Parse(split[1], Nfi),
+                                        float.Parse(split[2], Nfi));
+                                }
+
+                                materials[i].color = ColorUtility.TryParseHtmlString(meta["submesh" + i + "color"], out var color) ? color : Color.white;
+                            }
                         }
 
                         player.AEHENPKDKEG[IINHFOHEAJB.AAIJMJLPAFC].GetComponent<MeshRenderer>().materials =

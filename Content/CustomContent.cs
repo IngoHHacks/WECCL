@@ -249,7 +249,11 @@ public static class CustomContent
         {
             var color = dict.First(t => t.Key == "skin_color" || t.Key == "skin_colour" || t.Key == "skin_tone").Value;
             var split = color.Split(',');
-            return new Color(float.Parse(split[0], Nfi), float.Parse(split[1], Nfi), float.Parse(split[2], Nfi));
+            if (split.Length == 3)
+            {
+                return new Color(float.Parse(split[0], Nfi), float.Parse(split[1], Nfi), float.Parse(split[2], Nfi));
+            }
+            return ColorUtility.TryParseHtmlString(color, out var c) ? c : Color.white;
         }
         return Color.white;
     }
