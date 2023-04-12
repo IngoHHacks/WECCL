@@ -59,6 +59,7 @@ public class PromoData
                         }
                         promoData.Characters = enumerable.ToArray();
                     }
+                    continue;
                 }
 
                 c = 0;

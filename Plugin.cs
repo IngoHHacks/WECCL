@@ -677,6 +677,8 @@ public class Plugin : BaseUnityPlugin
                 UpdateConsoleLogLoadingBar($"Loading custom meshes from {dir.FullName}", cur, files.Length);
             }
         }
+        
+        Log.LogInfo($"Loaded {meshCount} custom meshes from {dir.FullName}");
     }
     
     internal static IEnumerator LoadOverrides(DirectoryInfo dir)

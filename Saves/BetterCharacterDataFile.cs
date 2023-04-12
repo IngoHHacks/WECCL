@@ -45,7 +45,7 @@ public class BetterCharacterDataFile
         {
             if (this.findMode == null)
             {
-                return "name_then_id";
+                return this.overrideMode == "append" ? "" : "name_then_id";
             }
 
             return this.findMode;

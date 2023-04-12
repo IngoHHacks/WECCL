@@ -36,23 +36,4 @@ public class ModdedCharacterManager
             File.WriteAllText(path, json);
         }
     }
-
-    public static Character ImportCharacter(string path, out string overrideMode)
-    {
-        GameSaveFile.GPFFEHKLNLD.savedChars[0] = null;
-        string json = File.ReadAllText(path);
-        BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
-        if (character != null)
-        {
-            Character internalCharacter = character.CharacterData.ToRegularCharacter(GameSaveFile.GPFFEHKLNLD.savedChars);
-            overrideMode = character.OverrideMode;
-            if (character.OverrideMode != "append")
-            {
-                overrideMode += $"-{character.FindMode}";
-            }
-            return internalCharacter;
-        }
-        overrideMode = null;
-        return null;
-    }
 }

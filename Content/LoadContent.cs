@@ -88,7 +88,7 @@ public static class LoadContent
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
             {
                 yield return Plugin.LoadPromos(modAssetsDir);
-                PromoPatches.PatchPromoInfo();
+                PromoPatch.PatchPromoInfo();
                 yield return Plugin.LoadAudioClips(modAssetsDir);
                 yield return Plugin.LoadCostumes(modAssetsDir);
                 yield return Plugin.LoadMeshes(modAssetsDir);

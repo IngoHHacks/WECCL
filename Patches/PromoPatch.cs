@@ -3,7 +3,7 @@
 namespace WECCL.Patches;
 
 [HarmonyPatch]
-internal class PromoPatches
+internal class PromoPatch
 {
     [HarmonyPatch(typeof(HJBJPCDFLGL), "EMFEHLOHNEC")]
     [HarmonyPrefix]

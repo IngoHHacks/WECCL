@@ -126,7 +126,7 @@ internal class SaveFilePatch
             {
                 Plugin.Log.LogInfo($"Importing character {file.CharacterData.name} with id {file.CharacterData.id}.");
                 string nameWithGuid = file._guid;
-                string overrideMode = file.OverrideMode;
+                string overrideMode = file.OverrideMode + file.FindMode;
                 Character importedCharacter =
                     file.CharacterData.ToRegularCharacter(GameSaveFile.GPFFEHKLNLD.savedChars);
                 
