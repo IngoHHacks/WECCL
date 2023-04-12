@@ -23,7 +23,8 @@ public static class LoadContent
         Costume = 1,
         Audio = 2,
         Mesh = 4,
-        All = Costume | Audio | Mesh
+        Promo = 8,
+        All = Costume | Audio | Mesh | Promo
     }
     
     internal static IEnumerator Load()
@@ -86,6 +87,8 @@ public static class LoadContent
         {
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
             {
+                yield return Plugin.LoadPromos(modAssetsDir);
+                PromoPatches.PatchPromoInfo();
                 yield return Plugin.LoadAudioClips(modAssetsDir);
                 yield return Plugin.LoadCostumes(modAssetsDir);
                 yield return Plugin.LoadMeshes(modAssetsDir);

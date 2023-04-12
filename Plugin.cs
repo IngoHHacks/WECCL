@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;
+using PromoData = WECCL.Content.PromoData;
 
 namespace WECCL;
 
@@ -57,6 +58,8 @@ public class Plugin : BaseUnityPlugin
     };
 
     private static readonly List<string> MeshExtensions = new() { ".mesh", "" };
+    
+    private static readonly List<string> PromoExtensions = new() { ".promo" };
 
     internal static Plugin Instance { get; private set; }
 
@@ -495,6 +498,75 @@ public class Plugin : BaseUnityPlugin
             Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.FullName}");
         }
     }
+
+    internal static IEnumerator LoadPromos(DirectoryInfo dir)
+    {
+        int promoCount = 0;
+        // Load custom promos
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => PromoExtensions.Contains(f.Extension.ToLower())).ToArray();
+        int count = files.Length;
+        long lastProgressUpdate = DateTime.Now.Ticks;
+        int cur = 0;
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            try
+            {
+                var modGuid = FindPluginName(file.DirectoryName);
+                if (modGuid != null && modGuid != "plugins")
+                {
+                    fileName = $"{modGuid}/{fileName}";
+                }
+
+                LoadContent._lastItemLoaded = fileName;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(e);
+            }
+            if (DateTime.Now.Ticks > _nextProgressUpdate)
+            {
+                _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                yield return null;
+            }
+            try
+            {
+                var promo = PromoData.CreatePromo(file.FullName);
+                promoCount++;
+                cur++;
+                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
+                {
+                    lastProgressUpdate = DateTime.Now.Ticks;
+                    UpdateConsoleLogLoadingBar($"Loading custom audio clips from {dir.FullName}", cur, count);
+                }
+
+                CustomContent.PromoData.Add(promo);
+            }
+            catch (Exception e)
+            {
+                Log.LogError(e);
+            }
+
+            GC.Collect();
+            LoadContent._loadedAssets++;
+            if (DateTime.Now.Ticks > _nextProgressUpdate)
+            {
+                _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                yield return null;
+            }
+        }
+
+        if (promoCount != 0)
+        {
+            Log.LogInfo($"Loaded {promoCount} custom promos from {dir.FullName}");
+        }
+    }
     
     internal static IEnumerator LoadMeshes(DirectoryInfo dir)
     {
@@ -853,6 +925,10 @@ public class Plugin : BaseUnityPlugin
             if ((type & LoadContent.ContentType.Mesh) != 0)
             {
                 extensions.AddRange(MeshExtensions);
+            }
+            if ((type & LoadContent.ContentType.Promo) != 0)
+            {
+                extensions.AddRange(PromoExtensions);
             }
             count += dir
                 .GetFiles("*", SearchOption.AllDirectories)

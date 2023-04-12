@@ -49,6 +49,8 @@ public static class CustomContent
     internal static readonly Dictionary<string, Dictionary<string,AudioClip>> ResourceOverridesAudio = new();
     internal static readonly Dictionary<string, Dictionary<string,Mesh>> ResourceOverridesMeshes = new();
     
+    internal static readonly List<PromoData> PromoData = new();
+    
     public static bool HasConflictingOverrides = false;
 
     internal static List<string> Prefixes = new();
