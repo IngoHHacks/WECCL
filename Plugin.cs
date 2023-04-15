@@ -76,6 +76,8 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> CacheEnabled { get; set; }
     
     internal static ConfigEntry<bool> Debug { get; set; }
+    
+    internal static ConfigEntry<bool> DebugRender { get; set; }
 
     public static float GameVersion => Characters.latestVersion;
 
@@ -112,6 +114,8 @@ public class Plugin : BaseUnityPlugin
                 "Enable caching of custom content. This will speed up loading times with the downside of more disk space usage. The cache is stored in the .cache folder, which is hidden by default. Disabling this will automatically delete the cache on startup.");
             Debug = this.Config.Bind("General", "Debug", false,
                 "Enable debug mode. This will create debugging files in the /Debug folder.");
+            DebugRender = this.Config.Bind("General", "DebugRender", false,
+                "Enable debug rendering. This will render debug information on the screen, such as collision boxes.");
             
             CreateBackups();
             

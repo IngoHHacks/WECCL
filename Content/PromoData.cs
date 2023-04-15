@@ -32,17 +32,21 @@ public class PromoData
             for (int i = 0; i < lines.Count; i++)
             {
                 var line = lines[i];
-                if (line.StartsWith("title:"))
+                if (line.Trim().Length == 0)
+                {
+                    continue;
+                }
+                if (line.ToLower().StartsWith("title:"))
                 {
                     promoData.Title = line.Substring(6).Trim();
                     continue;
                 }
-                if (line.StartsWith("description:"))
+                if (line.ToLower().StartsWith("description:"))
                 {
                     promoData.Description = line.Substring(12).Trim();
                     continue;
                 }
-                if (line.StartsWith("characters:"))
+                if (line.ToLower().StartsWith("characters:"))
                 {
                     if (!line.Contains(","))
                     {
