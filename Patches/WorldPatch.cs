@@ -166,47 +166,23 @@ public class WorldPatch
                 if (zSorted[3].x > zSorted[2].x)
                 {
                     topRight = zSorted[3];
+                    bottomRight = zSorted[2];
                 }
                 else
                 {
                     topRight = zSorted[2];
-                }
-                if (zSorted[1].x > zSorted[0].x)
-                {
-                    bottomRight = zSorted[1];
-                }
-                else
-                {
-                    bottomRight = zSorted[0];
+                    bottomRight = zSorted[3];
                 }
                 if (zSorted[1].x < zSorted[0].x)
                 {
                     bottomLeft = zSorted[1];
+                    topLeft = zSorted[0];
                 }
                 else
                 {
                     bottomLeft = zSorted[0];
+                    topLeft = zSorted[1];
                 }
-                if (zSorted[3].x < zSorted[2].x)
-                {
-                    topLeft = zSorted[3];
-                }
-                else
-                {
-                    topLeft = zSorted[2];
-                }
-
-
-                foreach (var corner in corners)
-                {
-                    Plugin.Log.LogInfo("Corner: " + corner);
-                }
-                
-                Plugin.Log.LogInfo("Top right: " + topRight);
-                Plugin.Log.LogInfo("Right Bottom right: " + bottomRight);
-                Plugin.Log.LogInfo("Bottom Bottom left: " + bottomLeft);
-                Plugin.Log.LogInfo("Top left: " + topLeft);
-                
 
                 // Create block
                 KONPHAKHJPP.GEHOOPJCAKD++;
