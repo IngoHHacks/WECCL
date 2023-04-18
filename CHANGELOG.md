@@ -1,10 +1,17 @@
 # Changelog
 
+### GV 1.56:
+
 ## Release 1.2.0
+- UPDATE TO GAME VERSION 1.56
 - Added support for costume meshes.
 - Added support for custom promos.
 - Better character exporting and importing. Note: This will break compatibility with older versions of the mod. Future versions will aim to be backwards compatible.
 - Exported characters now have the `.character` extension instead of `.json`, and `Meta` and `ContentMappings` now have the `.meta` and `.mappings` extensions respectively.
+- Game version is now stored in the content mappings to prevent issues with loading content from older versions of the game.
+- Experimental support for custom arenas.
+
+### GV 1.55:
 
 ## Release 1.1.8
 - Fixed characters not being able to exported if their name contains characters that are not allowed in file names.
