@@ -334,8 +334,8 @@ public class Plugin : BaseUnityPlugin
         if (CustomClips.Count != 0)
         {
             // Update the number of audio clips in the game
-            CKAMIAJJDBP.GGICEBAECGK = VanillaCounts.MusicCount + CustomClips.Count;
-            CKAMIAJJDBP.CKEJAMLGLAL = new AudioClip[CKAMIAJJDBP.GGICEBAECGK + 1];
+            EHIOFPLJLKH.CJNGPFLPOBM = VanillaCounts.MusicCount + CustomClips.Count;
+            EHIOFPLJLKH.GBMBIDMNKOK = new AudioClip[EHIOFPLJLKH.CJNGPFLPOBM + 1];
         }
 
         ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));

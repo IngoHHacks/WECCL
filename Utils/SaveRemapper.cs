@@ -14,8 +14,8 @@ public class SaveRemapper
 
         bool changed = false;
 
-        int oldVersion = Mathf.RoundToInt(Plugin.GameVersion * 100);
-        int newVersion = Mathf.RoundToInt((MetaFile.Data.GameVersion * 100));
+        int oldVersion = Mathf.RoundToInt((ContentMappings.ContentMap.GameVersion * 100));
+        int newVersion = Mathf.RoundToInt(Plugin.GameVersion * 100);
 
         VersionDiff versionDiff = null;
         
@@ -409,6 +409,12 @@ public class SaveRemapper
                             }
                         }
                     }
+                }
+                
+                if (versionDiff != null && versionDiff.MusicCountDiff != 0 && character.music > VanillaCounts.MusicCount - versionDiff.MusicCountDiff)
+                {
+                    character.music += versionDiff.MusicCountDiff;
+                    changed = true;
                 }
 
                 if (character.music > VanillaCounts.MusicCount)

@@ -12,6 +12,6 @@ internal class V155toV156 : VersionDiff
         TransparentHairMaterialCountDiff = 0;
         TransparentHairHairstyleCountDiff = 0;
         KneepadCountDiff = 0;
-        MusicCountDiff = 0;
+        MusicCountDiff = 4;
     }
 }

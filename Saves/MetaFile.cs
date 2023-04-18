@@ -12,8 +12,7 @@ public class MetaFile
     public bool HidePriorityScreenNextTime { get; set; } = false;
     
     public bool FirstLaunch { get; set; } = true;
-    
-    public float GameVersion { get; set; } = Plugin.GameVersion;
+   
 
     public void Save()
     {

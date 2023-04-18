@@ -10,26 +10,26 @@ internal class MenuPatch
 
     private static int _expectedNextId = -1;
 
-    [HarmonyPatch(typeof(Characters), "NBBPIGNONKO")]
+    [HarmonyPatch(typeof(Characters), nameof(Characters.DBAFDIJHDAO))]
     [HarmonyPrefix]
-    public static void Characters_NBBPIGNONKO(int FODHPJLILOD)
+    public static void Characters_DBAFDIJHDAO(int GDMOLNLLKAK)
     {
-        _lastFed = FODHPJLILOD;
+        _lastFed = GDMOLNLLKAK;
         _expectedNextId = 0;
     }
 
     /*
-     * GameMenus.GHGPDLAMLFL is called when the player opens the editor (including the fed editor)
+     * GameMenus.DMGJOHGEOKF is called when the player opens the editor (including the fed editor)
      * This patch is used to resize the character editor to fit the roster size if it is larger than 48 (vanilla max)
      */
-    [HarmonyPatch(typeof(GameMenus), "GHGPDLAMLFL")]
+    [HarmonyPatch(typeof(GameMenus), nameof(GameMenus.DMGJOHGEOKF))]
     [HarmonyPrefix]
-    public static void GameMenus_GHGPDLAMLFL(int PPPEMNOKLLL, string DOCHPFFDDHL, ref float PLPIOEGOEOP,
-        ref float FFMFHEJFJHO, ref float GJKLLIOBLBN, ref float LALIOOHGONN)
+    public static void GameMenus_DMGJOHGEOKF(int MBEAKNKLKOE, string DHPDOHFLOII, ref float EPGAPPEOJKI,
+        ref float POKNPEKLCCE, ref float DOCNIBNJKOL, ref float MJPLHDGLHDF)
     {
         try
         {
-            if (PPPEMNOKLLL != 5)
+            if (MBEAKNKLKOE != 5)
             {
                 return;
             }
@@ -37,7 +37,7 @@ internal class MenuPatch
             int fedSize = Characters.fedData[_lastFed].size;
             if (fedSize > 48)
             {
-                int actualIndex = (((int)PLPIOEGOEOP + 525) / 210) + ((-(int)FFMFHEJFJHO + 110) / 60 * 6);
+                int actualIndex = (((int)EPGAPPEOJKI + 525) / 210) + ((-(int)POKNPEKLCCE + 110) / 60 * 6);
 
                 if (actualIndex != _expectedNextId)
                 {
@@ -54,10 +54,10 @@ internal class MenuPatch
 
                 FindBestFit(fedSize, -525, -310, 525, 110, out rows, out columns, out scale, out startX, out startY);
 
-                GJKLLIOBLBN = scale;
-                LALIOOHGONN = scale;
-                PLPIOEGOEOP = startX + (actualIndex % columns * 210 * scale);
-                FFMFHEJFJHO = startY - (actualIndex / columns * 50 * scale);
+                DOCNIBNJKOL = scale;
+                MJPLHDGLHDF = scale;
+                EPGAPPEOJKI = startX + (actualIndex % columns * 210 * scale);
+                POKNPEKLCCE = startY - (actualIndex / columns * 50 * scale);
             }
         }
         catch (Exception e)

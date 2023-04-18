@@ -3,7 +3,7 @@
 [HarmonyPatch]
 internal class StackTracePatch
 {
-    [HarmonyPatch(typeof(StackTraceUtility), "ExtractStringFromExceptionInternal")]
+    [HarmonyPatch(typeof(StackTraceUtility), nameof(ExtractStringFromExceptionInternal))]
     [HarmonyPostfix]
     public static void ExtractStringFromExceptionInternal(ref string stackTrace)
     {

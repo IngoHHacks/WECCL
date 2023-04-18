@@ -24,20 +24,20 @@ public class ScreenPatch
         _dd = 10;
         if (MetaFile.Data.FirstLaunch)
         {
-            KPGIEHHDIDA.CGLNPGPJPJE();
-            KPGIEHHDIDA.LHOICDLLMID = 1002;
-            KPGIEHHDIDA.LHJLOPGFFPE = 0;
-            KPGIEHHDIDA.OKILOINLLAO = 0;
-            KPGIEHHDIDA.GHGPDLAMLFL();
+            GameScreens.GGPMGNGIAKG();
+            GameScreens.GLDIFJOEOIO = 1002;
+            GameScreens.FPBNAMNIOKK = 0;
+            GameScreens.AGAGHGBLCDA = 0;
+            GameScreens.DMGJOHGEOKF();
             __instance.gLicense.SetActive(value: false);
-            KPGIEHHDIDA.DGMLHKKIPEC.SetActive(value: false);
+            GameScreens.FBGBCKNJKCD.SetActive(value: false);
             Object.Destroy(GameObject.Find("Logo"));
-            var obj = Object.Instantiate(BNNAONOIMBL.KCPCEFMNNNJ[1]);
+            var obj = Object.Instantiate(GameSprites.FGEFCDGEEHA[1]);
             obj.transform.position = new Vector3(0f, 50f, 0f);
             obj.transform.localScale = new Vector3(1f, 1f, 1f);
             RectTransform rt = obj.transform.Find("Title").transform as RectTransform;
             rt.sizeDelta *= 5;
-            obj.transform.SetParent(KPGIEHHDIDA.APACKAAEEAH.transform, worldPositionStays: false);
+            obj.transform.SetParent(GameScreens.LIEFBDMPLNB.transform, worldPositionStays: false);
             Object.Destroy(obj.transform.Find("Background").gameObject);
             Object.Destroy(obj.transform.Find("Border").gameObject);
             Object.Destroy(obj.transform.Find("Sheen").gameObject);
@@ -46,21 +46,21 @@ public class ScreenPatch
         }
         else if (!_initialized && HasConflictingOverrides && !MetaFile.Data.HidePriorityScreenNextTime)
         {
-            KPGIEHHDIDA.CGLNPGPJPJE();
-            KPGIEHHDIDA.LHOICDLLMID = 1001;
-            KPGIEHHDIDA.LHJLOPGFFPE = 0;
-            KPGIEHHDIDA.OKILOINLLAO = 0;
-            KPGIEHHDIDA.GHGPDLAMLFL();
+            GameScreens.GGPMGNGIAKG();
+            GameScreens.GLDIFJOEOIO = 1001;
+            GameScreens.FPBNAMNIOKK = 0;
+            GameScreens.AGAGHGBLCDA = 0;
+            GameScreens.DMGJOHGEOKF();
             __instance.gLicense.SetActive(value: false);
-            KPGIEHHDIDA.DGMLHKKIPEC.SetActive(value: false);
+            GameScreens.FBGBCKNJKCD.SetActive(value: false);
             Object.Destroy(GameObject.Find("Logo"));
             
-            var obj = Object.Instantiate(BNNAONOIMBL.KCPCEFMNNNJ[1]);
+            var obj = Object.Instantiate(GameSprites.FGEFCDGEEHA[1]);
             obj.transform.position = new Vector3(0f, 315f, 0f);
             obj.transform.localScale = new Vector3(1f, 1f, 1f);
             RectTransform rt = obj.transform.Find("Title").transform as RectTransform;
             rt.sizeDelta *= 2;
-            obj.transform.SetParent(KPGIEHHDIDA.APACKAAEEAH.transform, worldPositionStays: false);
+            obj.transform.SetParent(GameScreens.LIEFBDMPLNB.transform, worldPositionStays: false);
             Object.Destroy(obj.transform.Find("Background").gameObject);
             Object.Destroy(obj.transform.Find("Border").gameObject);
             Object.Destroy(obj.transform.Find("Sheen").gameObject);
@@ -78,68 +78,68 @@ public class ScreenPatch
     {
         try
         {
-            if (KPGIEHHDIDA.LHOICDLLMID == 1001)
+            if (GameScreens.GLDIFJOEOIO == 1001)
             {
-                JINPJBLJOMA.BOOMMCGAEEO();
-                KPGIEHHDIDA.FFKDNJEKKNG();
+                GameControls.FKAFNEKGFEB();
+                GameScreens.HLNKAPEEMAG();
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    foc = KPGIEHHDIDA.NAGCDENHJNE;
+                    foc = GameScreens.DNNAOLIENKK;
                 }
                 else if (Input.GetMouseButtonUp(0))
                 {
                     foc = 0;
-                    KPGIEHHDIDA.NAGCDENHJNE = 0;
+                    GameScreens.DNNAOLIENKK = 0;
                     _dd = 10;
                     dir = 0;
-                    if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
+                    if (_menu != null) GameSprites.JCGAHJGKOKA(_menu.HDNGNBKADOP, 0.8f, 0.8f, 0.8f);
                 }
 
-                if (KPGIEHHDIDA.NAGCDENHJNE >= Prefixes.Count + 1)
+                if (GameScreens.DNNAOLIENKK >= Prefixes.Count + 1)
                 {
-                    if (KPGIEHHDIDA.NAGCDENHJNE == Prefixes.Count + 2)
+                    if (GameScreens.DNNAOLIENKK == Prefixes.Count + 2)
                     {
                         MetaFile.Data.HidePriorityScreenNextTime = true;
                     }
 
-                    CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
+                    GameAudio.GBJOOBJBPEM(GameAudio.HPAMLGBIJLJ, 0f, 0.5f);
                     List<string> prefixes = new();
                     for (int i = 1; i < Prefixes.Count + 1; i++)
                     {
-                        var text = KPGIEHHDIDA.KFGOFBAGLDH[i].JDAHAFDKBJG.transform.Find("Value").gameObject
+                        var text = GameScreens.AEKFGAHLMBF[i].KOFIFIBJKGH.transform.Find("Value").gameObject
                             .GetComponent<Text>().text;
                         prefixes.Add(text);
                     }
 
                     Prefixes = prefixes;
                     SavePrefixes();
-                    CKAMIAJJDBP.ILIKOLOBLBN.Stop();
-                    CKAMIAJJDBP.CKEJAMLGLAL[0] = GameGlobals.AMPMBILAJNM("Music", "Theme00") as AudioClip;
-                    CKAMIAJJDBP.ILIKOLOBLBN.clip = CKAMIAJJDBP.CKEJAMLGLAL[0];
-                    CKAMIAJJDBP.ILIKOLOBLBN.time = 0f;
-                    CKAMIAJJDBP.ILIKOLOBLBN.Play();
-                    KPGIEHHDIDA.BANOJFCLKIM(1);
+                    GameAudio.EDHODGHLFJF.Stop();
+                    GameAudio.GBMBIDMNKOK[0] = GameGlobals.GPPPEEGMGGP("Music", "Theme00") as AudioClip;
+                    GameAudio.EDHODGHLFJF.clip = GameAudio.GBMBIDMNKOK[0];
+                    GameAudio.EDHODGHLFJF.time = 0f;
+                    GameAudio.EDHODGHLFJF.Play();
+                    GameScreens.KLNDLKEPNEF(1);
                 }
                 else if (foc > 0 && _delay <= 0)
                 {
 
-                    var menu = KPGIEHHDIDA.KFGOFBAGLDH[foc];
-                    if (dir == 0) dir = menu.AIIODMAGBKI >= 0 ? 1 : -1;
+                    var menu = GameScreens.AEKFGAHLMBF[foc];
+                    if (dir == 0) dir = menu.LKFPJKJBDMK >= 0 ? 1 : -1;
                     if (dir < 0)
                     {
                         if (foc > 1)
                         {
-                            var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc - 1];
-                            var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
-                            var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
-                            menu2.IBOAEEIDBGL = text1.text;
-                            menu.IBOAEEIDBGL = text2.text;
+                            var menu2 = GameScreens.AEKFGAHLMBF[foc - 1];
+                            var text1 = menu.KOFIFIBJKGH.transform.Find("Value").gameObject.GetComponent<Text>();
+                            var text2 = menu2.KOFIFIBJKGH.transform.Find("Value").gameObject.GetComponent<Text>();
+                            menu2.IEMHDAFJKAK = text1.text;
+                            menu.IEMHDAFJKAK = text2.text;
                             (text1.text, text2.text) = (text2.text, text1.text);
-                            if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
+                            if (_menu != null) GameSprites.JCGAHJGKOKA(_menu.HDNGNBKADOP, 0.8f, 0.8f, 0.8f);
                             _menu = menu2;
-                            BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.3f, 0.9f, 0.3f);
-                            KPGIEHHDIDA.NAGCDENHJNE--;
+                            GameSprites.JCGAHJGKOKA(_menu.HDNGNBKADOP, 0.3f, 0.9f, 0.3f);
+                            GameScreens.DNNAOLIENKK--;
                             _delay = _dd;
                             if (_dd > 1) _dd -= 1;
                             foc--;
@@ -149,14 +149,14 @@ public class ScreenPatch
                     {
                         if (foc < Prefixes.Count)
                         {
-                            var menu2 = KPGIEHHDIDA.KFGOFBAGLDH[foc + 1];
-                            var text1 = menu.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
-                            var text2 = menu2.JDAHAFDKBJG.transform.Find("Value").gameObject.GetComponent<Text>();
+                            var menu2 = GameScreens.AEKFGAHLMBF[foc + 1];
+                            var text1 = menu.KOFIFIBJKGH.transform.Find("Value").gameObject.GetComponent<Text>();
+                            var text2 = menu2.KOFIFIBJKGH.transform.Find("Value").gameObject.GetComponent<Text>();
                             (text1.text, text2.text) = (text2.text, text1.text);
-                            if (_menu != null) BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.8f, 0.8f, 0.8f);
+                            if (_menu != null) GameSprites.JCGAHJGKOKA(_menu.HDNGNBKADOP, 0.8f, 0.8f, 0.8f);
                             _menu = menu2;
-                            BNNAONOIMBL.AJEPIKJNHMP(_menu.ENKGCMNBJMP, 0.9f, 0.3f, 0.3f);
-                            KPGIEHHDIDA.NAGCDENHJNE++;
+                            GameSprites.JCGAHJGKOKA(_menu.HDNGNBKADOP, 0.9f, 0.3f, 0.3f);
+                            GameScreens.DNNAOLIENKK++;
                             _delay = _dd;
                             if (_dd > 1) _dd -= 1;
                             foc++;
@@ -164,45 +164,45 @@ public class ScreenPatch
                     }
                 }
 
-                KPGIEHHDIDA.CMFJNCPCPIO = KPGIEHHDIDA.NAGCDENHJNE;
+                GameScreens.KDEIEADNAOK = GameScreens.DNNAOLIENKK;
 
                 _delay--;
 
                 return false;
             }
 
-            if (KPGIEHHDIDA.LHOICDLLMID == 1002)
+            if (GameScreens.GLDIFJOEOIO == 1002)
             {
-                JINPJBLJOMA.BOOMMCGAEEO();
-                KPGIEHHDIDA.FFKDNJEKKNG();
+                GameControls.FKAFNEKGFEB();
+                GameScreens.HLNKAPEEMAG();
 
-                for (int num = 1; num <= KPGIEHHDIDA.FPCGMGGJBKD; num++)
+                for (int num = 1; num <= GameScreens.GEBEPDNJHGB; num++)
                 {
-                    if (KPGIEHHDIDA.KFGOFBAGLDH[num].AIIODMAGBKI != 0f && KPGIEHHDIDA.LJOAGMEDLPI == 0 &&
-                        KPGIEHHDIDA.JOFJJPBIAEK > 10f && JINPJBLJOMA.ALBIPGOEJLM == 0f)
+                    if (GameScreens.AEKFGAHLMBF[num].LKFPJKJBDMK != 0f && GameScreens.PEAAJKABMCP == 0 &&
+                        GameScreens.NIIPOEGBBFH > 10f && GameControls.PKCABBMAGNE == 0f)
                     {
-                        if (KPGIEHHDIDA.KFGOFBAGLDH[num].EFBHEMABMOH > 0)
+                        if (GameScreens.AEKFGAHLMBF[num].HOOGIOMCIMP > 0)
                         {
-                            CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH);
-                            KPGIEHHDIDA.LJOAGMEDLPI = 1;
+                            GameAudio.GBJOOBJBPEM(GameAudio.HPAMLGBIJLJ);
+                            GameScreens.PEAAJKABMCP = 1;
                         }
-                        else if (JINPJBLJOMA.ALBIPGOEJLM == 0f)
+                        else if (GameControls.PKCABBMAGNE == 0f)
                         {
-                            CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.GNHIAENOPLP, 1f);
-                            JINPJBLJOMA.ALBIPGOEJLM = 10f;
+                            GameAudio.GBJOOBJBPEM(GameAudio.NNIOLGAKPGG, 1f);
+                            GameControls.PKCABBMAGNE = 10f;
                         }
                     }
                 }
 
-                if (KPGIEHHDIDA.LJOAGMEDLPI == 5 && KPGIEHHDIDA.NAGCDENHJNE > 0)
+                if (GameScreens.PEAAJKABMCP == 5 && GameScreens.DNNAOLIENKK > 0)
                 {
-                    CKAMIAJJDBP.NMHCGFCNGPP(CKAMIAJJDBP.KCHIBLPPMAH, 0f, 0.5f);
+                    GameAudio.GBJOOBJBPEM(GameAudio.HPAMLGBIJLJ, 0f, 0.5f);
                     MetaFile.Data.FirstLaunch = false;
                     MetaFile.Data.Save();
-                    KPGIEHHDIDA.BANOJFCLKIM(1);
+                    GameScreens.KLNDLKEPNEF(1);
                 }
 
-                KPGIEHHDIDA.OCPGHHJILBD();
+                GameScreens.BONHHCACNDG();
                 return false;
             }
         }
@@ -214,30 +214,30 @@ public class ScreenPatch
         return true;
     }
 
-    [HarmonyPatch(typeof(KPGIEHHDIDA), "GHGPDLAMLFL")]
+    [HarmonyPatch(typeof(GameScreens), nameof(GameScreens.DMGJOHGEOKF))]
     [HarmonyPrefix]
-    public static bool KPGIEHHDIDA_GHGPDLAMLFL(int HCOECEPAHDL)
+    public static bool GameScreens_DMGJOHGEOKF(int HHFMDMKEIKJ)
     {
-        if (KPGIEHHDIDA.LHOICDLLMID > 1000)
+        if (GameScreens.GLDIFJOEOIO > 1000)
         {
-            KPGIEHHDIDA.CGLNPGPJPJE();
-            KPGIEHHDIDA.NAGCDENHJNE = 0;
-            KPGIEHHDIDA.FPCGMGGJBKD = HCOECEPAHDL;
-            KPGIEHHDIDA.KFGOFBAGLDH = new OMNHIAMJHKF[KPGIEHHDIDA.FPCGMGGJBKD + 1];
-            for (KPGIEHHDIDA.NNABMMELIOG = 1; KPGIEHHDIDA.NNABMMELIOG <= KPGIEHHDIDA.FPCGMGGJBKD; KPGIEHHDIDA.NNABMMELIOG++)
+            GameScreens.GGPMGNGIAKG();
+            GameScreens.DNNAOLIENKK = 0;
+            GameScreens.GEBEPDNJHGB = HHFMDMKEIKJ;
+            GameScreens.AEKFGAHLMBF = new GameMenus[GameScreens.GEBEPDNJHGB + 1];
+            for (GameScreens.LCKJBMKHDFI = 1; GameScreens.LCKJBMKHDFI <= GameScreens.GEBEPDNJHGB; GameScreens.LCKJBMKHDFI++)
             {
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.NNABMMELIOG] = new OMNHIAMJHKF();
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.NNABMMELIOG].OHOPCKPFIOO= KPGIEHHDIDA.NNABMMELIOG;
+                GameScreens.AEKFGAHLMBF[GameScreens.LCKJBMKHDFI] = new GameMenus();
+                GameScreens.AEKFGAHLMBF[GameScreens.LCKJBMKHDFI].DKHFDIBPHMK = GameScreens.LCKJBMKHDFI;
             }
-            KPGIEHHDIDA.NONALLHCFMG = 0f;
-            KPGIEHHDIDA.FCHACKAPBJJ = 0f;
-            KPGIEHHDIDA.KNBMMGLEGFG = 0f;
-            KPGIEHHDIDA.EDNJGHNOKBG = 0f;
+            GameScreens.KOAPEMIOKLI = 0f;
+            GameScreens.AGFFOFNHHLK = 0f;
+            GameScreens.LPBMALHMIGE = 0f;
+            GameScreens.AJNEEIMNLFD = 0f;
             float num = 0f;
             float num2 = 0f;
             float num3 = 80f;
             float num4 = 1.6f;
-            if (KPGIEHHDIDA.LHOICDLLMID == 1001)
+            if (GameScreens.GLDIFJOEOIO == 1001)
             {
                 int rows;
                 int columns;
@@ -249,45 +249,45 @@ public class ScreenPatch
                 int index = 0;
                 foreach (var prefix in Prefixes)
                 {
-                    KPGIEHHDIDA.IHCMEHJGDGH();
+                    GameScreens.OHBONDHEDEC();
                     var x = startX + (index % columns * 210 * scale);
                     var y = startY - (index / columns * 50 * scale);
-                    KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(6,
+                    GameScreens.AEKFGAHLMBF[GameScreens.GEBEPDNJHGB].DMGJOHGEOKF(6,
                         "#" + (index + 1) +
                         (index == 0 ? " (highest)" : index == Prefixes.Count - 1 ? " (lowest)" : ""), x, y, scale,
                         scale);
-                    KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].JDAHAFDKBJG.transform.Find("Value").gameObject
+                    GameScreens.AEKFGAHLMBF[GameScreens.GEBEPDNJHGB].KOFIFIBJKGH.transform.Find("Value").gameObject
                         .GetComponent<Text>().text = prefix;
-                    BNNAONOIMBL.AJEPIKJNHMP(KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].ENKGCMNBJMP, 0.8f, 0.8f,
+                    GameSprites.JCGAHJGKOKA(GameScreens.AEKFGAHLMBF[GameScreens.GEBEPDNJHGB].HDNGNBKADOP, 0.8f, 0.8f,
                         0.8f);
                     index++;
                 }
 
-                KPGIEHHDIDA.IHCMEHJGDGH();
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", -150f, -280, 1.25f, 1.25f);
-                KPGIEHHDIDA.IHCMEHJGDGH();
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD]
-                    .GHGPDLAMLFL(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
+                GameScreens.OHBONDHEDEC();
+                GameScreens.AEKFGAHLMBF[GameScreens.GEBEPDNJHGB].DMGJOHGEOKF(1, "Proceed", -150f, -280, 1.25f, 1.25f);
+                GameScreens.OHBONDHEDEC();
+                GameScreens.AEKFGAHLMBF[GameScreens.GEBEPDNJHGB]
+                    .DMGJOHGEOKF(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
             }
-            else if (KPGIEHHDIDA.LHOICDLLMID == 1002)
+            else if (GameScreens.GLDIFJOEOIO == 1002)
             {
-                KPGIEHHDIDA.IHCMEHJGDGH();
-                KPGIEHHDIDA.KFGOFBAGLDH[KPGIEHHDIDA.FPCGMGGJBKD].GHGPDLAMLFL(1, "Proceed", 0f, -280, 1.25f, 1.25f);
+                GameScreens.OHBONDHEDEC();
+                GameScreens.AEKFGAHLMBF[GameScreens.GEBEPDNJHGB].DMGJOHGEOKF(1, "Proceed", 0f, -280, 1.25f, 1.25f);
             }
             
-            KPGIEHHDIDA.IKOBGOKFEOO();
-            if (KPGIEHHDIDA.AOFCBMJJODG() > 0 && KPGIEHHDIDA.FPCGMGGJBKD > 0 && foc == 0)
+            GameScreens.GJAJDABPMNH();
+            if (GameScreens.LGCOHPNNGLM() > 0 && GameScreens.GEBEPDNJHGB > 0 && foc == 0)
             {
                 foc = 1;
             }
-            KPGIEHHDIDA.CMFJNCPCPIO = foc;
-            KPGIEHHDIDA.LJOAGMEDLPI = 0;
-            LAOMLMMCODM.GGNCBEPBHCG = 0;
-            KPGIEHHDIDA.NGLMFGEBDJJ = 0;
-            KPGIEHHDIDA.ABJNEMANHBK = 0;
-            KPGIEHHDIDA.LDLDCBDAGLP = 0;
-            KPGIEHHDIDA.JOFJJPBIAEK = 0f;
-            JINPJBLJOMA.ALBIPGOEJLM = 10f;
+            GameScreens.KDEIEADNAOK = foc;
+            GameScreens.PEAAJKABMCP = 0;
+            GameKeyboard.FNCDEHIDPPM = 0;
+            GameScreens.KALAICJONEO = 0;
+            GameScreens.GDFKNNGCKML = 0;
+            GameScreens.KJLLBNEIAJO = 0;
+            GameScreens.NIIPOEGBBFH = 0f;
+            GameControls.PKCABBMAGNE = 10f;
             return false;
         }
 

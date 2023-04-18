@@ -6,9 +6,9 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 public class WorldPatch
 {
-    [HarmonyPatch(typeof(World), "GHGPDLAMLFL")]
+    [HarmonyPatch(typeof(World), nameof(World.DMGJOHGEOKF))]
     [HarmonyPrefix]
-    public static bool World_GHGPDLAMLFL(int DHLGJAHFOAM)
+    public static bool World_DMGJOHGEOKF(int BPPIGPFGLLG)
     {
         try
         {
@@ -17,16 +17,16 @@ public class WorldPatch
                 Debug.Log("Loading location " + World.location);
                 World.waterDefault = 0f;
                 World.no_baskets = 0;
-                if (DHLGJAHFOAM != 0 && World.gArena != null)
+                if (BPPIGPFGLLG != 0 && World.gArena != null)
                 {
                     Object.Destroy(World.gArena);
                 }
 
-                World.COJKOCKHJNI();
+                World.HOOLOHJJIFF();
 
                 World.gArena = Object.Instantiate(CustomArenaPrefabs[World.location - VanillaCounts.NoLocations - 1]);
 
-                if (KPGIEHHDIDA.LHOICDLLMID == 60)
+                if (GameScreens.GLDIFJOEOIO == 60)
                 {
                     World.gArena.transform.eulerAngles = new Vector3(0f, 170f, 0f);
                 }
@@ -36,7 +36,7 @@ public class WorldPatch
                     World.waterOffset = 0f;
                 }
 
-                if (GameGlobals.LPHMMPEBCMM == 1)
+                if (GameGlobals.NNJIFJPMBGJ == 1)
                 {
                     World.waterOffset = World.floodLevel;
                 }
@@ -46,29 +46,29 @@ public class WorldPatch
                 }
 
                 World.waterLevel = World.waterDefault + World.waterOffset;
-                World.DPJJFBECFEE();
-                if (KPGIEHHDIDA.LHOICDLLMID == 60)
+                World.BBLKECFGPOE();
+                if (GameScreens.GLDIFJOEOIO == 60)
                 {
                     return false;
                 }
 
-                World.EKDPJJFKIEJ(World.location);
-                if (KPGIEHHDIDA.LHOICDLLMID != 14)
+                World.OGAHGABKJFO(World.location);
+                if (GameScreens.GLDIFJOEOIO != 14)
                 {
-                    CKAMIAJJDBP.PANGKBNCHNP();
+                    GameAudio.CMCGCNHGLHN();
                 }
 
-                if (DHLGJAHFOAM == 0)
+                if (BPPIGPFGLLG == 0)
                 {
                     if (World.ringShape > 0)
                     {
-                        World.MMPOPGHPAKH();
+                        World.COELFJDMFAA();
                     }
 
-                    World.LOBEPMDGJLD();
+                    World.AHKIEJMJPHF();
                 }
 
-                KONPHAKHJPP.KDPBDDEJPLC();
+                GameCollision.OJMNGOHBIJH();
                 return false;
             }
         }
@@ -82,32 +82,32 @@ public class WorldPatch
     
     private static int _tempLocation = -999;
 
-    [HarmonyPatch(typeof(KONPHAKHJPP), "KDPBDDEJPLC")]
+    [HarmonyPatch(typeof(GameCollision), nameof(GameCollision.OJMNGOHBIJH))]
     [HarmonyPrefix]
-    public static void KONPHAKHJPP_KDPBDDEJPLC()
+    public static void GameCollision_OJMNGOHBIJH()
     {
         if (World.location > VanillaCounts.NoLocations)
         {
-            KONPHAKHJPP.GEHOOPJCAKD = 0;
-            KONPHAKHJPP.NDMKCOCBPAD = 0;
-            KONPHAKHJPP.IMLGDANNNJE = 0;
-            KONPHAKHJPP.GNHIAENOPLP = new HDLGBEEGFLH[KONPHAKHJPP.NDMKCOCBPAD + 1];
-            KONPHAKHJPP.GNHIAENOPLP[0] = new HDLGBEEGFLH();
-            KONPHAKHJPP.DNHJBMMJOCM = 0;
-            KONPHAKHJPP.NMKBGBEIKOD = 0;
-            KONPHAKHJPP.KAEKIEBHBEN = new DFJEEHIJCBN[KONPHAKHJPP.NMKBGBEIKOD + 1];
-            KONPHAKHJPP.KAEKIEBHBEN[0] = new DFJEEHIJCBN();
-            KONPHAKHJPP.LCDOOCIJIDJ = 0;
-            KONPHAKHJPP.PKKDOKFBMDF = new NDIILPMNNIO[KONPHAKHJPP.LCDOOCIJIDJ + 1];
-            KONPHAKHJPP.PKKDOKFBMDF[0] = new NDIILPMNNIO();
+            GameCollision.PEIFIJCKAOC = 0;
+            GameCollision.NJCPFHDPBOJ = 0;
+            GameCollision.FKKOPAMLAIE = 0;
+            GameCollision.NNIOLGAKPGG = new AJILJNLIOOH[GameCollision.NJCPFHDPBOJ + 1];
+            GameCollision.NNIOLGAKPGG[0] = new AJILJNLIOOH();
+            GameCollision.HGKKJGCBEPH = 0;
+            GameCollision.BKAPMFNPOIB = 0;
+            GameCollision.BAJJBMHMGBH = new MCBHJKMPEMD[GameCollision.BKAPMFNPOIB + 1];
+            GameCollision.BAJJBMHMGBH[0] = new MCBHJKMPEMD();
+            GameCollision.DOFJDPIHJPG = 0;
+            GameCollision.IKGAAJIDDEJ = new CILCKMOJGJG[GameCollision.DOFJDPIHJPG + 1];
+            GameCollision.IKGAAJIDDEJ[0] = new CILCKMOJGJG();
             _tempLocation = World.location;
             World.location = 999;
         }
     }
 
-    [HarmonyPatch(typeof(KONPHAKHJPP), "KDPBDDEJPLC")]
+    [HarmonyPatch(typeof(GameCollision), "OJMNGOHBIJH")]
     [HarmonyPostfix]
-    public static void KONPHAKHJPP_KDPBDDEJPLC_Postfix()
+    public static void GameCollision_OJMNGOHBIJH_Postfix()
     {
 
         if (_tempLocation != -999)
@@ -115,8 +115,8 @@ public class WorldPatch
             World.location = _tempLocation;
             _tempLocation = -999;
 
-            var last = KONPHAKHJPP.NDMKCOCBPAD;
-            KONPHAKHJPP.GEHOOPJCAKD = last;
+            var last = GameCollision.NJCPFHDPBOJ;
+            GameCollision.PEIFIJCKAOC = last;
             
             var colliders = World.gArena.GetComponentsInChildren<MeshCollider>();
             foreach (var collider in colliders)
@@ -185,28 +185,28 @@ public class WorldPatch
                 }
 
                 // Create block
-                KONPHAKHJPP.GEHOOPJCAKD++;
-                var GEHOOPJCAKD = KONPHAKHJPP.GEHOOPJCAKD;
-                KONPHAKHJPP.IHCMEHJGDGH();
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].AAAHCCBLLMN = 0f;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].AHOBHCOPAIN = yBottom;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].KHDIGLGDCDG = yTop;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].PADJKHFHPMP = 0;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].DPDGDOOCONK[1] = topRight.x;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].IAJJHLBOCMI[1] = topRight.z;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].DPDGDOOCONK[2] = bottomRight.x;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].IAJJHLBOCMI[2] = bottomRight.z;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].DPDGDOOCONK[3] = bottomLeft.x;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].IAJJHLBOCMI[3] = bottomLeft.z;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].DPDGDOOCONK[4] = topLeft.x;
-                KONPHAKHJPP.GNHIAENOPLP[GEHOOPJCAKD].IAJJHLBOCMI[4] = topLeft.z;
+                GameCollision.PEIFIJCKAOC++;
+                var PEIFIJCKAOC = GameCollision.PEIFIJCKAOC;
+                GameCollision.OHBONDHEDEC();
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].EBPHCBADBLI = 0f;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].IHBEDOLDPJC = yBottom;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].JKHPFKDCNJL = yTop;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].FPHEOHBIAFN = 0;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].BOBFOLNHBCL[1] = topRight.x;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].FDMAHBOILBC[1] = topRight.z;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].BOBFOLNHBCL[4] = bottomRight.x;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].FDMAHBOILBC[4] = bottomRight.z;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].BOBFOLNHBCL[3] = bottomLeft.x;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].FDMAHBOILBC[3] = bottomLeft.z;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].BOBFOLNHBCL[2] = topLeft.x;
+                GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].FDMAHBOILBC[2] = topLeft.z;
             }
-            for (KONPHAKHJPP.GEHOOPJCAKD = last + 1; KONPHAKHJPP.GEHOOPJCAKD <= KONPHAKHJPP.NDMKCOCBPAD; KONPHAKHJPP.GEHOOPJCAKD++)
+            for (GameCollision.PEIFIJCKAOC = last + 1; GameCollision.PEIFIJCKAOC <= GameCollision.NJCPFHDPBOJ; GameCollision.PEIFIJCKAOC++)
             {
-                if (KONPHAKHJPP.GNHIAENOPLP[KONPHAKHJPP.GEHOOPJCAKD].IIBNKAGIFHK != null)
+                if (GameCollision.NNIOLGAKPGG[GameCollision.PEIFIJCKAOC].HJGHHNAKAPD != null)
                 {
-                    KONPHAKHJPP.GNHIAENOPLP[KONPHAKHJPP.GEHOOPJCAKD].LMGGHIOODKC = KONPHAKHJPP.GNHIAENOPLP[KONPHAKHJPP.GEHOOPJCAKD].IIBNKAGIFHK.transform.localEulerAngles;
-                    KONPHAKHJPP.DNHJBMMJOCM = 1;
+                    GameCollision.NNIOLGAKPGG[GameCollision.PEIFIJCKAOC].HHEADFAGOMH = GameCollision.NNIOLGAKPGG[GameCollision.PEIFIJCKAOC].HJGHHNAKAPD.transform.localEulerAngles;
+                    GameCollision.HGKKJGCBEPH = 1;
                 }
             }
             
@@ -214,17 +214,17 @@ public class WorldPatch
 
         if (Plugin.DebugRender.Value)
         {
-            var arr = KONPHAKHJPP.GNHIAENOPLP;
+            var arr = GameCollision.NNIOLGAKPGG;
             for (int i = 1; i < arr.Length; i++)
             {
                 try
                 {
                     var scene = World.gArena;
-                    var x4 = arr[i].DPDGDOOCONK; // float[5], x4[0] is always 0
-                    var z4 = arr[i].IAJJHLBOCMI; // float[5], z4[0] is always 0
-                    var yLow = arr[i].AHOBHCOPAIN; // float
-                    var yHigh = arr[i].KHDIGLGDCDG; // float
-                    var type = arr[i].PADJKHFHPMP; // int
+                    var x4 = arr[i].BOBFOLNHBCL; // float[5], x4[0] is always 0
+                    var z4 = arr[i].FDMAHBOILBC; // float[5], z4[0] is always 0
+                    var yLow = arr[i].IHBEDOLDPJC; // float
+                    var yHigh = arr[i].JKHPFKDCNJL; // float
+                    var type = arr[i].FPHEOHBIAFN; // int
                     var color = Color.red;
                     switch (type)
                     {
@@ -259,10 +259,10 @@ public class WorldPatch
 
                     DrawCube(scene.transform, x4, yLow, yHigh, z4, color);
 
-                    if (arr[i].LHGLJFOBMMC != null)
+                    if (arr[i].JBALCHFODDL != null)
                     {
-                        var xl = arr[i].LHGLJFOBMMC.Skip(1);
-                        var zl = arr[i].CGNINMDBMFH.Skip(1);
+                        var xl = arr[i].JBALCHFODDL.Skip(1);
+                        var zl = arr[i].HEFNOMCGPFP.Skip(1);
                         var color2 = new Color(1f, 1f, 1f);
                         DrawLines(scene.transform, xl.ToArray(), yLow, yHigh, zl.ToArray(), color2, "Seating");
                     }
@@ -273,14 +273,14 @@ public class WorldPatch
                 }
             }
 
-            var arr2 = KONPHAKHJPP.PKKDOKFBMDF;
+            var arr2 = GameCollision.BAJJBMHMGBH;
             for (int i = 1; i < arr2.Length; i++)
             {
                 try
                 {
                     var scene = World.gArena;
-                    var x4 = arr2[i].DPDGDOOCONK; // float[5], x4[0] is always 0
-                    var z4 = arr2[i].IAJJHLBOCMI; // float[5], z4[0] is always 0
+                    var x4 = arr2[i].BOBFOLNHBCL; // float[5], x4[0] is always 0
+                    var z4 = arr2[i].FDMAHBOILBC; // float[5], z4[0] is always 0
                     var yLow = 0;
                     var yHigh = 0;
                     var color = new Color(1f, 0.5f, 0f);
@@ -292,16 +292,16 @@ public class WorldPatch
                 }
             }
 
-            var arr3 = KONPHAKHJPP.KAEKIEBHBEN;
+            var arr3 = GameCollision.BAJJBMHMGBH;
             for (int i = 1; i < arr3.Length; i++)
             {
                 try
                 {
                     var scene = World.gArena;
-                    var x4 = arr3[i].DPDGDOOCONK; // float[5], x4[0] is always 0
-                    var z4 = arr3[i].IAJJHLBOCMI; // float[5], z4[0] is always 0
+                    var x4 = arr3[i].BOBFOLNHBCL; // float[5], x4[0] is always 0
+                    var z4 = arr3[i].FDMAHBOILBC; // float[5], z4[0] is always 0
                     var yLow = 0;
-                    var yHigh = arr3[i].KHDIGLGDCDG; // float
+                    var yHigh = arr3[i].JKHPFKDCNJL; // float
 
                     var color = new Color(0.5f, 1f, 0f);
                     DrawCube(scene.transform, x4, yLow, yHigh, z4, color);
@@ -426,9 +426,9 @@ public class WorldPatch
         lineRenderer.loop = true;
     }
 
-    [HarmonyPatch(typeof(World), "EKDPJJFKIEJ")]
+    [HarmonyPatch(typeof(World), nameof(World.OGAHGABKJFO))]
     [HarmonyPrefix]
-    public static bool World_EKDPJJFKIEJ(int FPJOPENMOGN)
+    public static bool World_OGAHGABKJFO(int JIBNLDBGFLN)
     {
         if (World.location > VanillaCounts.NoLocations)
         {
@@ -449,15 +449,15 @@ public class WorldPatch
     }
 
 
-    [HarmonyPatch(typeof(World), "KEPCOHBMNDK")]
+    [HarmonyPatch(typeof(World), nameof(World.KFIOOMEFCBG))]
     [HarmonyPrefix]
-    public static bool World_KEPCOHBMNDK(ref int __result, int FPJOPENMOGN)
+    public static bool World_KFIOOMEFCBG(ref int __result, int JIBNLDBGFLN)
     {
         __result = 1;
         if (World.mapVersion < 2f)
         {
-            if (FPJOPENMOGN is >= 17 and < 21 ||
-                FPJOPENMOGN - VanillaCounts.NoLocations - 1 >= CustomArenaPrefabs.Count)
+            if ((JIBNLDBGFLN >= 17 && JIBNLDBGFLN <= VanillaCounts.NoLocations && JIBNLDBGFLN != 21) ||
+                JIBNLDBGFLN - VanillaCounts.NoLocations - 1 >= CustomArenaPrefabs.Count)
             {
                 __result = 0;
             }
@@ -466,18 +466,18 @@ public class WorldPatch
         return false;
     }
 
-    [HarmonyPatch(typeof(World), "MEKHOHAMAOJ")]
+    [HarmonyPatch(typeof(World), nameof(World.LGKCNJMDODE))]
     [HarmonyPostfix]
-    public static void World_MEKHOHAMAOJ(ref float __result, float GHGHLNECCPN, float KHNBEHPOGMD, float GEKJOOHPPCB)
+    public static void World_LGKCNJMDODE(ref float __result, float CPKGAGIGBGC, float GMBDDOADNKI, float MPEGIJJDMNF)
     {
         if (World.location > VanillaCounts.NoLocations)
         {
-            if (World.ringShape != 0 && GHGHLNECCPN > -40f && GHGHLNECCPN < 40f && GEKJOOHPPCB > -40f && GEKJOOHPPCB < 40f)
+            if (World.ringShape != 0 && CPKGAGIGBGC > -40f && CPKGAGIGBGC < 40f && MPEGIJJDMNF > -40f && MPEGIJJDMNF < 40f)
             {
                 return;
             }
 
-            var coords = new Vector3(GHGHLNECCPN, KHNBEHPOGMD, GEKJOOHPPCB);
+            var coords = new Vector3(CPKGAGIGBGC, GMBDDOADNKI, MPEGIJJDMNF);
             // Raycast down to find the ground
             var ray = new Ray(coords + new Vector3(0, 5f, 0f), Vector3.down);
             if (Physics.Raycast(ray, out var hit, 105f, 1 << 0))

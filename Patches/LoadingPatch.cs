@@ -12,7 +12,7 @@ public class LoadingPatch
     private static Text _text;
     private static Text _text2;
     
-    [HarmonyPatch(typeof(Scene_Loading), "Update")]
+    [HarmonyPatch(typeof(Scene_Loading), nameof(Scene_Loading.Update))]
     [HarmonyPrefix]
     public static bool Scene_Loading_Update(Scene_Loading __instance)
     {
@@ -55,7 +55,7 @@ public class LoadingPatch
             return true;
         }
         __instance.gLoader.SetActive(true);
-        _progressGradual = GameGlobals.GAFBLBIBALK(_progressGradual, _progress, 0.2f, 0.01f);
+        _progressGradual = GameGlobals.LKOKNCDPNBL(_progressGradual, _progress, 0.2f, 0.01f);
         __instance.gLoadMeter.transform.localScale =
             new Vector3(_progressGradual, 1f, 1f);
         __instance.gLoadMeter.GetComponent<Image>().color =

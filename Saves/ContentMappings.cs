@@ -39,6 +39,8 @@ internal class ContentMappings
     public List<string> PreviouslyImportedCharacters { get; set; } = new();
     
     public List<int> PreviouslyImportedCharacterIds { get; set; } = new();
+    
+    public float GameVersion { get; set; } = Plugin.GameVersion;
 
     public void Save()
     {

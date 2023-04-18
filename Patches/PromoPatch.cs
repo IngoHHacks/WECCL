@@ -5,30 +5,30 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class PromoPatch
 {
-    [HarmonyPatch(typeof(HJBJPCDFLGL), "EMFEHLOHNEC")]
+    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.OIAOBMLCPMA))]
     [HarmonyPrefix]
-    public static void HJBJPCDFLGL_EMFEHLOHNEC()
+    public static void GameDialog_OIAOBMLCPMA()
     {
-        var promoId = HJBJPCDFLGL.GPOMGOFJBBJ - 1000000;
+        var promoId = GameDialog.PEIMNLOEAED - 1000000;
         if (promoId < 0)
         {
             return;
         }
         var promo = PromoData[promoId];
 
-        var page = HJBJPCDFLGL.OKILOINLLAO - 1;
+        var page = GameDialog.AGAGHGBLCDA - 1;
         if (page >= promo.NumLines)
         {
-            HJBJPCDFLGL.GPOMGOFJBBJ = 0;
+            GameDialog.PEIMNLOEAED = 0;
         }
         else
         {
             ExecutePromoLine(promo.PromoLines[page].Line1, promo.PromoLines[page].Line2, promo.PromoLines[page].From, promo.PromoLines[page].To, promo.PromoLines[page].Demeanor, promo.PromoLines[page].TauntAnim);
         }
-        if (HJBJPCDFLGL.IAOODIBGNFI >= 100f && HJBJPCDFLGL.PHLNGBLJPCD < HJBJPCDFLGL.OKILOINLLAO)
+        if (GameDialog.AHKCECADCAM >= 100f && GameDialog.KJAOOKABIFM < GameDialog.AGAGHGBLCDA)
         {
-            CKAMIAJJDBP.LLEOPJCKBNE(HJBJPCDFLGL.NAGCDENHJNE, -1, 1f);
-            HJBJPCDFLGL.PHLNGBLJPCD = HJBJPCDFLGL.OKILOINLLAO;
+            GameAudio.KICNMIIFKIC(GameDialog.DNNAOLIENKK, -1, 1f);
+            GameDialog.KJAOOKABIFM = GameDialog.AGAGHGBLCDA;
         }
 
     }
@@ -38,9 +38,9 @@ internal class PromoPatch
         line1 = ReplaceVars(line1);
         line2 = ReplaceVars(line2);
         
-        HJBJPCDFLGL.PCBHDGIILMM(HJBJPCDFLGL.ACCCNCAHDNO[from], HJBJPCDFLGL.ACCCNCAHDNO[to], demeanor, taunt);
-        HJBJPCDFLGL.PLPGONCJOMC[1] = line1;
-        HJBJPCDFLGL.PLPGONCJOMC[2] = line2;
+        GameDialog.LGMALDIJNNC(GameDialog.OKDNAFEFJBB[from], GameDialog.OKDNAFEFJBB[to], demeanor, taunt);
+        GameDialog.HPCGCFCFBLO[1] = line1;
+        GameDialog.HPCGCFCFBLO[2] = line2;
     }
 
     private static string ReplaceVars(string line)
@@ -55,7 +55,7 @@ internal class PromoPatch
             switch (varName)
             {
                 case "name":
-                    varValue = HJBJPCDFLGL.LFMMJKBFOHO[varIndex].name;
+                    varValue = GameDialog.OBMBDIEGBOK[varIndex].name;
                     break;
             }
 
@@ -66,7 +66,7 @@ internal class PromoPatch
         {
             var varName = match.Groups[1].Value;
             var varIndex = int.Parse(match.Groups[2].Value);
-            var varValue = HJBJPCDFLGL.LFMMJKBFOHO[varIndex].DBFECDPDIFN(varName);
+            var varValue = GameDialog.OBMBDIEGBOK[varIndex].BMKFIPMAICK(varName);
             
             line = line.Replace(match.Value, varValue + match.Groups[3].Value);
         }
@@ -79,16 +79,16 @@ internal class PromoPatch
         {
             return;
         }
-        HJBJPCDFLGL.IMNHBANDBMM++;
-        Array.Resize(ref HJBJPCDFLGL.IPIGJMJCNAM, HJBJPCDFLGL.IMNHBANDBMM + 1);
-        ResizeArray(ref HJBJPCDFLGL.EMOGCGOONAA, HJBJPCDFLGL.IMNHBANDBMM + 1, Math.Max(40, PromoData.Count));
-        Array.Resize(ref HJBJPCDFLGL.NADPMKIMOCE, HJBJPCDFLGL.IMNHBANDBMM + 1);
-        HJBJPCDFLGL.NADPMKIMOCE[HJBJPCDFLGL.IMNHBANDBMM] = PromoData.Count;
-        HJBJPCDFLGL.IPIGJMJCNAM[HJBJPCDFLGL.IMNHBANDBMM] = "Custom";
-        HJBJPCDFLGL.EMOGCGOONAA[HJBJPCDFLGL.IMNHBANDBMM, 0] = 0;
+        GameDialog.BILCJNLECHK++;
+        Array.Resize(ref GameDialog.BOMNNLKCEIP, GameDialog.BILCJNLECHK + 1);
+        ResizeArray(ref GameDialog.BGDOGFPDOPK, GameDialog.BILCJNLECHK + 1, Math.Max(40, PromoData.Count));
+        Array.Resize(ref GameDialog.FHBOMMGABMM, GameDialog.BILCJNLECHK + 1);
+        GameDialog.FHBOMMGABMM[GameDialog.BILCJNLECHK] = PromoData.Count;
+        GameDialog.BOMNNLKCEIP[GameDialog.BILCJNLECHK] = "Custom";
+        GameDialog.BGDOGFPDOPK[GameDialog.BILCJNLECHK, 0] = 0;
         for (int i = 0; i < PromoData.Count; i++)
         {
-            HJBJPCDFLGL.EMOGCGOONAA[HJBJPCDFLGL.IMNHBANDBMM, i + 1] = 1000000 + i;
+            GameDialog.BGDOGFPDOPK[GameDialog.BILCJNLECHK, i + 1] = 1000000 + i;
         }
     }
 
@@ -105,18 +105,18 @@ internal class PromoPatch
     }
     
     
-    [HarmonyPatch(typeof(HJBJPCDFLGL), "CHACHKONPAI")]
+    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.ILJJHNDOFBK))]
     [HarmonyPostfix]
-    public static void HJBJPCDFLGL_CHACHKONPAI(int POMLANJPIML)
+    public static void GameDialog_ILJJHNDOFBK(int CBDCDJLMHFB)
     {
-        if (POMLANJPIML < 1000000)
+        if (CBDCDJLMHFB < 1000000)
         {
             return;
         }
-        var index = POMLANJPIML - 1000000;
+        var index = CBDCDJLMHFB - 1000000;
 
-        HJBJPCDFLGL.IBOAEEIDBGL = PromoData[index].Title;
-        HJBJPCDFLGL.KAEKKEABJBN = PromoData[index].Description;
-        HJBJPCDFLGL.NNKDFAJFGMC = PromoData[index].Characters;
+        GameDialog.IEMHDAFJKAK = PromoData[index].Title;
+        GameDialog.FOKOLBEDANF = PromoData[index].Description;
+        GameDialog.NHPLKKIKMLI = PromoData[index].Characters;
     }
 }
