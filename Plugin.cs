@@ -1,8 +1,10 @@
 using Newtonsoft.Json;
 using System.Collections;
+using System.Security.Cryptography;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;
+using WECCL.Utils;
 using PromoData = WECCL.Content.PromoData;
 
 namespace WECCL;
@@ -13,8 +15,8 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.2.0";
-
+    public const string PluginVer = "1.2.2";
+    
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
     internal static DirectoryInfo ImportDir;
@@ -81,11 +83,17 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> DebugRender { get; set; }
 
     public static float GameVersion => Characters.latestVersion;
+    public static readonly float PluginVersion = 1.56f;
 
     private void Awake()
     {
         try
         {
+            if (GameVersion != PluginVersion)
+            {
+                throw new Exception($"Unsupported game version: {GameVersion}");
+            }
+            
             Log = this.Logger;
             PluginPath = Path.GetDirectoryName(this.Info.Location) ?? string.Empty;
 
@@ -193,12 +201,20 @@ public class Plugin : BaseUnityPlugin
 
     private void OnEnable()
     {
+        if (GameVersion != PluginVersion)
+        {
+            return;
+        }
         Harmony.PatchAll();
         this.Logger.LogInfo($"Loaded {PluginName}!");
     }
 
     private void OnDisable()
     {
+        if (GameVersion != PluginVersion)
+        {
+            return;
+        }
         Harmony.UnpatchSelf();
         this.Logger.LogInfo($"Unloaded {PluginName}!");
     }
@@ -287,8 +303,8 @@ public class Plugin : BaseUnityPlugin
             }
             try
             {
-                if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time) ||
-                    file.LastWriteTimeUtc.Ticks != time)
+                if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
+                    file.LastWriteTimeUtc.Ticks != time || Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
                 {
 
                     UnityWebRequest wr = new(file.FullName);
@@ -350,16 +366,18 @@ public class Plugin : BaseUnityPlugin
         Buffer.BlockCopy(floatArray, 0, byteArray, 0, byteArray.Length);
         var fileName = clip.name.Replace("/","_") + ".audioclip";
         File.WriteAllBytes(Path.Combine(CacheDir.FullName, fileName), byteArray);
+        var chksum = Checksum.GetChecksum(byteArray);
         var meta = "channels: " + clip.channels + "\n" +
                    "frequency: " + clip.frequency + "\n" +
                    "length: " + clip.length + "\n" +
                    "samples: " + clip.samples + "\n" +
-                   "time: " + ticks;
+                   "time: " + ticks + "\n" +
+                   "chksum: " + chksum;
         File.WriteAllText(Path.Combine(CacheDir.FullName, clip.name.Replace("/","_") + ".meta"), meta);
         GC.Collect();
     }
     
-    private static bool TryLoadAudioFromCache(string name, out AudioClip clip, out long time)
+    private static bool TryLoadAudioFromCache(string name, out AudioClip clip, out long time, out string chksum)
     {
         name = name.Replace("/", "_");
         var fileName = name + ".audioclip";
@@ -368,6 +386,7 @@ public class Plugin : BaseUnityPlugin
         {
             clip = null;
             time = 0;
+            chksum = null;
             return false;
         }
         var bytes = File.ReadAllBytes(path);
@@ -377,6 +396,7 @@ public class Plugin : BaseUnityPlugin
         {
             clip = null;
             time = 0;
+            chksum = null;
             return false;
         }
         var meta = File.ReadAllText(Path.Combine(CacheDir.FullName, name + ".meta"));
@@ -385,6 +405,7 @@ public class Plugin : BaseUnityPlugin
         var frequency = int.Parse(lines[1].Split(' ')[1]);
         var samples = int.Parse(lines[3].Split(' ')[1]);
         time = long.Parse(lines[4].Split(' ')[1]);
+        chksum = lines.Length > 5 ? lines[5].Split(' ')[1] : "";
         clip = AudioClip.Create(name, samples, channels, frequency, false);
         clip.SetData(floatArray, 0);
         return true;
@@ -764,7 +785,7 @@ public class Plugin : BaseUnityPlugin
                 }
                 try
                 {
-                    if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time))
+                    if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out _, out _))
                     {
 
                         UnityWebRequest wr = new(file.FullName);

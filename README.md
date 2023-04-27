@@ -10,22 +10,24 @@ It is currently possible to add:
 
 - Custom music (themes)
 - Custom costume textures
+- Custom costume meshes
+- Custom promos
 
 It is currently possible to override:
 
 - All music (themes)
 - All costume textures
-- Most sound effects
-- Most world textures
+- All sound effects
+- All world textures
 
 Additional features:
 
 - Automatic remapping of custom content
-- Exporting characters as JSON files
+- Importing and exporting characters
 
 Experimental features:
 
-- Importing characters from JSON files (very experimental, likely to cause issues)
+- Custom arenas
 
 ## Getting Started
 
@@ -39,15 +41,21 @@ This is the recommended way to install the mods.
 
 ### Installation (Manual)
 
-To install this mod manually, you first need to install BepInEx 5.4.21 as a mod loader for Wrestling Empire. A guide for this
-can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex).
-Wrestling Empire needs the x64 Mono version.
+To install this mod manually, you first need to install BepInEx 5.4.21 as a mod loader for Wrestling Empire. A guide for this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex).
+It is recommended to use download BepInEx from [here](https://thunderstore.io/c/wrestling-empire/p/BepInEx/BepInExPack/) to ensure you get the correct version.
 
-To install WECCL, you simply need to copy `WECCL.dll` from releases to `Wrestling Empire/BepInEx/plugins`.
+To install WECCL, you simply need to copy `WECCL.dll` from releases to `./BepInEx/plugins`.
+
+## Important Notes
+
+When using a mod manager, `./BepInEx` can be found with `Browse profile folder` in the mod manager's settings.
+When using BepInEx manually, `./BepInEx` can be found in the game's root folder.
+`Assets`, `Overrides`, etc. can be anywhere in the `plugins` folder, e.g. `./BepInEx/plugins/MyMod/Assets`.
+If you're stuck, you can always ask for help in the [modding Discord](https://discord.gg/mH56AhUwPR).
 
 ## Adding Content
 
-You can add content by inserting images and audio files into `Wrestling Empire/BepInEx/plugins/Assets`. Any audio file
+You can add content by inserting images and audio files into `./BepInEx/plugins/Assets`. Any audio file
 here will be considered a theme. Image files must either be in a subfolder or prefixed by the costume texture name.  
 Example: `body_material_abc.png` or `body_material/abc.png` (`_` before 01 is not required; `abc` can be anything)
 
@@ -90,7 +98,7 @@ The following keys are supported:
 
 ## Meshes
 
-As with textures, meshes can be added by placing them in `Wrestling Empire/BepInEx/plugins/Assets`. Meshes must be in a subfolder by the mesh name.
+As with textures, meshes can be added by placing them in `./BepInEx/plugins/Assets`. Meshes must be in a subfolder by the mesh name.
 Example: `body_mesh/abc`. The extension must be `.mesh` or no extension at all.
 Meshes should be inside an asset bundle with it being the only mesh in the bundle. The first submesh will be the one affected by the game's mesh color setting. Others can be manually set in the metadata file.
 
@@ -119,19 +127,53 @@ The following keys are supported:
 | rotation      | The rotation of the mesh. Must be formatted as `x,y,z` (e.g. `0.0, 0.0, 0.0`). `0.0, 0.0, 0.0` is the default rotation.                                                                                             |
 | submeshXcolor | The color of submesh X. Must be formatted as `r,g,b` (e.g. `1,0, 0.0, 0.0`) or an HTML string (e.g. `#FF0000` or `red`). Overriding submesh 0 is not supported, as it is affected by the game's mesh color setting. |
 
+### Custom Arenas
+
+**Custom arenas are very experimental and may not work as intended. Use at your own risk.**  
+Custom arenas work the same as meshes, but require a GameObject as the root object and should be placed in a subfolder named `arena`.  
+Example: `arena/abc`. The extension must be `.mesh` or no extension at all (Please note that it is still not actually a mesh, but a GameObject. This will be changed in the future).  
+There is functionality in place to automatically assign collision to the arena, but this doesn't work for diagonal walls, i.e. walls that are not aligned with the X or Z axis. It may also not work as expected with some wall shapes.
+
+## Custom Promos
+
+You can add custom promos by placing a .promo file inside `./BepInEx/plugins/Assets`. The file must contain metadata in the format `key: value` (space is optional), and newline-separated dialog lines in the format `"line1","line2",speaker,target(,taunt,demeanor)`.
+Example:
+```
+title: Test Promo
+description: Promo between [P1] and [P2]
+characters: 2
+"Well, well, well, if it isn't $name2.","What brings you here, brother?",1,2
+"I came to put an end to your reign of terror, $name1.","And I heard you're touting some newfangled gadget. What is it?",2,1,12,-50
+"Oh, it's no gadget, brother.","It's the future of wrestling: custom promos.",1,2,36,50
+"Custom promos? Sounds like a cheap ploy to me.","I'm not falling for it.",2,1,111,-50
+"Cheap? Hardly, brother. Custom promos are the real deal. And speaking", "of deals, how about we settle things once and for all in the ring?",1,2
+"You're on, $name1. And you'd better believe", "I'll be bringing my A-game.",2,1,147
+```
+`title` must be a string.  
+`description` must be a string. [P1] and [P2] will be replaced with the names of the characters.  
+`characters` must be an integer or a comma-separated list of integers. When using an integer, an array up until that number will be created. When using a list, the list will be used as the array.  
+1 and 2 are the default characters as selected by the user, 3 is another character, -1 is the referee, and 11 and 22 are the tag team partners of 1 and 2 respectively. Other values are not supported.  
+`"line1"` and `"line2"` must be strings. The quotes are required. For quotes inside the string, use `\"`.  
+`$name#` will be replaced with the name of the character with the corresponding id.  
+`@him/his/etc.#` will be replaced with the pronoun of the character with the corresponding id, e.g. `@his1 friend` -> `his friend` or `her friend` depending on wrestler #1's gender. Supported pronouns are `He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy`.  
+`speaker` must be an integer.
+`target` must be an integer.
+`taunt` must be an integer. A list of taunts can be found in TauntAnims.md.
+`demeanor` must be an integer. A positive value will make the character happy for the given number of frames, and a negative value will make the character angry for the given number of frames.
+
 ## Overriding content
 
-You can override content by placing any image or audio file inside `Wrestling Empire/BepInEx/plugins/Overrides`
+You can override content by placing any image or audio file inside `./BepInEx/plugins/Overrides`
 referenced by the internal name. A zip file containing all the overridable files can be found in
 the [Modding Discord](https://discord.gg/mH56AhUwPR)
 
 ## Exporting Characters
 
-Characters are automatically exported to `Wrestling Empire/BepInEx/plugins/Export` when the game is saved.
+Characters are automatically exported to `./BepInEx/plugins/Export` when the game is saved.
 
 ## Importing Characters
 
-Characters can be imported by placing a JSON file inside `Wrestling Empire/BepInEx/plugins/Import`. Make sure to set
+Characters can be imported by placing a JSON file inside `./BepInEx/plugins/Import`. Make sure to set
 the `overrideMode` property to the desired mode.  
 `append` will add the imported character.  
 `override` will override the character with the same `id`.  
