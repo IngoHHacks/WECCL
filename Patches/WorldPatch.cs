@@ -23,7 +23,6 @@ public class WorldPatch
                 }
 
                 World.HOOLOHJJIFF();
-
                 World.gArena = Object.Instantiate(CustomArenaPrefabs[World.location - VanillaCounts.NoLocations - 1]);
 
                 if (GameScreens.GLDIFJOEOIO == 60)
@@ -105,7 +104,7 @@ public class WorldPatch
         }
     }
 
-    [HarmonyPatch(typeof(GameCollision), "OJMNGOHBIJH")]
+    [HarmonyPatch(typeof(GameCollision), nameof(GameCollision.OJMNGOHBIJH))]
     [HarmonyPostfix]
     public static void GameCollision_OJMNGOHBIJH_Postfix()
     {
@@ -209,6 +208,82 @@ public class WorldPatch
                     GameCollision.HGKKJGCBEPH = 1;
                 }
             }
+            var doors = World.gArena.GetComponentsInChildren<Transform>().Where(t => t.gameObject != null && t.gameObject.name.StartsWith("Exit")).Select(t => t.gameObject).ToArray();
+            foreach (var door in doors)
+            {
+                var corners = new Vector3[4];
+                var center = door.transform.position;
+                var localScale = door.transform.localScale;
+                var up = localScale.y;
+                var right = localScale.x;
+                var forward = localScale.z;
+                corners[0] = center + new Vector3(right, 0, forward);
+                corners[1] = center + new Vector3(right, 0, -forward);
+                corners[2] = center + new Vector3(-right, 0, forward);
+                corners[3] = center + new Vector3(-right, 0, -forward);
+
+                var yTop = center.y + up;
+                var yBottom = center.y - up;
+                
+                var xSorted = new Vector3[4];
+                var zSorted = new Vector3[4];
+                
+                Array.Copy(corners, xSorted, 4);
+                Array.Copy(corners, zSorted, 4);
+                
+                Array.Sort(xSorted, (a, b) =>
+                {
+                    return a.x.CompareTo(b.x);
+                });
+                Array.Sort(zSorted, (a, b) =>
+                {
+                    return a.z.CompareTo(b.z);
+                });
+                
+                Vector3 topRight = corners[0];
+                Vector3 bottomRight = corners[0];
+                Vector3 bottomLeft = corners[0];
+                Vector3 topLeft = corners[0];
+                
+                if (zSorted[3].x > zSorted[2].x)
+                {
+                    topRight = zSorted[3];
+                    bottomRight = zSorted[2];
+                }
+                else
+                {
+                    topRight = zSorted[2];
+                    bottomRight = zSorted[3];
+                }
+                if (zSorted[1].x < zSorted[0].x)
+                {
+                    bottomLeft = zSorted[1];
+                    topLeft = zSorted[0];
+                }
+                else
+                {
+                    bottomLeft = zSorted[0];
+                    topLeft = zSorted[1];
+                }
+                
+                // Create door
+                GameCollision.AHKNDAPINCE();
+                GameCollision.BAJJBMHMGBH[0] = GameCollision.BAJJBMHMGBH[GameCollision.BKAPMFNPOIB];
+                GameCollision.BAJJBMHMGBH[0].BOBFOLNHBCL[1] = topRight.x;
+                GameCollision.BAJJBMHMGBH[0].FDMAHBOILBC[1] = topRight.z;
+                GameCollision.BAJJBMHMGBH[0].BOBFOLNHBCL[4] = bottomRight.x;
+                GameCollision.BAJJBMHMGBH[0].FDMAHBOILBC[4] = bottomRight.z;
+                GameCollision.BAJJBMHMGBH[0].BOBFOLNHBCL[3] = bottomLeft.x;
+                GameCollision.BAJJBMHMGBH[0].FDMAHBOILBC[3] = bottomLeft.z;
+                GameCollision.BAJJBMHMGBH[0].BOBFOLNHBCL[2] = topLeft.x;
+                GameCollision.BAJJBMHMGBH[0].FDMAHBOILBC[2] = topLeft.z;
+                GameCollision.BAJJBMHMGBH[0].JKHPFKDCNJL = yTop;
+                GameCollision.BAJJBMHMGBH[0].PIOOGAJMCNL = door.transform.rotation.eulerAngles.y;
+                GameCollision.BAJJBMHMGBH[0].OCELBBFKDMN = 1f;
+                GameCollision.BAJJBMHMGBH[0].FLCIPPNLONE = EHIOFPLJLKH.BAJJBMHMGBH[1];
+                GameCollision.BAJJBMHMGBH[0].PBPPKPEFLCG = int.Parse(door.name.Substring(4));
+                GameCollision.BAJJBMHMGBH[0].KJOCNBPHILL = door.transform.rotation.eulerAngles.y + 180f;
+            }
             
         }
 
@@ -273,7 +348,7 @@ public class WorldPatch
                 }
             }
 
-            var arr2 = GameCollision.BAJJBMHMGBH;
+            var arr2 = GameCollision.IKGAAJIDDEJ;
             for (int i = 1; i < arr2.Length; i++)
             {
                 try
@@ -300,7 +375,7 @@ public class WorldPatch
                     var scene = World.gArena;
                     var x4 = arr3[i].BOBFOLNHBCL; // float[5], x4[0] is always 0
                     var z4 = arr3[i].FDMAHBOILBC; // float[5], z4[0] is always 0
-                    var yLow = 0;
+                    var yLow = World.ground - 5f;
                     var yHigh = arr3[i].JKHPFKDCNJL; // float
 
                     var color = new Color(0.5f, 1f, 0f);
@@ -433,11 +508,11 @@ public class WorldPatch
         if (World.location > VanillaCounts.NoLocations)
         {
             World.ground = 0f;
-            World.ceiling = 100f;
-            World.farNorth = 100f;
-            World.farSouth = -100f;
-            World.farEast = 100f;
-            World.farWest = -100f;
+            World.ceiling = 9999f;
+            World.farNorth = 9999f;
+            World.farSouth = -9999f;
+            World.farEast = 9999f;
+            World.farWest = -9999f;
             World.camNorth = 60f;
             World.camSouth = -60f;
             World.camEast = 60;

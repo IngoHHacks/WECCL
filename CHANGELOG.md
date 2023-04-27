@@ -2,6 +2,15 @@
 
 ### GV 1.56:
 
+## Release 1.2.2
+- Added support for doors.
+- Increased default location size to 9999 (from 100).
+- Fixed some debug rendering issues.
+
+## Release 1.2.1
+- Added an exception when using an unsupported game version.
+- Added checksums to cached audio clips.
+
 ## Release 1.2.0
 - UPDATE TO GAME VERSION 1.56
 - Added support for costume meshes.
