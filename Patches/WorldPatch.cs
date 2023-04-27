@@ -508,7 +508,7 @@ public class WorldPatch
         if (World.location > VanillaCounts.NoLocations)
         {
             World.ground = 0f;
-            World.ceiling = 9999f;
+            World.ceiling = 100f;
             World.farNorth = 9999f;
             World.farSouth = -9999f;
             World.farEast = 9999f;
