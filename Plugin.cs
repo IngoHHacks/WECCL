@@ -315,7 +315,8 @@ public class Plugin : BaseUnityPlugin
                     clip = DownloadHandlerAudioClip.GetContent(wr);
                     wr.Dispose();
                     clip.name = fileName;
-                    CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks);
+                    var chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
+                    CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks, chksum2);
                 }
 
                 clip.name = fileName;
@@ -358,7 +359,7 @@ public class Plugin : BaseUnityPlugin
         ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
     }
 
-    private static void CacheAudioClip(AudioClip clip, long ticks)
+    private static void CacheAudioClip(AudioClip clip, long ticks, string chksum)
     {
         var floatArray = new float[clip.samples * clip.channels];
         clip.GetData(floatArray, 0);
@@ -366,7 +367,6 @@ public class Plugin : BaseUnityPlugin
         Buffer.BlockCopy(floatArray, 0, byteArray, 0, byteArray.Length);
         var fileName = clip.name.Replace("/","_") + ".audioclip";
         File.WriteAllBytes(Path.Combine(CacheDir.FullName, fileName), byteArray);
-        var chksum = Checksum.GetChecksum(byteArray);
         var meta = "channels: " + clip.channels + "\n" +
                    "frequency: " + clip.frequency + "\n" +
                    "length: " + clip.length + "\n" +
@@ -785,9 +785,9 @@ public class Plugin : BaseUnityPlugin
                 }
                 try
                 {
-                    if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out _, out _))
+                    if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
+                        file.LastWriteTimeUtc.Ticks != time || Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
                     {
-
                         UnityWebRequest wr = new(file.FullName);
                         wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
                         wr.SendWebRequest();
@@ -796,7 +796,8 @@ public class Plugin : BaseUnityPlugin
                         clip = DownloadHandlerAudioClip.GetContent(wr);
                         wr.Dispose();
                         clip.name = fileName;
-                        CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks);
+                        var chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
+                        CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks, chksum2);
                     }
 
                     clip.name = fileName;

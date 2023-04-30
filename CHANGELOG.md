@@ -3,9 +3,10 @@
 ### GV 1.56:
 
 ## Release 1.2.2
-- Added support for doors.
+- Added experimental support for doors.
 - Increased default location size to 9999 (from 100).
 - Fixed some debug rendering issues.
+- Fixed cache not correctly updating for overridden assets.
 
 ## Release 1.2.1
 - Added an exception when using an unsupported game version.
