@@ -15,7 +15,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.2.2";
+    public const string PluginVer = "1.2.3";
     
     internal static DirectoryInfo AssetsDir;
     internal static DirectoryInfo ExportDir;
@@ -361,6 +361,11 @@ public class Plugin : BaseUnityPlugin
 
     private static void CacheAudioClip(AudioClip clip, long ticks, string chksum)
     {
+        // Don't cache clips that are too big
+        if (clip.samples * clip.channels * 4 > 2000000000)
+        {
+            return;
+        }
         var floatArray = new float[clip.samples * clip.channels];
         clip.GetData(floatArray, 0);
         var byteArray = new byte[floatArray.Length * 4];

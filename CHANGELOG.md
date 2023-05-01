@@ -2,6 +2,9 @@
 
 ### GV 1.56:
 
+## Release 1.2.3
+- Audio clips that are too big will no longer be attempted to be cached (due to the 2GB limit of byte arrays).
+
 ## Release 1.2.2
 - Added experimental support for doors.
 - Increased default location size to 9999 (from 100).
