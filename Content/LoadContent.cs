@@ -85,15 +85,17 @@ public static class LoadContent
         
         if (Plugin.EnableCustomContent.Value)
         {
+            VanillaCounts.NoLocations = World.no_locations;
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
             {
                 yield return Plugin.LoadPromos(modAssetsDir);
-                PromoPatch.PatchPromoInfo();
                 yield return Plugin.LoadAudioClips(modAssetsDir);
                 yield return Plugin.LoadCostumes(modAssetsDir);
                 yield return Plugin.LoadMeshes(modAssetsDir);
             }
         }
+        
+        PromoPatch.PatchPromoInfo();
 
         if (Plugin.EnableOverrides.Value)
         {

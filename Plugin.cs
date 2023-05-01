@@ -601,7 +601,6 @@ public class Plugin : BaseUnityPlugin
     
     internal static IEnumerator LoadMeshes(DirectoryInfo dir)
     {
-        VanillaCounts.NoLocations = World.no_locations;
         int meshCount = 0;
         // Load custom meshes
         if (!dir.Exists)

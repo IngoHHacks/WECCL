@@ -84,9 +84,9 @@ public class SaveRemapper
                                 costume.texture[i] -= versionDiff.SpecialFootwearCountDiff;
                                 changed = true;
                             }
-                            else if (i == 17 && versionDiff.TransparentHairHairstyleCountDiff != 0 && costume.texture[i] < -VanillaCounts.TransparentHairHairstyleCount + versionDiff.TransparentHairHairstyleCountDiff)
+                            else if (i == 17 && versionDiff.TransparentHairMaterialCountDiff != 0 && costume.texture[i] < -VanillaCounts.TransparentHairMaterialCount + versionDiff.TransparentHairMaterialCountDiff)
                             {
-                                costume.texture[i] -= versionDiff.TransparentHairHairstyleCountDiff;
+                                costume.texture[i] -= versionDiff.TransparentHairMaterialCountDiff;
                                 changed = true;
                             }
                             else if (i == 24 && versionDiff.KneepadCountDiff != 0 && costume.texture[i] < -VanillaCounts.KneepadCount + versionDiff.KneepadCountDiff)
