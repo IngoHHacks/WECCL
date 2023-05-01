@@ -82,10 +82,10 @@ public static class LoadContent
 
 
         VanillaCounts.MusicCount = EHIOFPLJLKH.CJNGPFLPOBM;
+        VanillaCounts.NoLocations = World.no_locations;
         
         if (Plugin.EnableCustomContent.Value)
         {
-            VanillaCounts.NoLocations = World.no_locations;
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
             {
                 yield return Plugin.LoadPromos(modAssetsDir);
