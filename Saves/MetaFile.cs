@@ -24,14 +24,22 @@ public class MetaFile
 
     public static MetaFile Load()
     {
-        string path = Locations.Meta.FullName;
-        if (!File.Exists(path))
+        try
         {
+            string path = Locations.Meta.FullName;
+            if (!File.Exists(path))
+            {
+                return new MetaFile();
+            }
+
+            string json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<MetaFile>(json,
+                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError($"Unable to load meta file: {e}");
             return new MetaFile();
         }
-
-        string json = File.ReadAllText(path);
-        return JsonConvert.DeserializeObject<MetaFile>(json,
-            new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
     }
 }

@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using System.Collections;
-using System.Security.Cryptography;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;

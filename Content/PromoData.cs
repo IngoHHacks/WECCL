@@ -48,14 +48,14 @@ public class PromoData
                 }
                 if (line.ToLower().StartsWith("characters:"))
                 {
-                    if (!line.Contains(","))
+                    if (line.Substring(11).Trim().StartsWith(":"))
                     {
-                        var num = int.Parse(line.Substring(11).Trim());
+                        var num = int.Parse(line.Substring(11).Trim().Substring(1));
                         promoData.Characters = GenerateArrayForNum(num);
                     }
                     else
                     {
-                        var chars = line.Substring(11).Split(',').Select(x => int.Parse(x.Trim()));
+                        var chars = line.Substring(11).Trim().Split(',').Select(x => int.Parse(x.Trim()));
                         IEnumerable<int> enumerable = chars.ToList();
                         if (enumerable.First() != 0)
                         {
@@ -128,7 +128,7 @@ public class PromoData
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
+            Plugin.Log.LogError($"Error parsing promo data: {e}");
             return null;
         }
     }
@@ -141,6 +141,7 @@ public class PromoData
     
     private static int[] GenerateArrayForNum(int characters)
     {
+        if (characters <= 0) return new[] { -1 };
         int[] arr = new int[characters+1];
         for (int i = 1; i <= characters; i++)
         {

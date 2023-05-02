@@ -141,7 +141,7 @@ Example:
 ```
 title: Test Promo
 description: Promo between [P1] and [P2]
-characters: 2
+characters: 1,2
 "Well, well, well, if it isn't $name2.","What brings you here, brother?",1,2
 "I came to put an end to your reign of terror, $name1.","And I heard you're touting some newfangled gadget. What is it?",2,1,12,-50
 "Oh, it's no gadget, brother.","It's the future of wrestling: custom promos.",1,2,36,50
@@ -151,7 +151,7 @@ characters: 2
 ```
 `title` must be a string.  
 `description` must be a string. [P1] and [P2] will be replaced with the names of the characters.  
-`characters` must be an integer or a comma-separated list of integers. When using an integer, an array up until that number will be created. When using a list, the list will be used as the array.  
+`characters` must be an comma-separated list of integers, or an integer prefixed by `:`. When using a prefixed integer, an array from 1 to that integer will be created. When using a list, the list will be used as the array.  
 1 and 2 are the default characters as selected by the user, 3 is another character, -1 is the referee, and 11 and 22 are the tag team partners of 1 and 2 respectively. Other values are not supported.  
 `"line1"` and `"line2"` must be strings. The quotes are required. For quotes inside the string, use `\"`.  
 `$name#` will be replaced with the name of the character with the corresponding id.  

@@ -58,22 +58,33 @@ internal class ContentMappings
             return new ContentMappings();
         }
 
-        string json = File.ReadAllText(path);
-        var obj = JsonConvert.DeserializeObject<ContentMappings>(json,
-            new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-        
-        for (int i = 0; i < obj.PreviouslyImportedCharacters.Count; i++)
+        try
         {
-            if (obj.PreviouslyImportedCharacters[i].EndsWith(".json"))
+            string json = File.ReadAllText(path);
+            var obj = JsonConvert.DeserializeObject<ContentMappings>(json,
+                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+            for (int i = 0; i < obj.PreviouslyImportedCharacters.Count; i++)
             {
-                obj.PreviouslyImportedCharacters[i] = obj.PreviouslyImportedCharacters[i].Substring(0, obj.PreviouslyImportedCharacters[i].Length - 5);
+                if (obj.PreviouslyImportedCharacters[i].EndsWith(".json"))
+                {
+                    obj.PreviouslyImportedCharacters[i] = obj.PreviouslyImportedCharacters[i]
+                        .Substring(0, obj.PreviouslyImportedCharacters[i].Length - 5);
+                }
+                else if (obj.PreviouslyImportedCharacters[i].EndsWith(".character"))
+                {
+                    obj.PreviouslyImportedCharacters[i] = obj.PreviouslyImportedCharacters[i]
+                        .Substring(0, obj.PreviouslyImportedCharacters[i].Length - 10);
+                }
             }
-            else if (obj.PreviouslyImportedCharacters[i].EndsWith(".character"))
-            {
-                obj.PreviouslyImportedCharacters[i] = obj.PreviouslyImportedCharacters[i].Substring(0, obj.PreviouslyImportedCharacters[i].Length - 10);
-            }
+
+            return obj;
         }
-        return obj;
+        catch (Exception e)
+        {
+            Plugin.Log.LogError($"Unable to load custom content map: {e}");
+            return new ContentMappings();
+        }
     }
     
     public void AddPreviouslyImportedCharacter(string name, int id)
