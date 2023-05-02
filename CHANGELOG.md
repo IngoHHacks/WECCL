@@ -2,6 +2,9 @@
 
 ### GV 1.56:
 
+## Release 1.2.4
+- Fixed Thunderstore version removing mappings.
+
 ## Release 1.2.3
 - Fixed arenas for Thunderstore.
 - Audio clips that are too big will no longer be attempted to be cached (due to the 2GB limit of byte arrays).

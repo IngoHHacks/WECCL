@@ -15,14 +15,8 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.2.3";
+    public const string PluginVer = "1.2.4";
     
-    internal static DirectoryInfo AssetsDir;
-    internal static DirectoryInfo ExportDir;
-    internal static DirectoryInfo ImportDir;
-    internal static DirectoryInfo OverrideDir;
-    internal static DirectoryInfo CacheDir;
-    internal static DirectoryInfo DebugFilesDir;
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
 
@@ -30,11 +24,8 @@ public class Plugin : BaseUnityPlugin
     internal static readonly Harmony Harmony = new(PluginGuid);
 
     internal static string PluginPath;
-
-    internal static string ContentMappingsPath;
+    internal static string PersistentDataPath;
     
-    internal static string MetaFilePath;
-
     private static long _nextProgressUpdate = DateTime.Now.Ticks;
 
     private static readonly List<string> ImageExtensions = new()
@@ -96,6 +87,11 @@ public class Plugin : BaseUnityPlugin
             
             Log = this.Logger;
             PluginPath = Path.GetDirectoryName(this.Info.Location) ?? string.Empty;
+            PersistentDataPath = Path.Combine(Application.persistentDataPath, "WECCL");
+            if (!Directory.Exists(PersistentDataPath))
+            {
+                Directory.CreateDirectory(PersistentDataPath);
+            }
 
             Instance = this;
             
@@ -128,68 +124,8 @@ public class Plugin : BaseUnityPlugin
             
             CreateBackups();
             
-            var oldContentMappingsPath = Path.Combine(PluginPath, "CustomContentSaveFile.json");
-            var oldMetaFilePath = Path.Combine(PluginPath, "CustomConfigsSaveFile.json");
-            
-            var oldContentMappingsPath2 = Path.Combine(PluginPath, "ContentMappings.json");
-            var oldMetaFilePath2 = Path.Combine(PluginPath, "Meta.json");
-
-            ContentMappingsPath = Path.Combine(PluginPath, "ContentMappings.mappings");
-            MetaFilePath = Path.Combine(PluginPath, "Meta.meta");
-            
-            if (File.Exists(oldContentMappingsPath))
-            {
-                File.Move(oldContentMappingsPath, ContentMappingsPath);
-            }
-            if (File.Exists(oldMetaFilePath))
-            {
-                File.Move(oldMetaFilePath, MetaFilePath);
-            }
-            if (File.Exists(oldContentMappingsPath2))
-            {
-                File.Move(oldContentMappingsPath2, ContentMappingsPath);
-            }
-            if (File.Exists(oldMetaFilePath2))
-            {
-                File.Move(oldMetaFilePath2, MetaFilePath);
-            }
-            
-            DebugFilesDir = new DirectoryInfo(Path.Combine(PluginPath, "Debug"));
-
-            AssetsDir = new DirectoryInfo(Path.Combine(PluginPath, "Assets"));
-            if (!AssetsDir.Exists)
-            {
-                AssetsDir.Create();
-            }
-
-            OverrideDir = new DirectoryInfo(Path.Combine(PluginPath, "Overrides"));
-            if (!OverrideDir.Exists)
-            {
-                OverrideDir.Create();
-            }
-
-            ImportDir = new DirectoryInfo(Path.Combine(PluginPath, "Import"));
-            if (!ImportDir.Exists)
-            {
-                ImportDir.Create();
-            }
-
-            ExportDir = new DirectoryInfo(Path.Combine(PluginPath, "Export"));
-            if (!ExportDir.Exists)
-            {
-                ExportDir.Create();
-            }
-            
-            CacheDir = new DirectoryInfo(Path.Combine(PluginPath, ".cache"));
-            if (CacheEnabled.Value && !CacheDir.Exists)
-            {
-                CacheDir.Create();
-                CacheDir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
-                CacheDir.Refresh();
-            } else if (!CacheEnabled.Value && CacheDir.Exists)
-            {
-                CacheDir.Delete(true);
-            }
+            Locations.MoveLegacyLocations();
+            Locations.CreateDirectories();
 
             StartCoroutine(LoadContent.Load());
         }
@@ -371,14 +307,14 @@ public class Plugin : BaseUnityPlugin
         var byteArray = new byte[floatArray.Length * 4];
         Buffer.BlockCopy(floatArray, 0, byteArray, 0, byteArray.Length);
         var fileName = clip.name.Replace("/","_") + ".audioclip";
-        File.WriteAllBytes(Path.Combine(CacheDir.FullName, fileName), byteArray);
+        File.WriteAllBytes(Path.Combine(Locations.Cache.FullName, fileName), byteArray);
         var meta = "channels: " + clip.channels + "\n" +
                    "frequency: " + clip.frequency + "\n" +
                    "length: " + clip.length + "\n" +
                    "samples: " + clip.samples + "\n" +
                    "time: " + ticks + "\n" +
                    "chksum: " + chksum;
-        File.WriteAllText(Path.Combine(CacheDir.FullName, clip.name.Replace("/","_") + ".meta"), meta);
+        File.WriteAllText(Path.Combine(Locations.Cache.FullName, clip.name.Replace("/","_") + ".meta"), meta);
         GC.Collect();
     }
     
@@ -386,7 +322,7 @@ public class Plugin : BaseUnityPlugin
     {
         name = name.Replace("/", "_");
         var fileName = name + ".audioclip";
-        var path = Path.Combine(CacheDir.FullName, fileName);
+        var path = Path.Combine(Locations.Cache.FullName, fileName);
         if (!File.Exists(path))
         {
             clip = null;
@@ -397,14 +333,14 @@ public class Plugin : BaseUnityPlugin
         var bytes = File.ReadAllBytes(path);
         var floatArray = new float[bytes.Length / 4];
         Buffer.BlockCopy(bytes, 0, floatArray, 0, bytes.Length);
-        if (!File.Exists(Path.Combine(CacheDir.FullName, name + ".meta")))
+        if (!File.Exists(Path.Combine(Locations.Cache.FullName, name + ".meta")))
         {
             clip = null;
             time = 0;
             chksum = null;
             return false;
         }
-        var meta = File.ReadAllText(Path.Combine(CacheDir.FullName, name + ".meta"));
+        var meta = File.ReadAllText(Path.Combine(Locations.Cache.FullName, name + ".meta"));
         var lines = meta.Split('\n');
         var channels = int.Parse(lines[0].Split(' ')[1]);
         var frequency = int.Parse(lines[1].Split(' ')[1]);

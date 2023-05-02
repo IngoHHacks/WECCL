@@ -52,19 +52,19 @@ public static class LoadContent
             Plugin.AllModsImportDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Import")));
         }
 
-        if (!AllModsAssetsDirs.Exists(x => x.FullName == Plugin.AssetsDir.FullName))
+        if (!AllModsAssetsDirs.Exists(x => x.FullName == Locations.Assets.FullName))
         {
-            AllModsAssetsDirs.Add(Plugin.AssetsDir);
+            AllModsAssetsDirs.Add(Locations.Assets);
         }
 
-        if (!AllModsOverridesDirs.Exists(x => x.FullName == Plugin.OverrideDir.FullName))
+        if (!AllModsOverridesDirs.Exists(x => x.FullName == Locations.Overrides.FullName))
         {
-            AllModsOverridesDirs.Add(Plugin.OverrideDir);
+            AllModsOverridesDirs.Add(Locations.Overrides);
         }
 
-        if (!Plugin.AllModsImportDirs.Exists(x => x.FullName == Plugin.ImportDir.FullName))
+        if (!Plugin.AllModsImportDirs.Exists(x => x.FullName == Locations.Import.FullName))
         {
-            Plugin.AllModsImportDirs.Add(Plugin.ImportDir);
+            Plugin.AllModsImportDirs.Add(Locations.Import);
         }
 
         if (AllModsAssetsDirs.Count > 0)

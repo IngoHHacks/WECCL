@@ -8,9 +8,9 @@ internal class VersionData
     public static void WriteVersionData()
     {
         var json = JsonConvert.SerializeObject(new VanillaCounts());
-        if (!Directory.Exists(Plugin.DebugFilesDir.FullName))
-            Directory.CreateDirectory(Plugin.DebugFilesDir.FullName);
+        if (!Directory.Exists(Locations.Debug.FullName))
+            Directory.CreateDirectory(Locations.Debug.FullName);
         
-        File.WriteAllText(Path.Combine(Plugin.DebugFilesDir.FullName, "VanillaCounts.json"), json);
+        File.WriteAllText(Path.Combine(Locations.Debug.FullName, "VanillaCounts.json"), json);
     }
 }

@@ -8,7 +8,7 @@ public class ModdedCharacterManager
 {
     public static void SaveAllCharacters()
     {
-        string exportPath = Plugin.ExportDir.FullName;
+        string exportPath = Locations.Export.FullName;
         Character[] characters = Characters.c;
         if (Directory.Exists(exportPath))
         {

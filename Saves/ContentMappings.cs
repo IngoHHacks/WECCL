@@ -44,7 +44,7 @@ internal class ContentMappings
 
     public void Save()
     {
-        string path = Plugin.ContentMappingsPath;
+        string path = Locations.ContentMappings.FullName;
         string json = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(path, json);
         Plugin.Log.LogDebug($"Saved custom content map to {path}.");
@@ -52,7 +52,7 @@ internal class ContentMappings
 
     public static ContentMappings Load()
     {
-        string path = Plugin.ContentMappingsPath;
+        string path = Locations.ContentMappings.FullName;
         if (!File.Exists(path))
         {
             return new ContentMappings();

@@ -16,7 +16,7 @@ public class MetaFile
 
     public void Save()
     {
-        string path = Plugin.MetaFilePath;
+        string path = Locations.Meta.FullName;
         string json = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(path, json);
         Plugin.Log.LogDebug($"Saved meta file to {path}.");
@@ -24,7 +24,7 @@ public class MetaFile
 
     public static MetaFile Load()
     {
-        string path = Plugin.MetaFilePath;
+        string path = Locations.Meta.FullName;
         if (!File.Exists(path))
         {
             return new MetaFile();
