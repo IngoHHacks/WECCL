@@ -6,6 +6,7 @@ public static class Locations
     public static DirectoryInfo Overrides { get; } = new(Path.Combine(Plugin.PluginPath, "Overrides"));
     public static DirectoryInfo Import { get; } = new(Path.Combine(Plugin.PluginPath, "Import"));
     public static DirectoryInfo Export { get; } = new(Path.Combine(Plugin.PluginPath, "Export"));
+    public static DirectoryInfo Libraries { get; } = new(Path.Combine(Plugin.PluginPath, "Libraries"));
     public static DirectoryInfo Cache { get; } = new(Path.Combine(Plugin.PersistentDataPath, ".cache"));
     public static DirectoryInfo Debug { get; } = new(Path.Combine(Plugin.PluginPath, "Debug"));
     

@@ -31,10 +31,11 @@ public static class LoadContent
     {
         List<DirectoryInfo> AllModsAssetsDirs = new();
         List<DirectoryInfo> AllModsOverridesDirs = new();
+        List<DirectoryInfo> AllModsLibrariesDirs = new();
 
         foreach (string modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
         {
-            Plugin.FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref Plugin.AllModsImportDirs);
+            Plugin.FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref Plugin.AllModsImportDirs, ref AllModsLibrariesDirs);
         }
         
         if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Assets")))
@@ -51,6 +52,11 @@ public static class LoadContent
         {
             Plugin.AllModsImportDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Import")));
         }
+        
+        if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Libraries")))
+        {
+            AllModsLibrariesDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Libraries")));
+        }
 
         if (!AllModsAssetsDirs.Exists(x => x.FullName == Locations.Assets.FullName))
         {
@@ -65,6 +71,11 @@ public static class LoadContent
         if (!Plugin.AllModsImportDirs.Exists(x => x.FullName == Locations.Import.FullName))
         {
             Plugin.AllModsImportDirs.Add(Locations.Import);
+        }
+        
+        if (!AllModsLibrariesDirs.Exists(x => x.FullName == Locations.Libraries.FullName))
+        {
+            AllModsLibrariesDirs.Add(Locations.Libraries);
         }
 
         if (AllModsAssetsDirs.Count > 0)
@@ -83,6 +94,11 @@ public static class LoadContent
 
         VanillaCounts.MusicCount = EHIOFPLJLKH.CJNGPFLPOBM;
         VanillaCounts.NoLocations = World.no_locations;
+
+        foreach (var dir in AllModsLibrariesDirs)
+        {
+            yield return Plugin.LoadLibraries(dir);
+        }
         
         if (Plugin.EnableCustomContent.Value)
         {

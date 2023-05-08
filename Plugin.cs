@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Collections;
+using System.Reflection;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;
@@ -93,7 +94,7 @@ public class Plugin : BaseUnityPlugin
             }
 
             Instance = this;
-            
+
             AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
                 "Automatically export characters to /Export when the game is saved.");
             EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
@@ -155,7 +156,9 @@ public class Plugin : BaseUnityPlugin
     }
 
     internal static void FindContent(string modPath, ref List<DirectoryInfo> AllModsAssetsDirs,
-        ref List<DirectoryInfo> AllModsOverridesDirs, ref List<DirectoryInfo> AllModsImportDirs)
+        ref List<DirectoryInfo> AllModsOverridesDirs, ref List<DirectoryInfo> AllModsImportDirs,
+        ref List<DirectoryInfo> AllModsLibrariesDirs)
+
     {
         try
         {
@@ -185,12 +188,19 @@ public class Plugin : BaseUnityPlugin
                 AllModsImportDirs.Add(modImportDir);
                 shouldCheckSubDirs = false;
             }
+            
+            DirectoryInfo modLibrariesDir = new(Path.Combine(modPath, "Libraries"));
+            if (modLibrariesDir.Exists)
+            {
+                AllModsLibrariesDirs.Add(modLibrariesDir);
+                shouldCheckSubDirs = false;
+            }
 
             if (shouldCheckSubDirs)
             {
                 foreach (string subDir in Directory.GetDirectories(modPath))
                 {
-                    FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs);
+                    FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs, ref AllModsLibrariesDirs);
                 }
             }
         }
@@ -462,6 +472,45 @@ public class Plugin : BaseUnityPlugin
         if (costumeCount != 0)
         {
             Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.FullName}");
+        }
+    }
+
+    internal static IEnumerator LoadLibraries(DirectoryInfo dir)
+    {
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+        
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => f.Extension.ToLower() == ".dll").ToArray();
+        
+        int count = files.Length;
+        long lastProgressUpdate = DateTime.Now.Ticks;
+        int cur = 0;
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            try
+            {
+                Assembly.LoadFrom(file.FullName);
+                LoadContent._lastItemLoaded = fileName;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(e);
+            }
+            if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
+            {
+                lastProgressUpdate = DateTime.Now.Ticks;
+                UpdateConsoleLogLoadingBar($"Loading custom libraries from {dir.FullName}", cur, count);
+            }
+            cur++;
+            if (DateTime.Now.Ticks > _nextProgressUpdate)
+            {
+                _nextProgressUpdate = DateTime.Now.Ticks + 666666;
+                yield return null;
+            }
         }
     }
 
