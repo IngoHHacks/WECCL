@@ -3,8 +3,9 @@
 ### GV 1.56:
 
 ## Release 1.2.4
-- Fixed Thunderstore version removing mappings.
 - `characters` in promos is now required to be a list, or an integer prefixed by `:` for a list from 1 to the specified number.
+- Fixed Thunderstore version removing mappings.
+- Fixed female face mappings.
 - Added exceptions to the meta and mappings file loaders.
 
 ## Release 1.2.3

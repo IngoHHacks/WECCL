@@ -37,8 +37,8 @@ public class BetterCostumeData
                 bcd.textureC[i] = "Custom/" + material;
             } else if (i == 3 && costume.texture[i] < -VanillaCounts.FaceFemaleCount)
             {
-                var index = -costume.texture[i] - VanillaCounts.KneepadCount - 1;
-                var material = ContentMappings.ContentMap.KneepadNameMap[index];
+                var index = -costume.texture[i] - VanillaCounts.FaceFemaleCount - 1;
+                var material = ContentMappings.ContentMap.FaceFemaleNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
             else if (i == 14 && costume.texture[i] < -VanillaCounts.SpecialFootwearCount)
