@@ -40,22 +40,22 @@ internal class PromoPatch
                         GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1);
                         break;
                     case CommandType.SetRealEnemy:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1);
-                        break;
-                    case CommandType.SetStoryEnemy:
                         GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1, 0);
                         break;
-                    case CommandType.SetRealFriend:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1);
+                    case CommandType.SetStoryEnemy:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1);
                         break;
-                    case CommandType.SetStoryFriend:
+                    case CommandType.SetRealFriend:
                         GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 0);
                         break;
+                    case CommandType.SetStoryFriend:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1);
+                        break;
                     case CommandType.SetRealNeutral:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0, 0);
                         break;
                     case CommandType.SetStoryNeutral:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0, 0);
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
                         break;
                     case CommandType.PlayAudio:
                         GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[int.Parse(feature.Args[0])], 1);
