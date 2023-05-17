@@ -19,8 +19,48 @@ public class PromoData
     }
     public class AdvFeatures
     {
-        public string Command { get; set; } = "";
+        public enum CommandType
+        {
+            None,
+            SetFace,
+            SetHeel,
+            SetRealEnemy,
+            SetStoryEnemy,
+            SetRealFriend,
+            SetStoryFriend,
+            SetRealNeutral,
+            SetStoryNeutral,
+            PlayAudio,
+        }
+        
+        public CommandType Command { get; set; } = CommandType.None;
         public List<string> Args { get; set; } = new();
+        
+        public bool SetCommand(string cmd)
+        {
+            if (Enum.TryParse(cmd, true, out CommandType command))
+            {
+                Command = command;
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsValidArgumentCount(out int expected)
+        {
+            if (Command == CommandType.None)
+            {
+                expected = -1;
+                return true;
+            }
+            if (Command is CommandType.SetFace or CommandType.SetHeel or CommandType.PlayAudio)
+            {
+                expected = 1;
+                return Args.Count == 1;
+            }
+            expected = 2;
+            return Args.Count == 2;
+        }
     }
 
     public List<PromoLine> PromoLines { get; set; } = new();
@@ -145,16 +185,23 @@ public class PromoData
     //format: command:arg:arg;command:arg
     public static List<AdvFeatures> SetUpFeatures(string commands)
     {
-        List<AdvFeatures> advFeatures = new List<AdvFeatures>();
+        List<AdvFeatures> advFeatures = new();
         var features = commands.Split(';');
-        foreach ( var feature in features ) 
+        foreach (var feature in features) 
         { 
             var command = feature.Split(':');
             var advFeature = new AdvFeatures();
-            advFeature.Command = command[0];
+            if (!advFeature.SetCommand(command[0]))
+            {
+                throw new Exception($"Invalid command: {command[0]}");
+            }
             for(int i = 1; i < command.Length; i++)
             {
                 advFeature.Args.Add(command[i]);
+            }
+            if (!advFeature.IsValidArgumentCount(out int expected))
+            {
+                throw new Exception($"Invalid argument count for command {command[0]}: {advFeature.Args.Count} (expected {expected})");
             }
             advFeatures.Add(advFeature);
         }

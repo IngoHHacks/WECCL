@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using CommandType = WECCL.Content.PromoData.AdvFeatures.CommandType;
 
 namespace WECCL.Patches;
 
@@ -27,30 +28,38 @@ internal class PromoPatch
         }
         if (GameDialog.AHKCECADCAM >= 100f && GameDialog.KJAOOKABIFM < GameDialog.AGAGHGBLCDA)
         {
-            bool audioPlayed = false;
             foreach (var feature in promo.PromoLines[page].Features)
             {
-
-                if (feature.Command == "SetFace")
+                var cmd = feature.Command;
+                switch (cmd)
                 {
-                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(0, 0);
-                }
-                if (feature.Command == "SetHeel")
-                {
-                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1, 0);
-                }
-                if (feature.Command == "SetRivalry") //Wrestlers 1 and 2 become story enemies, but they might change alignments? IngoH can you figure it out?
-                {
-                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
-                }   //ed. note: I think ^ DFELOGFFCKL sets alignment, while v DJPDDHKHGDL does not? DJPDDHKHGDL(a,b,c): a-id, b-friend(1) or enemy(-1),c-?
-                if (feature.Command == "SetFriendship") //Wrestlers 1 and 2 become story friends? 
-                {
-                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 1);
-                }
-                if (feature.Command == "PlayAudio")
-                {
-                    GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[int.Parse(feature.Args[0])], 1);
-                    audioPlayed = true;
+                    case CommandType.SetFace:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(0);
+                        break;
+                    case CommandType.SetHeel:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1);
+                        break;
+                    case CommandType.SetRealEnemy:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1);
+                        break;
+                    case CommandType.SetStoryEnemy:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1, 0);
+                        break;
+                    case CommandType.SetRealFriend:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1);
+                        break;
+                    case CommandType.SetStoryFriend:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 0);
+                        break;
+                    case CommandType.SetRealNeutral:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
+                        break;
+                    case CommandType.SetStoryNeutral:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0, 0);
+                        break;
+                    case CommandType.PlayAudio:
+                        GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[int.Parse(feature.Args[0])], 1);
+                        break;
                 }
             }
             GameAudio.KICNMIIFKIC(GameDialog.DNNAOLIENKK, -1, 1f);
@@ -84,7 +93,7 @@ internal class PromoPatch
                 case "name":
                     varValue = GameDialog.OBMBDIEGBOK[varIndex].name;
                     break;
-                case "promotion":      //added promotion
+                case "promotion":
                     varValue = GameDialog.KLADONJKEHO[varIndex].name;
                     break;
             }
