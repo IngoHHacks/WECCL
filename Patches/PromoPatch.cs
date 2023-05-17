@@ -27,6 +27,32 @@ internal class PromoPatch
         }
         if (GameDialog.AHKCECADCAM >= 100f && GameDialog.KJAOOKABIFM < GameDialog.AGAGHGBLCDA)
         {
+            bool audioPlayed = false;
+            foreach (var feature in promo.PromoLines[page].Features)
+            {
+
+                if (feature.Command == "SetFace")
+                {
+                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(0, 0);
+                }
+                if (feature.Command == "SetHeel")
+                {
+                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1, 0);
+                }
+                if (feature.Command == "SetRivalry") //Wrestlers 1 and 2 become story enemies, but they might change alignments? IngoH can you figure it out?
+                {
+                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
+                }   //ed. note: I think ^ DFELOGFFCKL sets alignment, while v DJPDDHKHGDL does not? DJPDDHKHGDL(a,b,c): a-id, b-friend(1) or enemy(-1),c-?
+                if (feature.Command == "SetFriendship") //Wrestlers 1 and 2 become story friends? 
+                {
+                    GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 1);
+                }
+                if (feature.Command == "PlayAudio")
+                {
+                    GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[int.Parse(feature.Args[0])], 1);
+                    audioPlayed = true;
+                }
+            }
             GameAudio.KICNMIIFKIC(GameDialog.DNNAOLIENKK, -1, 1f);
             GameDialog.KJAOOKABIFM = GameDialog.AGAGHGBLCDA;
         }
@@ -51,15 +77,37 @@ internal class PromoPatch
         {
             var varName = match.Groups[1].Value;
             var varIndex = int.Parse(match.Groups[2].Value);
+            var test = "";
             var varValue = "";
             switch (varName)
             {
                 case "name":
                     varValue = GameDialog.OBMBDIEGBOK[varIndex].name;
                     break;
+                case "promotion":      //added promotion
+                    varValue = GameDialog.KLADONJKEHO[varIndex].name;
+                    break;
             }
 
             line = line.Replace(match.Value, varValue + match.Groups[3].Value);
+        }
+        matches = Regex.Matches(line, @"#([a-zA-Z]+)(\d+)_(\d+)(\W|$)"); //probably can simplify and merge with the $name
+        foreach (Match match in matches)
+        {
+            var varName = match.Groups[1].Value;
+            var varIndex1 = int.Parse(match.Groups[2].Value);
+            var varIndex2 = int.Parse(match.Groups[3].Value);
+            var varValue = "";
+            switch (varName)
+            {
+                case "belt":
+                    varValue = GameDialog.KLADONJKEHO[varIndex1].beltName[varIndex2];
+                    break;
+                case "champ":
+                    varValue = Characters.c[GameDialog.KLADONJKEHO[varIndex1].champ[varIndex2, 1]].name;  //1 - current champ, then 2 - previous?
+                    break;
+            }
+            line = line.Replace(match.Value, varValue + match.Groups[4].Value);
         }
         matches = Regex.Matches(line, @"@([a-zA-Z]+)(\d+)(\W|$)");
         foreach (Match match in matches)

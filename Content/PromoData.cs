@@ -1,4 +1,6 @@
-﻿namespace WECCL.Content;
+﻿using System.Collections.Generic;
+
+namespace WECCL.Content;
 
 public class PromoData
 {
@@ -12,8 +14,15 @@ public class PromoData
 
         public float Demeanor { get; set; } = 0;
         public int TauntAnim { get; set; } = 0;
+
+        public List<AdvFeatures> Features { get; set; } = new();
     }
-    
+    public class AdvFeatures
+    {
+        public string Command { get; set; } = "";
+        public List<string> Args { get; set; } = new();
+    }
+
     public List<PromoLine> PromoLines { get; set; } = new();
     
     public string Title { get; set; } = "Title";
@@ -122,6 +131,7 @@ public class PromoData
                 promoLine.To = meta2.Length > 1 ? int.Parse(meta2[1].Trim()) : 2;
                 promoLine.TauntAnim = meta2.Length > 2 ? int.Parse(meta2[2].Trim()) : 0;
                 promoLine.Demeanor = meta2.Length > 3 ? float.Parse(meta2[3].Trim()) : 0;
+                promoLine.Features = meta2.Length > 4 ? SetUpFeatures(meta2[4].Trim()) : null;
                 promoData.PromoLines.Add(promoLine);
             }
             return promoData;
@@ -132,7 +142,24 @@ public class PromoData
             return null;
         }
     }
-
+    //format: command:arg:arg;command:arg
+    public static List<AdvFeatures> SetUpFeatures(string commands)
+    {
+        List<AdvFeatures> advFeatures = new List<AdvFeatures>();
+        var features = commands.Split(';');
+        foreach ( var feature in features ) 
+        { 
+            var command = feature.Split(':');
+            var advFeature = new AdvFeatures();
+            advFeature.Command = command[0];
+            for(int i = 1; i < command.Length; i++)
+            {
+                advFeature.Args.Add(command[i]);
+            }
+            advFeatures.Add(advFeature);
+        }
+        return advFeatures;
+    }
     public static PromoData CreatePromo(string file)
     {
         var lines = File.ReadAllLines(file).ToList();
