@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WECCL.Utils;
 
 namespace WECCL.Content;
 
@@ -169,7 +170,7 @@ public class PromoData
                 var meta2 = line.Substring(last + 1).Split(',');
                 promoLine.From = meta2.Length > 0 ? int.Parse(meta2[0].Trim()) : 1;
                 promoLine.To = meta2.Length > 1 ? int.Parse(meta2[1].Trim()) : 2;
-                promoLine.TauntAnim = meta2.Length > 2 ? int.Parse(meta2[2].Trim()) : 0;
+                promoLine.TauntAnim = meta2.Length > 2 ? Indices.ParseTauntAnim(meta2[2].Trim()) : 0;
                 promoLine.Demeanor = meta2.Length > 3 ? float.Parse(meta2[3].Trim()) : 0;
                 promoLine.Features = meta2.Length > 4 ? SetUpFeatures(meta2[4].Trim()) : null;
                 promoData.PromoLines.Add(promoLine);

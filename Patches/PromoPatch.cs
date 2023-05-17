@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using WECCL.Utils;
 using CommandType = WECCL.Content.PromoData.AdvFeatures.CommandType;
 
 namespace WECCL.Patches;
@@ -58,7 +59,7 @@ internal class PromoPatch
                         GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
                         break;
                     case CommandType.PlayAudio:
-                        GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[int.Parse(feature.Args[0])], 1);
+                        GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[Indices.ParseCrowdAudio(feature.Args[0])], 1);
                         break;
                 }
             }
