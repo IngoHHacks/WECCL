@@ -29,5 +29,8 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: bin
-        path: bin
+        name: WECCL
+        path: |
+          bin/Debug/WECCL/WECCL.dll
+          bin/Debug/WECCL/WECCL.pdb
+          
