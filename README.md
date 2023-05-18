@@ -136,7 +136,7 @@ There is functionality in place to automatically assign collision to the arena, 
 
 ## Custom Promos
 
-You can add custom promos by placing a .promo file inside `./BepInEx/plugins/Assets`. The file must contain metadata in the format `key: value` (space is optional), and newline-separated dialog lines in the format `"line1","line2",speaker,target(,taunt,demeanor)`.
+You can add custom promos by placing a .promo file inside `./BepInEx/plugins/Assets`. The file must contain metadata in the format `key: value` (space is optional), and newline-separated dialog lines in the format `"line1","line2",speaker,target(,taunt,demeanor,commands)`.
 Example:
 ```
 title: Test Promo
@@ -147,7 +147,7 @@ characters: 1,2
 "Oh, it's no gadget, brother.","It's the future of wrestling: custom promos.",1,2,Shake Finger,50
 "Custom promos? Sounds like a cheap ploy to me.","I'm not falling for it.",2,1,Thumbs Down,-50
 "Cheap? Hardly, brother. Custom promos are the real deal. And speaking", "of deals, how about we settle things once and for all in the ring?",1,2
-"You're on, $name1. And you'd better believe", "I'll be bringing my A-game.",2,1,Thumb Stampede
+"You're on, $name1. And you'd better believe", "I'll be bringing my A-game.",2,1,Thumb Stampede,0,PlayAudio:Cheer
 ```
 `title` must be a string.  
 `description` must be a string. [P1] and [P2] will be replaced with the names of the characters.  
@@ -160,8 +160,24 @@ characters: 1,2
 `target` must be an integer.
 `taunt` must be a string or integer. A list of taunts can be found in `TauntAnims.md`.
 `demeanor` must be an integer. A positive value will make the character happy for the given number of frames, and a negative value will make the character angry for the given number of frames.
+`commands` must be a list in the format `command:arg1:arg2:arg3...`. Commands are separated by a semicolon. Example: `SetFace:1;SetRealFriend:1:2`.
+The following commands are supported:
 
-## Overriding content
+| Command         | Arguments                | Description                                              | Example               |
+|-----------------|--------------------------|----------------------------------------------------------|-----------------------|
+| SetFace         | wrestlerId               | Sets the given wrestler to 'face' alignment.             | `SetFace:1`           |
+| SetHeel         | wrestlerId               | Sets the given wrestler to 'heel' alignment.             | `SetHeel:1`           |
+| SetRealEnemy    | wrestlerId1, wrestlerId2 | Sets the given wrestlers to 'real enemy' relationship.   | `SetRealEnemy:1:2`    |
+| SetStoryEnemy   | wrestlerId1, wrestlerId2 | Sets the given wrestlers to 'story enemy' relationship.  | `SetStoryEnemy:1:2`   |
+| SetRealFriend   | wrestlerId1, wrestlerId2 | Sets the given wrestlers to 'real friend' relationship.  | `SetRealFriend:1:2`   |
+| SetStoryFriend  | wrestlerId1, wrestlerId2 | Sets the given wrestlers to 'story friend' relationship. | `SetStoryFriend:1:2`  |
+| SetRealNeutral  | wrestlerId1, wrestlerId2 | Removes the relationship between the given wrestlers.    | `SetRealNeutral:1:2`  |
+| SetStoryNeutral | wrestlerId1, wrestlerId2 | Removes the relationship between the given wrestlers.    | `SetStoryNeutral:1:2` |
+| PlayAudio       | audioName/Id             | Plays the given crowd audio.                             | `PlayAudio:Cheer`     |
+
+Commands and names are case-insensitive.
+
+## Overriding Content
 
 You can override content by placing any image or audio file inside `./BepInEx/plugins/Overrides`
 referenced by the internal name. A zip file containing all the overridable files can be found in

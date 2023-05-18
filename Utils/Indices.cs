@@ -2,7 +2,7 @@
 
 public class Indices
 {
-    public static Dictionary<string, int> CrowdAudio = new()
+    public static Dictionary<string, int> CrowdAudio = new(StringComparer.OrdinalIgnoreCase)
     {
         { "Train", 0 },
         { "Oh", 1 },
@@ -71,7 +71,7 @@ public class Indices
         throw new Exception($"Unknown crowd audio: {audio}");
     }
 
-    public static Dictionary<string, int> TauntAnims = new()
+    public static Dictionary<string, int> TauntAnims = new(StringComparer.OrdinalIgnoreCase)
     {
         { "[None]", 0 },
         { "Wave", 1 },
