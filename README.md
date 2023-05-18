@@ -155,7 +155,8 @@ characters: 1,2
 1 and 2 are the default characters as selected by the user, 3 is another character, -1 is the referee, and 11 and 22 are the tag team partners of 1 and 2 respectively. Other values are not supported.  
 `"line1"` and `"line2"` must be strings. The quotes are required. For quotes inside the string, use `\"`.  
 `$name#` will be replaced with the name of the character with the corresponding id.  
-`@him/his/etc.#` will be replaced with the pronoun of the character with the corresponding id, e.g. `@his1 friend` -> `his friend` or `her friend` depending on wrestler #1's gender. Supported pronouns are `He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy`.  
+`@him/his/etc#` will be replaced with the pronoun of the character with the corresponding id, e.g. `@his1 friend` -> `his friend` or `her friend` depending on wrestler #'s gender. Supported pronouns are `He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy`.  
+`$promotion#`, `$$belt(#1)_(#2)`, `$$champ(#1)_(#2)` will be replaced with the name of promotion #, the name of promotion #1's belt #2, and the name of promotion #1's champion of belt #2 respectively.
 `speaker` must be an integer.
 `target` must be an integer.
 `taunt` must be a string or integer. A list of taunts can be found in `TauntAnims.md`.

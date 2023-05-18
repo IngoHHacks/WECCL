@@ -29,41 +29,58 @@ internal class PromoPatch
         }
         if (GameDialog.AHKCECADCAM >= 100f && GameDialog.KJAOOKABIFM < GameDialog.AGAGHGBLCDA)
         {
-            foreach (var feature in promo.PromoLines[page].Features)
+            if (promo.PromoLines[page].Features != null)
             {
-                var cmd = feature.Command;
-                switch (cmd)
+                foreach (var feature in promo.PromoLines[page].Features)
                 {
-                    case CommandType.SetFace:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(0);
-                        break;
-                    case CommandType.SetHeel:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1);
-                        break;
-                    case CommandType.SetRealEnemy:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1, 0);
-                        break;
-                    case CommandType.SetStoryEnemy:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1);
-                        break;
-                    case CommandType.SetRealFriend:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 0);
-                        break;
-                    case CommandType.SetStoryFriend:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1);
-                        break;
-                    case CommandType.SetRealNeutral:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0, 0);
-                        break;
-                    case CommandType.SetStoryNeutral:
-                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
-                        break;
-                    case CommandType.PlayAudio:
-                        GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[Indices.ParseCrowdAudio(feature.Args[0])], 1);
-                        break;
+                    var cmd = feature.Command;
+                    switch (cmd)
+                    {
+                        case CommandType.SetFace:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(0);
+                            break;
+                        case CommandType.SetHeel:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1);
+                            break;
+                        case CommandType.SetRealEnemy:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
+                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1, 0);
+                            break;
+                        case CommandType.SetStoryEnemy:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
+                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1);
+                            break;
+                        case CommandType.SetRealFriend:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
+                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 0);
+                            break;
+                        case CommandType.SetStoryFriend:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
+                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1);
+                            break;
+                        case CommandType.SetRealNeutral:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
+                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0, 0);
+                            break;
+                        case CommandType.SetStoryNeutral:
+                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
+                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
+                            break;
+                        case CommandType.PlayAudio:
+                            if (feature.Args[0] == "-1")
+                            {
+                                GameAudio.KICNMIIFKIC(GameDialog.DNNAOLIENKK, -1, 1f);
+                            }
+                            else
+                            {
+                                GameAudio.KALAKNIDPKO.PlayOneShot(
+                                    GameAudio.LEMKMADBAHL[Indices.ParseCrowdAudio(feature.Args[0])], 1);
+                            }
+                            break;
+                    }
                 }
             }
-            GameAudio.KICNMIIFKIC(GameDialog.DNNAOLIENKK, -1, 1f);
+            
             GameDialog.KJAOOKABIFM = GameDialog.AGAGHGBLCDA;
         }
 
@@ -85,39 +102,50 @@ internal class PromoPatch
         var matches = Regex.Matches(line, @"\$([a-zA-Z]+)(\d+)(\W|$)");
         foreach (Match match in matches)
         {
-            var varName = match.Groups[1].Value;
-            var varIndex = int.Parse(match.Groups[2].Value);
-            var test = "";
-            var varValue = "";
-            switch (varName)
+            try
             {
-                case "name":
-                    varValue = GameDialog.OBMBDIEGBOK[varIndex].name;
-                    break;
-                case "promotion":
-                    varValue = GameDialog.KLADONJKEHO[varIndex].name;
-                    break;
-            }
+                var varName = match.Groups[1].Value;
+                var varIndex = int.Parse(match.Groups[2].Value);
+                var test = "";
+                var varValue = varName switch
+                {
+                    "name" => GameDialog.OBMBDIEGBOK[varIndex].name,
+                    "promotion" => GameDialog.KLADONJKEHO[varIndex].name,
+                    _ => "UNKNOWN"
+                };
 
-            line = line.Replace(match.Value, varValue + match.Groups[3].Value);
+                line = line.Replace(match.Value, varValue + match.Groups[3].Value);
+            }
+            catch (Exception e)
+            {
+                line = line.Replace(match.Value, "INVALID");
+                Plugin.Log.LogError(e);
+            }
         }
-        matches = Regex.Matches(line, @"#([a-zA-Z]+)(\d+)_(\d+)(\W|$)"); //probably can simplify and merge with the $name
+        matches = Regex.Matches(line, @"\$\$([a-zA-Z]+)(\d+)_(\d+)(\W|$)"); //probably can simplify and merge with the $name
         foreach (Match match in matches)
         {
-            var varName = match.Groups[1].Value;
-            var varIndex1 = int.Parse(match.Groups[2].Value);
-            var varIndex2 = int.Parse(match.Groups[3].Value);
-            var varValue = "";
-            switch (varName)
+            try
             {
-                case "belt":
-                    varValue = GameDialog.KLADONJKEHO[varIndex1].beltName[varIndex2];
-                    break;
-                case "champ":
-                    varValue = Characters.c[GameDialog.KLADONJKEHO[varIndex1].champ[varIndex2, 1]].name;  //1 - current champ, then 2 - previous?
-                    break;
+                var varName = match.Groups[1].Value;
+                var varIndex1 = int.Parse(match.Groups[2].Value);
+                var varIndex2 = int.Parse(match.Groups[3].Value);
+                var varValue = varName switch
+                {
+                    "belt" => GameDialog.KLADONJKEHO[varIndex1].beltName[varIndex2],
+                    "champ" => Characters.c[GameDialog.KLADONJKEHO[varIndex1].champ[varIndex2, 1]]
+                        .name //1 - current champ, then 2 - previous?
+                    ,
+                    _ => "UNKNOWN"
+                };
+
+                line = line.Replace(match.Value, varValue + match.Groups[4].Value);
             }
-            line = line.Replace(match.Value, varValue + match.Groups[4].Value);
+            catch (Exception e)
+            {
+                line = line.Replace(match.Value, "INVALID");
+                Plugin.Log.LogError(e);
+            }
         }
         matches = Regex.Matches(line, @"@([a-zA-Z]+)(\d+)(\W|$)");
         foreach (Match match in matches)
