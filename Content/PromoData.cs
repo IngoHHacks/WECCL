@@ -1,4 +1,7 @@
-﻿namespace WECCL.Content;
+﻿using System.Collections.Generic;
+using WECCL.Utils;
+
+namespace WECCL.Content;
 
 public class PromoData
 {
@@ -12,8 +15,55 @@ public class PromoData
 
         public float Demeanor { get; set; } = 0;
         public int TauntAnim { get; set; } = 0;
+
+        public List<AdvFeatures> Features { get; set; } = new();
     }
-    
+    public class AdvFeatures
+    {
+        public enum CommandType
+        {
+            None,
+            SetFace,
+            SetHeel,
+            SetRealEnemy,
+            SetStoryEnemy,
+            SetRealFriend,
+            SetStoryFriend,
+            SetRealNeutral,
+            SetStoryNeutral,
+            PlayAudio,
+        }
+        
+        public CommandType Command { get; set; } = CommandType.None;
+        public List<string> Args { get; set; } = new();
+        
+        public bool SetCommand(string cmd)
+        {
+            if (Enum.TryParse(cmd, true, out CommandType command))
+            {
+                Command = command;
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsValidArgumentCount(out int expected)
+        {
+            if (Command == CommandType.None)
+            {
+                expected = -1;
+                return true;
+            }
+            if (Command is CommandType.SetFace or CommandType.SetHeel or CommandType.PlayAudio)
+            {
+                expected = 1;
+                return Args.Count == 1;
+            }
+            expected = 2;
+            return Args.Count == 2;
+        }
+    }
+
     public List<PromoLine> PromoLines { get; set; } = new();
     
     public string Title { get; set; } = "Title";
@@ -120,8 +170,9 @@ public class PromoData
                 var meta2 = line.Substring(last + 1).Split(',');
                 promoLine.From = meta2.Length > 0 ? int.Parse(meta2[0].Trim()) : 1;
                 promoLine.To = meta2.Length > 1 ? int.Parse(meta2[1].Trim()) : 2;
-                promoLine.TauntAnim = meta2.Length > 2 ? int.Parse(meta2[2].Trim()) : 0;
+                promoLine.TauntAnim = meta2.Length > 2 ? Indices.ParseTauntAnim(meta2[2].Trim()) : 0;
                 promoLine.Demeanor = meta2.Length > 3 ? float.Parse(meta2[3].Trim()) : 0;
+                promoLine.Features = meta2.Length > 4 ? SetUpFeatures(meta2[4].Trim()) : null;
                 promoData.PromoLines.Add(promoLine);
             }
             return promoData;
@@ -132,7 +183,31 @@ public class PromoData
             return null;
         }
     }
-
+    //format: command:arg:arg;command:arg
+    public static List<AdvFeatures> SetUpFeatures(string commands)
+    {
+        List<AdvFeatures> advFeatures = new();
+        var features = commands.Split(';');
+        foreach (var feature in features) 
+        { 
+            var command = feature.Split(':');
+            var advFeature = new AdvFeatures();
+            if (!advFeature.SetCommand(command[0]))
+            {
+                throw new Exception($"Invalid command: {command[0]}");
+            }
+            for(int i = 1; i < command.Length; i++)
+            {
+                advFeature.Args.Add(command[i]);
+            }
+            if (!advFeature.IsValidArgumentCount(out int expected))
+            {
+                throw new Exception($"Invalid argument count for command {command[0]}: {advFeature.Args.Count} (expected {expected})");
+            }
+            advFeatures.Add(advFeature);
+        }
+        return advFeatures;
+    }
     public static PromoData CreatePromo(string file)
     {
         var lines = File.ReadAllLines(file).ToList();

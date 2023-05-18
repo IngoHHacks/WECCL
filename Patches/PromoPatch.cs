@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using WECCL.Utils;
+using CommandType = WECCL.Content.PromoData.AdvFeatures.CommandType;
 
 namespace WECCL.Patches;
 
@@ -27,6 +29,40 @@ internal class PromoPatch
         }
         if (GameDialog.AHKCECADCAM >= 100f && GameDialog.KJAOOKABIFM < GameDialog.AGAGHGBLCDA)
         {
+            foreach (var feature in promo.PromoLines[page].Features)
+            {
+                var cmd = feature.Command;
+                switch (cmd)
+                {
+                    case CommandType.SetFace:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(0);
+                        break;
+                    case CommandType.SetHeel:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1);
+                        break;
+                    case CommandType.SetRealEnemy:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1, 0);
+                        break;
+                    case CommandType.SetStoryEnemy:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1);
+                        break;
+                    case CommandType.SetRealFriend:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 0);
+                        break;
+                    case CommandType.SetStoryFriend:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1);
+                        break;
+                    case CommandType.SetRealNeutral:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0, 0);
+                        break;
+                    case CommandType.SetStoryNeutral:
+                        GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
+                        break;
+                    case CommandType.PlayAudio:
+                        GameAudio.KALAKNIDPKO.PlayOneShot(GameAudio.LEMKMADBAHL[Indices.ParseCrowdAudio(feature.Args[0])], 1);
+                        break;
+                }
+            }
             GameAudio.KICNMIIFKIC(GameDialog.DNNAOLIENKK, -1, 1f);
             GameDialog.KJAOOKABIFM = GameDialog.AGAGHGBLCDA;
         }
@@ -51,15 +87,37 @@ internal class PromoPatch
         {
             var varName = match.Groups[1].Value;
             var varIndex = int.Parse(match.Groups[2].Value);
+            var test = "";
             var varValue = "";
             switch (varName)
             {
                 case "name":
                     varValue = GameDialog.OBMBDIEGBOK[varIndex].name;
                     break;
+                case "promotion":
+                    varValue = GameDialog.KLADONJKEHO[varIndex].name;
+                    break;
             }
 
             line = line.Replace(match.Value, varValue + match.Groups[3].Value);
+        }
+        matches = Regex.Matches(line, @"#([a-zA-Z]+)(\d+)_(\d+)(\W|$)"); //probably can simplify and merge with the $name
+        foreach (Match match in matches)
+        {
+            var varName = match.Groups[1].Value;
+            var varIndex1 = int.Parse(match.Groups[2].Value);
+            var varIndex2 = int.Parse(match.Groups[3].Value);
+            var varValue = "";
+            switch (varName)
+            {
+                case "belt":
+                    varValue = GameDialog.KLADONJKEHO[varIndex1].beltName[varIndex2];
+                    break;
+                case "champ":
+                    varValue = Characters.c[GameDialog.KLADONJKEHO[varIndex1].champ[varIndex2, 1]].name;  //1 - current champ, then 2 - previous?
+                    break;
+            }
+            line = line.Replace(match.Value, varValue + match.Groups[4].Value);
         }
         matches = Regex.Matches(line, @"@([a-zA-Z]+)(\d+)(\W|$)");
         foreach (Match match in matches)
