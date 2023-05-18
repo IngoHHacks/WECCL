@@ -143,11 +143,11 @@ title: Test Promo
 description: Promo between [P1] and [P2]
 characters: 1,2
 "Well, well, well, if it isn't $name2.","What brings you here, brother?",1,2
-"I came to put an end to your reign of terror, $name1.","And I heard you're touting some newfangled gadget. What is it?",2,1,12,-50
-"Oh, it's no gadget, brother.","It's the future of wrestling: custom promos.",1,2,36,50
-"Custom promos? Sounds like a cheap ploy to me.","I'm not falling for it.",2,1,111,-50
+"I came to put an end to your reign of terror, $name1.","And I heard you're touting some newfangled gadget. What is it?",2,1,Point At Ground,-50
+"Oh, it's no gadget, brother.","It's the future of wrestling: custom promos.",1,2,Shake Finger,50
+"Custom promos? Sounds like a cheap ploy to me.","I'm not falling for it.",2,1,Thumbs Down,-50
 "Cheap? Hardly, brother. Custom promos are the real deal. And speaking", "of deals, how about we settle things once and for all in the ring?",1,2
-"You're on, $name1. And you'd better believe", "I'll be bringing my A-game.",2,1,147
+"You're on, $name1. And you'd better believe", "I'll be bringing my A-game.",2,1,Thumb Stampede
 ```
 `title` must be a string.  
 `description` must be a string. [P1] and [P2] will be replaced with the names of the characters.  
@@ -158,7 +158,7 @@ characters: 1,2
 `@him/his/etc.#` will be replaced with the pronoun of the character with the corresponding id, e.g. `@his1 friend` -> `his friend` or `her friend` depending on wrestler #1's gender. Supported pronouns are `He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy`.  
 `speaker` must be an integer.
 `target` must be an integer.
-`taunt` must be an integer. A list of taunts can be found in TauntAnims.md.
+`taunt` must be a string or integer. A list of taunts can be found in `TauntAnims.md`.
 `demeanor` must be an integer. A positive value will make the character happy for the given number of frames, and a negative value will make the character angry for the given number of frames.
 
 ## Overriding content
