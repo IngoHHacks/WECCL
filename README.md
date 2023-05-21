@@ -254,9 +254,9 @@ creators!
 Donations are always appreciated. You can donate on my [Ko-fi page](https://ko-fi.com/IngoH).  
 
 ## Contributors
-**IngoH**
-**GamingMaster**
-**Street**
+**IngoH**  
+**GamingMaster**  
+**Street**  
 
 ## Special Thanks
 **Mat Dickie** for generously donating €1,000  
