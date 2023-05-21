@@ -29,6 +29,8 @@ public static class LoadContent
     
     internal static IEnumerator Load()
     {
+        Aliases.Load();
+        
         List<DirectoryInfo> AllModsAssetsDirs = new();
         List<DirectoryInfo> AllModsOverridesDirs = new();
         List<DirectoryInfo> AllModsLibrariesDirs = new();

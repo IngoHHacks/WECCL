@@ -178,6 +178,19 @@ The following commands are supported:
 
 Commands and names are case-insensitive.
 
+## Aliases
+
+Files can be aliased by placing a `.aliases` file inside `./BepInEx/plugins/Assets`. The file must contain a list of aliases in the format `alias=path`.
+Example:
+```
+song1.ogg=MyFirstSong
+subfolder/song2.ogg=MySecondSong
+path/to/song3.ogg=MyThirdSong
+```
+Left is file name, right is alias.  
+The path is relative to `./BepInEx/plugins/Assets` (or `./BepInEx/plugins/{PluginName}/Assets`).  
+This allows you to rename files without breaking the save file.
+
 ## Overriding Content
 
 You can override content by placing any image or audio file inside `./BepInEx/plugins/Overrides`

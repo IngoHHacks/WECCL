@@ -5,6 +5,7 @@
 ## Release 1.2.5
 - Added more promo options.
 - Added the option to use names instead of IDs for promo taunts.
+- Added the option to use file aliases for custom assets.
 
 ## Release 1.2.4
 - `characters` in promos is now required to be a list, or an integer prefixed by `:` for a list from 1 to the specified number.
