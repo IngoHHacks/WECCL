@@ -78,7 +78,7 @@ public class WorldPatch
 
         return true;
     }
-    
+
     private static int _tempLocation = -999;
 
     [HarmonyPatch(typeof(GameCollision), nameof(GameCollision.OJMNGOHBIJH))]
@@ -101,6 +101,8 @@ public class WorldPatch
             GameCollision.IKGAAJIDDEJ[0] = new CILCKMOJGJG();
             _tempLocation = World.location;
             World.location = 999;
+            //Sets arenaShape to 0 here to stop spawning of defaut collisions while setting it to other shapes based on object in custom arena
+            World.arenaShape = 0;
         }
     }
 
@@ -111,12 +113,14 @@ public class WorldPatch
 
         if (_tempLocation != -999)
         {
+            ArenaPatch.SetCustomArenaShape();
+
             World.location = _tempLocation;
             _tempLocation = -999;
 
             var last = GameCollision.NJCPFHDPBOJ;
             GameCollision.PEIFIJCKAOC = last;
-            
+
             var colliders = World.gArena.GetComponentsInChildren<MeshCollider>();
             foreach (var collider in colliders)
             {
@@ -131,14 +135,14 @@ public class WorldPatch
                 corners[1] = matrix.MultiplyPoint3x4(new Vector3(5, 0, -5));
                 corners[2] = matrix.MultiplyPoint3x4(new Vector3(-5, 0, 5));
                 corners[3] = matrix.MultiplyPoint3x4(new Vector3(-5, 0, -5));
-                
+
                 Array.Sort(corners, (a, b) =>
                 {
                     return a.y.CompareTo(b.y);
                 });
                 var yBottom = corners[0].y;
                 var yTop = corners[3].y;
-                
+
                 corners[0] -= up;
                 corners[1] -= up;
                 corners[2] = corners[1] + up * 2;
@@ -156,7 +160,7 @@ public class WorldPatch
                 {
                     return a.z.CompareTo(b.z);
                 });
-                
+
                 Vector3 topRight = corners[0];
                 Vector3 bottomRight = corners[0];
                 Vector3 bottomLeft = corners[0];
@@ -200,6 +204,54 @@ public class WorldPatch
                 GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].BOBFOLNHBCL[2] = topLeft.x;
                 GameCollision.NNIOLGAKPGG[PEIFIJCKAOC].FDMAHBOILBC[2] = topLeft.z;
             }
+
+            foreach (GameObject gameObject in (from t in World.gArena.GetComponentsInChildren<Transform>()
+                                               where t.gameObject != null && t.gameObject.name.StartsWith("Barrier_Climbables")
+                                               select t.gameObject).ToArray<GameObject>())
+            {
+                MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
+
+                Bounds bounds = meshCollider.sharedMesh.bounds;
+
+                Vector3 center = bounds.center;
+                Vector3 extents = bounds.extents;
+
+                // Calculate the 8 corners of the bounding box
+                Vector3[] corners = new Vector3[8];
+                corners[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
+                corners[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
+                corners[2] = center + new Vector3(extents.x, -extents.y, extents.z);
+                corners[3] = center + new Vector3(extents.x, -extents.y, -extents.z);
+                corners[4] = center + new Vector3(-extents.x, extents.y, -extents.z);
+                corners[5] = center + new Vector3(-extents.x, extents.y, extents.z);
+                corners[6] = center + new Vector3(extents.x, extents.y, extents.z);
+                corners[7] = center + new Vector3(extents.x, extents.y, -extents.z);
+
+                // Get the 8 corners of the bounding box as world position
+                Vector3[] worldCorners = new Vector3[corners.Length];
+                for (int i = 0; i < corners.Length; i++)
+                {
+                    worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
+                }
+
+                GameCollision.PEIFIJCKAOC++;
+                int peifijckaoc = GameCollision.PEIFIJCKAOC;
+                GameCollision.OHBONDHEDEC();
+                GameCollision.NNIOLGAKPGG[peifijckaoc].EBPHCBADBLI = 0f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].IHBEDOLDPJC = worldCorners[0].y;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].JKHPFKDCNJL = worldCorners[1].y;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].FPHEOHBIAFN = 1;
+                //Below controls the type of collision, tempted to replicate this foreach loop for other object names for other collision types like "Cage"
+                GameCollision.NNIOLGAKPGG[peifijckaoc].HDFOLIBBAFE = "Barrier";
+                GameCollision.NNIOLGAKPGG[peifijckaoc].BOBFOLNHBCL[1] = worldCorners[4].x + 2.5f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].FDMAHBOILBC[1] = worldCorners[4].z + 2.5f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].BOBFOLNHBCL[4] = worldCorners[7].x - 2.5f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].FDMAHBOILBC[4] = worldCorners[7].z + 2.5f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].BOBFOLNHBCL[3] = worldCorners[3].x - 2.5f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].FDMAHBOILBC[3] = worldCorners[3].z - 2.5f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].BOBFOLNHBCL[2] = worldCorners[0].x + 2.5f;
+                GameCollision.NNIOLGAKPGG[peifijckaoc].FDMAHBOILBC[2] = worldCorners[0].z - 2.5f;
+            }
             for (GameCollision.PEIFIJCKAOC = last + 1; GameCollision.PEIFIJCKAOC <= GameCollision.NJCPFHDPBOJ; GameCollision.PEIFIJCKAOC++)
             {
                 if (GameCollision.NNIOLGAKPGG[GameCollision.PEIFIJCKAOC].HJGHHNAKAPD != null)
@@ -224,13 +276,13 @@ public class WorldPatch
 
                 var yTop = center.y + up;
                 var yBottom = center.y - up;
-                
+
                 var xSorted = new Vector3[4];
                 var zSorted = new Vector3[4];
-                
+
                 Array.Copy(corners, xSorted, 4);
                 Array.Copy(corners, zSorted, 4);
-                
+
                 Array.Sort(xSorted, (a, b) =>
                 {
                     return a.x.CompareTo(b.x);
@@ -239,12 +291,12 @@ public class WorldPatch
                 {
                     return a.z.CompareTo(b.z);
                 });
-                
+
                 Vector3 topRight = corners[0];
                 Vector3 bottomRight = corners[0];
                 Vector3 bottomLeft = corners[0];
                 Vector3 topLeft = corners[0];
-                
+
                 if (zSorted[3].x > zSorted[2].x)
                 {
                     topRight = zSorted[3];
@@ -265,7 +317,7 @@ public class WorldPatch
                     bottomLeft = zSorted[0];
                     topLeft = zSorted[1];
                 }
-                
+
                 // Create door
                 GameCollision.AHKNDAPINCE();
                 GameCollision.BAJJBMHMGBH[0] = GameCollision.BAJJBMHMGBH[GameCollision.BKAPMFNPOIB];
@@ -284,7 +336,7 @@ public class WorldPatch
                 GameCollision.BAJJBMHMGBH[0].PBPPKPEFLCG = int.Parse(door.name.Substring(4));
                 GameCollision.BAJJBMHMGBH[0].KJOCNBPHILL = door.transform.rotation.eulerAngles.y + 180f;
             }
-            
+
         }
 
         if (Plugin.DebugRender.Value)
@@ -562,7 +614,7 @@ public class WorldPatch
             else
             {
                 __result = World.ground;
-            }   
+            }
         }
     }
 }
