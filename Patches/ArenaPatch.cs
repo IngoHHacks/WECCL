@@ -423,7 +423,7 @@ public class ArenaPatch
             {
                 if (objectMappings == null)
                 {
-                    //Make sure objectMappings is populated before it is used.
+                    //Make sure objectMappings is populated before it is used. 
                     ArenaPatch.CreateObjectMapping();
                 }
                 if (objectMappings.ContainsKey(input))
