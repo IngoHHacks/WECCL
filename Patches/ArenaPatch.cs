@@ -1,5 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Runtime.InteropServices.ComTypes;
+using System;
+using System.Text.RegularExpressions;
 using WECCL.Content;
+using static UnityEngine.UI.GridLayoutGroup;
+using static UnityEngine.UI.Image;
 using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
@@ -8,6 +12,7 @@ namespace WECCL.Patches;
 public class ArenaPatch
 {
     public static Dictionary<string, int> objectMappings;
+    public static float yOverride;
     public static int NoOriginalLocationsValue;
 
     private void Awake()
@@ -242,208 +247,210 @@ public class ArenaPatch
                 SetCustomArenaShape();
             }
         }
+    }
 
-        [HarmonyPatch(typeof(Stock))]
-        public static class StockPatch
+    [HarmonyPatch(typeof(KCEBMOOKIPH))]
+    public static class KCEBMOOKIPHPatch
+    {
+        public static bool furnitureAdded = false;
+        public static List<string> furnitureList;
+        [HarmonyPostfix]
+        [HarmonyPatch("OHOCDJPLPPB")]
+        public static void OHOCDJPLPPBPatch(int ODKMKAAPGEM, int HNCNGGMCOAF, ref int __result, int DPJHDBMLFPB = 0)
         {
-            public static float customY = 0f; // Custom value for ___y
-
-            [HarmonyPrefix]
-            [HarmonyPatch("KIIIOPKHPHI")]
-            public static void KIIIOPKHPHIPrefix(int MBEAKNKLKOE, int MNHOPKJHOPA, float EPGAPPEOJKI, float JFANDALFMBC, float LFIIJBJPMLF, float KMGJOGBBJID, ref float ___y)
+            int num = __result;
+            furnitureAdded = false;
+            if (HNCNGGMCOAF == 1)
             {
-                // Check if a custom value for ___y has been set
-                if (customY != 0f)
-                {
-                    // Assign the custom value to ___y, haven't tested this yet with different height ground to know if it works
-                    ___y = customY;
-                }
+                //Code is making new list of arena items so set our list back to empty here
+                furnitureList = new List<string>();
             }
-        }
-
-        [HarmonyPatch(typeof(KCEBMOOKIPH))]
-        public static class KCEBMOOKIPHPatch
-        {
-            public static bool furnitureAdded = false;
-            public static List<string> furnitureList;
-            [HarmonyPostfix]
-            [HarmonyPatch("OHOCDJPLPPB")]
-            public static void OHOCDJPLPPBPatch(int ODKMKAAPGEM, int HNCNGGMCOAF, ref int __result, int DPJHDBMLFPB = 0)
+            if (ODKMKAAPGEM > VanillaCounts.NoLocations)
             {
-                int num = __result;
-                furnitureAdded = false;
-                if (HNCNGGMCOAF == 1)
+                if (KCEBMOOKIPH.GPIHKBFAOMK == null)
                 {
-                    //Code is making new list of arena items so set our list back to empty here
-                    furnitureList = new List<string>();
+                    KCEBMOOKIPH.GPIHKBFAOMK = new Stock[1];
                 }
-                if (ODKMKAAPGEM > VanillaCounts.NoLocations)
+                KCEBMOOKIPH.GPIHKBFAOMK[0] = new Stock();
                 {
-                    if (KCEBMOOKIPH.GPIHKBFAOMK == null)
+                    //Maybe consider making this dynamic with map objects too for spawning stairs at any of the 4 (Or 6) corners
+                    if (World.ringShape == 1)
                     {
-                        KCEBMOOKIPH.GPIHKBFAOMK = new Stock[1];
-                    }
-                    KCEBMOOKIPH.GPIHKBFAOMK[0] = new Stock();
-                    {
-                        //Maybe consider making this dynamic with map objects too for spawning stairs at any of the 4 (Or 6) corners
-                        if (World.ringShape == 1)
-                        {
-                            if (HNCNGGMCOAF == 1)
-                            {
-                                furnitureAdded = true;
-                                furnitureList.Add("Steps1");
-                                KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, -35f * World.ringSize, 35f * World.ringSize, 315f);
-                            }
-                            if (HNCNGGMCOAF == 2)
-                            {
-                                furnitureList.Add("Steps2");
-                                furnitureAdded = true;
-                                KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, 35f * World.ringSize, -35f * World.ringSize, 135f);
-                            }
-                        }
-                        if (World.ringShape == 2)
-                        {
-                            if (HNCNGGMCOAF == 1)
-                            {
-                                furnitureList.Add("Steps1");
-                                furnitureAdded = true;
-                                KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, -21f * World.ringSize, 35f * World.ringSize, 330f);
-                            }
-                            if (HNCNGGMCOAF == 2)
-                            {
-                                furnitureList.Add("Steps2");
-                                furnitureAdded = true;
-                                KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, 21f * World.ringSize, -35f * World.ringSize, 150f);
-                            }
-                        }
-                    }
-
-                    GameObject[] announcerObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
-
-                    foreach (GameObject announcerObject in announcerObjects)
-                    {
-                        ProcessAnnouncerDesk(announcerObject);
-                    }
-
-                    GameObject[] customGameObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
-
-                    foreach (GameObject customGameObject in customGameObjects)
-                    {
-                        CustomGameObjectSpawner(customGameObject);
-                    }
-
-
-                    if (KCEBMOOKIPH.KFIOOMEFCBG(KCEBMOOKIPH.GPIHKBFAOMK[0].type) == 0 || KCEBMOOKIPH.GPIHKBFAOMK[0].type > KCEBMOOKIPH.JMKPIDIDDFK)
-                    {
-                        KCEBMOOKIPH.GPIHKBFAOMK[0].type = 0;
-                    }
-                    if (DPJHDBMLFPB != 0 && KCEBMOOKIPH.GPIHKBFAOMK[0].type != 0)
-                    {
-                        if (DPJHDBMLFPB > 0)
-                        {
-                            num = KCEBMOOKIPH.ONNDIMGHIPP();
-                            KCEBMOOKIPH.GPIHKBFAOMK[num].KIIIOPKHPHI(KCEBMOOKIPH.GPIHKBFAOMK[0].type, KCEBMOOKIPH.GPIHKBFAOMK[0].location, KCEBMOOKIPH.GPIHKBFAOMK[0].x, KCEBMOOKIPH.GPIHKBFAOMK[0].z, KCEBMOOKIPH.GPIHKBFAOMK[0].angle);
-                        }
-                        else
-                        {
-                            num = KCEBMOOKIPH.OHBONDHEDEC(KCEBMOOKIPH.GPIHKBFAOMK[0].type);
-                            if (KCEBMOOKIPH.GPIHKBFAOMK[0].scale != 1f)
-                            {
-                                KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB = KCEBMOOKIPH.GPIHKBFAOMK[0].scale;
-                                KCEBMOOKIPH.JMENOMCNCGF[num].ICHKOACHPMJ(KCEBMOOKIPH.GPIHKBFAOMK[0].type);
-                                KCEBMOOKIPH.JMENOMCNCGF[num].PNINKKAAPBD.transform.localScale = new Vector3(KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB, KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB, KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB);
-                            }
-                            KCEBMOOKIPH.JMENOMCNCGF[num].OGAIPIGBDOD(KCEBMOOKIPH.GPIHKBFAOMK[0].x, World.ground, KCEBMOOKIPH.GPIHKBFAOMK[0].z, KCEBMOOKIPH.GPIHKBFAOMK[0].angle);
-                        }
-                    }
-                    if (DPJHDBMLFPB == 0 && KCEBMOOKIPH.GPIHKBFAOMK[0].type != 0)
-                    {
-                        num = HNCNGGMCOAF;
-                    }
-                }
-                //Reset customY to 0 before leaving
-                StockPatch.customY = 0f;
-                __result = num;
-
-                void CustomGameObjectSpawner(GameObject customObject)
-                {
-                    string customObjectName = customObject.name.Substring("GameObject:".Length);
-                    //Remove numbers from end of the name
-                    customObjectName = Regex.Replace(customObjectName, @"\d+$", string.Empty);
-                    Vector3 newObjectPosition = customObject.transform.position;
-                    Quaternion newObjectRotation = customObject.transform.rotation;
-
-                    if (!furnitureList.Contains(customObject.name) && !furnitureAdded)
-                    {
-                        //Always add to list even if a valid customObjectId isn't returned to save going in everytime
-                        furnitureList.Add(customObject.name);
-                        int customObjectId = GetMapping(customObjectName);
-                        if (customObjectId > 0)
+                        if (HNCNGGMCOAF == 1)
                         {
                             furnitureAdded = true;
-                            StockPatch.customY = newObjectPosition.y;
-                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(customObjectId, ODKMKAAPGEM, newObjectPosition.x, newObjectPosition.z, newObjectRotation.eulerAngles.y);
+                            furnitureList.Add("Steps1");
+                            yOverride = 0f;
+                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, -35f * World.ringSize, 35f * World.ringSize, 315f);
+                        }
+                        if (HNCNGGMCOAF == 2)
+                        {
+                            furnitureList.Add("Steps2");
+                            furnitureAdded = true;
+                            yOverride = 0f;
+                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, 35f * World.ringSize, -35f * World.ringSize, 135f);
+                        }
+                    }
+                    if (World.ringShape == 2)
+                    {
+                        if (HNCNGGMCOAF == 1)
+                        {
+                            furnitureList.Add("Steps1");
+                            furnitureAdded = true;
+                            yOverride = 0f;
+                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, -21f * World.ringSize, 35f * World.ringSize, 330f);
+                        }
+                        if (HNCNGGMCOAF == 2)
+                        {
+                            furnitureList.Add("Steps2");
+                            furnitureAdded = true;
+                            yOverride = 0f;
+                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, 21f * World.ringSize, -35f * World.ringSize, 150f);
                         }
                     }
                 }
 
-                void ProcessAnnouncerDesk(GameObject deskObject)
+                GameObject[] announcerObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
+
+                foreach (GameObject announcerObject in announcerObjects)
                 {
-                    // Use Original table and chair positions to make custom location of them stay together
-                    Vector3 originalTablePosition = new Vector3(44f, 0f, 43f);
-                    Quaternion originalTableRotation = Quaternion.Euler(0f, 180f, 0f);
-
-                    Vector3 originalChair1Position = new Vector3(39.5f, 0f, 50.5f);
-                    Vector3 originalChair2Position = new Vector3(48.5f, 0f, 50.5f);
-
-                    Vector3 originalChair1RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) * (originalChair1Position - originalTablePosition);
-                    Vector3 originalChair2RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) * (originalChair2Position - originalTablePosition);
-
-                    // Retrieve the position (x, y, z) and rotation of the object
-                    Vector3 newDeskPosition = deskObject.transform.position;
-                    Quaternion newDeskRotation = deskObject.transform.rotation;
-
-                    Quaternion relativeRotation = Quaternion.Inverse(originalTableRotation) * newDeskRotation;
-
-                    // Adjust the chair positions based on the relative rotation of the desk object
-                    Vector3 updatedChair1Position = newDeskPosition + (relativeRotation * (originalChair1Position - originalTablePosition));
-                    Vector3 updatedChair2Position = newDeskPosition + (relativeRotation * (originalChair2Position - originalTablePosition));
-
-                    // Add the furniture to the list and perform other actions
-                    if (!furnitureList.Contains(deskObject.name) && !furnitureAdded)
-                    {
-                        furnitureList.Add(deskObject.name);
-                        furnitureAdded = true;
-                        StockPatch.customY = newDeskPosition.y;
-                        KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(3, ODKMKAAPGEM, newDeskPosition.x, newDeskPosition.z, newDeskRotation.eulerAngles.y);
-                    }
-                    if (!furnitureList.Contains(deskObject.name + "ChairA") && !furnitureAdded)
-                    {
-                        furnitureList.Add(deskObject.name + "ChairA");
-                        furnitureAdded = true;
-                        StockPatch.customY = newDeskPosition.y;
-                        KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(2, ODKMKAAPGEM, updatedChair1Position.x, updatedChair1Position.z, newDeskRotation.eulerAngles.y);
-                    }
-                    if (!furnitureList.Contains(deskObject.name + "ChairB") && !furnitureAdded)
-                    {
-                        furnitureList.Add(deskObject.name + "ChairB");
-                        furnitureAdded = true;
-                        StockPatch.customY = newDeskPosition.y;
-                        KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(2, ODKMKAAPGEM, updatedChair2Position.x, updatedChair2Position.z, newDeskRotation.eulerAngles.y);
-                    }
+                    ProcessAnnouncerDesk(announcerObject);
                 }
 
-                int GetMapping(string input)
+                GameObject[] customGameObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
+
+                foreach (GameObject customGameObject in customGameObjects)
                 {
-                    if (objectMappings.ContainsKey(input))
+                    CustomGameObjectSpawner(customGameObject);
+                }
+
+
+                if (KCEBMOOKIPH.KFIOOMEFCBG(KCEBMOOKIPH.GPIHKBFAOMK[0].type) == 0 || KCEBMOOKIPH.GPIHKBFAOMK[0].type > KCEBMOOKIPH.JMKPIDIDDFK)
+                {
+                    KCEBMOOKIPH.GPIHKBFAOMK[0].type = 0;
+                }
+                if (DPJHDBMLFPB != 0 && KCEBMOOKIPH.GPIHKBFAOMK[0].type != 0)
+                {
+                    if (DPJHDBMLFPB > 0)
                     {
-                        return objectMappings[input];
+                        num = KCEBMOOKIPH.ONNDIMGHIPP();
+                        KCEBMOOKIPH.GPIHKBFAOMK[num].KIIIOPKHPHI(KCEBMOOKIPH.GPIHKBFAOMK[0].type, KCEBMOOKIPH.GPIHKBFAOMK[0].location, KCEBMOOKIPH.GPIHKBFAOMK[0].x, KCEBMOOKIPH.GPIHKBFAOMK[0].z, KCEBMOOKIPH.GPIHKBFAOMK[0].angle);
                     }
                     else
                     {
-                        return 0;
+                        num = KCEBMOOKIPH.OHBONDHEDEC(KCEBMOOKIPH.GPIHKBFAOMK[0].type);
+                        if (KCEBMOOKIPH.GPIHKBFAOMK[0].scale != 1f)
+                        {
+                            KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB = KCEBMOOKIPH.GPIHKBFAOMK[0].scale;
+                            KCEBMOOKIPH.JMENOMCNCGF[num].ICHKOACHPMJ(KCEBMOOKIPH.GPIHKBFAOMK[0].type);
+                            KCEBMOOKIPH.JMENOMCNCGF[num].PNINKKAAPBD.transform.localScale = new Vector3(KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB, KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB, KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB);
+                        }
+                        KCEBMOOKIPH.JMENOMCNCGF[num].OGAIPIGBDOD(KCEBMOOKIPH.GPIHKBFAOMK[0].x, World.ground, KCEBMOOKIPH.GPIHKBFAOMK[0].z, KCEBMOOKIPH.GPIHKBFAOMK[0].angle);
                     }
                 }
+                if (DPJHDBMLFPB == 0 && KCEBMOOKIPH.GPIHKBFAOMK[0].type != 0)
+                {
+                    num = HNCNGGMCOAF;
+                }
+            }
+            //Reset customY to 0 before leaving
+            __result = num;
+
+            void CustomGameObjectSpawner(GameObject customObject)
+            {
+                string customObjectName = customObject.name.Substring("GameObject:".Length);
+                //Remove numbers from end of the name
+                customObjectName = Regex.Replace(customObjectName, @"\d+$", string.Empty);
+                Vector3 newObjectPosition = customObject.transform.position;
+                Quaternion newObjectRotation = customObject.transform.rotation;
+
+                if (!furnitureList.Contains(customObject.name) && !furnitureAdded)
+                {
+                    //Always add to list even if a valid customObjectId isn't returned to save going in everytime
+                    furnitureList.Add(customObject.name);
+                    int customObjectId = GetMapping(customObjectName);
+                    if (customObjectId > 0)
+                    {
+                        furnitureAdded = true;
+                        yOverride = newObjectPosition.y;
+                        KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(customObjectId, ODKMKAAPGEM, newObjectPosition.x, newObjectPosition.z, newObjectRotation.eulerAngles.y);
+                    }
+                }
+            }
+
+            void ProcessAnnouncerDesk(GameObject deskObject)
+            {
+                // Use Original table and chair positions to make custom location of them stay together
+                Vector3 originalTablePosition = new Vector3(44f, 0f, 43f);
+                Quaternion originalTableRotation = Quaternion.Euler(0f, 180f, 0f);
+
+                Vector3 originalChair1Position = new Vector3(39.5f, 0f, 50.5f);
+                Vector3 originalChair2Position = new Vector3(48.5f, 0f, 50.5f);
+
+                Vector3 originalChair1RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) * (originalChair1Position - originalTablePosition);
+                Vector3 originalChair2RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) * (originalChair2Position - originalTablePosition);
+
+                // Retrieve the position (x, y, z) and rotation of the object
+                Vector3 newDeskPosition = deskObject.transform.position;
+                Quaternion newDeskRotation = deskObject.transform.rotation;
+
+                Quaternion relativeRotation = Quaternion.Inverse(originalTableRotation) * newDeskRotation;
+
+                // Adjust the chair positions based on the relative rotation of the desk object
+                Vector3 updatedChair1Position = newDeskPosition + (relativeRotation * (originalChair1Position - originalTablePosition));
+                Vector3 updatedChair2Position = newDeskPosition + (relativeRotation * (originalChair2Position - originalTablePosition));
+
+                // Add the furniture to the list and perform other actions
+                if (!furnitureList.Contains(deskObject.name) && !furnitureAdded)
+                {
+                    furnitureList.Add(deskObject.name);
+                    furnitureAdded = true;
+                    yOverride = newDeskPosition.y;
+                    KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(3, ODKMKAAPGEM, newDeskPosition.x, newDeskPosition.z, newDeskRotation.eulerAngles.y);
+                }
+                if (!furnitureList.Contains(deskObject.name + "ChairA") && !furnitureAdded)
+                {
+                    furnitureList.Add(deskObject.name + "ChairA");
+                    furnitureAdded = true;
+                    yOverride = newDeskPosition.y;
+                    KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(2, ODKMKAAPGEM, updatedChair1Position.x, updatedChair1Position.z, newDeskRotation.eulerAngles.y);
+                }
+                if (!furnitureList.Contains(deskObject.name + "ChairB") && !furnitureAdded)
+                {
+                    furnitureList.Add(deskObject.name + "ChairB");
+                    furnitureAdded = true;
+                    yOverride = newDeskPosition.y;
+                    KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(2, ODKMKAAPGEM, updatedChair2Position.x, updatedChair2Position.z, newDeskRotation.eulerAngles.y);
+                }
+            }
+
+            int GetMapping(string input)
+            {
+                if (objectMappings.ContainsKey(input))
+                {
+                    return objectMappings[input];
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+    }
+    [HarmonyPatch(typeof(COHBONKLIKF))]
+    public static class COHBONKLIKFPatch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("OGAIPIGBDOD")]
+        public static void OGAIPIGBDODPostPatch(float AOFCMJDNFGD, float DKIDHBJMKFF, float CLMHDGDKBCH, float MGENCLKAFLH, COHBONKLIKF __instance)
+        {
+            if (yOverride != 0f)
+            {
+                //This overrides the height for placement of furniture so it can be above ground level.
+                KCEBMOOKIPH.GPIHKBFAOMK[__instance.CEJNFFKHENG].y = yOverride;
+                __instance.MIFDMGILIND = yOverride;
+                __instance.CPNHGCLBEFH = yOverride;
+                __instance.IHBEDOLDPJC = yOverride;
             }
         }
     }
