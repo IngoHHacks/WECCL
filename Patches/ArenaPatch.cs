@@ -1,10 +1,5 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using WECCL.Content;
-using static UnityEngine.UI.GridLayoutGroup;
-using static UnityEngine.UI.Image;
-using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
 
@@ -19,7 +14,7 @@ public class ArenaPatch
     {
         CreateObjectMapping();
     }
-    private void CreateObjectMapping()
+    private static void CreateObjectMapping()
     {
         objectMappings = new Dictionary<string, int>
         {
@@ -426,6 +421,11 @@ public class ArenaPatch
 
             int GetMapping(string input)
             {
+                if (objectMappings == null)
+                {
+                    //Make sure objectMappings is populated before it is used. 
+                    ArenaPatch.CreateObjectMapping();
+                }
                 if (objectMappings.ContainsKey(input))
                 {
                     return objectMappings[input];
