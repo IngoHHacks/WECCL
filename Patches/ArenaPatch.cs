@@ -142,6 +142,67 @@ public class ArenaPatch
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch("OGCEKDEJBBF")]
+        public static void OGCEKDEJBBFPatch(int JIBNLDBGFLN, ref Vector3 __result, int HKLOLOLBMDM = 0)
+        {
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                if (World.gArena != null)
+                {
+                    GameObject itemMarkerNorth = GameObject.Find("Itemborder (North)");
+                    GameObject itemMarkerEast = GameObject.Find("Itemborder (East)");
+                    GameObject itemMarkerSouth = GameObject.Find("Itemborder (South)");
+                    GameObject itemMarkerWest = GameObject.Find("Itemborder (West)");
+
+                    float furthestNorthDistance = float.MinValue;
+                    float furthestEastDistance = float.MinValue;
+                    float furthestSouthDistance = float.MaxValue;
+                    float furthestWestDistance = float.MaxValue;
+                    if (itemMarkerEast != null && itemMarkerNorth != null && itemMarkerSouth != null && itemMarkerWest != null)
+                    {
+
+                        if (itemMarkerNorth != null)
+                        {
+                            float northDistance = Vector3.Distance(itemMarkerNorth.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            furthestNorthDistance = northDistance;
+                        }
+
+                        if (itemMarkerEast != null)
+                        {
+                            float eastDistance = Vector3.Distance(itemMarkerEast.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            furthestEastDistance = eastDistance;
+                        }
+
+                        if (itemMarkerSouth != null)
+                        {
+                            float southDistance = Vector3.Distance(itemMarkerSouth.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            furthestSouthDistance = southDistance;
+                        }
+
+                        if (itemMarkerWest != null)
+                        {
+                            float westDistance = Vector3.Distance(itemMarkerWest.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            furthestWestDistance = westDistance;
+                        }
+
+                        // The furthest distances from the center coordinates
+                        float itemBorderNorth = furthestNorthDistance;
+                        float itemBorderEast = furthestEastDistance;
+                        float itemBorderSouth = furthestSouthDistance;
+                        float itemBorderWest = furthestWestDistance;
+
+                        float newX = UnityEngine.Random.Range(-itemBorderWest, itemBorderEast);
+                        float newZ = UnityEngine.Random.Range(-itemBorderSouth, itemBorderNorth);
+                        float newY = World.ground;
+
+                        __result = new Vector3(newX, newY, newZ);
+                    }
+                }
+            }
+        }
+        
+
+        [HarmonyPostfix]
         [HarmonyPatch("OGAHGABKJFO")]
         public static void OGAHGABKJFOPatch(ref int JIBNLDBGFLN)
         {
@@ -423,7 +484,7 @@ public class ArenaPatch
             {
                 if (objectMappings == null)
                 {
-                    //Make sure objectMappings is populated before it is used. 
+                    //Make sure objectMappings is populated before it is used.
                     ArenaPatch.CreateObjectMapping();
                 }
                 if (objectMappings.ContainsKey(input))
