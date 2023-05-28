@@ -1,5 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Reflection;
+using System.Reflection.Emit;
+using System.Text.RegularExpressions;
 using WECCL.Content;
+using Debug = UnityEngine.Debug;
 
 namespace WECCL.Patches;
 
@@ -104,6 +107,10 @@ public class ArenaPatch
         public static void DMGJOHGEOKFPatch()
         {
             SetCustomArenaShape();
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                World.JCDNJODBBMF();
+            }
         }
 
         [HarmonyPostfix]
@@ -301,6 +308,74 @@ public class ArenaPatch
                 }
 
                 SetCustomArenaShape();
+            }
+        }
+
+        //Get signs to randomise on custom arenas
+        [HarmonyPostfix]
+        [HarmonyPatch("JCDNJODBBMF")]
+        public static void JCDNJODBBMFPatch(int CLMNJCOMHJG = 0)
+        {
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                int num4 = GFEDPBPDALB.GLHCKJPAOPG(1, 6);
+                int num5;
+                Transform[] signTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
+                int count = 0;
+                for (int i = 0; i < signTransforms.Length; i++)
+                {
+                    if (signTransforms[i].name.StartsWith("Sign"))
+                    {
+                        count++;
+                    }
+                }
+
+                num5 = count;
+
+                for (int i = 1; i <= num5; i++)
+                {
+                    Transform transform4 = World.gArena.transform.Find("arena/Signs/Sign" + i.ToString("00"));
+                    if (!(transform4 != null))
+                    {
+                        continue;
+                    }
+                    int num6 = 0;
+                    if (GFEDPBPDALB.KFGGEOKGFDL > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
+                    {
+                        if ((i <= 18 && World.crowdSize >= 0.25f) || World.crowdSize >= 0.6f)
+                        {
+                            num6 = 1;
+                        }
+                        if (World.crowdSize < 0.7f && (i == 21 || i == 31 || i == 35))
+                        {
+                            num6 = 0;
+                        }
+                        if (LAHGBLEJCEO.GLDIFJOEOIO == 50 && GFEDPBPDALB.KFGGEOKGFDL == 1 && GFEDPBPDALB.GLHCKJPAOPG(0, 1) == 0)
+                        {
+                            num6 = 0;
+                        }
+                    }
+                    if (num6 > 0)
+                    {
+                        transform4.gameObject.SetActive(value: true);
+                        if (LAHGBLEJCEO.GLDIFJOEOIO == 50 && CLMNJCOMHJG == 0)
+                        {
+                            if (GFEDPBPDALB.KFGGEOKGFDL >= 2)
+                            {
+                                num4 = GFEDPBPDALB.GLHCKJPAOPG(1, 6);
+                            }
+                            transform4.gameObject.GetComponent<Renderer>().sharedMaterial = JBAFDOKGDIJ.DEFAPOLNFOO[num4];
+                        }
+                    }
+                    else if (LAHGBLEJCEO.GLDIFJOEOIO == 50)
+                    {
+                        UnityEngine.Object.Destroy(transform4.gameObject);
+                    }
+                    else
+                    {
+                        transform4.gameObject.SetActive(value: false);
+                    }
+                }
             }
         }
     }
@@ -512,6 +587,22 @@ public class ArenaPatch
                 __instance.MIFDMGILIND = yOverride;
                 __instance.CPNHGCLBEFH = yOverride;
                 __instance.IHBEDOLDPJC = yOverride;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(Scene_Match_Setup))]
+    public static class Scene_Match_SetupPatch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("Update")]
+        public static void UpdatePostPatch()
+        {
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                //Force barriers to 0, can't work out how to disable option since its controlled by arena shape
+                //So just forcing it to always be none does the job well enough
+                World.arenaBarriers = 0;
             }
         }
     }
