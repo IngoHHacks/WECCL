@@ -1,4 +1,4 @@
-﻿namespace WECCL.Patches;
+namespace WECCL.Patches;
 
 [HarmonyPatch]
 internal class StackTracePatch

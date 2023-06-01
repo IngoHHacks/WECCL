@@ -1,4 +1,4 @@
-﻿namespace WECCL.Content;
+namespace WECCL.Content;
 
 public class Aliases
 {

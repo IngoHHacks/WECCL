@@ -1,4 +1,4 @@
-﻿using WECCL.Utils;
+using WECCL.Utils;
 
 namespace WECCL.Patches;
 
@@ -10,26 +10,26 @@ internal class MenuPatch
 
     private static int _expectedNextId = -1;
 
-    [HarmonyPatch(typeof(Characters), nameof(Characters.DBAFDIJHDAO))]
+    [HarmonyPatch(typeof(Characters), nameof(Characters.PBNPILLGGLH))]
     [HarmonyPrefix]
-    public static void Characters_DBAFDIJHDAO(int GDMOLNLLKAK)
+    public static void Characters_PBNPILLGGLH(int HCKDAHDFLIF) // Second argument
     {
-        _lastFed = GDMOLNLLKAK;
+        _lastFed = HCKDAHDFLIF;
         _expectedNextId = 0;
     }
 
     /*
-     * GameMenus.DMGJOHGEOKF is called when the player opens the editor (including the fed editor)
+     * GameMenus.ICKGKDOKJEN is called when the player opens the editor (including the fed editor)
      * This patch is used to resize the character editor to fit the roster size if it is larger than 48 (vanilla max)
      */
-    [HarmonyPatch(typeof(GameMenus), nameof(GameMenus.DMGJOHGEOKF))]
+    [HarmonyPatch(typeof(GameMenus), nameof(GameMenus.ICKGKDOKJEN))]
     [HarmonyPrefix]
-    public static void GameMenus_DMGJOHGEOKF(int MBEAKNKLKOE, string DHPDOHFLOII, ref float EPGAPPEOJKI,
-        ref float POKNPEKLCCE, ref float DOCNIBNJKOL, ref float MJPLHDGLHDF)
+    public static void GameMenus_ICKGKDOKJEN(int IJLDPEFGOOL, string NPDFJAEJIND, ref float GBKANPHAPIG,
+        ref float AHMKMFPJFJA, ref float GLMFADFPECG, ref float BKBCELICBON)
     {
         try
         {
-            if (MBEAKNKLKOE != 5)
+            if (IJLDPEFGOOL != 5)
             {
                 return;
             }
@@ -37,7 +37,7 @@ internal class MenuPatch
             int fedSize = Characters.fedData[_lastFed].size;
             if (fedSize > 48)
             {
-                int actualIndex = (((int)EPGAPPEOJKI + 525) / 210) + ((-(int)POKNPEKLCCE + 110) / 60 * 6);
+                int actualIndex = (((int)GBKANPHAPIG + 525) / 210) + ((-(int)AHMKMFPJFJA + 110) / 60 * 6);
 
                 if (actualIndex != _expectedNextId)
                 {
@@ -54,10 +54,10 @@ internal class MenuPatch
 
                 FindBestFit(fedSize, -525, -310, 525, 110, out rows, out columns, out scale, out startX, out startY);
 
-                DOCNIBNJKOL = scale;
-                MJPLHDGLHDF = scale;
-                EPGAPPEOJKI = startX + (actualIndex % columns * 210 * scale);
-                POKNPEKLCCE = startY - (actualIndex / columns * 50 * scale);
+                GLMFADFPECG = scale;
+                BKBCELICBON = scale;
+                GBKANPHAPIG = startX + (actualIndex % columns * 210 * scale);
+                AHMKMFPJFJA = startY - (actualIndex / columns * 50 * scale);
             }
         }
         catch (Exception e)

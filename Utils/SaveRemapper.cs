@@ -1,4 +1,4 @@
-﻿using WECCL.Content;
+using WECCL.Content;
 using WECCL.Patches;
 using WECCL.Saves;
 using WECCL.Updates;
@@ -15,7 +15,7 @@ public class SaveRemapper
         bool changed = false;
 
         int oldVersion = Mathf.RoundToInt((ContentMappings.ContentMap.GameVersion * 100));
-        int newVersion = Mathf.RoundToInt(Plugin.GameVersion * 100);
+        int newVersion = Mathf.RoundToInt(Plugin.CharactersVersion * 100);
 
         VersionDiff versionDiff = null;
         

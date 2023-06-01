@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 namespace WECCL.Patches;
 
@@ -8,9 +8,9 @@ public class LogPatch
     /*
      * This patch is used to enable the game's unity logger if the user has enabled it in the config.
      */
-    [HarmonyPatch(typeof(GameGlobals), nameof(GameGlobals.CHCALIAKGMG))]
+    [HarmonyPatch(typeof(GameGlobals), nameof(GameGlobals.AGLLFBBHDDP))]
     [HarmonyPostfix]
-    public static void GameGlobals_CHCALIAKGMG()
+    public static void GameGlobals_AGLLFBBHDDP()
     {
         Debug.unityLogger.logEnabled = Plugin.EnableGameUnityLog.Value;
         Debug.unityLogger.filterLogType = Plugin.GameUnityLogLevel.Value.ToLower() == "error" ? LogType.Error :

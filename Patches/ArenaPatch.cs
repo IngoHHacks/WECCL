@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using WECCL.Content;
 using Debug = UnityEngine.Debug;
 
@@ -74,12 +74,12 @@ public class ArenaPatch
         }
     }
 
-    [HarmonyPatch(typeof(IFNKAOLDPGM))]
-    public static class IFNKAOLDPGMPatch
+    [HarmonyPatch(typeof(AKHBGBPEJHB))]
+    public static class AKHBGBPEJHBPatch
     {
         [HarmonyPrefix]
-        [HarmonyPatch("OJMNGOHBIJH")]
-        public static void OJMNGOHBIJHPrePatch()
+        [HarmonyPatch("BAEIJIILOHL")]
+        public static void BAEIJIILOHLPrePatch()
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -94,29 +94,29 @@ public class ArenaPatch
         internal static int _tempLocation;
 
         [HarmonyPostfix]
-        [HarmonyPatch("JACOFMPNHGH")]
-        public static void JACOFMPNHGHPatch()
+        [HarmonyPatch("IEPBKKHOCIF")]
+        public static void IEPBKKHOCIFPatch()
         {
             SetCustomArenaShape();
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("DMGJOHGEOKF")]
-        public static void DMGJOHGEOKFPatch()
+        [HarmonyPatch("ICKGKDOKJEN")]
+        public static void ICKGKDOKJENPatch()
         {
             SetCustomArenaShape();
             if (World.location > VanillaCounts.NoLocations)
             {
-                World.JCDNJODBBMF();
+                World.PIIEPDKLLBN();
             }
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("OFCGMNIICAM")]
-        public static void OFCGMNIICAMPatch(ref int ICOMOCOJCLP, ref string __result, string IDLAKOEHIEF = "")
+        [HarmonyPatch("INHDFFHDMMA")]
+        public static void INHDFFHDMMAPatch(ref string __result, ref int PPNPMGBOHKI, string CJLCJLAGLDP)
         {
             string originalResult = __result;
-            string text = "Location " + ICOMOCOJCLP.ToString();
+            string text = "Location " + PPNPMGBOHKI.ToString();
 
             GameObject arenaName = FindGameObjectWithNameStartingWith("Arena Name:");
             if (arenaName != null)
@@ -147,8 +147,8 @@ public class ArenaPatch
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("OGCEKDEJBBF")]
-        public static void OGCEKDEJBBFPatch(int JIBNLDBGFLN, ref Vector3 __result, int HKLOLOLBMDM = 0)
+        [HarmonyPatch("GCFFDBJDCIK")]
+        public static void GCFFDBJDCIKPatch(ref Vector3 __result, int PJNFPIAFBAM, int IDNHONBKEFG)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -208,8 +208,8 @@ public class ArenaPatch
         
 
         [HarmonyPostfix]
-        [HarmonyPatch("OGAHGABKJFO")]
-        public static void OGAHGABKJFOPatch(ref int JIBNLDBGFLN)
+        [HarmonyPatch("PKHEPCDDIBM")]
+        public static void PKHEPCDDIBMPatch(ref int PJNFPIAFBAM)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -311,12 +311,12 @@ public class ArenaPatch
 
         //Get signs to randomise on custom arenas
         [HarmonyPostfix]
-        [HarmonyPatch("JCDNJODBBMF")]
-        public static void JCDNJODBBMFPatch(int CLMNJCOMHJG = 0)
+        [HarmonyPatch("PIIEPDKLLBN")]
+        public static void PIIEPDKLLBNPatch(int EPPEAEEIGPG = 0)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
-                int num4 = GFEDPBPDALB.GLHCKJPAOPG(1, 6);
+                int num4 = JGKBBDPDIBC.OCMIPAODMHH(1, 6);
                 int num5;
                 Transform[] signTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
                 int count = 0;
@@ -338,7 +338,7 @@ public class ArenaPatch
                         continue;
                     }
                     int num6 = 0;
-                    if (GFEDPBPDALB.KFGGEOKGFDL > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
+                    if (JGKBBDPDIBC.HAMLGCFNEFG > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
                     {
                         if ((i <= 18 && World.crowdSize >= 0.25f) || World.crowdSize >= 0.6f)
                         {
@@ -348,7 +348,7 @@ public class ArenaPatch
                         {
                             num6 = 0;
                         }
-                        if (LAHGBLEJCEO.GLDIFJOEOIO == 50 && GFEDPBPDALB.KFGGEOKGFDL == 1 && GFEDPBPDALB.GLHCKJPAOPG(0, 1) == 0)
+                        if (DNDIEGNJOKN.OBNLIIMODBI == 50 && JGKBBDPDIBC.HAMLGCFNEFG == 1 && JGKBBDPDIBC.OCMIPAODMHH(0, 1) == 0)
                         {
                             num6 = 0;
                         }
@@ -356,16 +356,16 @@ public class ArenaPatch
                     if (num6 > 0)
                     {
                         transform4.gameObject.SetActive(value: true);
-                        if (LAHGBLEJCEO.GLDIFJOEOIO == 50 && CLMNJCOMHJG == 0)
+                        if (DNDIEGNJOKN.OBNLIIMODBI == 50 && EPPEAEEIGPG == 0)
                         {
-                            if (GFEDPBPDALB.KFGGEOKGFDL >= 2)
+                            if (JGKBBDPDIBC.HAMLGCFNEFG >= 2)
                             {
-                                num4 = GFEDPBPDALB.GLHCKJPAOPG(1, 6);
+                                num4 = JGKBBDPDIBC.OCMIPAODMHH(1, 6);
                             }
-                            transform4.gameObject.GetComponent<Renderer>().sharedMaterial = JBAFDOKGDIJ.DEFAPOLNFOO[num4];
+                            transform4.gameObject.GetComponent<Renderer>().sharedMaterial = DHHHGMELCCL.DFBJGHFKJGB[num4];
                         }
                     }
-                    else if (LAHGBLEJCEO.GLDIFJOEOIO == 50)
+                    else if (DNDIEGNJOKN.OBNLIIMODBI == 50)
                     {
                         UnityEngine.Object.Destroy(transform4.gameObject);
                     }
@@ -378,63 +378,63 @@ public class ArenaPatch
         }
     }
 
-    [HarmonyPatch(typeof(KCEBMOOKIPH))]
-    public static class KCEBMOOKIPHPatch
+    [HarmonyPatch(typeof(EEMAHMPFFPJ))]
+    public static class EEMAHMPFFPJPatch
     {
         public static bool furnitureAdded = false;
         public static List<string> furnitureList;
         [HarmonyPostfix]
-        [HarmonyPatch("OHOCDJPLPPB")]
-        public static void OHOCDJPLPPBPatch(int ODKMKAAPGEM, int HNCNGGMCOAF, ref int __result, int DPJHDBMLFPB = 0)
+        [HarmonyPatch("ECBHAMCKPPG")]
+        public static void ECBHAMCKPPGPatch(ref int __result, int EHEKDCOHHAO, int ELMNDAABAFD, int CDPGHLILDGH = 0)
         {
             int num = __result;
             furnitureAdded = false;
-            if (HNCNGGMCOAF == 1)
+            if (ELMNDAABAFD == 1)
             {
                 //Code is making new list of arena items so set our list back to empty here
                 furnitureList = new List<string>();
             }
-            if (ODKMKAAPGEM > VanillaCounts.NoLocations)
+            if (EHEKDCOHHAO > VanillaCounts.NoLocations)
             {
-                if (KCEBMOOKIPH.GPIHKBFAOMK == null)
+                if (EEMAHMPFFPJ.MNOMOILOJOF == null)
                 {
-                    KCEBMOOKIPH.GPIHKBFAOMK = new Stock[1];
+                    EEMAHMPFFPJ.MNOMOILOJOF = new Stock[1];
                 }
-                KCEBMOOKIPH.GPIHKBFAOMK[0] = new Stock();
+                EEMAHMPFFPJ.MNOMOILOJOF[0] = new Stock();
                 {
                     //Maybe consider making this dynamic with map objects too for spawning stairs at any of the 4 (Or 6) corners
                     if (World.ringShape == 1)
                     {
-                        if (HNCNGGMCOAF == 1)
+                        if (ELMNDAABAFD == 1)
                         {
                             furnitureAdded = true;
                             furnitureList.Add("Steps1");
                             yOverride = 0f;
-                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, -35f * World.ringSize, 35f * World.ringSize, 315f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, -35f * World.ringSize, 35f * World.ringSize, 315f);
                         }
-                        if (HNCNGGMCOAF == 2)
+                        if (ELMNDAABAFD == 2)
                         {
                             furnitureList.Add("Steps2");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, 35f * World.ringSize, -35f * World.ringSize, 135f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, 35f * World.ringSize, -35f * World.ringSize, 135f);
                         }
                     }
                     if (World.ringShape == 2)
                     {
-                        if (HNCNGGMCOAF == 1)
+                        if (ELMNDAABAFD == 1)
                         {
                             furnitureList.Add("Steps1");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, -21f * World.ringSize, 35f * World.ringSize, 330f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, -21f * World.ringSize, 35f * World.ringSize, 330f);
                         }
-                        if (HNCNGGMCOAF == 2)
+                        if (ELMNDAABAFD == 2)
                         {
                             furnitureList.Add("Steps2");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(4, ODKMKAAPGEM, 21f * World.ringSize, -35f * World.ringSize, 150f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, 21f * World.ringSize, -35f * World.ringSize, 150f);
                         }
                     }
                 }
@@ -454,32 +454,32 @@ public class ArenaPatch
                 }
 
 
-                if (KCEBMOOKIPH.KFIOOMEFCBG(KCEBMOOKIPH.GPIHKBFAOMK[0].type) == 0 || KCEBMOOKIPH.GPIHKBFAOMK[0].type > KCEBMOOKIPH.JMKPIDIDDFK)
+                if (EEMAHMPFFPJ.GPIENIJBOBC(EEMAHMPFFPJ.MNOMOILOJOF[0].type) == 0 || EEMAHMPFFPJ.MNOMOILOJOF[0].type > EEMAHMPFFPJ.IAFCKCCDOIJ)
                 {
-                    KCEBMOOKIPH.GPIHKBFAOMK[0].type = 0;
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].type = 0;
                 }
-                if (DPJHDBMLFPB != 0 && KCEBMOOKIPH.GPIHKBFAOMK[0].type != 0)
+                if (CDPGHLILDGH != 0 && EEMAHMPFFPJ.MNOMOILOJOF[0].type != 0)
                 {
-                    if (DPJHDBMLFPB > 0)
+                    if (CDPGHLILDGH > 0)
                     {
-                        num = KCEBMOOKIPH.ONNDIMGHIPP();
-                        KCEBMOOKIPH.GPIHKBFAOMK[num].KIIIOPKHPHI(KCEBMOOKIPH.GPIHKBFAOMK[0].type, KCEBMOOKIPH.GPIHKBFAOMK[0].location, KCEBMOOKIPH.GPIHKBFAOMK[0].x, KCEBMOOKIPH.GPIHKBFAOMK[0].z, KCEBMOOKIPH.GPIHKBFAOMK[0].angle);
+                        num = EEMAHMPFFPJ.BMOJPOBDFKE();
+                        EEMAHMPFFPJ.MNOMOILOJOF[num].MFGJBJOKLHB(EEMAHMPFFPJ.MNOMOILOJOF[0].type, EEMAHMPFFPJ.MNOMOILOJOF[0].location, EEMAHMPFFPJ.MNOMOILOJOF[0].x, EEMAHMPFFPJ.MNOMOILOJOF[0].z, EEMAHMPFFPJ.MNOMOILOJOF[0].angle);
                     }
                     else
                     {
-                        num = KCEBMOOKIPH.OHBONDHEDEC(KCEBMOOKIPH.GPIHKBFAOMK[0].type);
-                        if (KCEBMOOKIPH.GPIHKBFAOMK[0].scale != 1f)
+                        num = EEMAHMPFFPJ.LKMAEOFENHG(EEMAHMPFFPJ.MNOMOILOJOF[0].type);
+                        if (EEMAHMPFFPJ.MNOMOILOJOF[0].scale != 1f)
                         {
-                            KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB = KCEBMOOKIPH.GPIHKBFAOMK[0].scale;
-                            KCEBMOOKIPH.JMENOMCNCGF[num].ICHKOACHPMJ(KCEBMOOKIPH.GPIHKBFAOMK[0].type);
-                            KCEBMOOKIPH.JMENOMCNCGF[num].PNINKKAAPBD.transform.localScale = new Vector3(KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB, KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB, KCEBMOOKIPH.JMENOMCNCGF[num].PNPLJGMLGGB);
+                            EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK = EEMAHMPFFPJ.MNOMOILOJOF[0].scale;
+                            EEMAHMPFFPJ.MPCFNIBPKEK[num].DCFICGBNBFH(EEMAHMPFFPJ.MNOMOILOJOF[0].type);
+                            EEMAHMPFFPJ.MPCFNIBPKEK[num].CBLJCJMAPGH.transform.localScale = new Vector3(EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK, EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK, EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK);
                         }
-                        KCEBMOOKIPH.JMENOMCNCGF[num].OGAIPIGBDOD(KCEBMOOKIPH.GPIHKBFAOMK[0].x, World.ground, KCEBMOOKIPH.GPIHKBFAOMK[0].z, KCEBMOOKIPH.GPIHKBFAOMK[0].angle);
+                        EEMAHMPFFPJ.MPCFNIBPKEK[num].NDGLGAJCAOP(EEMAHMPFFPJ.MNOMOILOJOF[0].x, World.ground, EEMAHMPFFPJ.MNOMOILOJOF[0].z, EEMAHMPFFPJ.MNOMOILOJOF[0].angle);
                     }
                 }
-                if (DPJHDBMLFPB == 0 && KCEBMOOKIPH.GPIHKBFAOMK[0].type != 0)
+                if (CDPGHLILDGH == 0 && EEMAHMPFFPJ.MNOMOILOJOF[0].type != 0)
                 {
-                    num = HNCNGGMCOAF;
+                    num = ELMNDAABAFD;
                 }
             }
             //Reset customY to 0 before leaving
@@ -502,7 +502,7 @@ public class ArenaPatch
                     {
                         furnitureAdded = true;
                         yOverride = newObjectPosition.y;
-                        KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(customObjectId, ODKMKAAPGEM, newObjectPosition.x, newObjectPosition.z, newObjectRotation.eulerAngles.y);
+                        EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(customObjectId, EHEKDCOHHAO, newObjectPosition.x, newObjectPosition.z, newObjectRotation.eulerAngles.y);
                     }
                 }
             }
@@ -535,21 +535,21 @@ public class ArenaPatch
                     furnitureList.Add(deskObject.name);
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(3, ODKMKAAPGEM, newDeskPosition.x, newDeskPosition.z, newDeskRotation.eulerAngles.y);
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(3, EHEKDCOHHAO, newDeskPosition.x, newDeskPosition.z, newDeskRotation.eulerAngles.y);
                 }
                 if (!furnitureList.Contains(deskObject.name + "ChairA") && !furnitureAdded)
                 {
                     furnitureList.Add(deskObject.name + "ChairA");
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(2, ODKMKAAPGEM, updatedChair1Position.x, updatedChair1Position.z, newDeskRotation.eulerAngles.y);
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(2, EHEKDCOHHAO, updatedChair1Position.x, updatedChair1Position.z, newDeskRotation.eulerAngles.y);
                 }
                 if (!furnitureList.Contains(deskObject.name + "ChairB") && !furnitureAdded)
                 {
                     furnitureList.Add(deskObject.name + "ChairB");
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    KCEBMOOKIPH.GPIHKBFAOMK[0].KIIIOPKHPHI(2, ODKMKAAPGEM, updatedChair2Position.x, updatedChair2Position.z, newDeskRotation.eulerAngles.y);
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(2, EHEKDCOHHAO, updatedChair2Position.x, updatedChair2Position.z, newDeskRotation.eulerAngles.y);
                 }
             }
 
@@ -571,20 +571,20 @@ public class ArenaPatch
             }
         }
     }
-    [HarmonyPatch(typeof(COHBONKLIKF))]
-    public static class COHBONKLIKFPatch
+    [HarmonyPatch(typeof(DFAOBOGOEPL))]
+    public static class DFAOBOGOEPLPatch
     {
         [HarmonyPostfix]
-        [HarmonyPatch("OGAIPIGBDOD")]
-        public static void OGAIPIGBDODPostPatch(float AOFCMJDNFGD, float DKIDHBJMKFF, float CLMHDGDKBCH, float MGENCLKAFLH, COHBONKLIKF __instance)
+        [HarmonyPatch("NDGLGAJCAOP")]
+        public static void NDGLGAJCAOPPostPatch(DFAOBOGOEPL __instance)
         {
             if (yOverride != 0f)
             {
                 //This overrides the height for placement of furniture so it can be above ground level.
-                KCEBMOOKIPH.GPIHKBFAOMK[__instance.CEJNFFKHENG].y = yOverride;
-                __instance.MIFDMGILIND = yOverride;
-                __instance.CPNHGCLBEFH = yOverride;
-                __instance.IHBEDOLDPJC = yOverride;
+                EEMAHMPFFPJ.MNOMOILOJOF[__instance.FMNEFIPALEF].y = yOverride;
+                __instance.GOGMLEFHKHE = yOverride;
+                __instance.EDHBIOFAKNL = yOverride;
+                __instance.PPFFBIPHOEE = yOverride;
             }
         }
     }

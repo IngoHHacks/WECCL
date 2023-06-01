@@ -1,17 +1,17 @@
-﻿// Global using directives
+// Global using directives
 
-global using GameSaveFile = AFEOPIHBAIG;
-global using GameGlobals = GFEDPBPDALB;
-global using GameTextures = JBAFDOKGDIJ;
-global using GameMenus = JMNHAIKOGMO;
-global using GamePlayer = OEKDDHPAEIF;
-global using GameDialog = ANKJMHMKLPJ;
-global using GameAudio = EHIOFPLJLKH;
-global using GameScreens = LAHGBLEJCEO;
-global using GameSprites = CAFHHGFJBKI;
-global using GameControls = KDAEEMPNIHH;
-global using GameKeyboard = EOJILFDHDNN;
-global using GameCollision = IFNKAOLDPGM;
+global using GameSaveFile = KCJAANIHGBM;
+global using GameGlobals = JGKBBDPDIBC;
+global using GameTextures = DHHHGMELCCL;
+global using GameMenus = OHAJKFJEAFN;
+global using GamePlayer = GMIKIMHFABP;
+global using GameDialog = DNMADBBLNDC;
+global using GameAudio = JKPIHABGBGP;
+global using GameScreens = DNDIEGNJOKN;
+global using GameSprites = CEBGDNMEBCE;
+global using GameControls = IODAJCMGILB;
+global using GameKeyboard = CBJBIEGINJE;
+global using GameCollision = AKHBGBPEJHB;
 global using HarmonyLib;
 global using System;
 global using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using WECCL.Content;
+using WECCL.Content;
 
 namespace WECCL.Utils;
 
