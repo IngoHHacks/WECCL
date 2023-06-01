@@ -1,4 +1,4 @@
-﻿namespace WECCL.Updates;
+namespace WECCL.Updates;
 
 internal abstract class VersionDiff
 {

@@ -1,4 +1,4 @@
-﻿using WECCL.Patches;
+using WECCL.Patches;
 
 namespace WECCL.Utils;
 

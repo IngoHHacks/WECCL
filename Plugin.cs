@@ -6,6 +6,7 @@ using WECCL.Content;
 using WECCL.Saves;
 using WECCL.Utils;
 using PromoData = WECCL.Content.PromoData;
+using Random = UnityEngine.Random;
 
 namespace WECCL;
 
@@ -15,8 +16,8 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.2.4";
-    
+    public const string PluginVer = "1.3.0";
+
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
 
@@ -25,7 +26,7 @@ public class Plugin : BaseUnityPlugin
 
     internal static string PluginPath;
     internal static string PersistentDataPath;
-    
+
     private static long _nextProgressUpdate = DateTime.Now.Ticks;
 
     private static readonly List<string> ImageExtensions = new()
@@ -52,7 +53,7 @@ public class Plugin : BaseUnityPlugin
     };
 
     private static readonly List<string> MeshExtensions = new() { ".mesh", "" };
-    
+
     private static readonly List<string> PromoExtensions = new() { ".promo" };
 
     internal static Plugin Instance { get; private set; }
@@ -66,34 +67,145 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<string> GameUnityLogLevel { get; set; }
     internal static ConfigEntry<int> BaseFedLimit { get; set; }
     internal static ConfigEntry<int> MaxBackups { get; set; }
-    
+
     internal static ConfigEntry<bool> CacheEnabled { get; set; }
-    
+
     internal static ConfigEntry<bool> Debug { get; set; }
-    
+
     internal static ConfigEntry<bool> DebugRender { get; set; }
 
-    public static float GameVersion => Characters.latestVersion;
-    public static readonly float PluginVersion = 1.56f;
+    public static float CharactersVersion => Characters.latestVersion;
+    public const float PluginCharacterVersion = 1.56f;
+    public const float PluginVersion = 1.58f;
+
+    public const bool PreRelease = true;
+    public static string[] PreReleaseReasons = { "GameUpdate" };
+
+    public static string[] EasterEggs =
+    {
+        "Ah, I love the smell of game updates that break mods in the morning.",
+        "Apparently, Ingo is a \"very nice person\". I don't believe that.",
+        "Beware of Mat Dickie. He's watching you. Always. Everywhere.",
+        "Despite Mat Dickie's code, this game is actually pretty good.",
+        "Hey, Vsauce, Ingo here. Do you know what a wrestling empire is? You'll probably say something like \"Of course I do, Ingo, I'm not an idiot.\" But what if I told you that you're wrong?",
+        "Imagine if this game had a story mode. Oh wait, it does.",
+        "Ingo is not responsible for any damage caused by this mod. This includes, but is not limited to: broken game saves, broken game files, broken game, broken computer, nightmares, vomiting, increased risk of heart attack, increased risk of cancer, increased risk of being eaten by a giant spider, and death.",
+        "Ingo, if you're reading this, your egg shell hat is stupid. Like, really stupid.",
+        "Let's play a game. It's called \"Mat Breaks Mods\". It's a very fun game.",
+        "Mat Stop Breaking Mods Challenge 2023 (IMPOSSIBLE?) (GONE WRONG) (GONE SEXUAL) (GONE MAT DICKIE) (SUBSCRIBE TO INGOH) (NOT CLICKBAIT) (POLICE CALLED)",
+        "Never gonna give you up, never gonna let you down, never gonna run around and desert you. Never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you.",
+        "OMG, I just realized! Mat Dickie isn't actually real! He's just a character made up by Ingo to make it look like he's not the one to blame for all the bugs in this mod!",
+        "Oh no, I'm running out of ideas for these easter eggs.",
+        "OwO, what's this?",
+        "This game contains wrestling. Or does it?",
+        "This game is not a wrestling game. It's a life simulator.",
+        "WECCL Terms of Service: By using this mod, you agree to give Ingo all your money. You also agree to give Ingo all your belongings, including your house, your car, your family, your pets, and your soul. Furthermore, Ingo will be allowed to use your belongings in any way he wants, including but not limited to: selling them, destroying them, eating them, and using them to build a giant statue of himself. If you do not agree to these terms, you are not allowed to use this mod.",
+        "WECCL is a mod. I don't know what that means, but it sounds cool.",
+        "WECCL is made by some idiot named Ingo and a few other idiots.",
+        "Walked right into that one, didn't you?",
+        "What the frick did you just fricking say about me, you little Jabroni? I'll have you know I graduated top of my class in the Wrestling School, and I've been involved in numerous secret wrestling matches, and I have over 300 confirmed wins. I am trained in every single wrestling style and I'm the top wrestler in the entire Wrestling Empire. You are nothing to me but just another opponent. I will wipe you the frick out with precision the likes of which has never been seen before on this universe, mark my fricking words. You think you can get away with saying that crap to me over the Internet? Think again, Jabroni. As we speak I am contacting my secret network of wrestlers across the USA and your IP is being traced right now so you better prepare for the storm, Jabroni. The storm that wipes out the pathetic little thing you call your life. You're fricking dead, kid. I can be anywhere, anytime, and I can beat you in over seven hundred ways, and that's just inside the ring. Not only am I extensively trained in shoot fighting, but I have access to the entirety of Mat Dickie's arsenal of wrestling moves and I will use it to its full extent to wipe your miserable butt off the face of the map, you little Jabroni. If only you could have known what unholy retribution your little \"clever\" comment was about to bring down upon you, maybe you would have held your fricking tongue. But you couldn't, you didn't, and now you're paying the price, you idiot. I will crap fury all over you and you will drown in it. You're fricking dead, kiddo.",
+        "Why is Ingo writing these easter eggs? He should be working on the mod instead.",
+        "Working with Mat Dickie's code is like trying to find a needle in a haystack. While blindfolded. And the haystack is on fire.",
+        "Yo, what's up, it's ya boi, IngoH, back at it again with another video. Don't forget to SMASH that like and subscribe button, and hit that bell icon to get notified whenever I upload a new video.",
+        "Your feedback is important to us. If you have any, please shout it into the void. We will not listen to it, but it will make you feel better.",
+    };
 
     private void Awake()
     {
         try
         {
-            if (GameVersion != PluginVersion)
-            {
-                throw new Exception($"Unsupported game version: {GameVersion}");
-            }
-            
+            // Keep on top
             Log = this.Logger;
+            Instance = this;
             PluginPath = Path.GetDirectoryName(this.Info.Location) ?? string.Empty;
             PersistentDataPath = Path.Combine(Application.persistentDataPath, "WECCL");
             if (!Directory.Exists(PersistentDataPath))
             {
                 Directory.CreateDirectory(PersistentDataPath);
             }
+            // End of keep on top
 
-            Instance = this;
+            if (Random.Range(0, 100) == 0)
+            {
+                var easterEgg = EasterEggs[Random.Range(0, EasterEggs.Length)];
+                Log.LogInfo(easterEgg);
+            }
+
+
+            if (PreRelease)
+            {
+                Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
+                foreach (var reason in PreReleaseReasons)
+                {
+                    switch (reason)
+                    {
+                        case "GameUpdate":
+                            Log.LogWarning("Due to a recent game update, some features may not work as intended.");
+                            break;
+                        case "Experimental":
+                            Log.LogWarning(
+                                "This version contains experimental features that may not work as intended.");
+                            break;
+                        case "Dangerous":
+                            Log.LogWarning(
+                                "This version contains features that are known to be dangerous. Use at your own risk.");
+                            break;
+                        case "Unstable":
+                            Log.LogWarning(
+                                "This version contains features that are known to be unstable. Use at your own risk.");
+                            break;
+                        case "Broken":
+                            Log.LogWarning(
+                                "This version contains features that are known to be broken. Use at your own risk.");
+                            break;
+                        case "Malicious":
+                            Log.LogWarning(
+                                "This version contains features that are known to be malicious. Use at your own risk.");
+                            break;
+                        case "Virus":
+                            Log.LogWarning(
+                                "This version contains a virus. Use at your own risk.");
+                            break;
+                        case "Ransomware":
+                            Log.LogWarning(
+                                "This version contains ransomware. Please pay $1000 to Ingo to unlock your computer.");
+                            break;
+                        case "Trojan":
+                            Log.LogWarning(
+                                "This version contains a trojan. A horse will be delivered to your house shortly.");
+                            break;
+                        case "Worm":
+                            Log.LogWarning(
+                                "This version contains a worm. Please do not eat it.");
+                            break;
+                        case "Phishing":
+                            Log.LogWarning(
+                                "This version contains a phishing scam. Please send your credit card information to Ingo.");
+                            break;
+                        case "FurryConversion":
+                            Log.LogWarning(
+                                "This version will convert you into a furry. Please do not use this version if you do not wish to become a furry.");
+                            break;
+                        case "Alopecia":
+                            Log.LogWarning(
+                                "This version will cause you to lose all your hair. Please do not use this version if you do not wish to become bald.");
+                            break;
+                        case "Cancer":
+                            Log.LogWarning(
+                                "This version will give you cancer. Please do not use this version if you do not wish to get cancer.");
+                            break;
+                        case ""
+                        default:
+                            Log.LogWarning("This version may not work as intended for the following reason: " + reason);
+                            break;
+                    }
+                }
+            }
+
+            if (CharactersVersion != PluginCharacterVersion)
+            {
+                throw new Exception($"Unsupported game version: {CharactersVersion}");
+            }
 
             AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
                 "Automatically export characters to /Export when the game is saved.");
@@ -121,9 +233,9 @@ public class Plugin : BaseUnityPlugin
                 "Enable debug mode. This will create debugging files in the /Debug folder.");
             DebugRender = this.Config.Bind("General", "DebugRender", false,
                 "Enable debug rendering. This will render debug information on the screen, such as collision boxes.");
-            
+
             CreateBackups();
-            
+
             Locations.MoveLegacyLocations();
             Locations.CreateDirectories();
 
@@ -137,17 +249,31 @@ public class Plugin : BaseUnityPlugin
 
     private void OnEnable()
     {
-        if (GameVersion != PluginVersion)
+        if (CharactersVersion != PluginCharacterVersion)
         {
             return;
         }
-        Harmony.PatchAll();
+
+        try
+        {
+            Harmony.PatchAll();
+        }
+        catch (Exception e)
+        {
+            Log.LogError(
+                "Failed to patch with Harmony. This is likely caused by the game version being incompatible with the plugin version. The current plugin version is v" +
+                PluginVersion);
+            
+            Log.LogError(e);
+            Harmony.UnpatchSelf();
+        }
+
         this.Logger.LogInfo($"Loaded {PluginName}!");
     }
 
     private void OnDisable()
     {
-        if (GameVersion != PluginVersion)
+        if (CharactersVersion != PluginCharacterVersion)
         {
             return;
         }
@@ -297,8 +423,8 @@ public class Plugin : BaseUnityPlugin
         if (CustomClips.Count != 0)
         {
             // Update the number of audio clips in the game
-            EHIOFPLJLKH.CJNGPFLPOBM = VanillaCounts.MusicCount + CustomClips.Count;
-            EHIOFPLJLKH.GBMBIDMNKOK = new AudioClip[EHIOFPLJLKH.CJNGPFLPOBM + 1];
+            JKPIHABGBGP.CDAIKKJLDDD = VanillaCounts.MusicCount + CustomClips.Count;
+            JKPIHABGBGP.BDMIHNKDBDF = new AudioClip[JKPIHABGBGP.CDAIKKJLDDD + 1];
         }
 
         ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
@@ -691,8 +817,11 @@ public class Plugin : BaseUnityPlugin
                 UpdateConsoleLogLoadingBar($"Loading custom meshes from {dir.FullName}", cur, files.Length);
             }
         }
-        
-        Log.LogInfo($"Loaded {meshCount} custom meshes from {dir.FullName}");
+
+        if (meshCount != 0)
+        {
+            Log.LogInfo($"Loaded {meshCount} custom meshes from {dir.FullName}");
+        }
     }
     
     internal static IEnumerator LoadOverrides(DirectoryInfo dir)
@@ -879,7 +1008,10 @@ public class Plugin : BaseUnityPlugin
                 }
             }
 
-            Log.LogInfo($"Imported {ImportedCharacters.Count} characters from {dir.FullName}");
+            if (ImportedCharacters.Count > 0)
+            {
+                Log.LogInfo($"Imported {ImportedCharacters.Count} characters from {dir.FullName}");
+            }
         }
         catch (Exception e)
         {

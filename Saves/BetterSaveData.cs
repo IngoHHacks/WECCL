@@ -1,4 +1,4 @@
-﻿namespace WECCL.Saves;
+namespace WECCL.Saves;
 
 public class BetterSaveData
 {

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using WECCL.Utils;
 
 namespace WECCL.Saves;
@@ -41,7 +41,7 @@ internal class ContentMappings
     
     public List<int> PreviouslyImportedCharacterIds { get; set; } = new();
     
-    public float GameVersion { get; set; } = Plugin.GameVersion;
+    public float GameVersion { get; set; } = Plugin.CharactersVersion;
 
     public void Save()
     {

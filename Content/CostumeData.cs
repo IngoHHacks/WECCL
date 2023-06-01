@@ -1,4 +1,4 @@
-﻿using Object = UnityEngine.Object;
+using Object = UnityEngine.Object;
 
 namespace WECCL.Content;
 

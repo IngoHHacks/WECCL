@@ -1,5 +1,13 @@
 # Changelog
 
+### GV 1.58:
+
+## Release 1.3.0
+- UPDATE TO GAME VERSION 1.58
+- Added more arena features.
+- Better Game Version checking.
+- Added pre-release warnings.
+
 ### GV 1.56:
 
 ## Release 1.2.5

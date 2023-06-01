@@ -1,4 +1,4 @@
-﻿namespace WECCL;
+namespace WECCL;
 
 public static class Locations
 {

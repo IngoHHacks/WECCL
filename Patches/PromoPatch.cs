@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using WECCL.Utils;
 using CommandType = WECCL.Content.PromoData.AdvFeatures.CommandType;
 
@@ -7,27 +7,27 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class PromoPatch
 {
-    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.OIAOBMLCPMA))]
+    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.CJNHDOHIKNJ))]
     [HarmonyPrefix]
-    public static void GameDialog_OIAOBMLCPMA()
+    public static void GameDialog_CJNHDOHIKNJ()
     {
-        var promoId = GameDialog.PEIMNLOEAED - 1000000;
+        var promoId = GameDialog.JJHCKDLBACE - 1000000;
         if (promoId < 0)
         {
             return;
         }
         var promo = PromoData[promoId];
 
-        var page = GameDialog.AGAGHGBLCDA - 1;
+        var page = GameDialog.BABHEGOMNLJ - 1;
         if (page >= promo.NumLines)
         {
-            GameDialog.PEIMNLOEAED = 0;
+            GameDialog.JJHCKDLBACE = 0;
         }
         else
         {
             ExecutePromoLine(promo.PromoLines[page].Line1, promo.PromoLines[page].Line2, promo.PromoLines[page].From, promo.PromoLines[page].To, promo.PromoLines[page].Demeanor, promo.PromoLines[page].TauntAnim);
         }
-        if (GameDialog.AHKCECADCAM >= 100f && GameDialog.KJAOOKABIFM < GameDialog.AGAGHGBLCDA)
+        if (GameDialog.GKDOOPDCBMD >= 100f && GameDialog.KOJMLOEJKCN < GameDialog.BABHEGOMNLJ)
         {
             if (promo.PromoLines[page].Features != null)
             {
@@ -37,51 +37,51 @@ internal class PromoPatch
                     switch (cmd)
                     {
                         case CommandType.SetFace:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(0);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])].MFHHNDICNEF(0);
                             break;
                         case CommandType.SetHeel:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])].DFELOGFFCKL(-1);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])].MFHHNDICNEF(-1);
                             break;
                         case CommandType.SetRealEnemy:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
-                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1, 0);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])]
+                                .NHOANJHPFEE(GameDialog.GNNMHIENJIA[int.Parse(feature.Args[1])].id, -1, 0);
                             break;
                         case CommandType.SetStoryEnemy:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
-                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, -1);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])]
+                                .NHOANJHPFEE(GameDialog.GNNMHIENJIA[int.Parse(feature.Args[1])].id, -1);
                             break;
                         case CommandType.SetRealFriend:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
-                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1, 0);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])]
+                                .NHOANJHPFEE(GameDialog.GNNMHIENJIA[int.Parse(feature.Args[1])].id, 1, 0);
                             break;
                         case CommandType.SetStoryFriend:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
-                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 1);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])]
+                                .NHOANJHPFEE(GameDialog.GNNMHIENJIA[int.Parse(feature.Args[1])].id, 1);
                             break;
                         case CommandType.SetRealNeutral:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
-                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0, 0);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])]
+                                .NHOANJHPFEE(GameDialog.GNNMHIENJIA[int.Parse(feature.Args[1])].id, 0, 0);
                             break;
                         case CommandType.SetStoryNeutral:
-                            GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[0])]
-                                .DJPDDHKHGDL(GameDialog.OBMBDIEGBOK[int.Parse(feature.Args[1])].id, 0);
+                            GameDialog.GNNMHIENJIA[int.Parse(feature.Args[0])]
+                                .NHOANJHPFEE(GameDialog.GNNMHIENJIA[int.Parse(feature.Args[1])].id, 0);
                             break;
                         case CommandType.PlayAudio:
                             if (feature.Args[0] == "-1")
                             {
-                                GameAudio.KICNMIIFKIC(GameDialog.DNNAOLIENKK, -1, 1f);
+                                GameAudio.HPICKPAJOKP(GameDialog.PDMDFGNJCPN, -1, 1f);
                             }
                             else
                             {
-                                GameAudio.KALAKNIDPKO.PlayOneShot(
-                                    GameAudio.LEMKMADBAHL[Indices.ParseCrowdAudio(feature.Args[0])], 1);
+                                GameAudio.NCOKFNDGDME.PlayOneShot(
+                                    GameAudio.JPOFBDKBOMB[Indices.ParseCrowdAudio(feature.Args[0])], 1);
                             }
                             break;
                     }
                 }
             }
             
-            GameDialog.KJAOOKABIFM = GameDialog.AGAGHGBLCDA;
+            GameDialog.KOJMLOEJKCN = GameDialog.BABHEGOMNLJ;
         }
 
     }
@@ -91,9 +91,9 @@ internal class PromoPatch
         line1 = ReplaceVars(line1);
         line2 = ReplaceVars(line2);
         
-        GameDialog.LGMALDIJNNC(GameDialog.OKDNAFEFJBB[from], GameDialog.OKDNAFEFJBB[to], demeanor, taunt);
-        GameDialog.HPCGCFCFBLO[1] = line1;
-        GameDialog.HPCGCFCFBLO[2] = line2;
+        GameDialog.IDGEDBDFPCK(GameDialog.CABJFFKNOGN[from], GameDialog.CABJFFKNOGN[to], demeanor, taunt);
+        GameDialog.ODIDPPCKKJF[1] = line1;
+        GameDialog.ODIDPPCKKJF[2] = line2;
     }
 
     private static string ReplaceVars(string line)
@@ -109,8 +109,8 @@ internal class PromoPatch
                 var test = "";
                 var varValue = varName switch
                 {
-                    "name" => GameDialog.OBMBDIEGBOK[varIndex].name,
-                    "promotion" => GameDialog.KLADONJKEHO[varIndex].name,
+                    "name" => GameDialog.GNNMHIENJIA[varIndex].name,
+                    "promotion" => GameDialog.AOOGKCAICMI[varIndex].name,
                     _ => "UNKNOWN"
                 };
 
@@ -132,8 +132,8 @@ internal class PromoPatch
                 var varIndex2 = int.Parse(match.Groups[3].Value);
                 var varValue = varName switch
                 {
-                    "belt" => GameDialog.KLADONJKEHO[varIndex1].beltName[varIndex2],
-                    "champ" => Characters.c[GameDialog.KLADONJKEHO[varIndex1].champ[varIndex2, 1]]
+                    "belt" => GameDialog.AOOGKCAICMI[varIndex1].beltName[varIndex2],
+                    "champ" => Characters.c[GameDialog.AOOGKCAICMI[varIndex1].champ[varIndex2, 1]]
                         .name //1 - current champ, then 2 - previous?
                     ,
                     _ => "UNKNOWN"
@@ -152,7 +152,7 @@ internal class PromoPatch
         {
             var varName = match.Groups[1].Value;
             var varIndex = int.Parse(match.Groups[2].Value);
-            var varValue = GameDialog.OBMBDIEGBOK[varIndex].BMKFIPMAICK(varName);
+            var varValue = GameDialog.GNNMHIENJIA[varIndex].LDIOHGBMLHB(varName);
             
             line = line.Replace(match.Value, varValue + match.Groups[3].Value);
         }
@@ -165,16 +165,16 @@ internal class PromoPatch
         {
             return;
         }
-        GameDialog.BILCJNLECHK++;
-        Array.Resize(ref GameDialog.BOMNNLKCEIP, GameDialog.BILCJNLECHK + 1);
-        ResizeArray(ref GameDialog.BGDOGFPDOPK, GameDialog.BILCJNLECHK + 1, Math.Max(40, PromoData.Count));
-        Array.Resize(ref GameDialog.FHBOMMGABMM, GameDialog.BILCJNLECHK + 1);
-        GameDialog.FHBOMMGABMM[GameDialog.BILCJNLECHK] = PromoData.Count;
-        GameDialog.BOMNNLKCEIP[GameDialog.BILCJNLECHK] = "Custom";
-        GameDialog.BGDOGFPDOPK[GameDialog.BILCJNLECHK, 0] = 0;
+        GameDialog.JKAAAHLMLKN++;
+        Array.Resize(ref GameDialog.KOPNJGECPIA, GameDialog.JKAAAHLMLKN + 1);
+        ResizeArray(ref GameDialog.MFDNNCOMBBN, GameDialog.JKAAAHLMLKN + 1, Math.Max(40, PromoData.Count));
+        Array.Resize(ref GameDialog.KJBBEFOFGIP, GameDialog.JKAAAHLMLKN + 1);
+        GameDialog.KJBBEFOFGIP[GameDialog.JKAAAHLMLKN] = PromoData.Count;
+        GameDialog.KOPNJGECPIA[GameDialog.JKAAAHLMLKN] = "Custom";
+        GameDialog.MFDNNCOMBBN[GameDialog.JKAAAHLMLKN, 0] = 0;
         for (int i = 0; i < PromoData.Count; i++)
         {
-            GameDialog.BGDOGFPDOPK[GameDialog.BILCJNLECHK, i + 1] = 1000000 + i;
+            GameDialog.MFDNNCOMBBN[GameDialog.JKAAAHLMLKN, i + 1] = 1000000 + i;
         }
     }
 
@@ -191,18 +191,18 @@ internal class PromoPatch
     }
     
     
-    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.ILJJHNDOFBK))]
+    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.IPEMHNGGINI))]
     [HarmonyPostfix]
-    public static void GameDialog_ILJJHNDOFBK(int CBDCDJLMHFB)
+    public static void GameDialog_IPEMHNGGINI(int PLAEOMODMCI)
     {
-        if (CBDCDJLMHFB < 1000000)
+        if (PLAEOMODMCI < 1000000)
         {
             return;
         }
-        var index = CBDCDJLMHFB - 1000000;
+        var index = PLAEOMODMCI - 1000000;
 
-        GameDialog.IEMHDAFJKAK = PromoData[index].Title;
-        GameDialog.FOKOLBEDANF = PromoData[index].Description;
-        GameDialog.NHPLKKIKMLI = PromoData[index].Characters;
+        GameDialog.AABGEEFANFM = PromoData[index].Title;
+        GameDialog.DKLBGLEAEJC = PromoData[index].Description;
+        GameDialog.ALFDHAOKHGN = PromoData[index].Characters;
     }
 }

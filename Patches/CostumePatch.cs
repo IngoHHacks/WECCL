@@ -1,11 +1,11 @@
-﻿using WECCL.Content;
+using WECCL.Content;
 
 namespace WECCL.Patches;
 
 [HarmonyPatch]
 public class CostumePatch
 {
-    [HarmonyPatch(typeof(Costume), nameof(Costume.NBGMDJOGNGM))]
+    [HarmonyPatch(typeof(Costume), nameof(Costume.IFDJGOBNCMG))]
     [HarmonyPostfix]
     public static void CostumePostfix(ref Color __result, Costume __instance)
     {
