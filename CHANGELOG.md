@@ -2,6 +2,11 @@
 
 ### GV 1.58:
 
+## Release 1.3.1
+- Fixed custom furniture positions.
+- Fixed warning menu.
+- Fixed some other incorrect mappings that may have caused issues.
+
 ## Release 1.3.0
 - UPDATE TO GAME VERSION 1.58
 - Added more arena features.
