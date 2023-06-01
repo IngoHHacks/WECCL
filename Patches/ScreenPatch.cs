@@ -93,7 +93,7 @@ public class ScreenPatch
                     GameScreens.PDMDFGNJCPN = 0;
                     _dd = 10;
                     dir = 0;
-                    if (_menu != null) GameSprites.JAAOOCGLBNN(_menu.HBJNBEDIFIG, 0.8f, 0.8f, 0.8f);
+                    if (_menu != null) GameSprites.JAAOOCGLBNN(_menu.KNOKHLBGDKO, 0.8f, 0.8f, 0.8f);
                 }
 
                 if (GameScreens.PDMDFGNJCPN >= Prefixes.Count + 1)
@@ -136,9 +136,9 @@ public class ScreenPatch
                             menu2.AABGEEFANFM = text1.text;
                             menu.AABGEEFANFM = text2.text;
                             (text1.text, text2.text) = (text2.text, text1.text);
-                            if (_menu != null) GameSprites.JAAOOCGLBNN(_menu.HBJNBEDIFIG, 0.8f, 0.8f, 0.8f);
+                            if (_menu != null) GameSprites.JAAOOCGLBNN(_menu.KNOKHLBGDKO, 0.8f, 0.8f, 0.8f);
                             _menu = menu2;
-                            GameSprites.JAAOOCGLBNN(_menu.HBJNBEDIFIG, 0.3f, 0.9f, 0.3f);
+                            GameSprites.JAAOOCGLBNN(_menu.KNOKHLBGDKO, 0.3f, 0.9f, 0.3f);
                             GameScreens.PDMDFGNJCPN--;
                             _delay = _dd;
                             if (_dd > 1) _dd -= 1;
@@ -153,9 +153,9 @@ public class ScreenPatch
                             var text1 = menu.HBJNBEDIFIG.transform.Find("Value").gameObject.GetComponent<Text>();
                             var text2 = menu2.HBJNBEDIFIG.transform.Find("Value").gameObject.GetComponent<Text>();
                             (text1.text, text2.text) = (text2.text, text1.text);
-                            if (_menu != null) GameSprites.JAAOOCGLBNN(_menu.HBJNBEDIFIG, 0.8f, 0.8f, 0.8f);
+                            if (_menu != null) GameSprites.JAAOOCGLBNN(_menu.KNOKHLBGDKO, 0.8f, 0.8f, 0.8f);
                             _menu = menu2;
-                            GameSprites.JAAOOCGLBNN(_menu.HBJNBEDIFIG, 0.9f, 0.3f, 0.3f);
+                            GameSprites.JAAOOCGLBNN(_menu.KNOKHLBGDKO, 0.9f, 0.3f, 0.3f);
                             GameScreens.PDMDFGNJCPN++;
                             _delay = _dd;
                             if (_dd > 1) _dd -= 1;
@@ -258,7 +258,7 @@ public class ScreenPatch
                         scale);
                     GameScreens.FPLAGLKCKII[GameScreens.CFPJFAKOKMD].HBJNBEDIFIG.transform.Find("Value").gameObject
                         .GetComponent<Text>().text = prefix;
-                    GameSprites.JAAOOCGLBNN(GameScreens.FPLAGLKCKII[GameScreens.CFPJFAKOKMD].HBJNBEDIFIG, 0.8f, 0.8f,
+                    GameSprites.JAAOOCGLBNN(GameScreens.FPLAGLKCKII[GameScreens.CFPJFAKOKMD].KNOKHLBGDKO, 0.8f, 0.8f,
                         0.8f);
                     index++;
                 }

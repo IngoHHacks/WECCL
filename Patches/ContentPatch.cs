@@ -269,9 +269,9 @@ internal class ContentPatch
         FixMeshes(NCPIJJFEDFL);
     }
     
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.HDOKBDCLFGD))]
+    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.POBBMNHMBGI))]
     [HarmonyPostfix]
-    public static void GamePlayer_HDOKBDCLFGD(GamePlayer __instance)
+    public static void GamePlayer_POBBMNHMBGI(GamePlayer __instance)
     {
         FixMeshes(__instance);
     }

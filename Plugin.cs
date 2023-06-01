@@ -146,55 +146,6 @@ public class Plugin : BaseUnityPlugin
                             Log.LogWarning(
                                 "This version contains experimental features that may not work as intended.");
                             break;
-                        case "Dangerous":
-                            Log.LogWarning(
-                                "This version contains features that are known to be dangerous. Use at your own risk.");
-                            break;
-                        case "Unstable":
-                            Log.LogWarning(
-                                "This version contains features that are known to be unstable. Use at your own risk.");
-                            break;
-                        case "Broken":
-                            Log.LogWarning(
-                                "This version contains features that are known to be broken. Use at your own risk.");
-                            break;
-                        case "Malicious":
-                            Log.LogWarning(
-                                "This version contains features that are known to be malicious. Use at your own risk.");
-                            break;
-                        case "Virus":
-                            Log.LogWarning(
-                                "This version contains a virus. Use at your own risk.");
-                            break;
-                        case "Ransomware":
-                            Log.LogWarning(
-                                "This version contains ransomware. Please pay $1000 to Ingo to unlock your computer.");
-                            break;
-                        case "Trojan":
-                            Log.LogWarning(
-                                "This version contains a trojan. A horse will be delivered to your house shortly.");
-                            break;
-                        case "Worm":
-                            Log.LogWarning(
-                                "This version contains a worm. Please do not eat it.");
-                            break;
-                        case "Phishing":
-                            Log.LogWarning(
-                                "This version contains a phishing scam. Please send your credit card information to Ingo.");
-                            break;
-                        case "FurryConversion":
-                            Log.LogWarning(
-                                "This version will convert you into a furry. Please do not use this version if you do not wish to become a furry.");
-                            break;
-                        case "Alopecia":
-                            Log.LogWarning(
-                                "This version will cause you to lose all your hair. Please do not use this version if you do not wish to become bald.");
-                            break;
-                        case "Cancer":
-                            Log.LogWarning(
-                                "This version will give you cancer. Please do not use this version if you do not wish to get cancer.");
-                            break;
-                        case ""
                         default:
                             Log.LogWarning("This version may not work as intended for the following reason: " + reason);
                             break;

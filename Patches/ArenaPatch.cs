@@ -583,8 +583,8 @@ public class ArenaPatch
                 //This overrides the height for placement of furniture so it can be above ground level.
                 EEMAHMPFFPJ.MNOMOILOJOF[__instance.FMNEFIPALEF].y = yOverride;
                 __instance.GOGMLEFHKHE = yOverride;
+                __instance.PBFJIDAPJGL = yOverride;
                 __instance.EDHBIOFAKNL = yOverride;
-                __instance.PPFFBIPHOEE = yOverride;
             }
         }
     }
