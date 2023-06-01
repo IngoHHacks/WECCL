@@ -175,34 +175,29 @@ public class ScreenPatch
             {
                 GameControls.GCGDPDLEHPH();
                 GameScreens.OFFHPAMPIHN();
+                GameScreens.DGIBKBFIJJD();
 
                 for (int num = 1; num <= GameScreens.CFPJFAKOKMD; num++)
                 {
                     if (GameScreens.FPLAGLKCKII[num].LDPBBENEMHM != 0f && GameScreens.KGNNPFLHMPF == 0 &&
-                        GameScreens.OLPCEEJPNAF > 10f && GameControls.DBEEFCPGGCP == 0f)
+                        GameScreens.OLPCEEJPNAF > 10f && GameControls.DBEEFCPGGCP == 0f && GameScreens.FPLAGLKCKII[num].LFBLCLADKOM() == 0)
                     {
-                        if (GameScreens.FPLAGLKCKII[num].FLFDNLEILGC > 0)
+                        if (GameScreens.PDMDFGNJCPN > 0)
                         {
-                            GameAudio.MDIKCPGDILK(GameAudio.KNIDFHCNJPF);
                             GameScreens.KGNNPFLHMPF = 1;
-                        }
-                        else if (GameControls.DBEEFCPGGCP == 0f)
-                        {
-                            GameAudio.MDIKCPGDILK(GameAudio.DKPMHGHNHEH, 1f);
-                            GameControls.DBEEFCPGGCP = 10f;
+                            DNDIEGNJOKN.PDMDFGNJCPN = -1;
                         }
                     }
                 }
 
-                if (GameScreens.KGNNPFLHMPF == 5 && GameScreens.PDMDFGNJCPN > 0)
+                if (GameScreens.KGNNPFLHMPF >= 5 && GameScreens.PDMDFGNJCPN == -1)
                 {
                     GameAudio.MDIKCPGDILK(GameAudio.KNIDFHCNJPF, 0f, 0.5f);
                     MetaFile.Data.FirstLaunch = false;
                     MetaFile.Data.Save();
                     GameScreens.KGAMHBKDPCB(1);
                 }
-
-                GameScreens.DGIBKBFIJJD();
+                
                 return false;
             }
         }
