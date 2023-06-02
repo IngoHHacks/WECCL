@@ -604,4 +604,31 @@ public class ArenaPatch
             }
         }
     }
+    [HarmonyPatch(typeof(OLIKHHKOACF))]
+    public static class OLIKHHKOACF_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("ICKGKDOKJEN")]
+        public static void ICKGKDOKJEN_Patch()
+        {
+            GameObject titanCamera = GameObject.Find("TitantronCamera");
+            if(titanCamera)
+                titanCamera.AddComponent<CameraTracking>();
+        }
+    }
+    public class CameraTracking : MonoBehaviour
+    {
+        public GameObject CameraFocalPoint = null;
+        private void Start()
+        {
+            CameraFocalPoint = GameObject.Find("Camera Focal Point");
+        }
+        private void Update()
+        {
+            if (CameraFocalPoint)
+            {
+                transform.LookAt(CameraFocalPoint.transform);
+            }
+        }
+    }
 }
