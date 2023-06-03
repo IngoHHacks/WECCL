@@ -8,12 +8,15 @@ namespace WECCL.Patches;
 public class ArenaPatch
 {
     public static Dictionary<string, int> objectMappings;
+    public static Dictionary<string, int> weaponMappings;
+    public static List<string> weaponList;
     public static float yOverride;
     public static int NoOriginalLocationsValue;
 
     private void Awake()
     {
         CreateObjectMapping();
+        CreateWeaponMapping();
     }
     private static void CreateObjectMapping()
     {
@@ -47,6 +50,83 @@ public class ArenaPatch
             { "Piano", 26 }
             // Note, left Motorcycle, Bicycle, Car and Van here even though from testing they do not work.
             // If they ever have the models added they would become valid instantly but not included in documentation as to avoid confusion
+        };
+    }
+
+    private static void CreateWeaponMapping()
+    {
+        weaponMappings = new Dictionary<string, int>
+        {
+            { "Belt", 0 },
+            { "Microphone", 1 },
+            { "Camera", 2 },
+            { "Bell", 3 },
+            { "Explosive", 4 },
+            { "Baseball Bat", 5 },
+            { "Chair", 6 },
+            { "Cage Piece", 7 },
+            { "Wooden Board", 8 },
+            { "Table Piece", 9 },
+            { "Table Leg", 10 },
+            { "Barbed Bat", 11 },
+            { "Cardboard", 12 },
+            { "Ladder Piece", 13 },
+            { "Plank", 14 },
+            { "Pipe", 15 },
+            { "Nightstick", 16 },
+            { "Cane", 17 },
+            { "Step", 18 },
+            { "Dumbbell", 19 },
+            { "Weight", 20 },
+            { "Trashcan Lid", 21 },
+            { "Skateboard", 22 },
+            { "Water Bottle", 23 },
+            { "Milk Bottle", 24 },
+            { "Beer Bottle", 25 },
+            { "Light Tube", 26 },
+            { "Hammer", 27 },
+            { "Console", 28 },
+            { "Briefcase", 29 },
+            { "Brass Knuckles", 30 },
+            { "Extinguisher", 31 },
+            { "Trophy", 32 },
+            { "Gun", 33 },
+            { "Broom", 34 },
+            { "Sign", 35 },
+            { "Picture", 36 },
+            { "Glass Pane", 37 },
+            { "Guitar", 38 },
+            { "Tennis Racket", 39 },
+            { "Phone", 40 },
+            { "Cue", 41 },
+            { "Tombstone", 42 },
+            { "Cash", 43 },
+            { "Burger", 44 },
+            { "Pizza", 45 },
+            { "Hotdog", 46 },
+            { "Apple", 47 },
+            { "Orange", 48 },
+            { "Bannana", 49 },
+            { "Crutch", 50 },
+            { "Backpack", 51 },
+            { "Shovel", 52 },
+            { "Book", 53 },
+            { "Magazine", 54 },
+            { "Tablet", 55 },
+            { "Thumbtacks", 56 },
+            { "Football", 57 },
+            { "Basketball", 58 },
+            { "American Football", 59 },
+            { "Baseball", 60 },
+            { "Tennis Ball", 61 },
+            { "Beach Ball", 62 },
+            { "Tyre", 63 },
+            { "Large Gift", 64 },
+            { "Gift", 65 },
+            { "Chainsaw", 66 },
+            { "Handcuffs", 67 },
+            { "Rubber Chicken", 68 }
+            //Not all items the game has values for work, EG chainsaw and American Football are ones I tested that did not appear ingame.
         };
     }
 
@@ -189,7 +269,6 @@ public class ArenaPatch
                             float westDistance = Vector3.Distance(itemMarkerWest.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
                             furthestWestDistance = westDistance;
                         }
-
                         // The furthest distances from the center coordinates
                         float itemBorderNorth = furthestNorthDistance;
                         float itemBorderEast = furthestEastDistance;
@@ -601,6 +680,157 @@ public class ArenaPatch
                 //Force barriers to 0, can't work out how to disable option since its controlled by arena shape
                 //So just forcing it to always be none does the job well enough
                 World.arenaBarriers = 0;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(GMIKIMHFABP))]
+    public static class GMIKIMHFABPPrePatch
+    {
+        static int stored_BHDLBIFOONA;
+        static bool ifStatementOnePassed = false;
+        static bool ifStatementTwoPassed = false;
+        [HarmonyPrefix]
+        [HarmonyPatch("FPDABKEPGBE")]
+        public static void FPDABKEPGBEPrePatch(GMIKIMHFABP __instance)
+        {
+            //Set this to zero to stop original pyro from going off
+            stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
+            JGKBBDPDIBC.BHDLBIFOONA = 0;
+
+            if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 && __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast && __instance.OIHBMKLFEBJ > World.camSouth &&
+                __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest && __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth && __instance.OIHBMKLFEBJ < World.farNorth &&
+                __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) > 0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 || World.arenaShape * World.arenaBarriers == 0))
+            {
+                ifStatementOnePassed = true;
+            }
+            else
+            {
+                ifStatementOnePassed = false;
+            }
+
+            if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC && World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
+            {
+                ifStatementTwoPassed = true;
+            }
+            else
+            {
+                ifStatementTwoPassed = false;
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("FPDABKEPGBE")]
+        public static void FPDABKEPGBEPostPatch(GMIKIMHFABP __instance)
+        {
+            //Set GFEDPBPDALB.AFJDBIAFGKE back at postfix
+            JGKBBDPDIBC.BHDLBIFOONA = stored_BHDLBIFOONA;
+
+            if (ifStatementOnePassed)
+            {
+                if (ifStatementTwoPassed)
+                {
+                    GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
+
+                    foreach (GameObject pyroObject in pyroObjects)
+                    {
+                        Vector3 newPyroPosition = pyroObject.transform.position;
+                        Quaternion newPyroRotation = pyroObject.transform.rotation;
+
+                        if (__instance.IPNKFGHIDJP.pyro == 1 || __instance.IPNKFGHIDJP.pyro < 0)
+                        {
+                            EFIBMNEKJFB.NCANNKNAKBO(11, Color.white, 10f, null, 0f, newPyroPosition.y + 25f, newPyroPosition.z, 0f, 0f, 0.1f);
+                        }
+                        if (__instance.IPNKFGHIDJP.pyro == 2 || __instance.IPNKFGHIDJP.pyro < 0)
+                        {
+                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, -7f, newPyroPosition.y, newPyroPosition.z);
+                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, 7f, newPyroPosition.y, newPyroPosition.z);
+                        }
+                        if (__instance.IPNKFGHIDJP.pyro == 3 || __instance.IPNKFGHIDJP.pyro < 0)
+                        {
+                            JKPIHABGBGP.BDFEDMELBOL(__instance.BJANPGIFKHD, JKPIHABGBGP.GOBHIDLAEDF, -0.1f);
+                            EFIBMNEKJFB.NCANNKNAKBO(91, Color.white, 8f, null, 0f, newPyroPosition.y + 7f, newPyroPosition.z, 180f, 0.2f);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(GCOCDCCEALD))]
+    public static class GCOCDCCEALDPrePatch
+    {
+        internal static Vector3? newWeaponPosition;
+        internal static Quaternion? newWeaponRotation;
+        internal static int customWeaponId;
+
+        [HarmonyPostfix]
+        [HarmonyPatch("FDJPDPPAGCL")]
+        public static void FDJPDPPAGCLPostPatch()
+        {
+            newWeaponPosition = null;
+            newWeaponRotation = null;
+            weaponList = new List<string>();
+
+            //Loops through here to add weapons... IJLDPEFGOOL = weapon ID
+            GameObject[] customWeaponObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("WeaponObject:")).ToArray();
+            foreach (GameObject customWeaponObject in customWeaponObjects)
+            {
+                string customWeaponName = customWeaponObject.name.Substring("WeaponObject:".Length);
+                //Remove numbers from end of the name
+                customWeaponName = Regex.Replace(customWeaponName, @"\d+$", string.Empty);
+                newWeaponPosition = customWeaponObject.transform.position;
+                newWeaponRotation = customWeaponObject.transform.rotation;
+
+                if (!weaponList.Contains(customWeaponObject.name))
+                {
+                    if (customWeaponName == "Random")
+                    {
+                        System.Random random = new System.Random();
+                        customWeaponId = random.Next(1, 68 + 1);
+                    }
+                    else
+                    {
+                        customWeaponId = GetWeaponMapping(customWeaponName);
+                    }
+                    weaponList.Add(customWeaponObject.name);
+                    if (customWeaponId != 0)
+                    {
+                        GCOCDCCEALD.LKMAEOFENHG(customWeaponId);
+                    }
+                }
+            }
+        }
+
+        static int GetWeaponMapping(string input)
+        {
+            if (weaponMappings == null)
+            {
+                //Make sure weaponMappings is populated before it is used.
+                ArenaPatch.CreateWeaponMapping();
+            }
+            if (weaponMappings.ContainsKey(input))
+            {
+                return weaponMappings[input];
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(HGBIFNCNACK))]
+    public static class HGBIFNCNACKPrePatch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("ICKGKDOKJEN")]
+        public static void ICKGKDOKJENPostPatch(int FANKAPIFBLO, int FDAMPNHCCHN, HGBIFNCNACK __instance, int IJLDPEFGOOL = 0)
+        {
+            if (GCOCDCCEALDPrePatch.newWeaponPosition != null && GCOCDCCEALDPrePatch.newWeaponRotation != null)
+            {
+                __instance.BOBMFGJLKLH.transform.position = new Vector3(GCOCDCCEALDPrePatch.newWeaponPosition.Value.x, GCOCDCCEALDPrePatch.newWeaponPosition.Value.y, GCOCDCCEALDPrePatch.newWeaponPosition.Value.z);
+                __instance.BOBMFGJLKLH.transform.eulerAngles = new Vector3(GCOCDCCEALDPrePatch.newWeaponRotation.Value.x, GCOCDCCEALDPrePatch.newWeaponRotation.Value.y, GCOCDCCEALDPrePatch.newWeaponRotation.Value.z);
             }
         }
     }
