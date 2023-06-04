@@ -81,4 +81,11 @@ internal class AnimationPatch
         }
         return true;
     }
+    
+    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.AJOOKABNAOE))]
+    [HarmonyPrefix]
+    public static bool GamePlayer_AJOOKABNAOE(ref GamePlayer __instance)
+    {
+        return __instance.MDOCJJELCBG < 1000000;
+    }
 }
