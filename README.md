@@ -99,7 +99,7 @@ The following keys are supported:
 ## Meshes
 
 As with textures, meshes can be added by placing them in `./BepInEx/plugins/Assets`. Meshes must be in a subfolder by the mesh name.
-Example: `body_mesh/abc`. The extension must be `.mesh` or no extension at all.
+Example: `body_mesh/abc`. The extension must be `.assetbundle` or no extension at all. (Note that `.mesh` works too, but is deprecated and may be removed in the future).  
 Meshes should be inside an asset bundle with it being the only mesh in the bundle. The first submesh will be the one affected by the game's mesh color setting. Others can be manually set in the metadata file.
 
 | Supported Mesh Names       |
@@ -131,7 +131,7 @@ The following keys are supported:
 
 **Custom arenas are very experimental and may not work as intended. Use at your own risk.**  
 Custom arenas work the same as meshes, but require a GameObject as the root object and should be placed in a subfolder named `arena`.  
-Example: `arena/abc`. The extension must be `.mesh` or no extension at all (Please note that it is still not actually a mesh, but a GameObject. This will be changed in the future).  
+Example: `arena/abc`. The extension must be `.assetbundle` or no extension at all (Note that `.mesh` works too, but is deprecated and may be removed in the future).  
 There is functionality in place to automatically assign collision to the arena, but this doesn't work for diagonal walls, i.e. walls that are not aligned with the X or Z axis. It may also not work as expected with some wall shapes.
 
 ## Custom Promos
