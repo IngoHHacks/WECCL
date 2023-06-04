@@ -9,7 +9,7 @@ internal class AnimationPatch
     [HarmonyPrefix]
     public static void GamePlayer_HBMEELACHFO(ref GamePlayer __instance)
     {
-        if (__instance.MDOCJJELCBG >= 2000)
+        if (__instance.MDOCJJELCBG >= 1000000)
         {
             var anim = __instance.MKEAFINLGIO;
             var orig = anim.runtimeAnimatorController;
@@ -21,9 +21,9 @@ internal class AnimationPatch
                 }
                 var newController = new AnimatorOverrideController(orig);
                 newController.name = "CustomAnimation" + __instance.MDOCJJELCBG;
-                newController["Standard00"] = CustomAnimationClips[__instance.MDOCJJELCBG - 2000].Item1;
+                newController["Standard00"] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1;
                 __instance.MKEAFINLGIO.runtimeAnimatorController = newController;
-                NBPIEPNKBDG.KCIBKFDHPPD[100] = CustomAnimationClips[__instance.MDOCJJELCBG - 2000].Item1.length * CustomAnimationClips[__instance.MDOCJJELCBG - 2000].Item1.frameRate;
+                NBPIEPNKBDG.KCIBKFDHPPD[100] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.length * CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.frameRate;
                 NBPIEPNKBDG.AKKFFGMMCHD[100] = 1f / NBPIEPNKBDG.KCIBKFDHPPD[100];
             }
             Animations.DoCustomAnimation(__instance, __instance.MDOCJJELCBG);
@@ -42,7 +42,7 @@ internal class AnimationPatch
     [HarmonyPrefix]
     public static void GamePlayer_LCENEGBMIEJ(ref GamePlayer __instance)
     {
-        if (__instance.MDOCJJELCBG >= 2000) return;
+        if (__instance.MDOCJJELCBG >= 1000000) return;
         var orig = __instance.MKEAFINLGIO.runtimeAnimatorController;
         if (orig.name.StartsWith("CustomAnimation"))
         {
@@ -74,9 +74,9 @@ internal class AnimationPatch
     [HarmonyPrefix]
     public static bool NBPIEPNKBDG_OOKDMJJFLBO(ref string __result, int FAFFHCHCLHI)
     {
-        if (FAFFHCHCLHI >= 2000)
+        if (FAFFHCHCLHI >= 1000000)
         {
-            __result = CustomAnimationClips[FAFFHCHCLHI - 2000].Item2.Name ?? "CustomAnimation" + (FAFFHCHCLHI - 2000).ToString("00");
+            __result = CustomAnimationClips[FAFFHCHCLHI - 1000000].Item2.Name ?? "CustomAnimation" + (FAFFHCHCLHI - 1000000).ToString("00");
             return false;
         }
         return true;

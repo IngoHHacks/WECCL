@@ -11,7 +11,7 @@ internal class PromoPatch
     [HarmonyPrefix]
     public static void GameDialog_CJNHDOHIKNJ()
     {
-        var promoId = GameDialog.JJHCKDLBACE - 1000000;
+        var promoId = GameDialog.JJHCKDLBACE - 10000;
         if (promoId < 0)
         {
             return;

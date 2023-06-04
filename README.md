@@ -200,7 +200,6 @@ tag: value
 | PlayAudio          | audio                                              | Plays the given audio.                                                                       | `110 PlayAudio -1`                        |
 | SetAnimationId     | id (id2, id3, etc.)                                | Sets the animation to the given id. If multiple ids are given, one will be chosen at random. | `130 SetAnimationId 9 10`                 |
 | StopAnimation      |                                                    | Stops the animation.                                                                         | `140 StopAnimation`                       |
-| PostStandingAttack |                                                    | Performs the logic for a standing attack.                                                    | `0- PostStandingAttack`                   |
 
 `condition` must be a string followed by a question mark.  
 If the `condition` is met, the script will continue with the next line one indentation level deeper.
@@ -244,7 +243,7 @@ Full example:
 name: Big Punch
 types: BigAttack
 0-99 SetAnimation 100 1 -2
-0-99 StartAnimation -10 5
+0-99 StartAnimation -10 5 0.5
 101- SetAnimation 100 2
 110-120 EnableHitbox 8 1000 R_Hand 10 1
 110 Playaudio -1
@@ -252,7 +251,6 @@ types: BigAttack
  130 StrengthCheck?
   130 SetAnimationId 9 10
 140 StopAnimation
-0- PostStandingAttack
 ```
 
 ## Aliases

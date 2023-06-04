@@ -64,7 +64,7 @@ public class AnimationData
         
         foreach (var type in data.Types)
         {
-            var id = numAnimations + 2000;
+            var id = numAnimations + 1000000;
             switch (type)
             {
                 case MoveType.StrikeHigh:

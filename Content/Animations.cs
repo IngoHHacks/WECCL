@@ -6,8 +6,8 @@ public static class Animations
 {
     public static void DoCustomAnimation(GamePlayer player, int animationId)
     {
-        if (animationId < 2000) return;
-        var anim = animationId - 2000;
+        if (animationId < 1000000) return;
+        var anim = animationId - 1000000;
         AnimationData.DoCustomAnimation(anim, player, player.CLNAALEKPCG);
     }
 
@@ -44,28 +44,6 @@ public static class Animations
     {
         var anim = animIds.Length == 1 ? animIds[0] : animIds[Random.Range(0, animIds.Length)];
         player.CNJJKFKLFEK(anim);
-    }
-
-    public static void PostStandingAttack(this GamePlayer player)
-    {
-        if (!(player.MIGMAKAPBNI > 0f) || player.GNMKBNPIOIM[0] <= 0 || player.GNMKBNPIOIM[0] == player.NMKACNOOPPC || player.MDOCJJELCBG == 850 || player.MDOCJJELCBG == 851 || player.MDOCJJELCBG == 1150)
-        {
-            return;
-        }
-        player.NFFKFPPBPID = AMJONEKIAID.NCPIJJFEDFL[player.GNMKBNPIOIM[0]];
-        if ((player.NFFKFPPBPID.AFEEIHIFOIB > 0f || (player.NFFKFPPBPID.AOAEIHIOPIG >= -108 && player.NFFKFPPBPID.AOAEIHIOPIG <= -101) ||
-             (player.NFFKFPPBPID.MDOCJJELCBG >= 500 && player.NFFKFPPBPID.MDOCJJELCBG <= 503)) && player.NFFKFPPBPID.MIGMAKAPBNI > 0f &&
-            player.NFFKFPPBPID.JAENLEMFEIC > 0f)
-        {
-            player.MIGMAKAPBNI = (0f - player.NFFKFPPBPID.MIGMAKAPBNI) / 1f * player.MHDPPBHFPPK;
-            if (player.AOAEIHIOPIG > 0)
-            {
-                player.MIGMAKAPBNI /= 2f;
-            }
-
-            Debug.Log(
-                "Reversing against friction opponent " + player.GNMKBNPIOIM[0] + " with new travel of " + player.MIGMAKAPBNI);
-        }
     }
     
     public static bool HitConnected(this GamePlayer player)
@@ -117,11 +95,7 @@ public static class Animations
                     player.SetAnimation(0);
                     player.ResetAngle(currentFrame - 100);
                     return false;
-                
-                case "poststandingattack":
-                    player.PostStandingAttack();
-                    return false;
-                
+
                 case "hitconnected?":
                     return player.HitConnected();
                 
