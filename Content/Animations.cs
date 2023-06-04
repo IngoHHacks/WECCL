@@ -4,11 +4,15 @@ namespace WECCL.Content;
 
 public static class Animations
 {
-    public static void DoCustomAnimation(GamePlayer player, int animationId)
+    public static void DoCustomAnimation(GamePlayer player, int animationId, float fwdSpeedMultiplier = 4f)
     {
         if (animationId < 1000000) return;
         var anim = animationId - 1000000;
         AnimationData.DoCustomAnimation(anim, player, player.CLNAALEKPCG);
+        if (player.CLNAALEKPCG >= 101f || player.EMINEEGHAPE > 0f)
+        {
+            player.ANONONPEEHD(player.MPPIDPBCCEM, player.HPCDKFLHCFH * fwdSpeedMultiplier);
+        }
     }
 
     public static void StartAnimation(this GamePlayer player, float speed, int buildupFrames, float forwardMomentum = 0f)
@@ -56,14 +60,6 @@ public static class Animations
         return Random.Range(24f, player.MGHOMFFCEGK[2]) < 25f;
     }
 
-    public static void ResetAngle(this GamePlayer player, float frame)
-    {
-        if (player.CLNAALEKPCG >= 101f || player.EMINEEGHAPE > 0f)
-        {
-            player.ANONONPEEHD(player.MPPIDPBCCEM, frame);
-        }
-    }
-
     public static bool ExecuteCommand(GMIKIMHFABP player, string command, string[] args, float currentFrame, int startFrame, int endFrame)
     {
         try
@@ -93,7 +89,6 @@ public static class Animations
                 
                 case "stopanimation":
                     player.SetAnimation(0);
-                    player.ResetAngle(currentFrame - 100);
                     return false;
 
                 case "hitconnected?":

@@ -17,7 +17,8 @@ public class AnimationData
     }
     
     public string Name;
-    public MoveType[] Types;
+    public MoveType[] Types = Array.Empty<MoveType>();
+    public float ForwardSpeedMultiplier = 4f;
 
     public static AnimationData ParseString(string animationData)
     {
@@ -38,6 +39,10 @@ public class AnimationData
                         break;
                     case "types":
                         data.Types = split2[1].Trim().Split(' ').Select(x => (MoveType) Enum.Parse(typeof(MoveType), x, true)).ToArray();
+                        valid = true;
+                        break;
+                    case "forwardspeedmultiplier":
+                        data.ForwardSpeedMultiplier = float.Parse(split2[1].Trim());
                         valid = true;
                         break;
                 }

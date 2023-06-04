@@ -188,18 +188,18 @@ tag: value
 [start(-(end))] condition?
  [start(-(end))] command arg1 arg2 arg3...
 ```
-`tag` must be `name` or `types`. Valid `types` are `StrikeHigh`, `StrikeLow`, `BigAttack (== RunningAttack)`. Types should be separated by a space.  
+`tag` must be `name`, `types`, or `forwardspeedmultiplier. Valid `types` are `StrikeHigh`, `StrikeLow`, `BigAttack (== RunningAttack)`. Types should be separated by a space. `forwardspeedmultiplier` must be a float. This value is multiplied by the animation speed to determine the forward speed of the move. Default is 4.  
 `start` and `end` must be integers. `end` is optional and defaults to `start` (without `-`) or *infinity* (with `-`).  
 `command` must be a string. The following commands are supported:
 
-| Command            | Arguments                                          | Description                                                                                  | Example                                   |
-|--------------------|----------------------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------|
-| StartAnimation     | speed, buildupFrames, (forwardMomentum = 0)        | Starts the animation "buildup" with the given parameters.                                    | `0-99 StartAnimation -10 5`               |
-| SetAnimation       | file, frame, duration                              | Sets the animation to the given file and frame.                                              | `101- SetAnimation 100 2`                 |
-| EnableHitbox       | distance, damage, limb, (angle = 0) (particle = 0) | Enables a hitbox with the given parameters.                                                  | `110-120 EnableHitbox 8 1000 R_Hand 10 1` |
-| PlayAudio          | audio                                              | Plays the given audio.                                                                       | `110 PlayAudio -1`                        |
-| SetAnimationId     | id (id2, id3, etc.)                                | Sets the animation to the given id. If multiple ids are given, one will be chosen at random. | `130 SetAnimationId 9 10`                 |
-| StopAnimation      |                                                    | Stops the animation.                                                                         | `140 StopAnimation`                       |
+| Command            | Arguments                                                   | Description                                                                                  | Example                                   |
+|--------------------|-------------------------------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------|
+| StartAnimation     | speed ticks per frame, buildupFrames, (forwardMomentum = 0) | Starts the animation "buildup" with the given parameters. Speed is ticks per frame           | `0-99 StartAnimation -10 5`               |
+| SetAnimation       | file, frame, duration                                       | Sets the animation to the given file and frame.                                              | `101- SetAnimation 100 2`                 |
+| EnableHitbox       | distance, damage, limb, (angle = 0) (particle = 0)          | Enables a hitbox with the given parameters.                                                  | `110-129 EnableHitbox 8 1000 R_Hand 10 1` |
+| PlayAudio          | audio                                                       | Plays the given audio.                                                                       | `110 PlayAudio -1`                        |
+| SetAnimationId     | id (id2, id3, etc.)                                         | Sets the animation to the given id. If multiple ids are given, one will be chosen at random. | `130 SetAnimationId 9 10`                 |
+| StopAnimation      |                                                             | Stops the animation.                                                                         | `140 StopAnimation`                       |
 
 `condition` must be a string followed by a question mark.  
 If the `condition` is met, the script will continue with the next line one indentation level deeper.
@@ -242,10 +242,11 @@ Full example:
 ```
 name: Big Punch
 types: BigAttack
+forwardspeedmultiplier: 1.5
 0-99 SetAnimation 100 1 -2
 0-99 StartAnimation -10 5 0.5
 101- SetAnimation 100 2
-110-120 EnableHitbox 8 1000 R_Hand 10 1
+110-129 EnableHitbox 8 1000 R_Hand 10 1
 110 Playaudio -1
 130 HitConnected?
  130 StrengthCheck?

@@ -26,7 +26,7 @@ internal class AnimationPatch
                 NBPIEPNKBDG.KCIBKFDHPPD[100] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.length * CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.frameRate;
                 NBPIEPNKBDG.AKKFFGMMCHD[100] = 1f / NBPIEPNKBDG.KCIBKFDHPPD[100];
             }
-            Animations.DoCustomAnimation(__instance, __instance.MDOCJJELCBG);
+            Animations.DoCustomAnimation(__instance, __instance.MDOCJJELCBG, CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ForwardSpeedMultiplier);
         }
         else
         {
