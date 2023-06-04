@@ -744,28 +744,33 @@ public class ArenaPatch
         [HarmonyPatch("FPDABKEPGBE")]
         public static void FPDABKEPGBEPrePatch(GMIKIMHFABP __instance)
         {
-            //Set this to zero to stop original pyro from going off
-            stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
-            JGKBBDPDIBC.BHDLBIFOONA = 0;
+            
+            GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
 
-            if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 && __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast && __instance.OIHBMKLFEBJ > World.camSouth &&
-                __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest && __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth && __instance.OIHBMKLFEBJ < World.farNorth &&
-                __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) > 0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 || World.arenaShape * World.arenaBarriers == 0))
+            if (pyroObjects.Length > 0)
             {
-                ifStatementOnePassed = true;
-            }
-            else
-            {
-                ifStatementOnePassed = false;
-            }
+                if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 && __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast && __instance.OIHBMKLFEBJ > World.camSouth &&
+                    __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest && __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth && __instance.OIHBMKLFEBJ < World.farNorth &&
+                    __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) > 0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 || World.arenaShape * World.arenaBarriers == 0))
+                {
+                    ifStatementOnePassed = true;
+                }
+                else
+                {
+                    ifStatementOnePassed = false;
+                }
 
-            if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC && World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
-            {
-                ifStatementTwoPassed = true;
-            }
-            else
-            {
-                ifStatementTwoPassed = false;
+                if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC && World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
+                {
+                    ifStatementTwoPassed = true;
+                }
+                else
+                {
+                    ifStatementTwoPassed = false;
+                }
+                //Set this to zero to stop original pyro from going off
+                stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
+                JGKBBDPDIBC.BHDLBIFOONA = 0;
             }
         }
 
@@ -785,7 +790,6 @@ public class ArenaPatch
                     foreach (GameObject pyroObject in pyroObjects)
                     {
                         Vector3 newPyroPosition = pyroObject.transform.position;
-                        Quaternion newPyroRotation = pyroObject.transform.rotation;
 
                         if (__instance.IPNKFGHIDJP.pyro == 1 || __instance.IPNKFGHIDJP.pyro < 0)
                         {
