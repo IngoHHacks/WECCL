@@ -2,6 +2,9 @@
 
 ### GV 1.58:
 
+## Release 1.3.3
+- Added experimantal support for custom moves.
+
 ## Release 1.3.2
 - Added support for pyro and weapon positioning in custom arenas.
 - Added titantron camera auto-rotation.
