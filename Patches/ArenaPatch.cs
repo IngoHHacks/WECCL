@@ -921,6 +921,31 @@ public class ArenaPatch
 
                 __instance.BOBMFGJLKLH.transform.position = new Vector3(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ);
                 __instance.BOBMFGJLKLH.transform.eulerAngles = new Vector3(rotationX, __instance.LHBBEOPJHHD, rotationZ);
+=======
+    [HarmonyPatch(typeof(OLIKHHKOACF))]
+    public static class OLIKHHKOACF_Patch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("ICKGKDOKJEN")]
+        public static void ICKGKDOKJEN_Patch()
+        {
+            GameObject titanCamera = GameObject.Find("TitantronCamera");
+            if(titanCamera)
+                titanCamera.AddComponent<CameraTracking>();
+        }
+    }
+    public class CameraTracking : MonoBehaviour
+    {
+        public GameObject CameraFocalPoint = null;
+        private void Start()
+        {
+            CameraFocalPoint = GameObject.Find("Camera Focal Point");
+        }
+        private void Update()
+        {
+            if (CameraFocalPoint)
+            {
+                transform.LookAt(CameraFocalPoint.transform);
             }
         }
     }
