@@ -896,7 +896,8 @@ public class ArenaPatch
     {
         [HarmonyPostfix]
         [HarmonyPatch("ICKGKDOKJEN")]
-        public static void ICKGKDOKJENPostPatch(int FANKAPIFBLO, int FDAMPNHCCHN, HGBIFNCNACK __instance, int IJLDPEFGOOL = 0)
+        public static void ICKGKDOKJENPostPatch(int FANKAPIFBLO, int FDAMPNHCCHN, HGBIFNCNACK __instance,
+            int IJLDPEFGOOL = 0)
         {
             if (GCOCDCCEALDPrePatch.newWeaponPosition != null && GCOCDCCEALDPrePatch.newWeaponRotation != null)
             {
@@ -907,11 +908,13 @@ public class ArenaPatch
                 float rotationX = GCOCDCCEALDPrePatch.newWeaponRotation.Value.x;
                 float rotationZ = GCOCDCCEALDPrePatch.newWeaponRotation.Value.z;
                 string weaponName = GCOCDCCEALDPrePatch.CustomWeaponName;
-                if (weaponName == "Random") {
+                if (weaponName == "Random")
+                {
                     rotationX = 0f;
                     __instance.LHBBEOPJHHD = JGKBBDPDIBC.OCMIPAODMHH(0, 359);
                     rotationZ = 0f;
                 }
+
                 //Need to update these for weapons to allow pickup
                 __instance.EDHBIOFAKNL = __instance.PBFJIDAPJGL;
                 __instance.HCIPJDOLEGN = __instance.PPFFBIPHOEE;
@@ -919,9 +922,14 @@ public class ArenaPatch
                 __instance.NHIBHMDBGMA = __instance.OIHBMKLFEBJ;
                 __instance.BCJHFHEJLJA = __instance.LHBBEOPJHHD;
 
-                __instance.BOBMFGJLKLH.transform.position = new Vector3(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ);
-                __instance.BOBMFGJLKLH.transform.eulerAngles = new Vector3(rotationX, __instance.LHBBEOPJHHD, rotationZ);
-=======
+                __instance.BOBMFGJLKLH.transform.position = new Vector3(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL,
+                    __instance.OIHBMKLFEBJ);
+                __instance.BOBMFGJLKLH.transform.eulerAngles =
+                    new Vector3(rotationX, __instance.LHBBEOPJHHD, rotationZ);
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(OLIKHHKOACF))]
     public static class OLIKHHKOACF_Patch
     {
@@ -934,6 +942,7 @@ public class ArenaPatch
                 titanCamera.AddComponent<CameraTracking>();
         }
     }
+    
     public class CameraTracking : MonoBehaviour
     {
         public GameObject CameraFocalPoint = null;
