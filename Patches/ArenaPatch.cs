@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using WECCL.Content;
 using Debug = UnityEngine.Debug;
@@ -8,12 +9,15 @@ namespace WECCL.Patches;
 public class ArenaPatch
 {
     public static Dictionary<string, int> objectMappings;
+    public static Dictionary<string, int> weaponMappings;
+    public static List<string> weaponList;
     public static float yOverride;
     public static int NoOriginalLocationsValue;
 
     private void Awake()
     {
         CreateObjectMapping();
+        CreateWeaponMapping();
     }
     private static void CreateObjectMapping()
     {
@@ -47,6 +51,83 @@ public class ArenaPatch
             { "Piano", 26 }
             // Note, left Motorcycle, Bicycle, Car and Van here even though from testing they do not work.
             // If they ever have the models added they would become valid instantly but not included in documentation as to avoid confusion
+        };
+    }
+
+    private static void CreateWeaponMapping()
+    {
+        weaponMappings = new Dictionary<string, int>
+        {
+            { "Belt", 0 },
+            { "Microphone", 1 },
+            { "Camera", 2 },
+            { "Bell", 3 },
+            { "Explosive", 4 },
+            { "Baseball Bat", 5 },
+            { "Chair", 6 },
+            { "Cage Piece", 7 },
+            { "Wooden Board", 8 },
+            { "Table Piece", 9 },
+            { "Table Leg", 10 },
+            { "Barbed Bat", 11 },
+            { "Cardboard", 12 },
+            { "Ladder Piece", 13 },
+            { "Plank", 14 },
+            { "Pipe", 15 },
+            { "Nightstick", 16 },
+            { "Cane", 17 },
+            { "Step", 18 },
+            { "Dumbbell", 19 },
+            { "Weight", 20 },
+            { "Trashcan Lid", 21 },
+            { "Skateboard", 22 },
+            { "Water Bottle", 23 },
+            { "Milk Bottle", 24 },
+            { "Beer Bottle", 25 },
+            { "Light Tube", 26 },
+            { "Hammer", 27 },
+            { "Console", 28 },
+            { "Briefcase", 29 },
+            { "Brass Knuckles", 30 },
+            { "Extinguisher", 31 },
+            { "Trophy", 32 },
+            { "Gun", 33 },
+            { "Broom", 34 },
+            { "Sign", 35 },
+            { "Picture", 36 },
+            { "Glass Pane", 37 },
+            { "Guitar", 38 },
+            { "Tennis Racket", 39 },
+            { "Phone", 40 },
+            { "Cue", 41 },
+            { "Tombstone", 42 },
+            { "Cash", 43 },
+            { "Burger", 44 },
+            { "Pizza", 45 },
+            { "Hotdog", 46 },
+            { "Apple", 47 },
+            { "Orange", 48 },
+            { "Bannana", 49 },
+            { "Crutch", 50 },
+            { "Backpack", 51 },
+            { "Shovel", 52 },
+            { "Book", 53 },
+            { "Magazine", 54 },
+            { "Tablet", 55 },
+            { "Thumbtacks", 56 },
+            { "Football", 57 },
+            { "Basketball", 58 },
+            { "American Football", 59 },
+            { "Baseball", 60 },
+            { "Tennis Ball", 61 },
+            { "Beach Ball", 62 },
+            { "Tyre", 63 },
+            { "Large Gift", 64 },
+            { "Gift", 65 },
+            { "Chainsaw", 66 },
+            { "Handcuffs", 67 },
+            { "Rubber Chicken", 68 }
+            //Not all items the game has values for work, EG chainsaw and American Football are ones I tested that did not appear ingame.
         };
     }
 
@@ -189,7 +270,6 @@ public class ArenaPatch
                             float westDistance = Vector3.Distance(itemMarkerWest.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
                             furthestWestDistance = westDistance;
                         }
-
                         // The furthest distances from the center coordinates
                         float itemBorderNorth = furthestNorthDistance;
                         float itemBorderEast = furthestEastDistance;
@@ -592,6 +672,55 @@ public class ArenaPatch
     [HarmonyPatch(typeof(Scene_Match_Setup))]
     public static class Scene_Match_SetupPatch
     {
+        //oldArenaFurnitureCount used to make sure furniture number on custom arena is correct when swapping between multiple custom arenas
+        private static int oldArenaFurnitureCount;
+        [HarmonyPrefix]
+        [HarmonyPatch("Update")]
+        public static void UpdatePrePatch(Scene_Match_Setup __instance)
+        {
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                if (World.location != __instance.oldArena)
+                {
+                    if (World.location <= 1 && __instance.oldArena <= 1)
+                    {
+                        World.IEPBKKHOCIF(1);
+                    }
+                    else
+                    {
+                        World.ICKGKDOKJEN(1);
+                    }
+                    World.BMNCNDJBIGI();
+                    World.MLLMEPFEDMF();
+                    if (JGKBBDPDIBC.BFLIOCNAGDJ > 0)
+                    {
+                        Progress.arenaFog = World.fog;
+                    }
+                    //Calc furniture we should have on custom arena
+                    GameObject[] announcerObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
+                    GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
+                    int steps = 0;
+                    if (World.ringShape > 0)
+                    {
+                        steps = 2;
+                    }
+                    EEMAHMPFFPJ.LDLJJPCMDOG = gameObjects.Length + (announcerObjects.Length * 3) + steps  - oldArenaFurnitureCount;
+                    oldArenaFurnitureCount = EEMAHMPFFPJ.LDLJJPCMDOG - steps;
+                    EEMAHMPFFPJ.JABCJBEPIMP = 0;
+                    int num = GCOCDCCEALD.EHMFNAMNKEA(World.location);
+                    if (GCOCDCCEALD.LDLJJPCMDOG < num)
+                    {
+                        GCOCDCCEALD.LDLJJPCMDOG = num;
+                    }
+                }
+                __instance.oldArena = World.location;
+            }
+            else
+            {
+                oldArenaFurnitureCount = 0;
+            }    
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
         public static void UpdatePostPatch()
@@ -604,6 +733,195 @@ public class ArenaPatch
             }
         }
     }
+
+    [HarmonyPatch(typeof(GMIKIMHFABP))]
+    public static class GMIKIMHFABPPrePatch
+    {
+        static int stored_BHDLBIFOONA;
+        static bool ifStatementOnePassed = false;
+        static bool ifStatementTwoPassed = false;
+        [HarmonyPrefix]
+        [HarmonyPatch("FPDABKEPGBE")]
+        public static void FPDABKEPGBEPrePatch(GMIKIMHFABP __instance)
+        {
+            
+            GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
+
+            if (pyroObjects.Length > 0)
+            {
+                if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 && __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast && __instance.OIHBMKLFEBJ > World.camSouth &&
+                    __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest && __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth && __instance.OIHBMKLFEBJ < World.farNorth &&
+                    __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) > 0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 || World.arenaShape * World.arenaBarriers == 0))
+                {
+                    ifStatementOnePassed = true;
+                }
+                else
+                {
+                    ifStatementOnePassed = false;
+                }
+
+                if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC && World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
+                {
+                    ifStatementTwoPassed = true;
+                }
+                else
+                {
+                    ifStatementTwoPassed = false;
+                }
+                //Set this to zero to stop original pyro from going off
+                stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
+                JGKBBDPDIBC.BHDLBIFOONA = 0;
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("FPDABKEPGBE")]
+        public static void FPDABKEPGBEPostPatch(GMIKIMHFABP __instance)
+        {
+            //Set GFEDPBPDALB.AFJDBIAFGKE back at postfix
+            JGKBBDPDIBC.BHDLBIFOONA = stored_BHDLBIFOONA;
+
+            if (ifStatementOnePassed)
+            {
+                if (ifStatementTwoPassed)
+                {
+                    GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
+
+                    foreach (GameObject pyroObject in pyroObjects)
+                    {
+                        Vector3 newPyroPosition = pyroObject.transform.position;
+
+                        if (__instance.IPNKFGHIDJP.pyro == 1 || __instance.IPNKFGHIDJP.pyro < 0)
+                        {
+                            EFIBMNEKJFB.NCANNKNAKBO(11, Color.white, 10f, null, 0f, newPyroPosition.y + 25f, newPyroPosition.z, 0f, 0f, 0.1f);
+                        }
+                        if (__instance.IPNKFGHIDJP.pyro == 2 || __instance.IPNKFGHIDJP.pyro < 0)
+                        {
+                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, -7f, newPyroPosition.y, newPyroPosition.z);
+                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, 7f, newPyroPosition.y, newPyroPosition.z);
+                        }
+                        if (__instance.IPNKFGHIDJP.pyro == 3 || __instance.IPNKFGHIDJP.pyro < 0)
+                        {
+                            JKPIHABGBGP.BDFEDMELBOL(__instance.BJANPGIFKHD, JKPIHABGBGP.GOBHIDLAEDF, -0.1f);
+                            EFIBMNEKJFB.NCANNKNAKBO(91, Color.white, 8f, null, 0f, newPyroPosition.y + 7f, newPyroPosition.z, 180f, 0.2f);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(GCOCDCCEALD))]
+    public static class GCOCDCCEALDPrePatch
+    {
+        internal static Vector3? newWeaponPosition;
+        internal static Vector3? newWeaponRotation;
+        internal static int customWeaponId;
+        internal static string customWeaponName;
+
+        public static string CustomWeaponName
+        {
+            get { return customWeaponName; }
+            set { customWeaponName = value; }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("FDJPDPPAGCL")]
+        public static void FDJPDPPAGCLPrePatch()
+        {
+            //Reset these to null so loading custom map second time onwards doesn't force all outside ring weapons to a weapon spawn point
+            GCOCDCCEALDPrePatch.newWeaponPosition = null;
+            GCOCDCCEALDPrePatch.newWeaponRotation = null;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("FDJPDPPAGCL")]
+        public static void FDJPDPPAGCLPostPatch()
+        {
+            newWeaponPosition = null;
+            newWeaponRotation = null;
+            weaponList = new List<string>();
+            System.Random random = new System.Random();
+
+            //Loops through here to add weapons, IJLDPEFGOOL = weapon ID
+            GameObject[] customWeaponObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("WeaponObject:")).ToArray();
+            foreach (GameObject customWeaponObject in customWeaponObjects)
+            {
+                string customWeaponName = customWeaponObject.name.Substring("WeaponObject:".Length);
+                //Remove numbers from end of the name
+                customWeaponName = Regex.Replace(customWeaponName, @"\d+$", string.Empty);
+                GCOCDCCEALDPrePatch.CustomWeaponName = customWeaponName;
+                newWeaponPosition = customWeaponObject.transform.position;
+                newWeaponRotation = customWeaponObject.transform.eulerAngles;
+
+                if (!weaponList.Contains(customWeaponObject.name))
+                {
+                    if (customWeaponName == "Random")
+                    {
+                        customWeaponId = random.Next(1, 68 + 1);
+                    }
+                    else
+                    {
+                        customWeaponId = GetWeaponMapping(customWeaponName);
+                    }
+                    weaponList.Add(customWeaponObject.name);
+                    if (customWeaponId != 0)
+                    {
+                        GCOCDCCEALD.LKMAEOFENHG(customWeaponId);
+                    }
+                }
+            }
+        }
+
+        static int GetWeaponMapping(string input)
+        {
+            if (weaponMappings == null)
+            {
+                //Make sure weaponMappings is populated before it is used.
+                ArenaPatch.CreateWeaponMapping();
+            }
+            if (weaponMappings.ContainsKey(input))
+            {
+                return weaponMappings[input];
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(HGBIFNCNACK))]
+    public static class HGBIFNCNACKPrePatch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("ICKGKDOKJEN")]
+        public static void ICKGKDOKJENPostPatch(int FANKAPIFBLO, int FDAMPNHCCHN, HGBIFNCNACK __instance, int IJLDPEFGOOL = 0)
+        {
+            if (GCOCDCCEALDPrePatch.newWeaponPosition != null && GCOCDCCEALDPrePatch.newWeaponRotation != null)
+            {
+                __instance.PPFFBIPHOEE = GCOCDCCEALDPrePatch.newWeaponPosition.Value.x;
+                __instance.PBFJIDAPJGL = GCOCDCCEALDPrePatch.newWeaponPosition.Value.y;
+                __instance.OIHBMKLFEBJ = GCOCDCCEALDPrePatch.newWeaponPosition.Value.z;
+                __instance.LHBBEOPJHHD = GCOCDCCEALDPrePatch.newWeaponRotation.Value.y;
+                float rotationX = GCOCDCCEALDPrePatch.newWeaponRotation.Value.x;
+                float rotationZ = GCOCDCCEALDPrePatch.newWeaponRotation.Value.z;
+                string weaponName = GCOCDCCEALDPrePatch.CustomWeaponName;
+                if (weaponName == "Random") {
+                    rotationX = 0f;
+                    __instance.LHBBEOPJHHD = JGKBBDPDIBC.OCMIPAODMHH(0, 359);
+                    rotationZ = 0f;
+                }
+                //Need to update these for weapons to allow pickup
+                __instance.EDHBIOFAKNL = __instance.PBFJIDAPJGL;
+                __instance.HCIPJDOLEGN = __instance.PPFFBIPHOEE;
+                __instance.GOGMLEFHKHE = __instance.EDHBIOFAKNL;
+                __instance.NHIBHMDBGMA = __instance.OIHBMKLFEBJ;
+                __instance.BCJHFHEJLJA = __instance.LHBBEOPJHHD;
+
+                __instance.BOBMFGJLKLH.transform.position = new Vector3(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ);
+                __instance.BOBMFGJLKLH.transform.eulerAngles = new Vector3(rotationX, __instance.LHBBEOPJHHD, rotationZ);
+=======
     [HarmonyPatch(typeof(OLIKHHKOACF))]
     public static class OLIKHHKOACF_Patch
     {
