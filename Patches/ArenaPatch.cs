@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using WECCL.Content;
 using Debug = UnityEngine.Debug;
@@ -671,6 +672,55 @@ public class ArenaPatch
     [HarmonyPatch(typeof(Scene_Match_Setup))]
     public static class Scene_Match_SetupPatch
     {
+        //oldArenaFurnitureCount used to make sure furniture number on custom arena is correct when swapping between multiple custom arenas
+        private static int oldArenaFurnitureCount;
+        [HarmonyPrefix]
+        [HarmonyPatch("Update")]
+        public static void UpdatePrePatch(Scene_Match_Setup __instance)
+        {
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                if (World.location != __instance.oldArena)
+                {
+                    if (World.location <= 1 && __instance.oldArena <= 1)
+                    {
+                        World.IEPBKKHOCIF(1);
+                    }
+                    else
+                    {
+                        World.ICKGKDOKJEN(1);
+                    }
+                    World.BMNCNDJBIGI();
+                    World.MLLMEPFEDMF();
+                    if (JGKBBDPDIBC.BFLIOCNAGDJ > 0)
+                    {
+                        Progress.arenaFog = World.fog;
+                    }
+                    //Calc furniture we should have on custom arena
+                    GameObject[] announcerObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
+                    GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
+                    int steps = 0;
+                    if (World.ringShape > 0)
+                    {
+                        steps = 2;
+                    }
+                    EEMAHMPFFPJ.LDLJJPCMDOG = gameObjects.Length + (announcerObjects.Length * 3) + steps  - oldArenaFurnitureCount;
+                    oldArenaFurnitureCount = EEMAHMPFFPJ.LDLJJPCMDOG - steps;
+                    EEMAHMPFFPJ.JABCJBEPIMP = 0;
+                    int num = GCOCDCCEALD.EHMFNAMNKEA(World.location);
+                    if (GCOCDCCEALD.LDLJJPCMDOG < num)
+                    {
+                        GCOCDCCEALD.LDLJJPCMDOG = num;
+                    }
+                }
+                __instance.oldArena = World.location;
+            }
+            else
+            {
+                oldArenaFurnitureCount = 0;
+            }    
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
         public static void UpdatePostPatch()
@@ -761,8 +811,24 @@ public class ArenaPatch
     public static class GCOCDCCEALDPrePatch
     {
         internal static Vector3? newWeaponPosition;
-        internal static Quaternion? newWeaponRotation;
+        internal static Vector3? newWeaponRotation;
         internal static int customWeaponId;
+        internal static string customWeaponName;
+
+        public static string CustomWeaponName
+        {
+            get { return customWeaponName; }
+            set { customWeaponName = value; }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("FDJPDPPAGCL")]
+        public static void FDJPDPPAGCLPrePatch()
+        {
+            //Reset these to null so loading custom map second time onwards doesn't force all outside ring weapons to a weapon spawn point
+            GCOCDCCEALDPrePatch.newWeaponPosition = null;
+            GCOCDCCEALDPrePatch.newWeaponRotation = null;
+        }
 
         [HarmonyPostfix]
         [HarmonyPatch("FDJPDPPAGCL")]
@@ -771,22 +837,23 @@ public class ArenaPatch
             newWeaponPosition = null;
             newWeaponRotation = null;
             weaponList = new List<string>();
+            System.Random random = new System.Random();
 
-            //Loops through here to add weapons... IJLDPEFGOOL = weapon ID
+            //Loops through here to add weapons, IJLDPEFGOOL = weapon ID
             GameObject[] customWeaponObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("WeaponObject:")).ToArray();
             foreach (GameObject customWeaponObject in customWeaponObjects)
             {
                 string customWeaponName = customWeaponObject.name.Substring("WeaponObject:".Length);
                 //Remove numbers from end of the name
                 customWeaponName = Regex.Replace(customWeaponName, @"\d+$", string.Empty);
+                GCOCDCCEALDPrePatch.CustomWeaponName = customWeaponName;
                 newWeaponPosition = customWeaponObject.transform.position;
-                newWeaponRotation = customWeaponObject.transform.rotation;
+                newWeaponRotation = customWeaponObject.transform.eulerAngles;
 
                 if (!weaponList.Contains(customWeaponObject.name))
                 {
                     if (customWeaponName == "Random")
                     {
-                        System.Random random = new System.Random();
                         customWeaponId = random.Next(1, 68 + 1);
                     }
                     else
@@ -829,8 +896,27 @@ public class ArenaPatch
         {
             if (GCOCDCCEALDPrePatch.newWeaponPosition != null && GCOCDCCEALDPrePatch.newWeaponRotation != null)
             {
-                __instance.BOBMFGJLKLH.transform.position = new Vector3(GCOCDCCEALDPrePatch.newWeaponPosition.Value.x, GCOCDCCEALDPrePatch.newWeaponPosition.Value.y, GCOCDCCEALDPrePatch.newWeaponPosition.Value.z);
-                __instance.BOBMFGJLKLH.transform.eulerAngles = new Vector3(GCOCDCCEALDPrePatch.newWeaponRotation.Value.x, GCOCDCCEALDPrePatch.newWeaponRotation.Value.y, GCOCDCCEALDPrePatch.newWeaponRotation.Value.z);
+                __instance.PPFFBIPHOEE = GCOCDCCEALDPrePatch.newWeaponPosition.Value.x;
+                __instance.PBFJIDAPJGL = GCOCDCCEALDPrePatch.newWeaponPosition.Value.y;
+                __instance.OIHBMKLFEBJ = GCOCDCCEALDPrePatch.newWeaponPosition.Value.z;
+                __instance.LHBBEOPJHHD = GCOCDCCEALDPrePatch.newWeaponRotation.Value.y;
+                float rotationX = GCOCDCCEALDPrePatch.newWeaponRotation.Value.x;
+                float rotationZ = GCOCDCCEALDPrePatch.newWeaponRotation.Value.z;
+                string weaponName = GCOCDCCEALDPrePatch.CustomWeaponName;
+                if (weaponName == "Random") {
+                    rotationX = 0f;
+                    __instance.LHBBEOPJHHD = JGKBBDPDIBC.OCMIPAODMHH(0, 359);
+                    rotationZ = 0f;
+                }
+                //Need to update these for weapons to allow pickup
+                __instance.EDHBIOFAKNL = __instance.PBFJIDAPJGL;
+                __instance.HCIPJDOLEGN = __instance.PPFFBIPHOEE;
+                __instance.GOGMLEFHKHE = __instance.EDHBIOFAKNL;
+                __instance.NHIBHMDBGMA = __instance.OIHBMKLFEBJ;
+                __instance.BCJHFHEJLJA = __instance.LHBBEOPJHHD;
+
+                __instance.BOBMFGJLKLH.transform.position = new Vector3(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ);
+                __instance.BOBMFGJLKLH.transform.eulerAngles = new Vector3(rotationX, __instance.LHBBEOPJHHD, rotationZ);
             }
         }
     }
