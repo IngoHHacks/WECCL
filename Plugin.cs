@@ -16,7 +16,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.3.2";
+    public const string PluginVer = "1.3.3";
 
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
@@ -78,8 +78,8 @@ public class Plugin : BaseUnityPlugin
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.58f;
 
-    public const bool PreRelease = true;
-    public static string[] PreReleaseReasons = { "GameUpdate" };
+    public const bool PreRelease = false;
+    public static string[] PreReleaseReasons = { };
 
     public static string[] EasterEggs =
     {
@@ -933,7 +933,8 @@ public class Plugin : BaseUnityPlugin
             int cur = 0;
             foreach (FileInfo file in files)
             {
-                BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(File.ReadAllText(file.FullName));
+                var json = File.ReadAllText(file.FullName);
+                BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
                 if (character == null)
                 {
                     Log.LogError($"Failed to import character from {file.FullName}.");

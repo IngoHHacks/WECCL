@@ -203,13 +203,18 @@ Characters are automatically exported to `./BepInEx/plugins/Export` when the gam
 
 ## Importing Characters
 
-Characters can be imported by placing a JSON file inside `./BepInEx/plugins/Import`. Make sure to set
-the `overrideMode` property to the desired mode.  
-`append` will add the imported character.  
-`override` will override the character with the same `id`.  
-`merge` will replace all non-default values of the character referenced by the `id`.
-Imported JSON files will be automatically deleted after the game is saved (unless the config
-option `DeleteImportedCharacters` is set to `false`).
+Characters can be imported by placing a JSON file inside `./BepInEx/plugins/Import` with the `.character` extension.
+The JSON file must contain a single object with:
+`characterData`: The character data to import. Typically obtained by exporting a character.  
+Optional properties:  
+`overrideMode`: `append`, `override`, or `merge`.
+`append` will add the imported character to the end of the character list.  
+`override` will override the character with the same `name` or `id` as the imported character.
+`merge` will replace all non-default values of the character referenced by the `name` or `id` with the values of the imported character.  
+Defaults to `append`.  
+`findMode`: Determines how the game will find the character to override/merge. `id` will use the id, `name` will use the name, and `name_then_id` will first try to find the character by name, and if that fails, by id. Defaults to `name_then_id`.  
+`findName`: Is the name of the character to find if `findMode` is set to `name` or `name_then_id`. If `findMode` is not set, `characterData.name` will be used.  
+Imported JSON files will be automatically deleted after the game is saved (unless the config option `DeleteImportedCharacters` is set to `false`).
 
 ## Uploading mods
 

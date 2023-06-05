@@ -123,12 +123,15 @@ internal class SaveFilePatch
             SaveRemapper.PatchCustomContent(ref GameSaveFile.IOKDNAOAENK);
             foreach (BetterCharacterDataFile file in ImportedCharacters)
             {
-                Plugin.Log.LogInfo($"Importing character {file.CharacterData.name} with id {file.CharacterData.id}.");
+                Plugin.Log.LogInfo($"Importing character {file.CharacterData.name ?? "null"} with id {file.CharacterData.id.ToString() ?? "null"}");
                 string nameWithGuid = file._guid;
-                string overrideMode = file.OverrideMode + file.FindMode;
-                Character importedCharacter =
-                    file.CharacterData.ToRegularCharacter(GameSaveFile.IOKDNAOAENK.savedChars);
-                
+                string overrideMode = file.OverrideMode + "-" + file.FindMode;
+                Character importedCharacter = null;
+                if (!overrideMode.Contains("merge"))
+                {
+                    importedCharacter = file.CharacterData.ToRegularCharacter(GameSaveFile.IOKDNAOAENK.savedChars);
+                }
+
                 bool previouslyImported = CheckIfPreviouslyImported(nameWithGuid);
 
                 overrideMode = overrideMode.ToLower();
@@ -235,10 +238,10 @@ internal class SaveFilePatch
                     case "merge-id":
                     case "merge-name":
                     case "merge-name_then_id":
-                        int id3 = (overrideMode.Contains("id") ? importedCharacter.id : -1);
+                        int id3 = (overrideMode.Contains("id") ? (file.CharacterData.id ?? -1) : -1);
                         if (overrideMode.Contains("name"))
                         {
-                            var find = file.FindName ?? importedCharacter.name;
+                            var find = file.FindName ?? file.CharacterData.name ?? throw new Exception($"No name found for file {nameWithGuid}");
                             try
                             {
                                 
@@ -251,38 +254,38 @@ internal class SaveFilePatch
                         }
                         if (id3 == -1)
                         {
-                            Plugin.Log.LogError($"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
+                            Plugin.Log.LogError($"Could not find character with id {file.CharacterData.id?.ToString() ?? "null"} and name {file.CharacterData.name ?? "null"} using override mode {overrideMode}. Skipping.");
                             break;
                         }
                         Character oldCharacter2 = GameSaveFile.IOKDNAOAENK.savedChars[id3];
                         file.CharacterData.MergeIntoCharacter(oldCharacter2);
 
                         GameSaveFile.IOKDNAOAENK.savedChars[id3] = oldCharacter2;
-                        if (importedCharacter.fed != oldCharacter2.fed)
+                        if (file.CharacterData.fed != null && file.CharacterData.fed.Value != oldCharacter2.fed)
                         {
-                            if (GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size + 1 ==
-                                GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster.Length)
+                            if (GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size + 1 ==
+                                GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster.Length)
                             {
-                                Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster,
-                                    GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size + 2);
-                                if (GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster.Length >
+                                Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster,
+                                    GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size + 2);
+                                if (GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster.Length >
                                     Characters.fedLimit)
                                 {
                                     Characters.fedLimit++;
                                 }
                             }
 
-                            GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size++;
-                            GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed]
-                                .roster[GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size] = id3;
+                            GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size++;
+                            GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value]
+                                .roster[GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size] = id3;
                             GameSaveFile.IOKDNAOAENK.savedFeds[oldCharacter2.fed].JHDJHBMIEOG(id3);
                         }
 
                         Plugin.Log.LogInfo(
-                            $"Imported character with id {id3} and name {importedCharacter.name}, merging with existing character: {oldCharacter2.name}.");
+                            $"Imported character with id {id3} and name {file.CharacterData.name ?? "null"}, merging with existing character: {oldCharacter2.name}.");
                         break;
                 }
-                ContentMappings.ContentMap.AddPreviouslyImportedCharacter(nameWithGuid, importedCharacter.id);
+                ContentMappings.ContentMap.AddPreviouslyImportedCharacter(nameWithGuid, importedCharacter?.id ?? file.CharacterData.id ?? -1);
             }
 
             GameSaveFile.IOKDNAOAENK.NCOHBLMFLLN(BHCMGLCHEGO);

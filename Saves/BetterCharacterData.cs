@@ -45,13 +45,13 @@ public class BetterCharacterData
 
     public BetterCostumeData[] costumeC;
 
-    public int[] scar = new int[17];
+    public int?[] scar = new int?[17];
 
-    public float[] stat = new float[7];
+    public float?[] stat = new float?[7];
 
-    public float[] oldStat = new float[7];
+    public float?[] oldStat = new float?[7];
 
-    public float[] newStat = new float[7];
+    public float?[] newStat = new float?[7];
 
     public float? health;
 
@@ -81,7 +81,7 @@ public class BetterCharacterData
 
     public int? oldFed;
 
-    public int[] experience = new int[11];
+    public int?[] experience = new int?[11];
 
     public string[] relationshipC = new string[7];
 
@@ -89,17 +89,17 @@ public class BetterCharacterData
 
     public int? agreement;
 
-    public int[] moveFront = new int[17];
+    public int?[] moveFront = new int?[17];
 
-    public int[] moveBack = new int[9];
+    public int?[] moveBack = new int?[9];
 
-    public int[] moveGround = new int[7];
+    public int?[] moveGround = new int?[7];
 
-    public int[] moveAttack = new int[9];
+    public int?[] moveAttack = new int?[9];
 
-    public int[] moveCrush = new int[9];
+    public int?[] moveCrush = new int?[9];
 
-    public int[] taunt = new int[4];
+    public int?[] taunt = new int?[4];
 
     public int? stance;
 
@@ -211,6 +211,43 @@ public class BetterCharacterData
     
     public void MergeIntoCharacter(Character character)
     {
-        JsonConvert.PopulateObject(JsonConvert.SerializeObject(this), character);
+        foreach (var field in typeof(BetterCharacterData).GetFields())
+        {
+            if (field.FieldType.IsArray)
+            {
+                var array = (Array) field.GetValue(this);
+                if (array == null)
+                {
+                    continue;
+                }
+                var allNull = true;
+                var allNonNull = true;
+                foreach (var element in array)
+                {
+                    if (element != null)
+                    {
+                        allNull = false;
+                    }
+                    else
+                    {
+                        allNonNull = false;
+                    }
+                }
+                if (allNull)
+                {
+                    field.SetValue(this, null);
+                }
+                else if (!allNonNull)
+                {
+                    throw new Exception("It is not possible to merge arrays with both null and non-null elements.");
+                }
+            }
+        }
+        
+        // Ignore nulls and nulls in arrays
+        JsonConvert.PopulateObject(JsonConvert.SerializeObject(this), character, new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        });
     }
 }

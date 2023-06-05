@@ -105,6 +105,9 @@ internal class ContentMappings
         }
         
         this.PreviouslyImportedCharacters.Add(name);
-        this.PreviouslyImportedCharacterIds.Add(id);
+        if (id > 0 && !this.PreviouslyImportedCharacterIds.Contains(id))
+        {
+            this.PreviouslyImportedCharacterIds.Add(id);
+        }
     }
 }
