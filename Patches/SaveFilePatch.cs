@@ -151,13 +151,13 @@ internal class SaveFilePatch
                             }
                             catch (Exception e)
                             {
-                                Plugin.Log.LogWarning($"Could not find character with name {find}, or multiple characters with the same name exist.");
+                                // ignored
                             }
                         }
 
                         if (id == -1)
                         {
-                            Plugin.Log.LogError($"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
+                            Plugin.Log.LogWarning($"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
                             break;
                         }
                         Character oldCharacter = GameSaveFile.IOKDNAOAENK.savedChars[id];
@@ -249,12 +249,12 @@ internal class SaveFilePatch
                             }
                             catch (Exception e)
                             {
-                                Plugin.Log.LogWarning($"Could not find character with name {find}, or multiple characters with the same name exist.");
+                                // ignored
                             }
                         }
                         if (id3 == -1)
                         {
-                            Plugin.Log.LogError($"Could not find character with id {file.CharacterData.id?.ToString() ?? "null"} and name {file.CharacterData.name ?? "null"} using override mode {overrideMode}. Skipping.");
+                            Plugin.Log.LogWarning($"Could not find character with id {file.CharacterData.id?.ToString() ?? "null"} and name {file.FindName ?? file.CharacterData.name ?? "null"} using override mode {overrideMode}. Skipping.");
                             break;
                         }
                         Character oldCharacter2 = GameSaveFile.IOKDNAOAENK.savedChars[id3];
