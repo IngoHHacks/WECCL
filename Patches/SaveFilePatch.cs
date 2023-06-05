@@ -141,13 +141,14 @@ internal class SaveFilePatch
                         int id = overrideMode.Contains("id") ? importedCharacter.id : -1;
                         if (overrideMode.Contains("name"))
                         {
+                            var find = file.FindName ?? importedCharacter.name;
                             try
                             {
-                                id = GameSaveFile.IOKDNAOAENK.savedChars.Single(c => c != null && c.name != null && c.name == importedCharacter.name).id;
+                                id = GameSaveFile.IOKDNAOAENK.savedChars.Single(c => c != null && c.name != null && c.name == find).id;
                             }
                             catch (Exception e)
                             {
-                                Plugin.Log.LogWarning($"Could not find character with name {importedCharacter.name}, or multiple characters with the same name.");
+                                Plugin.Log.LogWarning($"Could not find character with name {find}, or multiple characters with the same name exist.");
                             }
                         }
 
@@ -237,13 +238,15 @@ internal class SaveFilePatch
                         int id3 = (overrideMode.Contains("id") ? importedCharacter.id : -1);
                         if (overrideMode.Contains("name"))
                         {
+                            var find = file.FindName ?? importedCharacter.name;
                             try
                             {
-                                id3 = GameSaveFile.IOKDNAOAENK.savedChars.Single(c => c != null && c.name != null && c.name == importedCharacter.name).id;
+                                
+                                id3 = GameSaveFile.IOKDNAOAENK.savedChars.Single(c => c != null && c.name != null && c.name == find).id;
                             }
                             catch (Exception e)
                             {
-                                Plugin.Log.LogWarning($"Could not find character with name {importedCharacter.name}, or multiple characters with the same name.");
+                                Plugin.Log.LogWarning($"Could not find character with name {find}, or multiple characters with the same name exist.");
                             }
                         }
                         if (id3 == -1)

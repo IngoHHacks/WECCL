@@ -7,6 +7,7 @@ public class BetterCharacterDataFile
     public BetterCharacterData characterData;
     public string overrideMode;
     public string findMode;
+    public string findName;
 
     internal string _guid;
     
@@ -19,7 +20,6 @@ public class BetterCharacterDataFile
             {
                 return new BetterCharacterData();
             }
-
             return characterData;
         }
     }
@@ -33,7 +33,6 @@ public class BetterCharacterDataFile
             {
                 return "append";
             }
-
             return overrideMode;
         }
     }
@@ -47,8 +46,10 @@ public class BetterCharacterDataFile
             {
                 return this.overrideMode == "append" ? "" : "name_then_id";
             }
-
             return this.findMode;
         }
     }
+    
+    [JsonIgnore]
+    public string FindName => this.findName;
 }
