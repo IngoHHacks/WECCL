@@ -241,7 +241,6 @@ public class WorldPatch
                 GameCollision.DKPMHGHNHEH[peifijckaoc].EDHBIOFAKNL = worldCorners[0].y;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].DIDCENDAHFF = 1;
-                //Below controls the type of collision, tempted to replicate this foreach loop for other object names for other collision types like "Cage"
                 GameCollision.DKPMHGHNHEH[peifijckaoc].BGJDFONPLFK = "Barrier";
                 GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[1] = worldCorners[4].x + 2.5f;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[1] = worldCorners[4].z + 2.5f;
@@ -252,6 +251,54 @@ public class WorldPatch
                 GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[2] = worldCorners[0].x + 2.5f;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[2] = worldCorners[0].z - 2.5f;
             }
+
+            foreach (GameObject gameObject in (from t in World.gArena.GetComponentsInChildren<Transform>()
+                                               where t.gameObject != null && t.gameObject.name.StartsWith("Fence_Climbables")
+                                               select t.gameObject).ToArray<GameObject>())
+            {
+                MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
+
+                Bounds bounds = meshCollider.sharedMesh.bounds;
+
+                Vector3 center = bounds.center;
+                Vector3 extents = bounds.extents;
+
+                // Calculate the 8 corners of the bounding box
+                Vector3[] corners = new Vector3[8];
+                corners[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
+                corners[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
+                corners[2] = center + new Vector3(extents.x, -extents.y, extents.z);
+                corners[3] = center + new Vector3(extents.x, -extents.y, -extents.z);
+                corners[4] = center + new Vector3(-extents.x, extents.y, -extents.z);
+                corners[5] = center + new Vector3(-extents.x, extents.y, extents.z);
+                corners[6] = center + new Vector3(extents.x, extents.y, extents.z);
+                corners[7] = center + new Vector3(extents.x, extents.y, -extents.z);
+
+                // Get the 8 corners of the bounding box as world position
+                Vector3[] worldCorners = new Vector3[corners.Length];
+                for (int i = 0; i < corners.Length; i++)
+                {
+                    worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
+                }
+
+                GameCollision.BELIFAOEFAK++;
+                int peifijckaoc = GameCollision.BELIFAOEFAK;
+                GameCollision.LKMAEOFENHG();
+                GameCollision.DKPMHGHNHEH[peifijckaoc].EPGJJDJAACP = 0f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].EDHBIOFAKNL = worldCorners[0].y;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].DIDCENDAHFF = 1;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].BGJDFONPLFK = "Cage";
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[1] = worldCorners[4].x + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[1] = worldCorners[4].z + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[4] = worldCorners[7].x - 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[4] = worldCorners[7].z + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[3] = worldCorners[3].x - 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[3] = worldCorners[3].z - 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[2] = worldCorners[0].x + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[2] = worldCorners[0].z - 2.5f;
+            }
+
             for (GameCollision.BELIFAOEFAK = last + 1; GameCollision.BELIFAOEFAK <= GameCollision.DGPJFOABPND; GameCollision.BELIFAOEFAK++)
             {
                 if (GameCollision.DKPMHGHNHEH[GameCollision.BELIFAOEFAK].HFNGNNHNFIC != null)
