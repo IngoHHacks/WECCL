@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using WECCL.Content;
 using Debug = UnityEngine.Debug;
@@ -285,7 +284,44 @@ public class ArenaPatch
                 }
             }
         }
-        
+
+        [HarmonyPatch(typeof(GMIKIMHFABP))]
+        public static class GMIKIMHFABPPatch
+        {
+            public static int storedValue;
+            [HarmonyPrefix]
+            [HarmonyPatch("GCGDPDLEHPH")]
+            public static void GCGDPDLEHPHPatch(GMIKIMHFABP __instance)
+            {
+                GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
+                GameObject[] announcerFreezeObj = objects.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
+                if (announcerFreezeObj != null)
+                {
+                    if (__instance.MMDNKLMAOEF == 0)
+                    {
+                        storedValue = __instance.KEBLMJDJIFJ;
+                        __instance.KEBLMJDJIFJ = 0;
+                    }
+                }
+            }
+            [HarmonyPostfix]
+            [HarmonyPatch("GCGDPDLEHPH")]
+            public static void GCGDPDLEHPHPostPatch(GMIKIMHFABP __instance)
+            {
+                GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
+                GameObject[] announcerFreezeObj = objects.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
+                if (announcerFreezeObj != null)
+                {
+                    if (__instance.MMDNKLMAOEF == 0)
+                    {
+                        if (storedValue != __instance.KEBLMJDJIFJ)
+                        {
+                            __instance.KEBLMJDJIFJ = storedValue;
+                        }
+                    }
+                }
+            }
+        }
 
         [HarmonyPostfix]
         [HarmonyPatch("PKHEPCDDIBM")]
@@ -562,7 +598,7 @@ public class ArenaPatch
                     num = ELMNDAABAFD;
                 }
             }
-            //Reset customY to 0 before leaving
+            
             __result = num;
 
             void CustomGameObjectSpawner(GameObject customObject)
@@ -665,6 +701,9 @@ public class ArenaPatch
                 __instance.GOGMLEFHKHE = yOverride;
                 __instance.PBFJIDAPJGL = yOverride;
                 __instance.EDHBIOFAKNL = yOverride;
+
+                //Set yOverride back to 0 afterwards so going to another map doesn't spawn all furniture in the air...
+                yOverride = 0f;
             }
         }
     }
