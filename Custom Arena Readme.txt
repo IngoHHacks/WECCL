@@ -38,5 +38,6 @@ Belt, Microphone, Camera, Bell, Explosive, Baseball Bat, Chair, Cage Piece, Wood
 
 In addition, you can use "WeaponObject:Random", "WeaponObject:Random2" etc to spawn a random weapon at a fixed location (This will also sometimes spawn nothing if it randomly hits a weapon that doesn't work)
 
+-If you have announce desk further from ring and find your announcers leave their seats to go stand at ringside, simply make an object called "AnnouncerFreeze" and the mod will disable the announcer AI so they don't leave their chairs.
 
 Any questions try the modding discord here: https://discord.gg/mH56AhUwPR
