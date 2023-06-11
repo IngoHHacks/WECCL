@@ -2,6 +2,11 @@
 
 public static class Secrets
 {
+    // Easter eggs
+    // Feel free to add your own easter eggs here!
+    // Please keep them appropriate, though.
+    // Please also keep them in alphabetical order.
+    // Easter eggs are randomly selected from this list, 1/100 chance to be printed to the console when the mod is loaded.
     public static string[] EasterEggs =
     { 
         "A dog by the name of Ingo appears. He looks at you, then speaks \"Please don't use this mod. It's bad.\" He then disappears.",
@@ -39,14 +44,14 @@ public static class Secrets
         "Ingo is not responsible for any damage caused by this mod. This includes, but is not limited to: broken game saves, broken game files, broken game, broken computer, nightmares, vomiting, increased risk of heart attack, increased risk of cancer, increased risk of being eaten by a giant spider, and death.",
         "Ingo says \"hi\".",
         "Ingo, if you're reading this, your egg shell hat is stupid. Like, really stupid.",
-        "It is the year 2473. Mat Dickie pushed out another update for Wrestling Empire that broke all the mods. Ingo is still trying to fix his mod. He has been trying to fix it for over 400 years. He is still not done.",
+        $"It is the year { DateTime.Now.Year + 450 }. Mat Dickie pushed out another update for Wrestling Empire that broke all the mods. Ingo is still trying to fix his mod. He has been trying to fix it for 450 years. He is still not done.",
         "It's said that if you say \"WECCL\" three times in front of a mirror, you will be visited by the ghost of Mat Dickie.",
         "Jabroni: *exists* Ingo: *paw driver*",
         "Let's play a game. In front of you, there is a button. The button will make Mat Dickie become real. It will also make him come to your house and break your computer. Do you press the button?",
         "Let's play a game. It's called \"Mat Breaks Mods\". It's a very fun game.",
         "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM Oh sorry, wrong textbox.",
         "Mat Dickie's game reminds me of the time I was in a wrestling match with him. I was about to win, but then he pulled out a gun and shot me. I died. The end.",
-        "Mat Stop Breaking Mods Challenge 2023 (IMPOSSIBLE?) (GONE WRONG) (GONE SEXUAL) (GONE MAT DICKIE) (SUBSCRIBE TO INGOH) (NOT CLICKBAIT) (POLICE CALLED)",
+        $"Mat Stop Breaking Mods Challenge { DateTime.Now.Year } (IMPOSSIBLE?) (GONE WRONG) (GONE SEXUAL) (GONE MAT DICKIE) (SUBSCRIBE TO INGOH) (NOT CLICKBAIT) (POLICE CALLED)",
         "Mat, if you're reading this, please stop breaking my mod. Thanks.",
         "Mat, this is your conscience speaking. Your conscience is telling you to make the deobfuscation mappings public.",
         "Never gonna give you up, never gonna let you down, never gonna run around and desert you. Never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you.",
@@ -103,7 +108,7 @@ public static class Secrets
         "You have been found guilty of the crime of \"being a Jabroni\". Your punishment is \"receiving a stunner\".",
         "You're a Jabroni, Harry.",
         "Your feedback is important to us. If you have any, please shout it into the void. We will not listen to it, but it will make you feel better.",
-        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     };
 }
         
