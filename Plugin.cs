@@ -95,10 +95,10 @@ public class Plugin : BaseUnityPlugin
             }
             // End of keep on top
 
-            if (Random.Range(0, 100) == 0)
+            var egg = Secrets.GetEasterEgg();
+            if (egg != null)
             {
-                var easterEgg = Secrets.EasterEggs[Random.Range(0, Secrets.EasterEggs.Length)];
-                Log.LogInfo(easterEgg);
+                Log.LogInfo(egg);
             }
 
 

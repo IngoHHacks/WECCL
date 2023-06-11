@@ -12,7 +12,10 @@ public class MetaFile
     public bool HidePriorityScreenNextTime { get; set; } = false;
     
     public bool FirstLaunch { get; set; } = true;
-   
+    
+    public int TimesLaunched { get; set; } = 0;
+    
+    public string PreviousUser { get; set; } = "";
 
     public void Save()
     {
@@ -34,12 +37,21 @@ public class MetaFile
 
             string json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<MetaFile>(json,
-                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }).IncrementTimesLaunched();
         }
         catch (Exception e)
         {
             Plugin.Log.LogError($"Unable to load meta file: {e}");
             return new MetaFile();
         }
+    }
+    
+    public MetaFile IncrementTimesLaunched()
+    {
+        if (TimesLaunched != int.MaxValue)
+        {
+            TimesLaunched++;
+        }
+        return this;
     }
 }

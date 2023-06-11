@@ -63,7 +63,7 @@
         <!-- Comment the lines below if you don't want to automatically copy the plugin to BepInEx -->
         <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(BepInExPath)\plugins" />
         <Move SourceFiles="$(OutputPath)\$(AssemblyName).pdb" DestinationFolder="$(BepInExPath)\plugins" />
-        <MakeDir Directories="$(OutputPath)\plugins"/>
+        <MakeDir Directories="$(OutputPath)\plugins" />
         <Move SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(OutputPath)\plugins" />
     </Target>
     
