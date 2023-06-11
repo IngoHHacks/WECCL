@@ -782,40 +782,44 @@ public class ArenaPatch
     [HarmonyPatch(typeof(GMIKIMHFABP))]
     public static class GMIKIMHFABPPrePatch
     {
-        static int stored_BHDLBIFOONA;
+        static int stored_BHDLBIFOONA = 0;
         static bool ifStatementOnePassed = false;
         static bool ifStatementTwoPassed = false;
         [HarmonyPrefix]
         [HarmonyPatch("FPDABKEPGBE")]
         public static void FPDABKEPGBEPrePatch(GMIKIMHFABP __instance)
         {
-            
-            GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
 
-            if (pyroObjects.Length > 0)
+            if (World.location > VanillaCounts.NoLocations)
             {
-                if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 && __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast && __instance.OIHBMKLFEBJ > World.camSouth &&
-                    __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest && __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth && __instance.OIHBMKLFEBJ < World.farNorth &&
-                    __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) > 0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 || World.arenaShape * World.arenaBarriers == 0))
-                {
-                    ifStatementOnePassed = true;
-                }
-                else
-                {
-                    ifStatementOnePassed = false;
-                }
+                GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
 
-                if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC && World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
+                if (pyroObjects.Length > 0)
                 {
-                    ifStatementTwoPassed = true;
+                    if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 && __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast && __instance.OIHBMKLFEBJ > World.camSouth &&
+                        __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest && __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth && __instance.OIHBMKLFEBJ < World.farNorth &&
+                        __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) > 0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 || World.arenaShape * World.arenaBarriers == 0))
+                    {
+                        ifStatementOnePassed = true;
+                    }
+                    else
+                    {
+                        ifStatementOnePassed = false;
+                    }
+
+                    if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC && World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
+                    {
+                        ifStatementTwoPassed = true;
+                    }
+                    else
+                    {
+                        ifStatementTwoPassed = false;
+                    }
+                    //Set this to zero to stop original pyro from going off
+                    stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
+                    Debug.LogError("Pre Patch JGKBBDPDIBC.BHDLBIFOONA" + JGKBBDPDIBC.BHDLBIFOONA);
+                    JGKBBDPDIBC.BHDLBIFOONA = 0;
                 }
-                else
-                {
-                    ifStatementTwoPassed = false;
-                }
-                //Set this to zero to stop original pyro from going off
-                stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
-                JGKBBDPDIBC.BHDLBIFOONA = 0;
             }
         }
 
@@ -824,7 +828,10 @@ public class ArenaPatch
         public static void FPDABKEPGBEPostPatch(GMIKIMHFABP __instance)
         {
             //Set GFEDPBPDALB.AFJDBIAFGKE back at postfix
-            JGKBBDPDIBC.BHDLBIFOONA = stored_BHDLBIFOONA;
+            if (stored_BHDLBIFOONA != 0)
+            {
+                JGKBBDPDIBC.BHDLBIFOONA = stored_BHDLBIFOONA;
+            }
 
             if (ifStatementOnePassed)
             {
