@@ -33,7 +33,7 @@
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <Folder Include="lib" />
     </ItemGroup>
@@ -41,10 +41,28 @@
     <ItemGroup>
         <Reference Include="Assembly-CSharp">
             <HintPath>lib\Assembly-CSharp_public.dll</HintPath>
+            <Private>false</Private>
         </Reference>
         <Reference Include="UnityEngine.UI">
             <HintPath>lib\UnityEngine.UI.dll</HintPath>
+            <Private>false</Private>
         </Reference>
     </ItemGroup>
 
+    <PropertyGroup>
+        <!-- Change this to the BepInEx folder of your game if necessary -->
+        <BepInExPath>C:\Program Files (x86)\Steam\steamapps\common\Wrestling Empire\BepInEx</BepInExPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <Content Include="*.md;*.txt;*.json;*.png" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    
+    <Target Name="PostBuild" AfterTargets="Build">
+        <Delete Files="$(OutputPath)\$(AssemblyName).deps.json" />
+        <!-- Comment the two lines below if you don't want to automatically copy the plugin to BepInEx -->
+        <Move SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(BepInExPath)\plugins" />
+        <Move SourceFiles="$(OutputPath)\$(AssemblyName).pdb" DestinationFolder="$(BepInExPath)\plugins" />
+    </Target>
+    
 </Project>
