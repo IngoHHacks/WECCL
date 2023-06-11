@@ -13,6 +13,7 @@ public class ArenaPatch
     public static List<string> weaponList;
     public static float yOverride;
     public static int NoOriginalLocationsValue;
+    public static bool freezeAnnouncers = false;
 
     private void Awake()
     {
@@ -294,9 +295,7 @@ public class ArenaPatch
             [HarmonyPatch("GCGDPDLEHPH")]
             public static void GCGDPDLEHPHPatch(GMIKIMHFABP __instance)
             {
-                GameObject[] objects = Object.FindObjectsOfType<GameObject>();
-                GameObject[] announcerFreezeObj = objects.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
-                if (announcerFreezeObj.Length > 0)
+                if (freezeAnnouncers)
                 {
                     if (__instance.MMDNKLMAOEF == 0)
                     {
@@ -309,9 +308,7 @@ public class ArenaPatch
             [HarmonyPatch("GCGDPDLEHPH")]
             public static void GCGDPDLEHPHPostPatch(GMIKIMHFABP __instance)
             {
-                GameObject[] objects = Object.FindObjectsOfType<GameObject>();
-                GameObject[] announcerFreezeObj = objects.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
-                if (announcerFreezeObj.Length > 0)
+                if (freezeAnnouncers)
                 {
                     if (__instance.MMDNKLMAOEF == 0 && storedValue != __instance.KEBLMJDJIFJ)
                     {
@@ -327,6 +324,17 @@ public class ArenaPatch
         {
             if (World.location > VanillaCounts.NoLocations)
             {
+                GameObject[] freezeObj = Object.FindObjectsOfType<GameObject>();
+                GameObject[] announcerFreezeObj = freezeObj.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
+                if (announcerFreezeObj.Length > 0)
+                {
+                    freezeAnnouncers = true;
+                }
+                else
+                {
+                    freezeAnnouncers = false;
+                }
+
                 GameObject[] objects = Object.FindObjectsOfType<GameObject>();
                 float camDistanceFloat = new();
 
