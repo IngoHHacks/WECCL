@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using WECCL.Content;
 using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
 
@@ -293,9 +294,9 @@ public class ArenaPatch
             [HarmonyPatch("GCGDPDLEHPH")]
             public static void GCGDPDLEHPHPatch(GMIKIMHFABP __instance)
             {
-                GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
+                GameObject[] objects = Object.FindObjectsOfType<GameObject>();
                 GameObject[] announcerFreezeObj = objects.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
-                if (announcerFreezeObj != null)
+                if (announcerFreezeObj.Length > 0)
                 {
                     if (__instance.MMDNKLMAOEF == 0)
                     {
@@ -308,16 +309,13 @@ public class ArenaPatch
             [HarmonyPatch("GCGDPDLEHPH")]
             public static void GCGDPDLEHPHPostPatch(GMIKIMHFABP __instance)
             {
-                GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
+                GameObject[] objects = Object.FindObjectsOfType<GameObject>();
                 GameObject[] announcerFreezeObj = objects.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
-                if (announcerFreezeObj != null)
+                if (announcerFreezeObj.Length > 0)
                 {
-                    if (__instance.MMDNKLMAOEF == 0)
+                    if (__instance.MMDNKLMAOEF == 0 && storedValue != __instance.KEBLMJDJIFJ)
                     {
-                        if (storedValue != __instance.KEBLMJDJIFJ)
-                        {
-                            __instance.KEBLMJDJIFJ = storedValue;
-                        }
+                        __instance.KEBLMJDJIFJ = storedValue;
                     }
                 }
             }
@@ -329,12 +327,12 @@ public class ArenaPatch
         {
             if (World.location > VanillaCounts.NoLocations)
             {
-                GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
-                float camDistanceFloat = new float();
+                GameObject[] objects = Object.FindObjectsOfType<GameObject>();
+                float camDistanceFloat = new();
 
                 string desiredName = "camDistance";
                 GameObject[] camDistanceObj = objects.Where(obj => obj.name.StartsWith(desiredName)).ToArray();
-                if (camDistanceObj != null)
+                if (camDistanceObj.Length > 0)
                 {
                     string[] camDistance = camDistanceObj.Select(obj => obj.name.Substring(desiredName.Length)).ToArray();
 

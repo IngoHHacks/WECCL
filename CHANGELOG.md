@@ -2,6 +2,9 @@
 
 ## GV 1.58:
 
+### Release 1.3.5
+- Fixed announcer AI always being disabled.
+
 ### Release 1.3.4
 - Added an option to disable announcer AI in custom arenas.
 - Added climbable cage support for custom arenas.
