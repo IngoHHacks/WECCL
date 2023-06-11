@@ -2,8 +2,10 @@
 
 ## GV 1.58:
 
-### Release 1.3.6
+### Release 1.3.7
 - Fixed the 'Special FX' setting being set to 0 when using vanilla arenas.
+
+### Release 1.3.6
 - Fixed performance issues for large matches.
 
 ### Release 1.3.5
