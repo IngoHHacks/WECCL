@@ -962,7 +962,7 @@ public class Plugin : BaseUnityPlugin
 
             if (ImportedCharacters.Count > 0)
             {
-                Log.LogInfo($"Imported {ImportedCharacters.Count} characters from {dir.FullName}");
+                Log.LogInfo($"Imported {ImportedCharacters.Count} character(s) from {dir.FullName}");
             }
         }
         catch (Exception e)

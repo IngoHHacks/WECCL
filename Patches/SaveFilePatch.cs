@@ -123,92 +123,67 @@ internal class SaveFilePatch
             SaveRemapper.PatchCustomContent(ref GameSaveFile.IOKDNAOAENK);
             foreach (BetterCharacterDataFile file in ImportedCharacters)
             {
-                Plugin.Log.LogInfo($"Importing character {file.CharacterData.name ?? "null"} with id {file.CharacterData.id.ToString() ?? "null"}");
                 string nameWithGuid = file._guid;
                 string overrideMode = file.OverrideMode + "-" + file.FindMode;
-                Character importedCharacter = null;
-                if (!overrideMode.Contains("merge"))
+                overrideMode = overrideMode.ToLower();
+                if (overrideMode.EndsWith("-"))
                 {
-                    importedCharacter = file.CharacterData.ToRegularCharacter(GameSaveFile.IOKDNAOAENK.savedChars);
+                    overrideMode = overrideMode.Substring(0, overrideMode.Length - 1);
                 }
 
-                bool previouslyImported = CheckIfPreviouslyImported(nameWithGuid);
-
-                overrideMode = overrideMode.ToLower();
-                
-                switch (overrideMode)
+                try
                 {
-                    case "override-id":
-                    case "override-name":
-                    case "override-name_then_id":
-                        int id = overrideMode.Contains("id") ? importedCharacter.id : -1;
-                        if (overrideMode.Contains("name"))
-                        {
-                            var find = file.FindName ?? importedCharacter.name;
-                            try
-                            {
-                                id = GameSaveFile.IOKDNAOAENK.savedChars.Single(c => c != null && c.name != null && c.name == find).id;
-                            }
-                            catch (Exception e)
-                            {
-                                // ignored
-                            }
-                        }
+                    if (!overrideMode.Contains("append"))
+                    {
+                        Plugin.Log.LogInfo(
+                            $"Importing character {file.CharacterData.name ?? "null"} with id {file.CharacterData.id.ToString() ?? "null"} using mode {overrideMode}");
+                    }
+                    else
+                    {
+                        Plugin.Log.LogInfo(
+                            $"Appending character {file.CharacterData.name ?? "null"} to next available id using mode {overrideMode}");
+                    }
 
-                        if (id == -1)
-                        {
-                            Plugin.Log.LogWarning($"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
-                            break;
-                        }
-                        Character oldCharacter = GameSaveFile.IOKDNAOAENK.savedChars[id];
-                        string name = importedCharacter.name;
-                        string oldCharacterName = oldCharacter.name;
-                        GameSaveFile.IOKDNAOAENK.savedChars[id] = importedCharacter;
-                        if (importedCharacter.fed != oldCharacter.fed)
-                        {
-                            if (GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size + 1 ==
-                                GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster.Length)
+                    Character importedCharacter = null;
+                    if (!overrideMode.Contains("merge"))
+                    {
+                        importedCharacter = file.CharacterData.ToRegularCharacter(GameSaveFile.IOKDNAOAENK.savedChars);
+                    }
+
+                    bool previouslyImported = CheckIfPreviouslyImported(nameWithGuid);
+
+                    switch (overrideMode)
+                    {
+                        case "override-id":
+                        case "override-name":
+                        case "override-name_then_id":
+                            int id = overrideMode.Contains("id") ? importedCharacter.id : -1;
+                            if (overrideMode.Contains("name"))
                             {
-                                Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster,
-                                    GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size + 2);
-                                if (GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster.Length >
-                                    Characters.fedLimit)
+                                var find = file.FindName ?? importedCharacter.name;
+                                try
                                 {
-                                    Characters.fedLimit++;
+                                    id = GameSaveFile.IOKDNAOAENK.savedChars
+                                        .Single(c => c != null && c.name != null && c.name == find).id;
+                                }
+                                catch (Exception e)
+                                {
+                                    // ignored
                                 }
                             }
 
-                            GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size++;
-                            GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed]
-                                .roster[GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size] = id;
-                            GameSaveFile.IOKDNAOAENK.savedFeds[oldCharacter.fed].JHDJHBMIEOG(id);
-                        }
-
-                        Plugin.Log.LogInfo(
-                            $"Imported character with id {id} and name {name}, overwriting character with name {oldCharacterName}.");
-                        break;
-                    case "append":
-                        if (!previouslyImported)
-                        {
-                            int id2 = Characters.no_chars + 1;
-                            importedCharacter.id = id2;
-                            if (GameSaveFile.IOKDNAOAENK.savedChars.Length <= id2)
-                            {
-                                Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedChars, id2 + 1);
-                                Array.Resize(ref GameSaveFile.IOKDNAOAENK.charUnlock, id2 + 1);
-                                Array.Resize(ref Characters.c, id2 + 1);
-                                Array.Resize(ref Progress.charUnlock, id2 + 1);
-                                GameSaveFile.IOKDNAOAENK.charUnlock[id2] = 1;
-                                Progress.charUnlock[id2] = 1;
-                            }
-                            else
+                            if (id == -1)
                             {
                                 Plugin.Log.LogWarning(
-                                    $"The array of characters is larger than the number of characters. This should not happen. The character {GameSaveFile.IOKDNAOAENK.savedChars[id2].name} will be overwritten.");
+                                    $"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
+                                break;
                             }
 
-                            GameSaveFile.IOKDNAOAENK.savedChars[id2] = importedCharacter;
-                            if (importedCharacter.fed != 0)
+                            Character oldCharacter = GameSaveFile.IOKDNAOAENK.savedChars[id];
+                            string name = importedCharacter.name;
+                            string oldCharacterName = oldCharacter.name;
+                            GameSaveFile.IOKDNAOAENK.savedChars[id] = importedCharacter;
+                            if (importedCharacter.fed != oldCharacter.fed)
                             {
                                 if (GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size + 1 ==
                                     GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster.Length)
@@ -224,74 +199,140 @@ internal class SaveFilePatch
 
                                 GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size++;
                                 GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed]
-                                    .roster[GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size] = id2;
+                                    .roster[GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size] = id;
+                                GameSaveFile.IOKDNAOAENK.savedFeds[oldCharacter.fed].JHDJHBMIEOG(id);
                             }
 
-                            Characters.no_chars++;
                             Plugin.Log.LogInfo(
-                                $"Imported character with id {id2} and name {importedCharacter.name}. Incremented number of characters to {Characters.no_chars}.");
+                                $"Imported character with id {id} and name {name}, overwriting character with name {oldCharacterName}.");
                             break;
-                        }
-                        importedCharacter.id = GetPreviouslyImportedId(nameWithGuid);
-                        overrideMode = "merge-name_then_id";
-                        goto case "merge-name_then_id";
-                    case "merge-id":
-                    case "merge-name":
-                    case "merge-name_then_id":
-                        int id3 = (overrideMode.Contains("id") ? (file.CharacterData.id ?? -1) : -1);
-                        if (overrideMode.Contains("name"))
-                        {
-                            var find = file.FindName ?? file.CharacterData.name ?? throw new Exception($"No name found for file {nameWithGuid}");
-                            try
+                        case "append":
+                            if (!previouslyImported)
                             {
-                                
-                                id3 = GameSaveFile.IOKDNAOAENK.savedChars.Single(c => c != null && c.name != null && c.name == find).id;
-                            }
-                            catch (Exception e)
-                            {
-                                // ignored
-                            }
-                        }
-                        if (id3 == -1)
-                        {
-                            Plugin.Log.LogWarning($"Could not find character with id {file.CharacterData.id?.ToString() ?? "null"} and name {file.FindName ?? file.CharacterData.name ?? "null"} using override mode {overrideMode}. Skipping.");
-                            break;
-                        }
-                        Character oldCharacter2 = GameSaveFile.IOKDNAOAENK.savedChars[id3];
-                        file.CharacterData.MergeIntoCharacter(oldCharacter2);
-
-                        GameSaveFile.IOKDNAOAENK.savedChars[id3] = oldCharacter2;
-                        if (file.CharacterData.fed != null && file.CharacterData.fed.Value != oldCharacter2.fed)
-                        {
-                            if (GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size + 1 ==
-                                GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster.Length)
-                            {
-                                Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster,
-                                    GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size + 2);
-                                if (GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster.Length >
-                                    Characters.fedLimit)
+                                Plugin.Log.LogInfo(
+                                    $"Appending character {importedCharacter.name ?? "null"} to next available id.");
+                                int id2 = Characters.no_chars + 1;
+                                importedCharacter.id = id2;
+                                if (GameSaveFile.IOKDNAOAENK.savedChars.Length <= id2)
                                 {
-                                    Characters.fedLimit++;
+                                    Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedChars, id2 + 1);
+                                    Array.Resize(ref GameSaveFile.IOKDNAOAENK.charUnlock, id2 + 1);
+                                    Array.Resize(ref Characters.c, id2 + 1);
+                                    Array.Resize(ref Progress.charUnlock, id2 + 1);
+                                    GameSaveFile.IOKDNAOAENK.charUnlock[id2] = 1;
+                                    Progress.charUnlock[id2] = 1;
+                                }
+                                else
+                                {
+                                    Plugin.Log.LogWarning(
+                                        $"The array of characters is larger than the number of characters. This should not happen. The character {GameSaveFile.IOKDNAOAENK.savedChars[id2].name} will be overwritten.");
+                                }
+
+                                GameSaveFile.IOKDNAOAENK.savedChars[id2] = importedCharacter;
+                                if (importedCharacter.fed != 0)
+                                {
+                                    if (GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size + 1 ==
+                                        GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster.Length)
+                                    {
+                                        Array.Resize(
+                                            ref GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster,
+                                            GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size + 2);
+                                        if (GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].roster.Length >
+                                            Characters.fedLimit)
+                                        {
+                                            Characters.fedLimit++;
+                                        }
+                                    }
+
+                                    GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size++;
+                                    GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed]
+                                        .roster[GameSaveFile.IOKDNAOAENK.savedFeds[importedCharacter.fed].size] = id2;
+                                }
+
+                                Characters.no_chars++;
+                                Plugin.Log.LogInfo(
+                                    $"Imported character with id {id2} and name {importedCharacter.name}. Incremented number of characters to {Characters.no_chars}.");
+                                break;
+                            }
+                            Plugin.Log.LogInfo($"Character with name {importedCharacter.name} was previously imported, merging.");
+                            importedCharacter.id = GetPreviouslyImportedId(nameWithGuid);
+                            overrideMode = "merge-name_then_id";
+                            goto case "merge-name_then_id";
+                        case "merge-id":
+                        case "merge-name":
+                        case "merge-name_then_id":
+                            int id3 = (overrideMode.Contains("id") ? (file.CharacterData.id ?? -1) : -1);
+                            if (overrideMode.Contains("name"))
+                            {
+                                var find = file.FindName ?? file.CharacterData.name ??
+                                    throw new Exception($"No name found for file {nameWithGuid}");
+                                try
+                                {
+
+                                    id3 = GameSaveFile.IOKDNAOAENK.savedChars
+                                        .Single(c => c != null && c.name != null && c.name == find).id;
+                                }
+                                catch (Exception e)
+                                {
+                                    // ignored
                                 }
                             }
 
-                            GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size++;
-                            GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value]
-                                .roster[GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size] = id3;
-                            GameSaveFile.IOKDNAOAENK.savedFeds[oldCharacter2.fed].JHDJHBMIEOG(id3);
-                        }
+                            if (id3 == -1)
+                            {
+                                Plugin.Log.LogWarning(
+                                    $"Could not find character with id {file.CharacterData.id?.ToString() ?? "null"} and name {file.FindName ?? file.CharacterData.name ?? "null"} using override mode {overrideMode}. Skipping.");
+                                break;
+                            }
 
-                        Plugin.Log.LogInfo(
-                            $"Imported character with id {id3} and name {file.CharacterData.name ?? "null"}, merging with existing character: {oldCharacter2.name}.");
-                        break;
+                            Character oldCharacter2 = GameSaveFile.IOKDNAOAENK.savedChars[id3];
+                            file.CharacterData.MergeIntoCharacter(oldCharacter2);
+
+                            GameSaveFile.IOKDNAOAENK.savedChars[id3] = oldCharacter2;
+                            if (file.CharacterData.fed != null && file.CharacterData.fed.Value != oldCharacter2.fed)
+                            {
+                                if (GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size + 1 ==
+                                    GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster.Length)
+                                {
+                                    Array.Resize(
+                                        ref GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster,
+                                        GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size + 2);
+                                    if (GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].roster.Length >
+                                        Characters.fedLimit)
+                                    {
+                                        Characters.fedLimit++;
+                                    }
+                                }
+
+                                GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size++;
+                                GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value]
+                                        .roster[GameSaveFile.IOKDNAOAENK.savedFeds[file.CharacterData.fed.Value].size] =
+                                    id3;
+                                GameSaveFile.IOKDNAOAENK.savedFeds[oldCharacter2.fed].JHDJHBMIEOG(id3);
+                            }
+
+                            Plugin.Log.LogInfo(
+                                $"Imported character with id {id3} and name {file.CharacterData.name ?? "null"}, merging with existing character: {oldCharacter2.name}.");
+                            break;
+                        default:
+                            throw new Exception($"Unknown override mode {overrideMode}");
+                    }
+
+                    ContentMappings.ContentMap.AddPreviouslyImportedCharacter(nameWithGuid,
+                        importedCharacter?.id ?? file.CharacterData.id ?? -1);
                 }
-                ContentMappings.ContentMap.AddPreviouslyImportedCharacter(nameWithGuid, importedCharacter?.id ?? file.CharacterData.id ?? -1);
+                catch (Exception e)
+                {
+                    Plugin.Log.LogError($"Error while importing character {nameWithGuid}.");
+                    Plugin.Log.LogError(e);
+                }
             }
 
             GameSaveFile.IOKDNAOAENK.NCOHBLMFLLN(BHCMGLCHEGO);
         }
         catch (Exception e)
         {
+            Plugin.Log.LogError("Error while importing characters.");
             Plugin.Log.LogError(e);
         }
     }
