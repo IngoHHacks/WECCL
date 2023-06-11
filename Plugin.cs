@@ -4,7 +4,6 @@ using System.Reflection;
 using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;
-using WECCL.Utils;
 using PromoData = WECCL.Content.PromoData;
 using Random = UnityEngine.Random;
 
@@ -16,7 +15,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.3.5";
+    public const string PluginVer = "1.3.6";
 
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
