@@ -151,45 +151,100 @@ public class BetterCostumeData
         {
             if (textureC[i].StartsWith("Custom/"))
             {
-                var material = textureC[i].Substring(7);
-                var index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                costume.texture[i] = index + VanillaCounts.MaterialCounts[i] + 1;
+                try
+                {
+                    var material = textureC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
+                    costume.texture[i] = index + VanillaCounts.MaterialCounts[i] + 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find texture from name {textureC[i]}, setting to 0.");
+                    costume.texture[i] = 0;
+                }
             }
             else if (i == 3 && textureC[i].StartsWith("Custom/"))
             {
-                var material = textureC[i].Substring(7);
-                var index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                try
+                {
+                    var material = textureC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
+                    costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find texture from name {textureC[i]}, setting to 0.");
+                    costume.texture[i] = 0;
+                }
             }
             else if (i == 14 && textureC[i].StartsWith("Custom/"))
             {
-                var material = textureC[i].Substring(7);
-                var index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
-                costume.texture[i] = -index - VanillaCounts.SpecialFootwearCount - 1;
+                try
+                {
+                    var material = textureC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
+                    costume.texture[i] = -index - VanillaCounts.SpecialFootwearCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find texture from name {textureC[i]}, setting to 0.");
+                    costume.texture[i] = 0;
+                }
             }
             else if (i == 15 && textureC[i].StartsWith("Custom/"))
             {
-                var material = textureC[i].Substring(7);
-                var index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
-                costume.texture[i] = -index - VanillaCounts.SpecialFootwearCount - 1;
+                try
+                {
+                    var material = textureC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
+                    costume.texture[i] = -index - VanillaCounts.SpecialFootwearCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find texture from name {textureC[i]}, setting to 0.");
+                    costume.texture[i] = 0;
+                }
             }
             else if (i == 17 && textureC[i].StartsWith("Custom/"))
             {
-                var material = textureC[i].Substring(7);
-                var index = ContentMappings.ContentMap.TransparentHairMaterialNameMap.IndexOf(material);
-                costume.texture[i] = -index - VanillaCounts.TransparentHairMaterialCount - 1;
+                try
+                {
+                    var material = textureC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.TransparentHairMaterialNameMap.IndexOf(material);
+                    costume.texture[i] = -index - VanillaCounts.TransparentHairMaterialCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find texture from name {textureC[i]}, setting to 0.");
+                    costume.texture[i] = 0;
+                }
             }
             else if (i == 24 && textureC[i].StartsWith("Custom/"))
             {
-                var material = textureC[i].Substring(7);
-                var index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                try {
+                    var material = textureC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
+                    costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find texture from name {textureC[i]}, setting to 0.");
+                    costume.texture[i] = 0;
+                }
             }
             else if (i == 25 && textureC[i].StartsWith("Custom/"))
             {
-                var material = textureC[i].Substring(7);
-                var index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                try
+                {
+                    var material = textureC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
+                    costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find texture from name {textureC[i]}, setting to 0.");
+                    costume.texture[i] = 0;
+                }
             }
             else
             {
@@ -201,15 +256,31 @@ public class BetterCostumeData
         {
             if (fleshC[i].StartsWith("Custom/"))
             {
-                var material = fleshC[i].Substring(7);
-                var index = ContentMappings.ContentMap.FleshNameMap[i].IndexOf(material);
-                costume.flesh[i] = index + VanillaCounts.FleshCounts[i] + 1;
+                try
+                {
+                    var material = fleshC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.FleshNameMap[i].IndexOf(material);
+                    costume.flesh[i] = index + VanillaCounts.FleshCounts[i] + 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find flesh from name {fleshC[i]}, setting to 0.");
+                    costume.flesh[i] = 0;
+                }
             }
             else if (i == 2 && fleshC[i].StartsWith("Custom/"))
             {
-                var material = fleshC[i].Substring(7);
-                var index = ContentMappings.ContentMap.BodyFemaleNameMap.IndexOf(material);
-                costume.flesh[i] = -index - VanillaCounts.BodyFemaleCount - 1;
+                try
+                {
+                    var material = fleshC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.BodyFemaleNameMap.IndexOf(material);
+                    costume.flesh[i] = -index - VanillaCounts.BodyFemaleCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find flesh from name {fleshC[i]}, setting to 0.");
+                    costume.flesh[i] = 0;
+                }
             }
             else
             {
@@ -221,15 +292,31 @@ public class BetterCostumeData
         {
             if (shapeC[i].StartsWith("Custom/"))
             {
-                var material = shapeC[i].Substring(7);
-                var index = ContentMappings.ContentMap.ShapeNameMap[i].IndexOf(material);
-                costume.shape[i] = index + VanillaCounts.ShapeCounts[i] + 1;
+                try
+                {
+                    var material = shapeC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.ShapeNameMap[i].IndexOf(material);
+                    costume.shape[i] = index + VanillaCounts.ShapeCounts[i] + 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find shape from name {shapeC[i]}, setting to 0.");
+                    costume.shape[i] = 0;
+                }
             }
             else if (i == 17 && shapeC[i].StartsWith("Custom/"))
             {
-                var material = shapeC[i].Substring(7);
-                var index = ContentMappings.ContentMap.TransparentHairHairstyleNameMap.IndexOf(material);
-                costume.shape[i] = -index - VanillaCounts.TransparentHairHairstyleCount - 1;
+                try
+                {
+                    var material = shapeC[i].Substring(7);
+                    var index = ContentMappings.ContentMap.TransparentHairHairstyleNameMap.IndexOf(material);
+                    costume.shape[i] = -index - VanillaCounts.TransparentHairHairstyleCount - 1;
+                }
+                catch
+                {
+                    Plugin.Log.LogWarning($"Failed to find shape from name {shapeC[i]}, setting to 0.");
+                    costume.shape[i] = 0;
+                }
             }
             else
             {

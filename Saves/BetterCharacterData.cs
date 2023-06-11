@@ -198,9 +198,17 @@ public class BetterCharacterData
         }
         if (musicC.StartsWith("Custom/"))
         {
-            var music = musicC.Substring(7);
-            var index = ContentMappings.ContentMap.MusicNameMap.IndexOf(music);
-            character.music = index + VanillaCounts.MusicCount + 1;
+            try
+            {
+                var music = musicC.Substring(7);
+                var index = ContentMappings.ContentMap.MusicNameMap.IndexOf(music);
+                character.music = index + VanillaCounts.MusicCount + 1;
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.LogWarning("Failed to find music from name " + musicC + ", setting to 0.");
+                character.music = 0;
+            }
         }
         else
         {
