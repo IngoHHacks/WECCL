@@ -639,6 +639,8 @@ public class WorldPatch
 
         return false;
     }
+    
+    private static LimitedDictionary<Vector3, float> _raycastCache = new(1000);
 
     [HarmonyPatch(typeof(World), nameof(World.FOOLMKOOCGH))]
     [HarmonyPostfix]
@@ -652,6 +654,11 @@ public class WorldPatch
             }
 
             var coords = new Vector3(DPDOBMIPMKE, HONKBFJOEMG, MALHMMKLEHG);
+            if (_raycastCache.TryGetValue(coords.Round(2), out var cached))
+            {
+                __result = cached;
+                return;
+            }
             // Raycast down to find the ground
             var ray = new Ray(coords + new Vector3(0, 5f, 0f), Vector3.down);
             if (Physics.Raycast(ray, out var hit, 105f, 1 << 0))
@@ -661,6 +668,10 @@ public class WorldPatch
             else
             {
                 __result = World.ground;
+            }
+            if (!_raycastCache.ContainsKey(coords))
+            {
+                _raycastCache.Add(coords.Round(2), __result);
             }
         }
     }
