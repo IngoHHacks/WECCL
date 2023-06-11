@@ -81,35 +81,6 @@ public class Plugin : BaseUnityPlugin
     public const bool PreRelease = false;
     public static string[] PreReleaseReasons = { };
 
-    public static string[] EasterEggs =
-    {
-        "Ah, I love the smell of game updates that break mods in the morning.",
-        "Apparently, Ingo is a \"very nice person\". I don't believe that.",
-        "Beware of Mat Dickie. He's watching you. Always. Everywhere.",
-        "Despite Mat Dickie's code, this game is actually pretty good.",
-        "Hey, Vsauce, Ingo here. Do you know what a wrestling empire is? You'll probably say something like \"Of course I do, Ingo, I'm not an idiot.\" But what if I told you that you're wrong?",
-        "Imagine if this game had a story mode. Oh wait, it does.",
-        "Ingo is not responsible for any damage caused by this mod. This includes, but is not limited to: broken game saves, broken game files, broken game, broken computer, nightmares, vomiting, increased risk of heart attack, increased risk of cancer, increased risk of being eaten by a giant spider, and death.",
-        "Ingo, if you're reading this, your egg shell hat is stupid. Like, really stupid.",
-        "Let's play a game. It's called \"Mat Breaks Mods\". It's a very fun game.",
-        "Mat Stop Breaking Mods Challenge 2023 (IMPOSSIBLE?) (GONE WRONG) (GONE SEXUAL) (GONE MAT DICKIE) (SUBSCRIBE TO INGOH) (NOT CLICKBAIT) (POLICE CALLED)",
-        "Never gonna give you up, never gonna let you down, never gonna run around and desert you. Never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you.",
-        "OMG, I just realized! Mat Dickie isn't actually real! He's just a character made up by Ingo to make it look like he's not the one to blame for all the bugs in this mod!",
-        "Oh no, I'm running out of ideas for these easter eggs.",
-        "OwO, what's this?",
-        "This game contains wrestling. Or does it?",
-        "This game is not a wrestling game. It's a life simulator.",
-        "WECCL Terms of Service: By using this mod, you agree to give Ingo all your money. You also agree to give Ingo all your belongings, including your house, your car, your family, your pets, and your soul. Furthermore, Ingo will be allowed to use your belongings in any way he wants, including but not limited to: selling them, destroying them, eating them, and using them to build a giant statue of himself. If you do not agree to these terms, you are not allowed to use this mod.",
-        "WECCL is a mod. I don't know what that means, but it sounds cool.",
-        "WECCL is made by some idiot named Ingo and a few other idiots.",
-        "Walked right into that one, didn't you?",
-        "What the frick did you just fricking say about me, you little Jabroni? I'll have you know I graduated top of my class in the Wrestling School, and I've been involved in numerous secret wrestling matches, and I have over 300 confirmed wins. I am trained in every single wrestling style and I'm the top wrestler in the entire Wrestling Empire. You are nothing to me but just another opponent. I will wipe you the frick out with precision the likes of which has never been seen before on this universe, mark my fricking words. You think you can get away with saying that crap to me over the Internet? Think again, Jabroni. As we speak I am contacting my secret network of wrestlers across the USA and your IP is being traced right now so you better prepare for the storm, Jabroni. The storm that wipes out the pathetic little thing you call your life. You're fricking dead, kid. I can be anywhere, anytime, and I can beat you in over seven hundred ways, and that's just inside the ring. Not only am I extensively trained in shoot fighting, but I have access to the entirety of Mat Dickie's arsenal of wrestling moves and I will use it to its full extent to wipe your miserable butt off the face of the map, you little Jabroni. If only you could have known what unholy retribution your little \"clever\" comment was about to bring down upon you, maybe you would have held your fricking tongue. But you couldn't, you didn't, and now you're paying the price, you idiot. I will crap fury all over you and you will drown in it. You're fricking dead, kiddo.",
-        "Why is Ingo writing these easter eggs? He should be working on the mod instead.",
-        "Working with Mat Dickie's code is like trying to find a needle in a haystack. While blindfolded. And the haystack is on fire.",
-        "Yo, what's up, it's ya boi, IngoH, back at it again with another video. Don't forget to SMASH that like and subscribe button, and hit that bell icon to get notified whenever I upload a new video.",
-        "Your feedback is important to us. If you have any, please shout it into the void. We will not listen to it, but it will make you feel better.",
-    };
-
     private void Awake()
     {
         try
@@ -127,7 +98,7 @@ public class Plugin : BaseUnityPlugin
 
             if (Random.Range(0, 100) == 0)
             {
-                var easterEgg = EasterEggs[Random.Range(0, EasterEggs.Length)];
+                var easterEgg = Secrets.EasterEggs[Random.Range(0, Secrets.EasterEggs.Length)];
                 Log.LogInfo(easterEgg);
             }
 
