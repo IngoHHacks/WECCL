@@ -93,14 +93,7 @@ public class Plugin : BaseUnityPlugin
                 Directory.CreateDirectory(PersistentDataPath);
             }
             // End of keep on top
-
-            string egg = Secrets.GetEasterEgg();
-            if (egg != null)
-            {
-                Log.LogInfo(egg);
-            }
-
-
+            
             if (PreRelease)
             {
                 Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
@@ -153,6 +146,13 @@ public class Plugin : BaseUnityPlugin
                 "Enable debug mode. This will create debugging files in the /Debug folder.");
             DebugRender = this.Config.Bind("General", "DebugRender", false,
                 "Enable debug rendering. This will render debug information on the screen, such as collision boxes.");
+            
+            
+            string egg = Secrets.GetEasterEgg();
+            if (egg != null)
+            {
+                Log.LogInfo(egg);
+            }
 
             CreateBackups();
 
