@@ -10,8 +10,8 @@ namespace WECCL.Patches;
 internal class ContentPatch
 {
     internal static readonly Dictionary<string, int> _internalCostumeCounts = new();
-    
-    internal static bool _contentLoaded = false;
+
+    internal static bool _contentLoaded;
 
     /*
      * GameGlobals.KNPGMHAEKJO loads an object from an AssetBundle.
@@ -76,19 +76,19 @@ internal class ContentPatch
         VanillaCounts.TransparentHairHairstyleCount = GameTextures.HBCJJDDDEJO;
         VanillaCounts.KneepadCount = GameTextures.IBFPEKPLBIJ;
         VanillaCounts.IsInitialized = true;
-        
+
         if (Plugin.Debug.Value)
         {
             VersionData.WriteVersionData();
         }
-        
+
         _contentLoaded = true;
     }
 
     /*
      * This is a patch to override the textures of the game with ones in the Overrides folder.
      */
-    
+
     [HarmonyPatch(typeof(AssetBundle), nameof(AssetBundle.LoadAsset), typeof(string), typeof(Type))]
     [HarmonyPostfix]
     public static void AssetBundle_LoadAsset(ref Object __result, string name)
@@ -114,11 +114,12 @@ internal class ContentPatch
                     overrideTexture = ResizeTexture(overrideTexture, sprite.texture.width, sprite.texture.height);
                     SetHighestPriorityTextureOverride(name, overrideTexture);
                 }
-                
-                var relativePivot = new Vector2(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height);
 
-                var rect = new Rect(Mathf.Round(sprite.rect.x), Mathf.Round(sprite.rect.y), Mathf.Round(sprite.rect.width), Mathf.Round(sprite.rect.height));
-                
+                Vector2 relativePivot = new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height);
+
+                Rect rect = new(Mathf.Round(sprite.rect.x), Mathf.Round(sprite.rect.y), Mathf.Round(sprite.rect.width),
+                    Mathf.Round(sprite.rect.height));
+
                 __result = Sprite.Create(overrideTexture, rect, relativePivot, sprite.pixelsPerUnit);
             }
             else
@@ -139,7 +140,7 @@ internal class ContentPatch
             }
         }
     }
-    
+
     [HarmonyPatch(typeof(Object), "Internal_CloneSingle", typeof(Object))]
     [HarmonyPostfix]
     public static void Object_CloneSingle(ref Object __result)
@@ -155,9 +156,12 @@ internal class ContentPatch
                     {
                         continue;
                     }
-                    if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name) || ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)","").Trim() + "_" + material.mainTexture))
+
+                    if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name) ||
+                        ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)", "").Trim() + "_" +
+                                                              material.mainTexture))
                     {
-                        var tex = GetHighestPriorityTextureOverride(material.mainTexture.name);
+                        Texture2D tex = GetHighestPriorityTextureOverride(material.mainTexture.name);
                         if (material.mainTexture.width != tex.width ||
                             material.mainTexture.height != tex.height)
                         {
@@ -169,6 +173,7 @@ internal class ContentPatch
                     }
                 }
             }
+
             AudioSource[] audioSources = gameObject.GetComponentsInChildren<AudioSource>(true);
             foreach (AudioSource audioSource in audioSources)
             {
@@ -176,6 +181,7 @@ internal class ContentPatch
                 {
                     continue;
                 }
+
                 if (ResourceOverridesAudio.ContainsKey(audioSource.clip.name))
                 {
                     audioSource.clip = GetHighestPriorityAudioOverride(audioSource.clip.name);
@@ -183,7 +189,7 @@ internal class ContentPatch
             }
         }
     }
-    
+
     [HarmonyPatch(typeof(Image), nameof(UnityEngine.UI.Image.OnPopulateMesh))]
     [HarmonyPostfix]
     public static void Image(ref Image __instance)
@@ -198,10 +204,10 @@ internal class ContentPatch
                     __instance.m_Sprite.texture.height);
             }
 
-            var relativePivot = new Vector2(__instance.m_Sprite.pivot.x / __instance.m_Sprite.rect.width,
+            Vector2 relativePivot = new(__instance.m_Sprite.pivot.x / __instance.m_Sprite.rect.width,
                 __instance.m_Sprite.pivot.y / __instance.m_Sprite.rect.height);
 
-            var rect = new Rect(Mathf.Round(__instance.m_Sprite.rect.x),
+            Rect rect = new(Mathf.Round(__instance.m_Sprite.rect.x),
                 Mathf.Round(__instance.m_Sprite.rect.y), Mathf.Round(__instance.m_Sprite.rect.width),
                 Mathf.Round(__instance.m_Sprite.rect.height));
 
@@ -209,7 +215,7 @@ internal class ContentPatch
                 __instance.m_Sprite.pixelsPerUnit);
         }
     }
-    
+
     /*
      * CFHMKIICHMB is the method that is called when the game applies the meshes to the player.
      */
@@ -217,45 +223,68 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void GamePlayer_CFHMKIICHMB(ref GamePlayer __instance, int FNLOGBBADOD)
     {
-        if (FNLOGBBADOD == 4 && (__instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > 50 && __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] % 10 == 0) || VanillaCounts.ShapeCounts[FNLOGBBADOD] == 0) return;
-        try {
-            if (__instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > VanillaCounts.ShapeCounts[FNLOGBBADOD] || (FNLOGBBADOD == 17 &&
-                    -__instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > VanillaCounts.TransparentHairHairstyleCount))
+        if ((FNLOGBBADOD == 4 && __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > 50 &&
+             __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] % 10 == 0) || VanillaCounts.ShapeCounts[FNLOGBBADOD] == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            if (__instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > VanillaCounts.ShapeCounts[FNLOGBBADOD] ||
+                (FNLOGBBADOD == 17 &&
+                 -__instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > VanillaCounts.TransparentHairHairstyleCount))
             {
-                var shape = __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > 0 ? __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] - VanillaCounts.ShapeCounts[FNLOGBBADOD] - 1: -__instance.HBFGHFIFIEN.shape[FNLOGBBADOD] - VanillaCounts.TransparentHairHairstyleCount - 1;
+                int shape = __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] > 0
+                    ? __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] - VanillaCounts.ShapeCounts[FNLOGBBADOD] - 1
+                    : -__instance.HBFGHFIFIEN.shape[FNLOGBBADOD] - VanillaCounts.TransparentHairHairstyleCount - 1;
                 if (CustomCostumes.Values.Any(x => x.InternalPrefix.Contains("shape" + FNLOGBBADOD)))
                 {
-                    var c = CustomCostumes.Values.First(x => x.InternalPrefix.Contains("shape" + FNLOGBBADOD))
+                    Tuple<string, Object, Dictionary<string, string>> c = CustomCostumes.Values
+                        .First(x => x.InternalPrefix.Contains("shape" + FNLOGBBADOD))
                         .CustomObjects[shape];
                     ;
-                    var mesh = c.Item2 as Mesh;
-                    var meta = c.Item3;
+                    Mesh mesh = c.Item2 as Mesh;
+                    Dictionary<string, string> meta = c.Item3;
                     if (mesh != null)
                     {
                         __instance.CBLJCJMAPGH[FNLOGBBADOD].GetComponent<MeshFilter>().mesh = mesh;
                         if (meta.ContainsKey("scale"))
                         {
-                            if (meta["scale"].Contains(",")) {
-                                var scale = meta["scale"].Split(',');
-                                __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localScale = new Vector3(float.Parse(scale[0], Nfi), float.Parse(scale[1], Nfi), float.Parse(scale[2], Nfi));
-                            } else {
-                                __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localScale = new Vector3(float.Parse(meta["scale"], Nfi), float.Parse(meta["scale"], Nfi), float.Parse(meta["scale"], Nfi));
+                            if (meta["scale"].Contains(","))
+                            {
+                                string[] scale = meta["scale"].Split(',');
+                                __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localScale = new Vector3(
+                                    float.Parse(scale[0], Nfi), float.Parse(scale[1], Nfi), float.Parse(scale[2], Nfi));
+                            }
+                            else
+                            {
+                                __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localScale = new Vector3(
+                                    float.Parse(meta["scale"], Nfi), float.Parse(meta["scale"], Nfi),
+                                    float.Parse(meta["scale"], Nfi));
                             }
                         }
+
                         if (meta.ContainsKey("position"))
                         {
-                            var position = meta["position"].Split(',');
-                            __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localPosition = new Vector3(float.Parse(position[0], Nfi), float.Parse(position[1], Nfi), float.Parse(position[2], Nfi));
+                            string[] position = meta["position"].Split(',');
+                            __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localPosition = new Vector3(
+                                float.Parse(position[0], Nfi), float.Parse(position[1], Nfi),
+                                float.Parse(position[2], Nfi));
                         }
+
                         if (meta.ContainsKey("rotation"))
                         {
-                            var rotation = meta["rotation"].Split(','); 
-                            __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localRotation = Quaternion.Euler(float.Parse(rotation[0], Nfi), float.Parse(rotation[1], Nfi), float.Parse(rotation[2], Nfi));
+                            string[] rotation = meta["rotation"].Split(',');
+                            __instance.CBLJCJMAPGH[FNLOGBBADOD].transform.localRotation = Quaternion.Euler(
+                                float.Parse(rotation[0], Nfi), float.Parse(rotation[1], Nfi),
+                                float.Parse(rotation[2], Nfi));
                         }
                     }
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Plugin.Log.LogError(e);
             Plugin.Log.LogError("FNLOGBBADOD: " + FNLOGBBADOD + " (" + __instance.HBFGHFIFIEN.shape[FNLOGBBADOD] + ")");
@@ -268,7 +297,7 @@ internal class ContentPatch
     {
         FixMeshes(NCPIJJFEDFL);
     }
-    
+
     [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.POBBMNHMBGI))]
     [HarmonyPostfix]
     public static void GamePlayer_POBBMNHMBGI(GamePlayer __instance)
@@ -283,21 +312,32 @@ internal class ContentPatch
             for (GameTextures.FNLOGBBADOD = 1;
                  GameTextures.FNLOGBBADOD <= GameTextures.OFFCLMNEJCA;
                  GameTextures.FNLOGBBADOD++)
+            {
+                if ((GameTextures.FNLOGBBADOD == 4 && player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] > 50 &&
+                     player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] % 10 == 0) ||
+                    player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD] == null ||
+                    VanillaCounts.ShapeCounts[GameTextures.FNLOGBBADOD] == 0)
                 {
-                    if (GameTextures.FNLOGBBADOD == 4 && player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] > 50 && player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] % 10 == 0 || player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD] == null|| VanillaCounts.ShapeCounts[GameTextures.FNLOGBBADOD] == 0)
-                    {
-                        continue;
-                    }
-                    if (player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] > VanillaCounts.ShapeCounts[GameTextures.FNLOGBBADOD]
-                        || (GameTextures.FNLOGBBADOD == 17 && -player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] > VanillaCounts.TransparentHairHairstyleCount))
-                    {
-                    var mesh = player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD].GetComponent<MeshFilter>().mesh;
+                    continue;
+                }
+
+                if (player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] >
+                    VanillaCounts.ShapeCounts[GameTextures.FNLOGBBADOD]
+                    || (GameTextures.FNLOGBBADOD == 17 && -player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] >
+                        VanillaCounts.TransparentHairHairstyleCount))
+                {
+                    Mesh mesh = player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD].GetComponent<MeshFilter>().mesh;
                     if (player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD].GetComponent<MeshRenderer>().materials.Length <
                         mesh.subMeshCount)
                     {
-                        var shape = player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] > 0 ? player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] - VanillaCounts.ShapeCounts[GameTextures.FNLOGBBADOD] - 1: -player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] - VanillaCounts.TransparentHairHairstyleCount - 1;
-                        var meta = new Dictionary<string, string>();
-                        if (CustomCostumes.Values.Any(x => x.InternalPrefix.Contains("shape" + GameTextures.FNLOGBBADOD)))
+                        int shape = player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] > 0
+                            ? player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] -
+                              VanillaCounts.ShapeCounts[GameTextures.FNLOGBBADOD] - 1
+                            : -player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] -
+                              VanillaCounts.TransparentHairHairstyleCount - 1;
+                        Dictionary<string, string> meta = new();
+                        if (CustomCostumes.Values.Any(
+                                x => x.InternalPrefix.Contains("shape" + GameTextures.FNLOGBBADOD)))
                         {
                             meta = CustomCostumes.Values
                                 .First(x => x.InternalPrefix.Contains("shape" + GameTextures.FNLOGBBADOD))
@@ -305,22 +345,28 @@ internal class ContentPatch
                                 .Item3;
                         }
 
-                        var materials = new Material[mesh.subMeshCount];
-                        materials[0] = player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD].GetComponent<MeshRenderer>().material;
+                        Material[] materials = new Material[mesh.subMeshCount];
+                        materials[0] = player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD].GetComponent<MeshRenderer>()
+                            .material;
                         for (int i = 1; i < materials.Length; i++)
                         {
-                            materials[i] = new Material(player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD].GetComponent<MeshRenderer>().material);
+                            materials[i] = new Material(player.CBLJCJMAPGH[GameTextures.FNLOGBBADOD]
+                                .GetComponent<MeshRenderer>().material);
 
                             if (meta.ContainsKey("submesh" + i + "color"))
                             {
-                                var split = meta["submesh" + i + "color"].Split(',');
+                                string[] split = meta["submesh" + i + "color"].Split(',');
                                 if (split.Length == 3)
                                 {
-                                    materials[i].color = new Color(float.Parse(split[0], Nfi), float.Parse(split[1], Nfi),
+                                    materials[i].color = new Color(float.Parse(split[0], Nfi),
+                                        float.Parse(split[1], Nfi),
                                         float.Parse(split[2], Nfi));
                                 }
 
-                                materials[i].color = ColorUtility.TryParseHtmlString(meta["submesh" + i + "color"], out var color) ? color : Color.white;
+                                materials[i].color =
+                                    ColorUtility.TryParseHtmlString(meta["submesh" + i + "color"], out Color color)
+                                        ? color
+                                        : Color.white;
                             }
                         }
 
@@ -333,7 +379,8 @@ internal class ContentPatch
         catch (Exception e)
         {
             Plugin.Log.LogError(e);
-            Plugin.Log.LogError("FNLOGBBADOD: " + GameTextures.FNLOGBBADOD + " (" + player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] + ")");
+            Plugin.Log.LogError("FNLOGBBADOD: " + GameTextures.FNLOGBBADOD + " (" +
+                                player.HBFGHFIFIEN.shape[GameTextures.FNLOGBBADOD] + ")");
         }
     }
 }

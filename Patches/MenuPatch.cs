@@ -1,5 +1,3 @@
-using WECCL.Utils;
-
 namespace WECCL.Patches;
 
 [HarmonyPatch]

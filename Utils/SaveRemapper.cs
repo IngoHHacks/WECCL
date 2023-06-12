@@ -14,11 +14,11 @@ public class SaveRemapper
 
         bool changed = false;
 
-        int oldVersion = Mathf.RoundToInt((ContentMappings.ContentMap.GameVersion * 100));
+        int oldVersion = Mathf.RoundToInt(ContentMappings.ContentMap.GameVersion * 100);
         int newVersion = Mathf.RoundToInt(Plugin.CharactersVersion * 100);
 
         VersionDiff versionDiff = null;
-        
+
         if (oldVersion != newVersion)
         {
             Plugin.Log.LogInfo($"Game version changed from {oldVersion} to {newVersion}. Updating custom content map.");
@@ -29,7 +29,8 @@ public class SaveRemapper
             }
             else
             {
-                Plugin.Log.LogError($"No update data found for version change from {oldVersion} to {newVersion}. Please report this to the mod author.");
+                Plugin.Log.LogError(
+                    $"No update data found for version change from {oldVersion} to {newVersion}. Please report this to the mod author.");
             }
         }
 
@@ -64,43 +65,51 @@ public class SaveRemapper
 
                         if (versionDiff != null)
                         {
-                            if (versionDiff.MaterialCountsDiff[i] != 0 && costume.texture[i] > VanillaCounts.MaterialCounts[i] - versionDiff.MaterialCountsDiff[i])
+                            if (versionDiff.MaterialCountsDiff[i] != 0 && costume.texture[i] >
+                                VanillaCounts.MaterialCounts[i] - versionDiff.MaterialCountsDiff[i])
                             {
                                 costume.texture[i] += versionDiff.MaterialCountsDiff[i];
                                 changed = true;
                             }
-                            else if (i == 3 && versionDiff.FaceFemaleCountDiff != 0 && costume.texture[i] < -VanillaCounts.FaceFemaleCount + versionDiff.FaceFemaleCountDiff)
+                            else if (i == 3 && versionDiff.FaceFemaleCountDiff != 0 && costume.texture[i] <
+                                     -VanillaCounts.FaceFemaleCount + versionDiff.FaceFemaleCountDiff)
                             {
                                 costume.texture[i] -= versionDiff.FaceFemaleCountDiff;
                                 changed = true;
                             }
-                            else if (i == 14 && versionDiff.SpecialFootwearCountDiff != 0 &&costume.texture[i] < -VanillaCounts.SpecialFootwearCount + versionDiff.SpecialFootwearCountDiff)
+                            else if (i == 14 && versionDiff.SpecialFootwearCountDiff != 0 && costume.texture[i] <
+                                     -VanillaCounts.SpecialFootwearCount + versionDiff.SpecialFootwearCountDiff)
                             {
                                 costume.texture[i] -= versionDiff.SpecialFootwearCountDiff;
                                 changed = true;
                             }
-                            else if (i == 15 && versionDiff.SpecialFootwearCountDiff != 0 &&costume.texture[i] < -VanillaCounts.SpecialFootwearCount + versionDiff.SpecialFootwearCountDiff)
+                            else if (i == 15 && versionDiff.SpecialFootwearCountDiff != 0 && costume.texture[i] <
+                                     -VanillaCounts.SpecialFootwearCount + versionDiff.SpecialFootwearCountDiff)
                             {
                                 costume.texture[i] -= versionDiff.SpecialFootwearCountDiff;
                                 changed = true;
                             }
-                            else if (i == 17 && versionDiff.TransparentHairMaterialCountDiff != 0 && costume.texture[i] < -VanillaCounts.TransparentHairMaterialCount + versionDiff.TransparentHairMaterialCountDiff)
+                            else if (i == 17 && versionDiff.TransparentHairMaterialCountDiff != 0 &&
+                                     costume.texture[i] < -VanillaCounts.TransparentHairMaterialCount +
+                                     versionDiff.TransparentHairMaterialCountDiff)
                             {
                                 costume.texture[i] -= versionDiff.TransparentHairMaterialCountDiff;
                                 changed = true;
                             }
-                            else if (i == 24 && versionDiff.KneepadCountDiff != 0 && costume.texture[i] < -VanillaCounts.KneepadCount + versionDiff.KneepadCountDiff)
+                            else if (i == 24 && versionDiff.KneepadCountDiff != 0 && costume.texture[i] <
+                                     -VanillaCounts.KneepadCount + versionDiff.KneepadCountDiff)
                             {
                                 costume.texture[i] -= versionDiff.KneepadCountDiff;
                                 changed = true;
                             }
-                            else if (i == 25 && versionDiff.KneepadCountDiff != 0 && costume.texture[i] < -VanillaCounts.KneepadCount + versionDiff.KneepadCountDiff)
+                            else if (i == 25 && versionDiff.KneepadCountDiff != 0 && costume.texture[i] <
+                                     -VanillaCounts.KneepadCount + versionDiff.KneepadCountDiff)
                             {
                                 costume.texture[i] -= versionDiff.KneepadCountDiff;
                                 changed = true;
                             }
                         }
-                        
+
                         if (costume.texture[i] > VanillaCounts.MaterialCounts[i])
                         {
                             int oldIndex = costume.texture[i] - VanillaCounts.MaterialCounts[i] - 1;
@@ -279,12 +288,14 @@ public class SaveRemapper
 
                         if (versionDiff != null)
                         {
-                            if (versionDiff.FleshCountsDiff[i] != 0 && costume.flesh[i] > VanillaCounts.FleshCounts[i] - versionDiff.FleshCountsDiff[i])
+                            if (versionDiff.FleshCountsDiff[i] != 0 && costume.flesh[i] >
+                                VanillaCounts.FleshCounts[i] - versionDiff.FleshCountsDiff[i])
                             {
                                 costume.flesh[i] += versionDiff.FleshCountsDiff[i];
                                 changed = true;
                             }
-                            else if (i == 2 && versionDiff.BodyFemaleCountDiff != 0 && costume.flesh[i] < -VanillaCounts.BodyFemaleCount + versionDiff.BodyFemaleCountDiff)
+                            else if (i == 2 && versionDiff.BodyFemaleCountDiff != 0 && costume.flesh[i] <
+                                     -VanillaCounts.BodyFemaleCount + versionDiff.BodyFemaleCountDiff)
                             {
                                 costume.flesh[i] -= versionDiff.BodyFemaleCountDiff;
                                 changed = true;
@@ -346,15 +357,18 @@ public class SaveRemapper
                         {
                             continue;
                         }
-                        
+
                         if (versionDiff != null)
                         {
-                            if (versionDiff.ShapeCountsDiff[i] != 0 && costume.shape[i] > VanillaCounts.ShapeCounts[i] - versionDiff.ShapeCountsDiff[i])
+                            if (versionDiff.ShapeCountsDiff[i] != 0 && costume.shape[i] >
+                                VanillaCounts.ShapeCounts[i] - versionDiff.ShapeCountsDiff[i])
                             {
                                 costume.shape[i] += versionDiff.ShapeCountsDiff[i];
                                 changed = true;
                             }
-                            else if (i == 17 && versionDiff.TransparentHairHairstyleCountDiff != 0 && costume.shape[i] < -VanillaCounts.TransparentHairHairstyleCount + versionDiff.TransparentHairHairstyleCountDiff)
+                            else if (i == 17 && versionDiff.TransparentHairHairstyleCountDiff != 0 && costume.shape[i] <
+                                     -VanillaCounts.TransparentHairHairstyleCount +
+                                     versionDiff.TransparentHairHairstyleCountDiff)
                             {
                                 costume.shape[i] -= versionDiff.TransparentHairHairstyleCountDiff;
                                 changed = true;
@@ -410,8 +424,9 @@ public class SaveRemapper
                         }
                     }
                 }
-                
-                if (versionDiff != null && versionDiff.MusicCountDiff != 0 && character.music > VanillaCounts.MusicCount - versionDiff.MusicCountDiff)
+
+                if (versionDiff != null && versionDiff.MusicCountDiff != 0 &&
+                    character.music > VanillaCounts.MusicCount - versionDiff.MusicCountDiff)
                 {
                     character.music += versionDiff.MusicCountDiff;
                     changed = true;

@@ -7,14 +7,14 @@ public class MetaFile
     private static MetaFile _instance;
 
     internal static MetaFile Data => _instance ??= Load();
-    
+
     public List<string> PrefixPriorityOrder { get; set; } = new();
     public bool HidePriorityScreenNextTime { get; set; } = false;
-    
+
     public bool FirstLaunch { get; set; } = true;
-    
-    public int TimesLaunched { get; set; } = 0;
-    
+
+    public int TimesLaunched { get; set; }
+
     public string PreviousUser { get; set; } = "";
 
     public void Save()
@@ -37,7 +37,8 @@ public class MetaFile
 
             string json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<MetaFile>(json,
-                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }).IncrementTimesLaunched();
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace })
+                .IncrementTimesLaunched();
         }
         catch (Exception e)
         {
@@ -45,13 +46,14 @@ public class MetaFile
             return new MetaFile();
         }
     }
-    
+
     public MetaFile IncrementTimesLaunched()
     {
-        if (TimesLaunched != int.MaxValue)
+        if (this.TimesLaunched != int.MaxValue)
         {
-            TimesLaunched++;
+            this.TimesLaunched++;
         }
+
         return this;
     }
 }

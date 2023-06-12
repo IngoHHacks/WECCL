@@ -4,7 +4,8 @@ namespace WECCL.Utils;
 
 public static class MenuUtils
 {
-    public static void FindBestFit(int size, int minX, int minY, int maxX, int maxY, out int rows, out int columns, out float scale, out int startX,
+    public static void FindBestFit(int size, int minX, int minY, int maxX, int maxY, out int rows, out int columns,
+        out float scale, out int startX,
         out int startY)
     {
         if (MenuPatch._optimalLayouts.TryGetValue(size, out Tuple<int, int, float, int, int> tuple))
@@ -42,7 +43,8 @@ public static class MenuUtils
                 startY = maxY - ((scaledTotalHeight - curTotalHeight) / 2);
                 Plugin.Log.LogDebug(
                     $"Found best fit for {size} items: {rows} rows, {columns} columns, {scale} scale, {startX} startX, {startY} startY");
-                MenuPatch._optimalLayouts.Add(size, new Tuple<int, int, float, int, int>(rows, columns, scale, startX, startY));
+                MenuPatch._optimalLayouts.Add(size,
+                    new Tuple<int, int, float, int, int>(rows, columns, scale, startX, startY));
                 return;
             }
 

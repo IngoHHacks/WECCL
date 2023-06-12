@@ -1,13 +1,14 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using WECCL.Content;
 using WECCL.Saves;
-using WECCL.Utils;
 
 namespace WECCL.Patches;
 
 [HarmonyPatch]
 internal class SaveFilePatch
 {
+    private static int[] fedCharCount;
+
     /*
      * GameSaveFile.LJAOBLOCLFK is called when the game restores the default data
      * This patch resets the character and federation counts.
@@ -21,7 +22,7 @@ internal class SaveFilePatch
         {
             Characters.no_chars = 350;
             Characters.fedLimit = Plugin.BaseFedLimit.Value;
-            
+
             if (Characters.star > 350)
             {
                 Characters.star = 1;
@@ -36,7 +37,7 @@ internal class SaveFilePatch
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GameSaveFile.IOKDNAOAENK.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedChars, Characters.no_chars + 1);
-            
+
             ContentMappings.ContentMap.PreviouslyImportedCharacters.Clear();
             ContentMappings.ContentMap.PreviouslyImportedCharacterIds.Clear();
         }
@@ -46,8 +47,6 @@ internal class SaveFilePatch
         }
     }
 
-    private static int[] fedCharCount;
-    
     /*
      * GameSaveFile.HCKKGEAPBMK is called when the game loads the save file.
      * This prefix patch is used to update character counts and arrays to accommodate the custom content.
@@ -101,11 +100,12 @@ internal class SaveFilePatch
         {
             return;
         }
+
         if (fedCharCount != null && GameSaveFile.IOKDNAOAENK.savedFeds != null)
         {
             for (int i = 1; i <= Characters.no_feds; i++)
             {
-                var count = Plugin.BaseFedLimit.Value <= 48 ? fedCharCount[i] + 1 : Plugin.BaseFedLimit.Value + 1;
+                int count = Plugin.BaseFedLimit.Value <= 48 ? fedCharCount[i] + 1 : Plugin.BaseFedLimit.Value + 1;
                 if (GameSaveFile.IOKDNAOAENK.savedFeds[i] != null)
                 {
                     GameSaveFile.IOKDNAOAENK.savedFeds[i].size = fedCharCount[i];
@@ -114,6 +114,7 @@ internal class SaveFilePatch
                         Array.Resize(ref GameSaveFile.IOKDNAOAENK.savedFeds[i].roster, count);
                     }
                 }
+
                 Array.Resize(ref Characters.fedData[i].roster, count);
             }
         }
@@ -160,7 +161,7 @@ internal class SaveFilePatch
                             int id = overrideMode.Contains("id") ? importedCharacter.id : -1;
                             if (overrideMode.Contains("name"))
                             {
-                                var find = file.FindName ?? importedCharacter.name;
+                                string find = file.FindName ?? importedCharacter.name;
                                 try
                                 {
                                     id = GameSaveFile.IOKDNAOAENK.savedChars
@@ -254,21 +255,22 @@ internal class SaveFilePatch
                                     $"Imported character with id {id2} and name {importedCharacter.name}. Incremented number of characters to {Characters.no_chars}.");
                                 break;
                             }
-                            Plugin.Log.LogInfo($"Character with name {importedCharacter.name} was previously imported, merging.");
+
+                            Plugin.Log.LogInfo(
+                                $"Character with name {importedCharacter.name} was previously imported, merging.");
                             importedCharacter.id = GetPreviouslyImportedId(nameWithGuid);
                             overrideMode = "merge-name_then_id";
                             goto case "merge-name_then_id";
                         case "merge-id":
                         case "merge-name":
                         case "merge-name_then_id":
-                            int id3 = (overrideMode.Contains("id") ? (file.CharacterData.id ?? -1) : -1);
+                            int id3 = overrideMode.Contains("id") ? file.CharacterData.id ?? -1 : -1;
                             if (overrideMode.Contains("name"))
                             {
-                                var find = file.FindName ?? file.CharacterData.name ??
+                                string find = file.FindName ?? file.CharacterData.name ??
                                     throw new Exception($"No name found for file {nameWithGuid}");
                                 try
                                 {
-
                                     id3 = GameSaveFile.IOKDNAOAENK.savedChars
                                         .Single(c => c != null && c.name != null && c.name == find).id;
                                 }
@@ -358,14 +360,15 @@ internal class SaveFilePatch
         {
             nameWithGuid = nameWithGuid.Substring(0, nameWithGuid.Length - 10);
         }
-        
+
         return ContentMappings.ContentMap.PreviouslyImportedCharacters.Contains(nameWithGuid);
     }
-    
-    
+
+
     private static int GetPreviouslyImportedId(string nameWithGuid)
     {
-        return ContentMappings.ContentMap.PreviouslyImportedCharacterIds[ContentMappings.ContentMap.PreviouslyImportedCharacters.IndexOf(nameWithGuid)];
+        return ContentMappings.ContentMap.PreviouslyImportedCharacterIds[
+            ContentMappings.ContentMap.PreviouslyImportedCharacters.IndexOf(nameWithGuid)];
     }
 
 

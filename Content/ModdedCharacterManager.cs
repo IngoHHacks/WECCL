@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using WECCL.Saves;
-using WECCL.Utils;
 
 namespace WECCL.Content;
 
@@ -26,13 +25,9 @@ public class ModdedCharacterManager
             }
 
             BetterCharacterData moddedCharacter = BetterCharacterData.FromRegularCharacter(character, characters);
-            BetterCharacterDataFile file = new()
-            {
-                characterData = moddedCharacter,
-                overrideMode = "append"
-            };
+            BetterCharacterDataFile file = new() { characterData = moddedCharacter, overrideMode = "append" };
             string json = JsonConvert.SerializeObject(file, Formatting.Indented);
-            string path = Path.Combine(exportPath, $"{character.id}_{FileNameUtils.Escape(character.name)}.character");
+            string path = Path.Combine(exportPath, $"{character.id}_{Escape(character.name)}.character");
             File.WriteAllText(path, json);
         }
     }

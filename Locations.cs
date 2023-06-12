@@ -9,10 +9,12 @@ public static class Locations
     public static DirectoryInfo Libraries { get; } = new(Path.Combine(Plugin.PluginPath, "Libraries"));
     public static DirectoryInfo Cache { get; } = new(Path.Combine(Plugin.PersistentDataPath, ".cache"));
     public static DirectoryInfo Debug { get; } = new(Path.Combine(Plugin.PluginPath, "Debug"));
-    
+
     public static DirectoryInfo Meta { get; } = new(Path.Combine(Plugin.PersistentDataPath, "Meta.meta"));
-    public static DirectoryInfo ContentMappings { get; } = new(Path.Combine(Plugin.PersistentDataPath, "ContentMappings.mappings"));
-    
+
+    public static DirectoryInfo ContentMappings { get; } =
+        new(Path.Combine(Plugin.PersistentDataPath, "ContentMappings.mappings"));
+
     internal static void CreateDirectories()
     {
         Assets.Create();
@@ -24,13 +26,15 @@ public static class Locations
             Cache.Create();
             Cache.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
             Cache.Refresh();
-        } else if (!Plugin.CacheEnabled.Value && Cache.Exists)
+        }
+        else if (!Plugin.CacheEnabled.Value && Cache.Exists)
         {
             Cache.Delete(true);
         }
+
         Debug.Create();
     }
-    
+
     internal static void MoveLegacyLocations()
     {
         LegacyLocations.MoveLegacyLocations();
@@ -42,8 +46,13 @@ internal static class LegacyLocations
     public static DirectoryInfo OldCache { get; } = new(Path.Combine(Plugin.PluginPath, ".cache"));
     public static DirectoryInfo OldMetadata { get; } = new(Path.Combine(Plugin.PluginPath, "Meta.meta"));
     public static DirectoryInfo OldMappings { get; } = new(Path.Combine(Plugin.PluginPath, "ContentMappings.mappings"));
-    public static DirectoryInfo OldMetadata2 { get; } = new(Path.Combine(Plugin.PluginPath, "CustomConfigsSaveFile.json"));
-    public static DirectoryInfo OldMappings2 { get; } = new(Path.Combine(Plugin.PluginPath, "CustomContentSaveFile.json"));
+
+    public static DirectoryInfo OldMetadata2 { get; } =
+        new(Path.Combine(Plugin.PluginPath, "CustomConfigsSaveFile.json"));
+
+    public static DirectoryInfo OldMappings2 { get; } =
+        new(Path.Combine(Plugin.PluginPath, "CustomContentSaveFile.json"));
+
     public static DirectoryInfo OldMetadata3 { get; } = new(Path.Combine(Plugin.PluginPath, "Meta.json"));
     public static DirectoryInfo OldMappings3 { get; } = new(Path.Combine(Plugin.PluginPath, "ContentMappings.json"));
 

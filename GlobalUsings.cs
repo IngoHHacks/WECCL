@@ -21,7 +21,6 @@ global using BepInEx.Configuration;
 global using BepInEx.Logging;
 global using System.IO;
 global using UnityEngine;
-
 global using WECCL.Utils;
 global using static WECCL.Utils.TextureUtils;
 global using static WECCL.Utils.MenuUtils;

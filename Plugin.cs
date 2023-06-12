@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 using WECCL.Content;
 using WECCL.Saves;
 using PromoData = WECCL.Content.PromoData;
-using Random = UnityEngine.Random;
 
 namespace WECCL;
 
@@ -16,6 +15,10 @@ public class Plugin : BaseUnityPlugin
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
     public const string PluginVer = "1.3.7";
+    public const float PluginCharacterVersion = 1.56f;
+    public const float PluginVersion = 1.58f;
+
+    public const bool PreRelease = false;
 
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
@@ -54,6 +57,7 @@ public class Plugin : BaseUnityPlugin
     private static readonly List<string> MeshExtensions = new() { ".mesh", "" };
 
     private static readonly List<string> PromoExtensions = new() { ".promo" };
+    public static string[] PreReleaseReasons = { };
 
     internal static Plugin Instance { get; private set; }
 
@@ -74,11 +78,6 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> DebugRender { get; set; }
 
     public static float CharactersVersion => Characters.latestVersion;
-    public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.58f;
-
-    public const bool PreRelease = false;
-    public static string[] PreReleaseReasons = { };
 
     private void Awake()
     {
@@ -95,7 +94,7 @@ public class Plugin : BaseUnityPlugin
             }
             // End of keep on top
 
-            var egg = Secrets.GetEasterEgg();
+            string egg = Secrets.GetEasterEgg();
             if (egg != null)
             {
                 Log.LogInfo(egg);
@@ -105,7 +104,7 @@ public class Plugin : BaseUnityPlugin
             if (PreRelease)
             {
                 Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
-                foreach (var reason in PreReleaseReasons)
+                foreach (string reason in PreReleaseReasons)
                 {
                     switch (reason)
                     {
@@ -184,7 +183,7 @@ public class Plugin : BaseUnityPlugin
             Log.LogError(
                 "Failed to patch with Harmony. This is likely caused by the game version being incompatible with the plugin version. The current plugin version is v" +
                 PluginVersion);
-            
+
             Log.LogError(e);
             Harmony.UnpatchSelf();
         }
@@ -198,6 +197,7 @@ public class Plugin : BaseUnityPlugin
         {
             return;
         }
+
         Harmony.UnpatchSelf();
         this.Logger.LogInfo($"Unloaded {PluginName}!");
     }
@@ -235,7 +235,7 @@ public class Plugin : BaseUnityPlugin
                 AllModsImportDirs.Add(modImportDir);
                 shouldCheckSubDirs = false;
             }
-            
+
             DirectoryInfo modLibrariesDir = new(Path.Combine(modPath, "Libraries"));
             if (modLibrariesDir.Exists)
             {
@@ -247,7 +247,8 @@ public class Plugin : BaseUnityPlugin
             {
                 foreach (string subDir in Directory.GetDirectories(modPath))
                 {
-                    FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs, ref AllModsLibrariesDirs);
+                    FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs,
+                        ref AllModsLibrariesDirs);
                 }
             }
         }
@@ -273,10 +274,10 @@ public class Plugin : BaseUnityPlugin
         int cur = 0;
         foreach (FileInfo file in files)
         {
-            var fileName = file.Name;
+            string fileName = file.Name;
             try
             {
-                var modGuid = FindPluginName(file.DirectoryName);
+                string modGuid = FindPluginName(file.DirectoryName);
                 if (modGuid != null && modGuid != "plugins")
                 {
                     fileName = $"{modGuid}/{fileName}";
@@ -288,17 +289,20 @@ public class Plugin : BaseUnityPlugin
             {
                 Log.LogError(e);
             }
+
             if (DateTime.Now.Ticks > _nextProgressUpdate)
             {
                 _nextProgressUpdate = DateTime.Now.Ticks + 666666;
                 yield return null;
             }
+
             try
             {
-                if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
-                    file.LastWriteTimeUtc.Ticks != time || Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
+                if (!CacheEnabled.Value ||
+                    !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
+                    file.LastWriteTimeUtc.Ticks != time ||
+                    Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
                 {
-
                     UnityWebRequest wr = new(file.FullName);
                     wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
                     wr.SendWebRequest();
@@ -307,7 +311,7 @@ public class Plugin : BaseUnityPlugin
                     clip = DownloadHandlerAudioClip.GetContent(wr);
                     wr.Dispose();
                     clip.name = fileName;
-                    var chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
+                    string chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
                     CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks, chksum2);
                 }
 
@@ -358,27 +362,28 @@ public class Plugin : BaseUnityPlugin
         {
             return;
         }
-        var floatArray = new float[clip.samples * clip.channels];
+
+        float[] floatArray = new float[clip.samples * clip.channels];
         clip.GetData(floatArray, 0);
-        var byteArray = new byte[floatArray.Length * 4];
+        byte[] byteArray = new byte[floatArray.Length * 4];
         Buffer.BlockCopy(floatArray, 0, byteArray, 0, byteArray.Length);
-        var fileName = clip.name.Replace("/","_") + ".audioclip";
+        string fileName = clip.name.Replace("/", "_") + ".audioclip";
         File.WriteAllBytes(Path.Combine(Locations.Cache.FullName, fileName), byteArray);
-        var meta = "channels: " + clip.channels + "\n" +
-                   "frequency: " + clip.frequency + "\n" +
-                   "length: " + clip.length + "\n" +
-                   "samples: " + clip.samples + "\n" +
-                   "time: " + ticks + "\n" +
-                   "chksum: " + chksum;
-        File.WriteAllText(Path.Combine(Locations.Cache.FullName, clip.name.Replace("/","_") + ".meta"), meta);
+        string meta = "channels: " + clip.channels + "\n" +
+                      "frequency: " + clip.frequency + "\n" +
+                      "length: " + clip.length + "\n" +
+                      "samples: " + clip.samples + "\n" +
+                      "time: " + ticks + "\n" +
+                      "chksum: " + chksum;
+        File.WriteAllText(Path.Combine(Locations.Cache.FullName, clip.name.Replace("/", "_") + ".meta"), meta);
         GC.Collect();
     }
-    
+
     private static bool TryLoadAudioFromCache(string name, out AudioClip clip, out long time, out string chksum)
     {
         name = name.Replace("/", "_");
-        var fileName = name + ".audioclip";
-        var path = Path.Combine(Locations.Cache.FullName, fileName);
+        string fileName = name + ".audioclip";
+        string path = Path.Combine(Locations.Cache.FullName, fileName);
         if (!File.Exists(path))
         {
             clip = null;
@@ -386,8 +391,9 @@ public class Plugin : BaseUnityPlugin
             chksum = null;
             return false;
         }
-        var bytes = File.ReadAllBytes(path);
-        var floatArray = new float[bytes.Length / 4];
+
+        byte[] bytes = File.ReadAllBytes(path);
+        float[] floatArray = new float[bytes.Length / 4];
         Buffer.BlockCopy(bytes, 0, floatArray, 0, bytes.Length);
         if (!File.Exists(Path.Combine(Locations.Cache.FullName, name + ".meta")))
         {
@@ -396,11 +402,12 @@ public class Plugin : BaseUnityPlugin
             chksum = null;
             return false;
         }
-        var meta = File.ReadAllText(Path.Combine(Locations.Cache.FullName, name + ".meta"));
-        var lines = meta.Split('\n');
-        var channels = int.Parse(lines[0].Split(' ')[1]);
-        var frequency = int.Parse(lines[1].Split(' ')[1]);
-        var samples = int.Parse(lines[3].Split(' ')[1]);
+
+        string meta = File.ReadAllText(Path.Combine(Locations.Cache.FullName, name + ".meta"));
+        string[] lines = meta.Split('\n');
+        int channels = int.Parse(lines[0].Split(' ')[1]);
+        int frequency = int.Parse(lines[1].Split(' ')[1]);
+        int samples = int.Parse(lines[3].Split(' ')[1]);
         time = long.Parse(lines[4].Split(' ')[1]);
         chksum = lines.Length > 5 ? lines[5].Split(' ')[1] : "";
         clip = AudioClip.Create(name, samples, channels, frequency, false);
@@ -442,7 +449,7 @@ public class Plugin : BaseUnityPlugin
                             byte[] bytes = File.ReadAllBytes(file.FullName);
                             tex.LoadImage(bytes);
                             tex.name = fileName;
-                            var modGuid = FindPluginName(file.DirectoryName);
+                            string modGuid = FindPluginName(file.DirectoryName);
                             if (modGuid != null && modGuid != "plugins")
                             {
                                 fileName = $"{modGuid}/{fileName}";
@@ -461,12 +468,12 @@ public class Plugin : BaseUnityPlugin
                         _nextProgressUpdate = DateTime.Now.Ticks + 666666;
                         yield return null;
                     }
+
                     try
                     {
-                        var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
+                        string meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
                         if (File.Exists(Path.Combine(file.DirectoryName, meta)))
                         {
-
                             List<string> metaLines =
                                 File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
                             Dictionary<string, string> metaDict = new();
@@ -487,11 +494,12 @@ public class Plugin : BaseUnityPlugin
                         }
                         else
                         {
-                            costumeData.AddCustomObject(fileName, tex, new());
+                            costumeData.AddCustomObject(fileName, tex, new Dictionary<string, string>());
                         }
 
                         costumeCount++;
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         Log.LogError(e);
                     }
@@ -504,7 +512,7 @@ public class Plugin : BaseUnityPlugin
                 lastProgressUpdate = DateTime.Now.Ticks;
                 UpdateConsoleLogLoadingBar($"Loading custom costumes from {dir.FullName}", cur, count);
             }
-            
+
             GC.Collect();
             LoadContent._loadedAssets++;
             if (DateTime.Now.Ticks > _nextProgressUpdate)
@@ -513,7 +521,6 @@ public class Plugin : BaseUnityPlugin
                 yield return null;
             }
         }
-
 
 
         if (costumeCount != 0)
@@ -528,10 +535,10 @@ public class Plugin : BaseUnityPlugin
         {
             yield break;
         }
-        
+
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
             .Where(f => f.Extension.ToLower() == ".dll").ToArray();
-        
+
         int count = files.Length;
         long lastProgressUpdate = DateTime.Now.Ticks;
         int cur = 0;
@@ -547,11 +554,13 @@ public class Plugin : BaseUnityPlugin
             {
                 Log.LogError(e);
             }
+
             if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
             {
                 lastProgressUpdate = DateTime.Now.Ticks;
                 UpdateConsoleLogLoadingBar($"Loading custom libraries from {dir.FullName}", cur, count);
             }
+
             cur++;
             if (DateTime.Now.Ticks > _nextProgressUpdate)
             {
@@ -580,7 +589,7 @@ public class Plugin : BaseUnityPlugin
             string fileName = file.Name;
             try
             {
-                var modGuid = FindPluginName(file.DirectoryName);
+                string modGuid = FindPluginName(file.DirectoryName);
                 if (modGuid != null && modGuid != "plugins")
                 {
                     fileName = $"{modGuid}/{fileName}";
@@ -592,14 +601,16 @@ public class Plugin : BaseUnityPlugin
             {
                 Log.LogError(e);
             }
+
             if (DateTime.Now.Ticks > _nextProgressUpdate)
             {
                 _nextProgressUpdate = DateTime.Now.Ticks + 666666;
                 yield return null;
             }
+
             try
             {
-                var promo = PromoData.CreatePromo(file.FullName);
+                PromoData promo = PromoData.CreatePromo(file.FullName);
                 promoCount++;
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
@@ -629,7 +640,7 @@ public class Plugin : BaseUnityPlugin
             Log.LogInfo($"Loaded {promoCount} custom promos from {dir.FullName}");
         }
     }
-    
+
     internal static IEnumerator LoadMeshes(DirectoryInfo dir)
     {
         int meshCount = 0;
@@ -638,6 +649,7 @@ public class Plugin : BaseUnityPlugin
         {
             yield break;
         }
+
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
             .Where(f => MeshExtensions.Contains(f.Extension.ToLower())).ToArray();
         long lastProgressUpdate = DateTime.Now.Ticks;
@@ -662,7 +674,7 @@ public class Plugin : BaseUnityPlugin
                             mesh = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<Mesh>().First();
                             mesh.name = fileName;
 
-                            var modGuid = FindPluginName(file.DirectoryName);
+                            string modGuid = FindPluginName(file.DirectoryName);
                             if (modGuid != null && modGuid != "plugins")
                             {
                                 fileName = $"{modGuid}/{fileName}";
@@ -679,10 +691,9 @@ public class Plugin : BaseUnityPlugin
                     yield return null;
                     try
                     {
-                        var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
+                        string meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
                         if (File.Exists(Path.Combine(file.DirectoryName, meta)))
                         {
-
                             List<string> metaLines =
                                 File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
                             Dictionary<string, string> metaDict = new();
@@ -703,14 +714,16 @@ public class Plugin : BaseUnityPlugin
                         }
                         else
                         {
-                            costumeData.AddCustomObject(fileName, mesh, new());
+                            costumeData.AddCustomObject(fileName, mesh, new Dictionary<string, string>());
                         }
 
                         meshCount++;
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         Log.LogError(e);
                     }
+
                     break;
                 }
             }
@@ -731,6 +744,7 @@ public class Plugin : BaseUnityPlugin
                     Log.LogError(e);
                 }
             }
+
             cur++;
             if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
             {
@@ -744,7 +758,7 @@ public class Plugin : BaseUnityPlugin
             Log.LogInfo($"Loaded {meshCount} custom meshes from {dir.FullName}");
         }
     }
-    
+
     internal static IEnumerator LoadOverrides(DirectoryInfo dir)
     {
         int overrideCount = 0;
@@ -775,7 +789,7 @@ public class Plugin : BaseUnityPlugin
                     tex.LoadImage(bytes);
                     tex.name = fileName;
 
-                    var modGuid = FindPluginName(file.DirectoryName);
+                    string modGuid = FindPluginName(file.DirectoryName);
                     if (modGuid != null && modGuid != "plugins")
                     {
                         fileName = $"{modGuid}/{fileName}";
@@ -804,27 +818,31 @@ public class Plugin : BaseUnityPlugin
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                 try
                 {
-
-                    var modGuid = FindPluginName(file.DirectoryName);
+                    string modGuid = FindPluginName(file.DirectoryName);
                     if (modGuid != null && modGuid != "plugins")
                     {
                         fileName = $"{modGuid}/{fileName}";
                     }
 
                     LoadContent._lastItemLoaded = fileName;
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Log.LogError(e);
                 }
+
                 if (DateTime.Now.Ticks > _nextProgressUpdate)
                 {
                     _nextProgressUpdate = DateTime.Now.Ticks + 666666;
                     yield return null;
                 }
+
                 try
                 {
-                    if (!CacheEnabled.Value || !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
-                        file.LastWriteTimeUtc.Ticks != time || Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
+                    if (!CacheEnabled.Value ||
+                        !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
+                        file.LastWriteTimeUtc.Ticks != time ||
+                        Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
                     {
                         UnityWebRequest wr = new(file.FullName);
                         wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
@@ -834,7 +852,7 @@ public class Plugin : BaseUnityPlugin
                         clip = DownloadHandlerAudioClip.GetContent(wr);
                         wr.Dispose();
                         clip.name = fileName;
-                        var chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
+                        string chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
                         CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks, chksum2);
                     }
 
@@ -848,12 +866,14 @@ public class Plugin : BaseUnityPlugin
                 {
                     Log.LogError(e);
                 }
+
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
                 {
                     lastProgressUpdate = DateTime.Now.Ticks;
                     UpdateConsoleLogLoadingBar($"Loading resource overrides from {dir.FullName}", cur, count);
                 }
+
                 GC.Collect();
                 LoadContent._loadedAssets++;
                 if (DateTime.Now.Ticks > _nextProgressUpdate)
@@ -872,17 +892,19 @@ public class Plugin : BaseUnityPlugin
 
     private static string FindPluginName(string fileDirectoryName)
     {
-        var dir = new DirectoryInfo(fileDirectoryName);
-        var child = dir;
+        DirectoryInfo dir = new DirectoryInfo(fileDirectoryName);
+        DirectoryInfo child = dir;
         while (dir != null && dir.Name != "plugins")
         {
             child = dir;
             dir = dir.Parent;
         }
+
         if (dir == null)
         {
             throw new Exception($"Could not find 'plugins' directory for {fileDirectoryName}");
         }
+
         return child.Name;
     }
 
@@ -903,21 +925,21 @@ public class Plugin : BaseUnityPlugin
             int cur = 0;
             foreach (FileInfo file in files)
             {
-                var json = File.ReadAllText(file.FullName);
+                string json = File.ReadAllText(file.FullName);
                 BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
                 if (character == null)
                 {
                     Log.LogError($"Failed to import character from {file.FullName}.");
                     continue;
                 }
-                
-                var name = file.Name;
-                var guid = Directory.GetParent(file.DirectoryName!)?.Name;
+
+                string name = file.Name;
+                string guid = Directory.GetParent(file.DirectoryName!)?.Name;
                 if (guid != null && guid != "plugins")
                 {
                     name = $"{guid}/{name}";
                 }
-                
+
                 character._guid = name;
 
                 ImportedCharacters.Add(character);
@@ -1008,22 +1030,27 @@ public class Plugin : BaseUnityPlugin
             {
                 extensions.AddRange(ImageExtensions);
             }
+
             if ((type & LoadContent.ContentType.Audio) != 0)
             {
                 extensions.AddRange(AudioExtensions);
             }
+
             if ((type & LoadContent.ContentType.Mesh) != 0)
             {
                 extensions.AddRange(MeshExtensions);
             }
+
             if ((type & LoadContent.ContentType.Promo) != 0)
             {
                 extensions.AddRange(PromoExtensions);
             }
+
             count += dir
                 .GetFiles("*", SearchOption.AllDirectories)
                 .Count(f => extensions.Contains(f.Extension.ToLower()));
         }
+
         return count;
     }
 }

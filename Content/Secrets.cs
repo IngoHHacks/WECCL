@@ -19,8 +19,7 @@ public static class Secrets
         "Beware of Mat Dickie. He's watching you. Always. Everywhere.",
         "Can people stop making fun of Mat Dickie? He's trying his best. He's just not very good at it.",
         "Can someone tell Mat Dickie to make a game that doesn't have garbage code? Thanks.",
-        "Ceci n'est pas une oeuf de Pâques.",
-        "Despite Mat Dickie's code, this game is actually pretty good.",
+        "Ceci n'est pas une oeuf de Pâques.", "Despite Mat Dickie's code, this game is actually pretty good.",
         "Did you know that WECCL is an anagram of \"CLEWC\"? I don't know what that means, but it sounds cool.",
         "Did you know that WECCL is not an acronym but a word? It's pronounced \"weasel\".",
         "Did you know that WECCL is secretly a recursive acronym? It stands for \"WECCL Eliminates Code Complexity Lazily\".",
@@ -45,8 +44,7 @@ public static class Secrets
         "If you type \"Ingo is a Jabroni\" in the console, he will personally come to your house and give you a paw driver.",
         "Imagine if this game had a story mode. Oh wait, it does.",
         "Ingo is not responsible for any damage caused by this mod. This includes, but is not limited to: broken game saves, broken game files, broken game, broken computer, nightmares, vomiting, increased risk of heart attack, increased risk of cancer, increased risk of being eaten by a giant spider, and death.",
-        "Ingo says \"hi\".",
-        "Ingo, if you're reading this, your egg shell hat is stupid. Like, really stupid.",
+        "Ingo says \"hi\".", "Ingo, if you're reading this, your egg shell hat is stupid. Like, really stupid.",
         $"It is the year {DateTime.Now.Year + 450}. Mat Dickie pushed out another update for Wrestling Empire that broke all the mods. Ingo is still trying to fix his mod. He has been trying to fix it for 450 years. He is still not done.",
         "It's said that if you say \"WECCL\" three times in front of a mirror, you will be visited by the ghost of Mat Dickie.",
         "Jabroni: *exists* Ingo: *paw driver*",
@@ -79,17 +77,13 @@ public static class Secrets
         "That's a lot of mods you have installed. The developers are of WECCL are impressed. Due to the nature of WECCL, any comments about the amount of mods you have installed are speculation on our part. Please disregard this message if you do not have a lot of mods installed.",
         "That's a nice mod you have there. It would be a shame if someone... deleted it.",
         "The Holy trinity of Mat Dickie; fun, features, and frustration. These blessings were so strong, Mat restricted their power. He said, \"I will give you three choices. You can have fun, but you will have no features. You can have features, but you will have no fun. Or you can have both, but you will have to deal with frustration.\" Then, as humanity chose, a crack broke the earth. A dog rose from the depths of the earth, and said, \"I will offer the powerful choice of mod support! I am IngoH, lord of all Undickie.\" Humanity rose and said \"Begone, dog! We will not be tempted by your foul heresy!\" And Mat rose as well, and smote IngoH with a block of code so complex, it was said to contain all the bugs in the universe. IngoH cried \"This will not be the last of me! Mat will betr-\" and he fell into the eternal Abyss of deprecated code. Mat gifted humanity with a new update, a monumental piece of software that brimmed with fun, features, and above all, frustration - yes, a frustration so profound that it transcended the mundane and approached the divine. And humanity journeyed off with their new update, as Ingo's words echoed through their heads.",
-        "The real Jabroni was inside you all along.",
-        "The real WECCL is the friends we made along the way.",
-        "The wrestling speaks for itself.",
-        "This game contains wrestling. Or does it?",
+        "The real Jabroni was inside you all along.", "The real WECCL is the friends we made along the way.",
+        "The wrestling speaks for itself.", "This game contains wrestling. Or does it?",
         "This game is not a wrestling game. It's a life simulator.",
         "This game may contain jumpscares. Not because it's a horror game, but because Mat Dickie is so bad at coding that he probably accidentally wrote some code that makes the game jumpscare you.",
-        "This is a placeholder easter egg. Please come back later.",
-        "This is not an easter egg. It's a feature.",
+        "This is a placeholder easter egg. Please come back later.", "This is not an easter egg. It's a feature.",
         "To be fair, you have to have a very high IQ to understand WECCL. The code is extremely subtle, and without a solid grasp of theoretical physics most of the code will go over a typical programmer's head.",
-        "Touch grass. Now.",
-        "Uh oh, stinky. That's what I say whenever I look at Mat Dickie's code.",
+        "Touch grass. Now.", "Uh oh, stinky. That's what I say whenever I look at Mat Dickie's code.",
         "UwU, what's this? *notices your code*",
         "WECCL 2: Electric Boogaloo - Coming soon to a Thunderstore near you.",
         "WECCL DELUXE: IngoH Deletes Mat Dickie's Code - Coming soon to a Thunderstore near you.",
@@ -140,68 +134,195 @@ public static class Secrets
             case 696969:
                 return "Nicenicenice. You started WECCL 696969 times. That's extremely nice.";
             case 1000000:
-                return "You started WECCL one million times! That's it, I'm calling the police. You are a danger to society. Or perhaps you cheated by editing the meta file. Either way, you are a Jabroni.";
+                return
+                    "You started WECCL one million times! That's it, I'm calling the police. You are a danger to society. Or perhaps you cheated by editing the meta file. Either way, you are a Jabroni.";
             case 1000000000:
-                return "So, you started WECCL one billion times. That's cool, I guess. But did you know Ingo doesn't care? That's right! Ingo doesn't care about you or your stupid billion launches. He only cares about dog treats. So stop wasting your time and go buy Ingo some dog treats.";
+                return
+                    "So, you started WECCL one billion times. That's cool, I guess. But did you know Ingo doesn't care? That's right! Ingo doesn't care about you or your stupid billion launches. He only cares about dog treats. So stop wasting your time and go buy Ingo some dog treats.";
             case 2147483647:
-                return "Oh no! You started WECCL so many times that the number of times you started it can't go any higher! Congratulations, you broke the game. You must now uninstall WECCL and never play it again.";
+                return
+                    "Oh no! You started WECCL so many times that the number of times you started it can't go any higher! Congratulations, you broke the game. You must now uninstall WECCL and never play it again.";
             case < 0:
-                return "You started WECCL a negative number of times. That's not possible. How did you do that? Did you hack the game? Or did you just edit the meta file? Either way, you are a Jabroni.";
+                return
+                    "You started WECCL a negative number of times. That's not possible. How did you do that? Did you hack the game? Or did you just edit the meta file? Either way, you are a Jabroni.";
             case 0:
-                return "You started WECCL zero times. That's not possible. How did you do that? Did you hack the game? Or did you just edit the meta file? Either way, you are a Jabroni.";
+                return
+                    "You started WECCL zero times. That's not possible. How did you do that? Did you hack the game? Or did you just edit the meta file? Either way, you are a Jabroni.";
         }
 
         // Special Dates
-        if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1) return "IngoH just announced that WECCL is in fact going to be deleted. Haha, April Fools! You got pranked, Jabroni!";
-        if (DateTime.Now.Month == 12 && (DateTime.Now.Day >= 24 && DateTime.Now.Day <= 26)) return "Merry Christmas! Go spend some time with your family instead of playing this mod.";
-        if (DateTime.Now.Month == 10 && DateTime.Now.Day == 31) return "Boo! Did I scare you? No? Well, I tried. Happy Halloween from IngoH and the rest of the WECCL team!";
-        if (DateTime.Now.Month == 1 && DateTime.Now.Day == 1) return "Happy New Year! Go make some New Year's resolutions. And don't forget to include \"play WECCL more\" in them.";
-        if (DateTime.Now.Month == 2 && DateTime.Now.Day == 14) return "Happy Valentine's Day! I hope you have a great day with your loved ones. Or if you don't have any loved ones, I hope you have a great day playing WECCL.";
-        if (DateTime.Now.Month == 2 && DateTime.Now.Day == 29) return "Oh no! It's a leap year! That means you have to play WECCL one more day this year! I'm so sorry.";
+        if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1)
+        {
+            return
+                "IngoH just announced that WECCL is in fact going to be deleted. Haha, April Fools! You got pranked, Jabroni!";
+        }
+
+        if (DateTime.Now.Month == 12 && DateTime.Now.Day >= 24 && DateTime.Now.Day <= 26)
+        {
+            return "Merry Christmas! Go spend some time with your family instead of playing this mod.";
+        }
+
+        if (DateTime.Now.Month == 10 && DateTime.Now.Day == 31)
+        {
+            return
+                "Boo! Did I scare you? No? Well, I tried. Happy Halloween from IngoH and the rest of the WECCL team!";
+        }
+
+        if (DateTime.Now.Month == 1 && DateTime.Now.Day == 1)
+        {
+            return
+                "Happy New Year! Go make some New Year's resolutions. And don't forget to include \"play WECCL more\" in them.";
+        }
+
+        if (DateTime.Now.Month == 2 && DateTime.Now.Day == 14)
+        {
+            return
+                "Happy Valentine's Day! I hope you have a great day with your loved ones. Or if you don't have any loved ones, I hope you have a great day playing WECCL.";
+        }
+
+        if (DateTime.Now.Month == 2 && DateTime.Now.Day == 29)
+        {
+            return "Oh no! It's a leap year! That means you have to play WECCL one more day this year! I'm so sorry.";
+        }
+
         if (DateTime.Now.Month == 2 && DateTime.Now.Day == 30)
         {
-            return $"Happy February 30th! Wait, what? February 30th isn't a real day? How did you do that? Did you hack {OS.GetOSString("your operating system")}? I'm so confused.";
+            return
+                $"Happy February 30th! Wait, what? February 30th isn't a real day? How did you do that? Did you hack {OS.GetOSString("your operating system")}? I'm so confused.";
         }
-        if (DateTime.Now.Hour == 0 && DateTime.Now.Minute == 0) return "It's midnight! You should probably go to sleep now. Or you could stay up all night playing WECCL. I'm not your mom, I can't tell you what to do.";
-        if (DateTime.Now.Hour == 3 && DateTime.Now.Minute == 0) return "Playing WECCL at 3 AM challenge? That's so 2016. But hey! I'm not judging. You do you.";
-        if (DateTime.Now.Hour == 4 && DateTime.Now.Minute == 20) return "It's 4:20! You know what that means! It's time to blaze it! Or you could just play WECCL. That's cool too.";
-        if (DateTime.Now.Hour == 25) return "It's 25 o'clock! That's right, 25 o'clock! Apparently, you broke the space-time continuum. I'm not sure how you did that, but you did.";
+
+        if (DateTime.Now.Hour == 0 && DateTime.Now.Minute == 0)
+        {
+            return
+                "It's midnight! You should probably go to sleep now. Or you could stay up all night playing WECCL. I'm not your mom, I can't tell you what to do.";
+        }
+
+        if (DateTime.Now.Hour == 3 && DateTime.Now.Minute == 0)
+        {
+            return "Playing WECCL at 3 AM challenge? That's so 2016. But hey! I'm not judging. You do you.";
+        }
+
+        if (DateTime.Now.Hour == 4 && DateTime.Now.Minute == 20)
+        {
+            return
+                "It's 4:20! You know what that means! It's time to blaze it! Or you could just play WECCL. That's cool too.";
+        }
+
+        if (DateTime.Now.Hour == 25)
+        {
+            return
+                "It's 25 o'clock! That's right, 25 o'clock! Apparently, you broke the space-time continuum. I'm not sure how you did that, but you did.";
+        }
+
         if (DateTime.Now.Day == DateTime.Now.Month && DateTime.Now.Day == DateTime.Now.Hour &&
-            DateTime.Now.Day == DateTime.Now.Minute && DateTime.Now.Day == DateTime.Now.Second) return "Wow! It's the " + DateTime.Now.Day + " of the " + DateTime.Now.Month + " at " + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "! How cool is that?";
+            DateTime.Now.Day == DateTime.Now.Minute && DateTime.Now.Day == DateTime.Now.Second)
+        {
+            return "Wow! It's the " + DateTime.Now.Day + " of the " + DateTime.Now.Month + " at " + DateTime.Now.Hour +
+                   ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "! How cool is that?";
+        }
+
         if (DateTime.Now.Day == DateTime.Now.Month && DateTime.Now.Day == DateTime.Now.Hour &&
-            DateTime.Now.Day == DateTime.Now.Minute) return "Wow! It's the " + DateTime.Now.Day + " of the " + DateTime.Now.Month + " at " + DateTime.Now.Hour + ":" + DateTime.Now.Minute + "! That's pretty cool.";
-        
+            DateTime.Now.Day == DateTime.Now.Minute)
+        {
+            return "Wow! It's the " + DateTime.Now.Day + " of the " + DateTime.Now.Month + " at " + DateTime.Now.Hour +
+                   ":" + DateTime.Now.Minute + "! That's pretty cool.";
+        }
+
         // System Quirks
-        if (SystemInfo.batteryStatus != BatteryStatus.Unknown && SystemInfo.batteryLevel < 0.10f) return "Psst, hey! I just wanted to let you know that your battery is running low. You should probably plug in your computer.";
-        if (SystemInfo.batteryStatus != BatteryStatus.Unknown && SystemInfo.batteryLevel == 0f) return "Oh no, your battery level is at 0%! What are you waiting for? Plug it in right now!";
-        if (SystemInfo.usesReversedZBuffer && Random.Range(0, 1000) == 0) return "Psst, hey! I just wanted to let you know that you are using a reversed Z-buffer. I don't know what that means, but it sounds bad.";
-        if (SystemInfo.systemMemorySize < 1000 && Random.Range(0, 1000) == 0) return "Psst, hey! I just wanted to let you know that you have less than 1 GB of RAM. I'm not sure how you are even running this game, but you should probably upgrade your computer.";
+        if (SystemInfo.batteryStatus != BatteryStatus.Unknown && SystemInfo.batteryLevel < 0.10f)
+        {
+            return
+                "Psst, hey! I just wanted to let you know that your battery is running low. You should probably plug in your computer.";
+        }
+
+        if (SystemInfo.batteryStatus != BatteryStatus.Unknown && SystemInfo.batteryLevel == 0f)
+        {
+            return "Oh no, your battery level is at 0%! What are you waiting for? Plug it in right now!";
+        }
+
+        if (SystemInfo.usesReversedZBuffer && Random.Range(0, 1000) == 0)
+        {
+            return
+                "Psst, hey! I just wanted to let you know that you are using a reversed Z-buffer. I don't know what that means, but it sounds bad.";
+        }
+
+        if (SystemInfo.systemMemorySize < 1000 && Random.Range(0, 1000) == 0)
+        {
+            return
+                "Psst, hey! I just wanted to let you know that you have less than 1 GB of RAM. I'm not sure how you are even running this game, but you should probably upgrade your computer.";
+        }
+
         if (Environment.UserName.ToLower().StartsWith("ingo") && MetaFile.Data.PreviousUser != Environment.UserName)
         {
             MetaFile.Data.PreviousUser = Environment.UserName;
-            return "Hey, Ingo! How's it going? I hope you are having a great day. I just wanted to let you know that you are awesome. Keep up the good work!";
+            return
+                "Hey, Ingo! How's it going? I hope you are having a great day. I just wanted to let you know that you are awesome. Keep up the good work!";
         }
-        if ((Environment.UserName.ToLower().StartsWith("mat dickie") || Environment.UserName.ToLower().StartsWith("matdickie") || Environment.UserName.ToLower().StartsWith("mdickie")) && MetaFile.Data.PreviousUser != Environment.UserName)
+
+        if ((Environment.UserName.ToLower().StartsWith("mat dickie") ||
+             Environment.UserName.ToLower().StartsWith("matdickie") ||
+             Environment.UserName.ToLower().StartsWith("mdickie")) &&
+            MetaFile.Data.PreviousUser != Environment.UserName)
         {
             MetaFile.Data.PreviousUser = Environment.UserName;
             return "Hey, Mat! Thank you for using WECCL. Have a great day!";
         }
-        if (Environment.HasShutdownStarted) return "It appears that your computer is shutting down at this very moment. Why are you shutting down your computer? Are you done playing WECCL? I hope you had fun!";
-        if (Environment.TickCount <= 60000) return "You started WECCL less than a minute after you started your computer. That's pretty impressive.";
-        if (Environment.TickCount >= 1000 * 60 * 60 * 24 * 7 && Random.Range(0, 1000) == 0) return "You started WECCL more than a week after you started your computer. I'm not judging, but you should probably restart your computer every once in a while.";
-        if (Environment.TickCount < 0 && Random.Range(0, 1000) == 0) return "Psst, hey! I just wanted to let you know that your computer has been running for more than 24 days. You should probably restart it.";
-        if (Plugin.MaxBackups.Value == 69 && Random.Range(0, 1000) == 0) return "You set the maximum number of backups to 69. Nice.";
-        if (Plugin.BaseFedLimit.Value == 69 && Random.Range(0, 1000) == 0) return "You set the base federation limit to 69. Nice.";
-        if (int.Parse(Plugin.PluginVer.Split('.')[2]) >= 10 && Random.Range(0, 1000) == 0) return $"This is already patch #{Plugin.PluginVer.Split('.')[2]}. of {Plugin.PluginVer.Split('.')[0]}.{Plugin.PluginVer.Split('.')[1]}! That's because Ingo is a good developer who always writes good code that totally works!";
+
+        if (Environment.HasShutdownStarted)
+        {
+            return
+                "It appears that your computer is shutting down at this very moment. Why are you shutting down your computer? Are you done playing WECCL? I hope you had fun!";
+        }
+
+        if (Environment.TickCount <= 60000)
+        {
+            return "You started WECCL less than a minute after you started your computer. That's pretty impressive.";
+        }
+
+        if (Environment.TickCount >= 1000 * 60 * 60 * 24 * 7 && Random.Range(0, 1000) == 0)
+        {
+            return
+                "You started WECCL more than a week after you started your computer. I'm not judging, but you should probably restart your computer every once in a while.";
+        }
+
+        if (Environment.TickCount < 0 && Random.Range(0, 1000) == 0)
+        {
+            return
+                "Psst, hey! I just wanted to let you know that your computer has been running for more than 24 days. You should probably restart it.";
+        }
+
+        if (Plugin.MaxBackups.Value == 69 && Random.Range(0, 1000) == 0)
+        {
+            return "You set the maximum number of backups to 69. Nice.";
+        }
+
+        if (Plugin.BaseFedLimit.Value == 69 && Random.Range(0, 1000) == 0)
+        {
+            return "You set the base federation limit to 69. Nice.";
+        }
+
+        if (int.Parse(Plugin.PluginVer.Split('.')[2]) >= 10 && Random.Range(0, 1000) == 0)
+        {
+            return
+                $"This is already patch #{Plugin.PluginVer.Split('.')[2]}. of {Plugin.PluginVer.Split('.')[0]}.{Plugin.PluginVer.Split('.')[1]}! That's because Ingo is a good developer who always writes good code that totally works!";
+        }
 
         return null;
     }
 
     public static string GetEasterEgg()
     {
-        var conditionalEasteregg = GetConditionalEasterEgg();
-        if (conditionalEasteregg != null) return conditionalEasteregg;
-        if (Random.Range(0, 100) == 0) return EasterEggs[Random.Range(0, EasterEggs.Length)];
+        string conditionalEasterEgg = GetConditionalEasterEgg();
+        if (conditionalEasterEgg != null)
+        {
+            return conditionalEasterEgg;
+        }
+
+        if (Random.Range(0, 100) == 0)
+        {
+            return EasterEggs[Random.Range(0, EasterEggs.Length)];
+        }
+
         return null;
     }
 }

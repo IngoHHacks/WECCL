@@ -4,39 +4,40 @@ namespace WECCL.Saves;
 
 public class BetterCharacterDataFile
 {
+    internal string _guid;
     public BetterCharacterData characterData;
-    public string overrideMode;
     public string findMode;
     public string findName;
+    public string overrideMode;
 
-    internal string _guid;
-    
     [JsonIgnore]
     public BetterCharacterData CharacterData
     {
         get
         {
-            if (characterData == null)
+            if (this.characterData == null)
             {
                 return new BetterCharacterData();
             }
-            return characterData;
+
+            return this.characterData;
         }
     }
-    
+
     [JsonIgnore]
     public string OverrideMode
     {
         get
         {
-            if (overrideMode == null)
+            if (this.overrideMode == null)
             {
                 return "append";
             }
-            return overrideMode;
+
+            return this.overrideMode;
         }
     }
-    
+
     [JsonIgnore]
     public string FindMode
     {
@@ -46,10 +47,10 @@ public class BetterCharacterDataFile
             {
                 return this.overrideMode == "append" ? "" : "name_then_id";
             }
+
             return this.findMode;
         }
     }
-    
-    [JsonIgnore]
-    public string FindName => this.findName;
+
+    [JsonIgnore] public string FindName => this.findName;
 }

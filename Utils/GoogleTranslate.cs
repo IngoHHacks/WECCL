@@ -7,11 +7,12 @@ public static class GoogleTranslate
 {
     public static string Translate(string text, string from, string to)
     {
-        string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={from}&tl={to}&dt=t&q={Uri.EscapeUriString(text)}";
+        string url =
+            $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={from}&tl={to}&dt=t&q={Uri.EscapeUriString(text)}";
         string result = new WebClient().DownloadString(url);
         return ToText(result);
     }
-    
+
     private static string ToText(string result)
     {
         int start = result.IndexOf("\"", StringComparison.Ordinal) + 1;
@@ -51,6 +52,7 @@ public static class GoogleTranslate
                 }
             }
         }
+
         return sb.ToString();
     }
 }

@@ -6,12 +6,12 @@ public class LimitedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>
 
     public LimitedDictionary(int limit)
     {
-        _limit = limit;
+        this._limit = limit;
     }
 
     public new void Add(TKey key, TValue value)
     {
-        if (Count >= _limit)
+        if (this.Count >= this._limit)
         {
             Remove(this.First().Key);
         }
