@@ -19,7 +19,7 @@ public class ContentList : List<string>
             }
         }
     }
-    
+
     public new void Add(string item)
     {
         if (Aliases.AliasMap.TryGetValue(item, out string value))
@@ -31,7 +31,7 @@ public class ContentList : List<string>
             base.Add(item);
         }
     }
-    
+
     public new void AddRange(IEnumerable<string> collection)
     {
         foreach (string item in collection)
@@ -46,7 +46,7 @@ public class ContentList : List<string>
             }
         }
     }
-    
+
     public new void Insert(int index, string item)
     {
         if (Aliases.AliasMap.TryGetValue(item, out string value))
@@ -58,7 +58,7 @@ public class ContentList : List<string>
             base.Insert(index, item);
         }
     }
-    
+
     public new void InsertRange(int index, IEnumerable<string> collection)
     {
         foreach (string item in collection)
@@ -73,16 +73,14 @@ public class ContentList : List<string>
             }
         }
     }
-    
+
     public new bool Remove(string item)
     {
         if (Aliases.AliasMap.TryGetValue(item, out string value))
         {
             return base.Remove(value);
         }
-        else
-        {
-            return base.Remove(item);
-        }
+
+        return base.Remove(item);
     }
 }

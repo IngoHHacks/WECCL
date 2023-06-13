@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using WECCL.Content;
-using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace WECCL.Patches;
 
@@ -13,12 +13,14 @@ public class ArenaPatch
     public static List<string> weaponList;
     public static float yOverride;
     public static int NoOriginalLocationsValue;
+    public static bool freezeAnnouncers;
 
     private void Awake()
     {
         CreateObjectMapping();
         CreateWeaponMapping();
     }
+
     private static void CreateObjectMapping()
     {
         objectMappings = new Dictionary<string, int>
@@ -138,16 +140,19 @@ public class ArenaPatch
         {
             World.arenaShape = 4;
         }
+
         arenaShape = GameObject.Find("arenaShape3");
         if (arenaShape != null)
         {
             World.arenaShape = 3;
         }
+
         arenaShape = GameObject.Find("arenaShape2");
         if (arenaShape != null)
         {
             World.arenaShape = 2;
         }
+
         arenaShape = GameObject.Find("arenaShape1");
         if (arenaShape != null)
         {
@@ -197,7 +202,7 @@ public class ArenaPatch
         public static void INHDFFHDMMAPatch(ref string __result, ref int PPNPMGBOHKI, string CJLCJLAGLDP)
         {
             string originalResult = __result;
-            string text = "Location " + PPNPMGBOHKI.ToString();
+            string text = "Location " + PPNPMGBOHKI;
 
             GameObject arenaName = FindGameObjectWithNameStartingWith("Arena Name:");
             if (arenaName != null)
@@ -214,7 +219,7 @@ public class ArenaPatch
 
         private static GameObject FindGameObjectWithNameStartingWith(string name)
         {
-            GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>();
+            GameObject[] gameObjects = Object.FindObjectsOfType<GameObject>();
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -244,40 +249,45 @@ public class ArenaPatch
                     float furthestEastDistance = float.MinValue;
                     float furthestSouthDistance = float.MaxValue;
                     float furthestWestDistance = float.MaxValue;
-                    if (itemMarkerEast != null && itemMarkerNorth != null && itemMarkerSouth != null && itemMarkerWest != null)
+                    if (itemMarkerEast != null && itemMarkerNorth != null && itemMarkerSouth != null &&
+                        itemMarkerWest != null)
                     {
-
                         if (itemMarkerNorth != null)
                         {
-                            float northDistance = Vector3.Distance(itemMarkerNorth.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float northDistance = Vector3.Distance(itemMarkerNorth.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestNorthDistance = northDistance;
                         }
 
                         if (itemMarkerEast != null)
                         {
-                            float eastDistance = Vector3.Distance(itemMarkerEast.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float eastDistance = Vector3.Distance(itemMarkerEast.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestEastDistance = eastDistance;
                         }
 
                         if (itemMarkerSouth != null)
                         {
-                            float southDistance = Vector3.Distance(itemMarkerSouth.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float southDistance = Vector3.Distance(itemMarkerSouth.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestSouthDistance = southDistance;
                         }
 
                         if (itemMarkerWest != null)
                         {
-                            float westDistance = Vector3.Distance(itemMarkerWest.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float westDistance = Vector3.Distance(itemMarkerWest.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestWestDistance = westDistance;
                         }
+
                         // The furthest distances from the center coordinates
                         float itemBorderNorth = furthestNorthDistance;
                         float itemBorderEast = furthestEastDistance;
                         float itemBorderSouth = furthestSouthDistance;
                         float itemBorderWest = furthestWestDistance;
 
-                        float newX = UnityEngine.Random.Range(-itemBorderWest, itemBorderEast);
-                        float newZ = UnityEngine.Random.Range(-itemBorderSouth, itemBorderNorth);
+                        float newX = Random.Range(-itemBorderWest, itemBorderEast);
+                        float newZ = Random.Range(-itemBorderSouth, itemBorderNorth);
                         float newY = World.ground;
 
                         __result = new Vector3(newX, newY, newZ);
@@ -285,7 +295,6 @@ public class ArenaPatch
                 }
             }
         }
-        
 
         [HarmonyPostfix]
         [HarmonyPatch("PKHEPCDDIBM")]
@@ -293,14 +302,27 @@ public class ArenaPatch
         {
             if (World.location > VanillaCounts.NoLocations)
             {
-                GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
-                float camDistanceFloat = new float();
+                GameObject[] freezeObj = Object.FindObjectsOfType<GameObject>();
+                GameObject[] announcerFreezeObj =
+                    freezeObj.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
+                if (announcerFreezeObj.Length > 0)
+                {
+                    freezeAnnouncers = true;
+                }
+                else
+                {
+                    freezeAnnouncers = false;
+                }
+
+                GameObject[] objects = Object.FindObjectsOfType<GameObject>();
+                float camDistanceFloat = new();
 
                 string desiredName = "camDistance";
                 GameObject[] camDistanceObj = objects.Where(obj => obj.name.StartsWith(desiredName)).ToArray();
-                if (camDistanceObj != null)
+                if (camDistanceObj.Length > 0)
                 {
-                    string[] camDistance = camDistanceObj.Select(obj => obj.name.Substring(desiredName.Length)).ToArray();
+                    string[] camDistance =
+                        camDistanceObj.Select(obj => obj.name.Substring(desiredName.Length)).ToArray();
 
                     foreach (string distance in camDistance)
                     {
@@ -314,8 +336,8 @@ public class ArenaPatch
                             Debug.LogError("Failed to parse camDistance: " + distance);
                         }
                     }
-
                 }
+
                 World.ground = 0f;
                 World.ceiling = 100f;
                 if (camDistanceFloat != 0)
@@ -347,28 +369,31 @@ public class ArenaPatch
                     float furthestWestDistance = float.MaxValue;
                     if (markerEast != null && markerNorth != null && markerSouth != null && markerWest != null)
                     {
-
                         if (markerNorth != null)
                         {
-                            float northDistance = Vector3.Distance(markerNorth.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float northDistance = Vector3.Distance(markerNorth.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestNorthDistance = northDistance;
                         }
 
                         if (markerEast != null)
                         {
-                            float eastDistance = Vector3.Distance(markerEast.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float eastDistance = Vector3.Distance(markerEast.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestEastDistance = eastDistance;
                         }
 
                         if (markerSouth != null)
                         {
-                            float southDistance = Vector3.Distance(markerSouth.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float southDistance = Vector3.Distance(markerSouth.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestSouthDistance = southDistance;
                         }
 
                         if (markerWest != null)
                         {
-                            float westDistance = Vector3.Distance(markerWest.transform.position, new Vector3(0.0f, -0.4f, 0.0f));
+                            float westDistance = Vector3.Distance(markerWest.transform.position,
+                                new Vector3(0.0f, -0.4f, 0.0f));
                             furthestWestDistance = westDistance;
                         }
 
@@ -417,6 +442,7 @@ public class ArenaPatch
                     {
                         continue;
                     }
+
                     int num6 = 0;
                     if (JGKBBDPDIBC.HAMLGCFNEFG > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
                     {
@@ -424,34 +450,73 @@ public class ArenaPatch
                         {
                             num6 = 1;
                         }
+
                         if (World.crowdSize < 0.7f && (i == 21 || i == 31 || i == 35))
                         {
                             num6 = 0;
                         }
-                        if (DNDIEGNJOKN.OBNLIIMODBI == 50 && JGKBBDPDIBC.HAMLGCFNEFG == 1 && JGKBBDPDIBC.OCMIPAODMHH(0, 1) == 0)
+
+                        if (DNDIEGNJOKN.OBNLIIMODBI == 50 && JGKBBDPDIBC.HAMLGCFNEFG == 1 &&
+                            JGKBBDPDIBC.OCMIPAODMHH(0, 1) == 0)
                         {
                             num6 = 0;
                         }
                     }
+
                     if (num6 > 0)
                     {
-                        transform4.gameObject.SetActive(value: true);
+                        transform4.gameObject.SetActive(true);
                         if (DNDIEGNJOKN.OBNLIIMODBI == 50 && EPPEAEEIGPG == 0)
                         {
                             if (JGKBBDPDIBC.HAMLGCFNEFG >= 2)
                             {
                                 num4 = JGKBBDPDIBC.OCMIPAODMHH(1, 6);
                             }
-                            transform4.gameObject.GetComponent<Renderer>().sharedMaterial = DHHHGMELCCL.DFBJGHFKJGB[num4];
+
+                            transform4.gameObject.GetComponent<Renderer>().sharedMaterial =
+                                DHHHGMELCCL.DFBJGHFKJGB[num4];
                         }
                     }
                     else if (DNDIEGNJOKN.OBNLIIMODBI == 50)
                     {
-                        UnityEngine.Object.Destroy(transform4.gameObject);
+                        Object.Destroy(transform4.gameObject);
                     }
                     else
                     {
-                        transform4.gameObject.SetActive(value: false);
+                        transform4.gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(GMIKIMHFABP))]
+        public static class GMIKIMHFABPPatch
+        {
+            public static int storedValue;
+
+            [HarmonyPrefix]
+            [HarmonyPatch("GCGDPDLEHPH")]
+            public static void GCGDPDLEHPHPatch(GMIKIMHFABP __instance)
+            {
+                if (freezeAnnouncers)
+                {
+                    if (__instance.MMDNKLMAOEF == 0)
+                    {
+                        storedValue = __instance.KEBLMJDJIFJ;
+                        __instance.KEBLMJDJIFJ = 0;
+                    }
+                }
+            }
+
+            [HarmonyPostfix]
+            [HarmonyPatch("GCGDPDLEHPH")]
+            public static void GCGDPDLEHPHPostPatch(GMIKIMHFABP __instance)
+            {
+                if (freezeAnnouncers)
+                {
+                    if (__instance.MMDNKLMAOEF == 0 && storedValue != __instance.KEBLMJDJIFJ)
+                    {
+                        __instance.KEBLMJDJIFJ = storedValue;
                     }
                 }
             }
@@ -461,8 +526,9 @@ public class ArenaPatch
     [HarmonyPatch(typeof(EEMAHMPFFPJ))]
     public static class EEMAHMPFFPJPatch
     {
-        public static bool furnitureAdded = false;
+        public static bool furnitureAdded;
         public static List<string> furnitureList;
+
         [HarmonyPostfix]
         [HarmonyPatch("ECBHAMCKPPG")]
         public static void ECBHAMCKPPGPatch(ref int __result, int EHEKDCOHHAO, int ELMNDAABAFD, int CDPGHLILDGH = 0)
@@ -474,12 +540,14 @@ public class ArenaPatch
                 //Code is making new list of arena items so set our list back to empty here
                 furnitureList = new List<string>();
             }
+
             if (EHEKDCOHHAO > VanillaCounts.NoLocations)
             {
                 if (EEMAHMPFFPJ.MNOMOILOJOF == null)
                 {
                     EEMAHMPFFPJ.MNOMOILOJOF = new Stock[1];
                 }
+
                 EEMAHMPFFPJ.MNOMOILOJOF[0] = new Stock();
                 {
                     //Maybe consider making this dynamic with map objects too for spawning stairs at any of the 4 (Or 6) corners
@@ -490,16 +558,20 @@ public class ArenaPatch
                             furnitureAdded = true;
                             furnitureList.Add("Steps1");
                             yOverride = 0f;
-                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, -35f * World.ringSize, 35f * World.ringSize, 315f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, -35f * World.ringSize,
+                                35f * World.ringSize, 315f);
                         }
+
                         if (ELMNDAABAFD == 2)
                         {
                             furnitureList.Add("Steps2");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, 35f * World.ringSize, -35f * World.ringSize, 135f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, 35f * World.ringSize,
+                                -35f * World.ringSize, 135f);
                         }
                     }
+
                     if (World.ringShape == 2)
                     {
                         if (ELMNDAABAFD == 1)
@@ -507,26 +579,31 @@ public class ArenaPatch
                             furnitureList.Add("Steps1");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, -21f * World.ringSize, 35f * World.ringSize, 330f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, -21f * World.ringSize,
+                                35f * World.ringSize, 330f);
                         }
+
                         if (ELMNDAABAFD == 2)
                         {
                             furnitureList.Add("Steps2");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, 21f * World.ringSize, -35f * World.ringSize, 150f);
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(4, EHEKDCOHHAO, 21f * World.ringSize,
+                                -35f * World.ringSize, 150f);
                         }
                     }
                 }
 
-                GameObject[] announcerObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
+                GameObject[] announcerObjects = Object.FindObjectsOfType<GameObject>()
+                    .Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
 
                 foreach (GameObject announcerObject in announcerObjects)
                 {
                     ProcessAnnouncerDesk(announcerObject);
                 }
 
-                GameObject[] customGameObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
+                GameObject[] customGameObjects = Object.FindObjectsOfType<GameObject>()
+                    .Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
 
                 foreach (GameObject customGameObject in customGameObjects)
                 {
@@ -534,16 +611,20 @@ public class ArenaPatch
                 }
 
 
-                if (EEMAHMPFFPJ.GPIENIJBOBC(EEMAHMPFFPJ.MNOMOILOJOF[0].type) == 0 || EEMAHMPFFPJ.MNOMOILOJOF[0].type > EEMAHMPFFPJ.IAFCKCCDOIJ)
+                if (EEMAHMPFFPJ.GPIENIJBOBC(EEMAHMPFFPJ.MNOMOILOJOF[0].type) == 0 ||
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].type > EEMAHMPFFPJ.IAFCKCCDOIJ)
                 {
                     EEMAHMPFFPJ.MNOMOILOJOF[0].type = 0;
                 }
+
                 if (CDPGHLILDGH != 0 && EEMAHMPFFPJ.MNOMOILOJOF[0].type != 0)
                 {
                     if (CDPGHLILDGH > 0)
                     {
                         num = EEMAHMPFFPJ.BMOJPOBDFKE();
-                        EEMAHMPFFPJ.MNOMOILOJOF[num].MFGJBJOKLHB(EEMAHMPFFPJ.MNOMOILOJOF[0].type, EEMAHMPFFPJ.MNOMOILOJOF[0].location, EEMAHMPFFPJ.MNOMOILOJOF[0].x, EEMAHMPFFPJ.MNOMOILOJOF[0].z, EEMAHMPFFPJ.MNOMOILOJOF[0].angle);
+                        EEMAHMPFFPJ.MNOMOILOJOF[num].MFGJBJOKLHB(EEMAHMPFFPJ.MNOMOILOJOF[0].type,
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].location, EEMAHMPFFPJ.MNOMOILOJOF[0].x,
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].z, EEMAHMPFFPJ.MNOMOILOJOF[0].angle);
                     }
                     else
                     {
@@ -552,17 +633,22 @@ public class ArenaPatch
                         {
                             EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK = EEMAHMPFFPJ.MNOMOILOJOF[0].scale;
                             EEMAHMPFFPJ.MPCFNIBPKEK[num].DCFICGBNBFH(EEMAHMPFFPJ.MNOMOILOJOF[0].type);
-                            EEMAHMPFFPJ.MPCFNIBPKEK[num].CBLJCJMAPGH.transform.localScale = new Vector3(EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK, EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK, EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK);
+                            EEMAHMPFFPJ.MPCFNIBPKEK[num].CBLJCJMAPGH.transform.localScale = new Vector3(
+                                EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK, EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK,
+                                EEMAHMPFFPJ.MPCFNIBPKEK[num].MHDPPBHFPPK);
                         }
-                        EEMAHMPFFPJ.MPCFNIBPKEK[num].NDGLGAJCAOP(EEMAHMPFFPJ.MNOMOILOJOF[0].x, World.ground, EEMAHMPFFPJ.MNOMOILOJOF[0].z, EEMAHMPFFPJ.MNOMOILOJOF[0].angle);
+
+                        EEMAHMPFFPJ.MPCFNIBPKEK[num].NDGLGAJCAOP(EEMAHMPFFPJ.MNOMOILOJOF[0].x, World.ground,
+                            EEMAHMPFFPJ.MNOMOILOJOF[0].z, EEMAHMPFFPJ.MNOMOILOJOF[0].angle);
                     }
                 }
+
                 if (CDPGHLILDGH == 0 && EEMAHMPFFPJ.MNOMOILOJOF[0].type != 0)
                 {
                     num = ELMNDAABAFD;
                 }
             }
-            //Reset customY to 0 before leaving
+
             __result = num;
 
             void CustomGameObjectSpawner(GameObject customObject)
@@ -582,7 +668,8 @@ public class ArenaPatch
                     {
                         furnitureAdded = true;
                         yOverride = newObjectPosition.y;
-                        EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(customObjectId, EHEKDCOHHAO, newObjectPosition.x, newObjectPosition.z, newObjectRotation.eulerAngles.y);
+                        EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(customObjectId, EHEKDCOHHAO, newObjectPosition.x,
+                            newObjectPosition.z, newObjectRotation.eulerAngles.y);
                     }
                 }
             }
@@ -590,14 +677,16 @@ public class ArenaPatch
             void ProcessAnnouncerDesk(GameObject deskObject)
             {
                 // Use Original table and chair positions to make custom location of them stay together
-                Vector3 originalTablePosition = new Vector3(44f, 0f, 43f);
+                Vector3 originalTablePosition = new(44f, 0f, 43f);
                 Quaternion originalTableRotation = Quaternion.Euler(0f, 180f, 0f);
 
-                Vector3 originalChair1Position = new Vector3(39.5f, 0f, 50.5f);
-                Vector3 originalChair2Position = new Vector3(48.5f, 0f, 50.5f);
+                Vector3 originalChair1Position = new(39.5f, 0f, 50.5f);
+                Vector3 originalChair2Position = new(48.5f, 0f, 50.5f);
 
-                Vector3 originalChair1RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) * (originalChair1Position - originalTablePosition);
-                Vector3 originalChair2RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) * (originalChair2Position - originalTablePosition);
+                Vector3 originalChair1RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) *
+                                                         (originalChair1Position - originalTablePosition);
+                Vector3 originalChair2RelativePosition = Quaternion.Euler(0f, originalTableRotation.eulerAngles.y, 0f) *
+                                                         (originalChair2Position - originalTablePosition);
 
                 // Retrieve the position (x, y, z) and rotation of the object
                 Vector3 newDeskPosition = deskObject.transform.position;
@@ -606,8 +695,10 @@ public class ArenaPatch
                 Quaternion relativeRotation = Quaternion.Inverse(originalTableRotation) * newDeskRotation;
 
                 // Adjust the chair positions based on the relative rotation of the desk object
-                Vector3 updatedChair1Position = newDeskPosition + (relativeRotation * (originalChair1Position - originalTablePosition));
-                Vector3 updatedChair2Position = newDeskPosition + (relativeRotation * (originalChair2Position - originalTablePosition));
+                Vector3 updatedChair1Position =
+                    newDeskPosition + (relativeRotation * (originalChair1Position - originalTablePosition));
+                Vector3 updatedChair2Position =
+                    newDeskPosition + (relativeRotation * (originalChair2Position - originalTablePosition));
 
                 // Add the furniture to the list and perform other actions
                 if (!furnitureList.Contains(deskObject.name) && !furnitureAdded)
@@ -615,21 +706,26 @@ public class ArenaPatch
                     furnitureList.Add(deskObject.name);
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(3, EHEKDCOHHAO, newDeskPosition.x, newDeskPosition.z, newDeskRotation.eulerAngles.y);
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(3, EHEKDCOHHAO, newDeskPosition.x, newDeskPosition.z,
+                        newDeskRotation.eulerAngles.y);
                 }
+
                 if (!furnitureList.Contains(deskObject.name + "ChairA") && !furnitureAdded)
                 {
                     furnitureList.Add(deskObject.name + "ChairA");
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(2, EHEKDCOHHAO, updatedChair1Position.x, updatedChair1Position.z, newDeskRotation.eulerAngles.y);
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(2, EHEKDCOHHAO, updatedChair1Position.x,
+                        updatedChair1Position.z, newDeskRotation.eulerAngles.y);
                 }
+
                 if (!furnitureList.Contains(deskObject.name + "ChairB") && !furnitureAdded)
                 {
                     furnitureList.Add(deskObject.name + "ChairB");
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(2, EHEKDCOHHAO, updatedChair2Position.x, updatedChair2Position.z, newDeskRotation.eulerAngles.y);
+                    EEMAHMPFFPJ.MNOMOILOJOF[0].MFGJBJOKLHB(2, EHEKDCOHHAO, updatedChair2Position.x,
+                        updatedChair2Position.z, newDeskRotation.eulerAngles.y);
                 }
             }
 
@@ -638,19 +734,19 @@ public class ArenaPatch
                 if (objectMappings == null)
                 {
                     //Make sure objectMappings is populated before it is used.
-                    ArenaPatch.CreateObjectMapping();
+                    CreateObjectMapping();
                 }
+
                 if (objectMappings.ContainsKey(input))
                 {
                     return objectMappings[input];
                 }
-                else
-                {
-                    return 0;
-                }
+
+                return 0;
             }
         }
     }
+
     [HarmonyPatch(typeof(DFAOBOGOEPL))]
     public static class DFAOBOGOEPLPatch
     {
@@ -665,6 +761,9 @@ public class ArenaPatch
                 __instance.GOGMLEFHKHE = yOverride;
                 __instance.PBFJIDAPJGL = yOverride;
                 __instance.EDHBIOFAKNL = yOverride;
+
+                //Set yOverride back to 0 afterwards so going to another map doesn't spawn all furniture in the air...
+                yOverride = 0f;
             }
         }
     }
@@ -674,6 +773,7 @@ public class ArenaPatch
     {
         //oldArenaFurnitureCount used to make sure furniture number on custom arena is correct when swapping between multiple custom arenas
         private static int oldArenaFurnitureCount;
+
         [HarmonyPrefix]
         [HarmonyPatch("Update")]
         public static void UpdatePrePatch(Scene_Match_Setup __instance)
@@ -690,21 +790,27 @@ public class ArenaPatch
                     {
                         World.ICKGKDOKJEN(1);
                     }
+
                     World.BMNCNDJBIGI();
                     World.MLLMEPFEDMF();
                     if (JGKBBDPDIBC.BFLIOCNAGDJ > 0)
                     {
                         Progress.arenaFog = World.fog;
                     }
+
                     //Calc furniture we should have on custom arena
-                    GameObject[] announcerObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
-                    GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
+                    GameObject[] announcerObjects = Object.FindObjectsOfType<GameObject>()
+                        .Where(obj => obj.name.StartsWith("AnnouncerDeskBundle")).ToArray();
+                    GameObject[] gameObjects = Object.FindObjectsOfType<GameObject>()
+                        .Where(obj => obj.name.StartsWith("GameObject:")).ToArray();
                     int steps = 0;
                     if (World.ringShape > 0)
                     {
                         steps = 2;
                     }
-                    EEMAHMPFFPJ.LDLJJPCMDOG = gameObjects.Length + (announcerObjects.Length * 3) + steps  - oldArenaFurnitureCount;
+
+                    EEMAHMPFFPJ.LDLJJPCMDOG = gameObjects.Length + (announcerObjects.Length * 3) + steps -
+                                              oldArenaFurnitureCount;
                     oldArenaFurnitureCount = EEMAHMPFFPJ.LDLJJPCMDOG - steps;
                     EEMAHMPFFPJ.JABCJBEPIMP = 0;
                     int num = GCOCDCCEALD.EHMFNAMNKEA(World.location);
@@ -713,12 +819,13 @@ public class ArenaPatch
                         GCOCDCCEALD.LDLJJPCMDOG = num;
                     }
                 }
+
                 __instance.oldArena = World.location;
             }
             else
             {
                 oldArenaFurnitureCount = 0;
-            }    
+            }
         }
 
         [HarmonyPostfix]
@@ -737,40 +844,53 @@ public class ArenaPatch
     [HarmonyPatch(typeof(GMIKIMHFABP))]
     public static class GMIKIMHFABPPrePatch
     {
-        static int stored_BHDLBIFOONA;
-        static bool ifStatementOnePassed = false;
-        static bool ifStatementTwoPassed = false;
+        private static int stored_BHDLBIFOONA;
+        private static bool ifStatementOnePassed;
+        private static bool ifStatementTwoPassed;
+
         [HarmonyPrefix]
         [HarmonyPatch("FPDABKEPGBE")]
         public static void FPDABKEPGBEPrePatch(GMIKIMHFABP __instance)
         {
-            
-            GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
-
-            if (pyroObjects.Length > 0)
+            if (World.location > VanillaCounts.NoLocations)
             {
-                if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 && __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast && __instance.OIHBMKLFEBJ > World.camSouth &&
-                    __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest && __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth && __instance.OIHBMKLFEBJ < World.farNorth &&
-                    __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) > 0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 || World.arenaShape * World.arenaBarriers == 0))
-                {
-                    ifStatementOnePassed = true;
-                }
-                else
-                {
-                    ifStatementOnePassed = false;
-                }
+                GameObject[] pyroObjects = Object.FindObjectsOfType<GameObject>()
+                    .Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
 
-                if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC && World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
+                if (pyroObjects.Length > 0)
                 {
-                    ifStatementTwoPassed = true;
+                    if (__instance.FLFDNLEILGC == 1f && __instance.MDOCJJELCBG != 54 &&
+                        __instance.PPFFBIPHOEE > World.camWest && __instance.PPFFBIPHOEE < World.camEast &&
+                        __instance.OIHBMKLFEBJ > World.camSouth &&
+                        __instance.OIHBMKLFEBJ < World.camNorth && __instance.PPFFBIPHOEE > World.farWest &&
+                        __instance.PPFFBIPHOEE < World.farEast && __instance.OIHBMKLFEBJ > World.farSouth &&
+                        __instance.OIHBMKLFEBJ < World.farNorth &&
+                        __instance.DDBPCBLFFIH(__instance.PPFFBIPHOEE, __instance.EDHBIOFAKNL, __instance.OIHBMKLFEBJ) >
+                        0 && (AKHBGBPEJHB.OAOFIKEGIHH(__instance.PPFFBIPHOEE, __instance.OIHBMKLFEBJ) > 0 ||
+                              World.arenaShape * World.arenaBarriers == 0))
+                    {
+                        ifStatementOnePassed = true;
+                    }
+                    else
+                    {
+                        ifStatementOnePassed = false;
+                    }
+
+                    if (ONACPDNNNMM.JJAJNKLJHCL == 1 && ONACPDNNNMM.JKAKKHJACHD == __instance.NMKACNOOPPC &&
+                        World.arenaShape > 0 && JGKBBDPDIBC.BHDLBIFOONA > 0)
+                    {
+                        ifStatementTwoPassed = true;
+                    }
+                    else
+                    {
+                        ifStatementTwoPassed = false;
+                    }
+
+                    //Set this to zero to stop original pyro from going off
+                    stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
+                    Debug.LogError("Pre Patch JGKBBDPDIBC.BHDLBIFOONA" + JGKBBDPDIBC.BHDLBIFOONA);
+                    JGKBBDPDIBC.BHDLBIFOONA = 0;
                 }
-                else
-                {
-                    ifStatementTwoPassed = false;
-                }
-                //Set this to zero to stop original pyro from going off
-                stored_BHDLBIFOONA = JGKBBDPDIBC.BHDLBIFOONA;
-                JGKBBDPDIBC.BHDLBIFOONA = 0;
             }
         }
 
@@ -779,13 +899,17 @@ public class ArenaPatch
         public static void FPDABKEPGBEPostPatch(GMIKIMHFABP __instance)
         {
             //Set GFEDPBPDALB.AFJDBIAFGKE back at postfix
-            JGKBBDPDIBC.BHDLBIFOONA = stored_BHDLBIFOONA;
+            if (stored_BHDLBIFOONA != 0)
+            {
+                JGKBBDPDIBC.BHDLBIFOONA = stored_BHDLBIFOONA;
+            }
 
             if (ifStatementOnePassed)
             {
                 if (ifStatementTwoPassed)
                 {
-                    GameObject[] pyroObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
+                    GameObject[] pyroObjects = Object.FindObjectsOfType<GameObject>()
+                        .Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
 
                     foreach (GameObject pyroObject in pyroObjects)
                     {
@@ -793,17 +917,23 @@ public class ArenaPatch
 
                         if (__instance.IPNKFGHIDJP.pyro == 1 || __instance.IPNKFGHIDJP.pyro < 0)
                         {
-                            EFIBMNEKJFB.NCANNKNAKBO(11, Color.white, 10f, null, 0f, newPyroPosition.y + 25f, newPyroPosition.z, 0f, 0f, 0.1f);
+                            EFIBMNEKJFB.NCANNKNAKBO(11, Color.white, 10f, null, 0f, newPyroPosition.y + 25f,
+                                newPyroPosition.z, 0f, 0f, 0.1f);
                         }
+
                         if (__instance.IPNKFGHIDJP.pyro == 2 || __instance.IPNKFGHIDJP.pyro < 0)
                         {
-                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, -7f, newPyroPosition.y, newPyroPosition.z);
-                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, 7f, newPyroPosition.y, newPyroPosition.z);
+                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, -7f, newPyroPosition.y,
+                                newPyroPosition.z);
+                            EFIBMNEKJFB.NCANNKNAKBO(10, Color.white, 10f, null, 7f, newPyroPosition.y,
+                                newPyroPosition.z);
                         }
+
                         if (__instance.IPNKFGHIDJP.pyro == 3 || __instance.IPNKFGHIDJP.pyro < 0)
                         {
                             JKPIHABGBGP.BDFEDMELBOL(__instance.BJANPGIFKHD, JKPIHABGBGP.GOBHIDLAEDF, -0.1f);
-                            EFIBMNEKJFB.NCANNKNAKBO(91, Color.white, 8f, null, 0f, newPyroPosition.y + 7f, newPyroPosition.z, 180f, 0.2f);
+                            EFIBMNEKJFB.NCANNKNAKBO(91, Color.white, 8f, null, 0f, newPyroPosition.y + 7f,
+                                newPyroPosition.z, 180f, 0.2f);
                         }
                     }
                 }
@@ -821,8 +951,8 @@ public class ArenaPatch
 
         public static string CustomWeaponName
         {
-            get { return customWeaponName; }
-            set { customWeaponName = value; }
+            get => customWeaponName;
+            set => customWeaponName = value;
         }
 
         [HarmonyPrefix]
@@ -830,8 +960,8 @@ public class ArenaPatch
         public static void FDJPDPPAGCLPrePatch()
         {
             //Reset these to null so loading custom map second time onwards doesn't force all outside ring weapons to a weapon spawn point
-            GCOCDCCEALDPrePatch.newWeaponPosition = null;
-            GCOCDCCEALDPrePatch.newWeaponRotation = null;
+            newWeaponPosition = null;
+            newWeaponRotation = null;
         }
 
         [HarmonyPostfix]
@@ -841,16 +971,17 @@ public class ArenaPatch
             newWeaponPosition = null;
             newWeaponRotation = null;
             weaponList = new List<string>();
-            System.Random random = new System.Random();
+            System.Random random = new();
 
             //Loops through here to add weapons, IJLDPEFGOOL = weapon ID
-            GameObject[] customWeaponObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.name.StartsWith("WeaponObject:")).ToArray();
+            GameObject[] customWeaponObjects = Object.FindObjectsOfType<GameObject>()
+                .Where(obj => obj.name.StartsWith("WeaponObject:")).ToArray();
             foreach (GameObject customWeaponObject in customWeaponObjects)
             {
                 string customWeaponName = customWeaponObject.name.Substring("WeaponObject:".Length);
                 //Remove numbers from end of the name
                 customWeaponName = Regex.Replace(customWeaponName, @"\d+$", string.Empty);
-                GCOCDCCEALDPrePatch.CustomWeaponName = customWeaponName;
+                CustomWeaponName = customWeaponName;
                 newWeaponPosition = customWeaponObject.transform.position;
                 newWeaponRotation = customWeaponObject.transform.eulerAngles;
 
@@ -864,6 +995,7 @@ public class ArenaPatch
                     {
                         customWeaponId = GetWeaponMapping(customWeaponName);
                     }
+
                     weaponList.Add(customWeaponObject.name);
                     if (customWeaponId != 0)
                     {
@@ -873,21 +1005,20 @@ public class ArenaPatch
             }
         }
 
-        static int GetWeaponMapping(string input)
+        private static int GetWeaponMapping(string input)
         {
             if (weaponMappings == null)
             {
                 //Make sure weaponMappings is populated before it is used.
-                ArenaPatch.CreateWeaponMapping();
+                CreateWeaponMapping();
             }
+
             if (weaponMappings.ContainsKey(input))
             {
                 return weaponMappings[input];
             }
-            else
-            {
-                return 0;
-            }
+
+            return 0;
         }
     }
 
@@ -938,23 +1069,27 @@ public class ArenaPatch
         public static void ICKGKDOKJEN_Patch()
         {
             GameObject titanCamera = GameObject.Find("TitantronCamera");
-            if(titanCamera)
+            if (titanCamera)
+            {
                 titanCamera.AddComponent<CameraTracking>();
+            }
         }
     }
-    
+
     public class CameraTracking : MonoBehaviour
     {
-        public GameObject CameraFocalPoint = null;
+        public GameObject CameraFocalPoint;
+
         private void Start()
         {
-            CameraFocalPoint = GameObject.Find("Camera Focal Point");
+            this.CameraFocalPoint = GameObject.Find("Camera Focal Point");
         }
+
         private void Update()
         {
-            if (CameraFocalPoint)
+            if (this.CameraFocalPoint)
             {
-                transform.LookAt(CameraFocalPoint.transform);
+                this.transform.LookAt(this.CameraFocalPoint.transform);
             }
         }
     }

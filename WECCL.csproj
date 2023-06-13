@@ -24,27 +24,47 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="UnityEngine.Modules" Version="2020.3.43" IncludeAssets="compile" />
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2020.3.43" IncludeAssets="compile"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="lib" />
+        <Folder Include="lib"/>
     </ItemGroup>
 
     <ItemGroup>
         <Reference Include="Assembly-CSharp">
             <HintPath>lib\Assembly-CSharp_public.dll</HintPath>
+            <Private>false</Private>
         </Reference>
         <Reference Include="UnityEngine.UI">
             <HintPath>lib\UnityEngine.UI.dll</HintPath>
+            <Private>false</Private>
         </Reference>
     </ItemGroup>
+
+    <PropertyGroup>
+        <!-- Change this to the BepInEx folder of your game if necessary -->
+        <BepInExPath>C:\Program Files (x86)\Steam\steamapps\common\Wrestling Empire\BepInEx</BepInExPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="*.md;*.txt;*.json;*.png" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="Build">
+        <Delete Files="$(OutputPath)\$(AssemblyName).deps.json"/>
+        <!-- Comment the lines below if you don't want to automatically copy the plugin to BepInEx -->
+        <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(BepInExPath)\plugins"/>
+        <Move SourceFiles="$(OutputPath)\$(AssemblyName).pdb" DestinationFolder="$(BepInExPath)\plugins"/>
+        <MakeDir Directories="$(OutputPath)\plugins"/>
+        <Move SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(OutputPath)\plugins"/>
+    </Target>
 
 </Project>

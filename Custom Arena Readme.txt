@@ -9,6 +9,7 @@ This readme is if you want to use unity to create a custom arena and has some gu
 
 -Make barriers that can be climbed on like the original arena barriers that can be climbed on / over. Simply make sure your barriers start with the name "Barrier_Climbables" (If you put them as a child of an object to group them, don't have "Barrier_Climbables" in the parents name) The mod will then render a climbable collision box around these objects for you as long as they have an appropriate meshCollider set.
 
+-Also can make "Cage" like climbable terrain, eg for chainlink fences. Just name it "Fence_Climbables" and the rest of the logic will work like the barriers but with cage climbing logic.
 
 -Set custom camera distance, make an object called camDistance200, will set the camera distance to 200 (Default arena camera distance is 135 which this mod will set it to if you don't make this object.) If you are wondering why you want this, I found this setting impacts when the name tag will appear and fireworks / smoke etc from entrances happens, the lower the camera distance, the closer to the ring the entrance effect seems to trigger. Also is just useful if you want to make small indoor maps like new backstage rooms.
 
@@ -37,5 +38,6 @@ Belt, Microphone, Camera, Bell, Explosive, Baseball Bat, Chair, Cage Piece, Wood
 
 In addition, you can use "WeaponObject:Random", "WeaponObject:Random2" etc to spawn a random weapon at a fixed location (This will also sometimes spawn nothing if it randomly hits a weapon that doesn't work)
 
+-If you have announce desk further from ring and find your announcers leave their seats to go stand at ringside, simply make an object called "AnnouncerFreeze" and the mod will disable the announcer AI so they don't leave their chairs.
 
 Any questions try the modding discord here: https://discord.gg/mH56AhUwPR

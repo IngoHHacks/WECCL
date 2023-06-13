@@ -57,19 +57,6 @@ public class Indices
         { "Laughter03", 58 },
         { "Applause03", 59 }
     };
-    
-    public static int ParseCrowdAudio(string audio)
-    {
-        if (int.TryParse(audio, out var index))
-        {
-            return index < CrowdAudio.Count ? index : throw new Exception($"Crowd audio index out of range: {audio}, max: {CrowdAudio.Count - 1}");
-        }
-        if (CrowdAudio.TryGetValue(audio, out index))
-        {
-            return index;
-        }
-        throw new Exception($"Unknown crowd audio: {audio}");
-    }
 
     public static Dictionary<string, int> TauntAnims = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -260,19 +247,37 @@ public class Indices
         { "Read Tablet (Left)", 184 }
     };
 
-    public static int ParseTauntAnim(string anim)
+    public static int ParseCrowdAudio(string audio)
     {
-        if (int.TryParse(anim, out var index))
+        if (int.TryParse(audio, out int index))
         {
-            return index < TauntAnims.Count ? index : throw new Exception($"Taunt animation index out of range: {anim}, max: {TauntAnims.Count - 1}");
+            return index < CrowdAudio.Count
+                ? index
+                : throw new Exception($"Crowd audio index out of range: {audio}, max: {CrowdAudio.Count - 1}");
         }
 
-        if (TauntAnims.TryGetValue(anim.Replace("_"," "), out index))
+        if (CrowdAudio.TryGetValue(audio, out index))
+        {
+            return index;
+        }
+
+        throw new Exception($"Unknown crowd audio: {audio}");
+    }
+
+    public static int ParseTauntAnim(string anim)
+    {
+        if (int.TryParse(anim, out int index))
+        {
+            return index < TauntAnims.Count
+                ? index
+                : throw new Exception($"Taunt animation index out of range: {anim}, max: {TauntAnims.Count - 1}");
+        }
+
+        if (TauntAnims.TryGetValue(anim.Replace("_", " "), out index))
         {
             return index;
         }
 
         throw new Exception($"Unknown taunt animation: {anim}");
     }
-
 }

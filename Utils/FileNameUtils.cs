@@ -4,11 +4,12 @@ public static class FileNameUtils
 {
     public static string Escape(string fileName)
     {
-        var replace = Path.GetInvalidFileNameChars();
-        foreach (var c in replace)
+        char[] replace = Path.GetInvalidFileNameChars();
+        foreach (char c in replace)
         {
             fileName = fileName.Replace(c, '_');
         }
+
         return fileName;
     }
 
@@ -18,10 +19,12 @@ public static class FileNameUtils
         {
             source = source.Parent;
         }
+
         if (source.Parent?.Name == "BepInEx")
         {
             return "Assets";
         }
+
         return source.Parent?.Name ?? "Assets";
     }
 }

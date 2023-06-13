@@ -36,14 +36,19 @@ Experimental features:
 
 This is the recommended way to install the mods.
 
-- Download and install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager) or [r2modman](https://github.com/ebkr/r2modmanPlus/releases)
-- Click the `Install with Mod Manager` button on top of the [page](https://thunderstore.io/c/wrestling-empire/p/IngoH/WECCL/) (or install it through the mod manager directly)
+- Download and install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager)
+  or [r2modman](https://github.com/ebkr/r2modmanPlus/releases)
+- Click the `Install with Mod Manager` button on top of
+  the [page](https://thunderstore.io/c/wrestling-empire/p/IngoH/WECCL/) (or install it through the mod manager directly)
 - Run the game via the mod manager
 
 ### Installation (Manual)
 
-To install this mod manually, you first need to install BepInEx 5.4.21 as a mod loader for Wrestling Empire. A guide for this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex).
-It is recommended to use download BepInEx from [here](https://thunderstore.io/c/wrestling-empire/p/BepInEx/BepInExPack/) to ensure you get the correct version.
+To install this mod manually, you first need to install BepInEx 5.4.21 as a mod loader for Wrestling Empire. A guide for
+this can be
+found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex).
+It is recommended to use download BepInEx from [here](https://thunderstore.io/c/wrestling-empire/p/BepInEx/BepInExPack/)
+to ensure you get the correct version.
 
 To install WECCL, you simply need to copy `WECCL.dll` from releases to `./BepInEx/plugins`.
 
@@ -88,13 +93,14 @@ Example: `body_material_abc.png` or `body_material/abc.png` (`_` before 01 is no
 
 ### Metadata
 
-Metadata files can be used to add additional information to assets, e.g. skin tone. Metadata files must be named the same as the asset, but with the `.meta` extension.
+Metadata files can be used to add additional information to assets, e.g. skin tone. Metadata files must be named the
+same as the asset, but with the `.meta` extension.
 Example: `abc.png` and `abc.meta`.
 Meta files must be a newline-separated list of key-value pairs in the format `key: value` (space is optional).
 The following keys are supported:
 
-| Key | Description                                                                                                                                                                                                                                                                       |
-|-----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Key       | Description                                                                                                                                                                                                                                                                       |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | skin_tone | The skin tone of the character. Must be formatted as `r,g,b` (e.g. `1.0, 0.0, 0.0`) or an HTML string (e.g. `#FF0000` or `red`). `1.0, 1.0, 1.0` is the default skin tone (white). `0.75, 0.75, 0.75` and `0.5, 0.45, 0.3` are the two other skin tones used in the vanilla game. |
 
 ## Meshes
@@ -102,6 +108,7 @@ The following keys are supported:
 As with textures, meshes can be added by placing them in `./BepInEx/plugins/Assets`. Meshes must be in a subfolder by the mesh name.
 Example: `body_mesh/abc`. The extension must be `.assetbundle` or no extension at all. (Note that `.mesh` works too, but is deprecated and may be removed in the future).  
 Meshes should be inside an asset bundle with it being the only mesh in the bundle. The first submesh will be the one affected by the game's mesh color setting. Others can be manually set in the metadata file.
+
 
 | Supported Mesh Names       |
 |----------------------------|
@@ -116,8 +123,9 @@ Meshes should be inside an asset bundle with it being the only mesh in the bundl
 
 ### Metadata
 
-Metadata files can be used to add additional information to meshes, e.g. mesh color. Metadata files must be named the same as the mesh, but with the `.meta` extension.
-Example: `abc` and `abc.meta`. 
+Metadata files can be used to add additional information to meshes, e.g. mesh color. Metadata files must be named the
+same as the mesh, but with the `.meta` extension.
+Example: `abc` and `abc.meta`.
 Meta files must be a newline-separated list of key-value pairs in the format `key: value` (space is optional).
 The following keys are supported:
 
@@ -136,8 +144,11 @@ There is functionality in place to automatically assign collision to the arena, 
 
 ## Custom Promos
 
-You can add custom promos by placing a .promo file inside `./BepInEx/plugins/Assets`. The file must contain metadata in the format `key: value` (space is optional), and newline-separated dialog lines in the format `"line1","line2",speaker,target(,taunt,demeanor,commands)`.
+You can add custom promos by placing a .promo file inside `./BepInEx/plugins/Assets`. The file must contain metadata in
+the format `key: value` (space is optional), and newline-separated dialog lines in the
+format `"line1","line2",speaker,target(,taunt,demeanor,commands)`.
 Example:
+
 ```
 title: Test Promo
 description: Promo between [P1] and [P2]
@@ -149,19 +160,27 @@ characters: 1,2
 "Cheap? Hardly, brother. Custom promos are the real deal. And speaking", "of deals, how about we settle things once and for all in the ring?",1,2
 "You're on, $name1. And you'd better believe", "I'll be bringing my A-game.",2,1,Thumb Stampede,0,PlayAudio:Cheer
 ```
+
 `title` must be a string.  
 `description` must be a string. [P1] and [P2] will be replaced with the names of the characters.  
-`characters` must be an comma-separated list of integers, or an integer prefixed by `:`. When using a prefixed integer, an array from 1 to that integer will be created. When using a list, the list will be used as the array.  
-1 and 2 are the default characters as selected by the user, 3 is another character, -1 is the referee, and 11 and 22 are the tag team partners of 1 and 2 respectively. Other values are not supported.  
+`characters` must be an comma-separated list of integers, or an integer prefixed by `:`. When using a prefixed integer,
+an array from 1 to that integer will be created. When using a list, the list will be used as the array.  
+1 and 2 are the default characters as selected by the user, 3 is another character, -1 is the referee, and 11 and 22 are
+the tag team partners of 1 and 2 respectively. Other values are not supported.  
 `"line1"` and `"line2"` must be strings. The quotes are required. For quotes inside the string, use `\"`.  
 `$name#` will be replaced with the name of the character with the corresponding id.  
-`@him/his/etc#` will be replaced with the pronoun of the character with the corresponding id, e.g. `@his1 friend` -> `his friend` or `her friend` depending on wrestler #'s gender. Supported pronouns are `He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy`.  
-`$promotion#`, `$$belt(#1)_(#2)`, `$$champ(#1)_(#2)` will be replaced with the name of promotion #, the name of promotion #1's belt #2, and the name of promotion #1's champion of belt #2 respectively.
+`@him/his/etc#` will be replaced with the pronoun of the character with the corresponding id,
+e.g. `@his1 friend` -> `his friend` or `her friend` depending on wrestler #'s gender. Supported pronouns
+are `He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy`.  
+`$promotion#`, `$$belt(#1)_(#2)`, `$$champ(#1)_(#2)` will be replaced with the name of promotion #, the name of
+promotion #1's belt #2, and the name of promotion #1's champion of belt #2 respectively.
 `speaker` must be an integer.
 `target` must be an integer.
 `taunt` must be a string or integer. A list of taunts can be found in `TauntAnims.md`.
-`demeanor` must be an integer. A positive value will make the character happy for the given number of frames, and a negative value will make the character angry for the given number of frames.
-`commands` must be a list in the format `command:arg1:arg2:arg3...`. Commands are separated by a semicolon. Example: `SetFace:1;SetRealFriend:1:2`.
+`demeanor` must be an integer. A positive value will make the character happy for the given number of frames, and a
+negative value will make the character angry for the given number of frames.
+`commands` must be a list in the format `command:arg1:arg2:arg3...`. Commands are separated by a semicolon.
+Example: `SetFace:1;SetRealFriend:1:2`.
 The following commands are supported:
 
 | Command         | Arguments                | Description                                              | Example               |
@@ -256,13 +275,16 @@ forwardspeedmultiplier: 1.5
 
 ## Aliases
 
-Files can be aliased by placing a `.aliases` file inside `./BepInEx/plugins/Assets`. The file must contain a list of aliases in the format `alias=path`.
+Files can be aliased by placing a `.aliases` file inside `./BepInEx/plugins/Assets`. The file must contain a list of
+aliases in the format `alias=path`.
 Example:
+
 ```
 song1.ogg=MyFirstSong
 subfolder/song2.ogg=MySecondSong
 path/to/song3.ogg=MyThirdSong
 ```
+
 Left is file name, right is alias.  
 The path is relative to `./BepInEx/plugins/Assets` (or `./BepInEx/plugins/{PluginName}/Assets`).  
 This allows you to rename files without breaking the save file.
@@ -279,18 +301,31 @@ Characters are automatically exported to `./BepInEx/plugins/Export` when the gam
 
 ## Importing Characters
 
-Characters can be imported by placing a JSON file inside `./BepInEx/plugins/Import`. Make sure to set
-the `overrideMode` property to the desired mode.  
-`append` will add the imported character.  
-`override` will override the character with the same `id`.  
-`merge` will replace all non-default values of the character referenced by the `id`.
+Characters can be imported by placing a JSON file inside `./BepInEx/plugins/Import` with the `.character` extension.
+The JSON file must contain a single object with:
+`characterData`: The character data to import. Typically obtained by exporting a character.  
+Optional properties:  
+`overrideMode`: `append`, `override`, or `merge`.
+`append` will add the imported character to the end of the character list.  
+`override` will override the character with the same `name` or `id` as the imported character.
+`merge` will replace all non-default values of the character referenced by the `name` or `id` with the values of the
+imported character.  
+Defaults to `append`.  
+`findMode`: Determines how the game will find the character to override/merge. `id` will use the id, `name` will use the
+name, and `name_then_id` will first try to find the character by name, and if that fails, by id. Defaults
+to `name_then_id`.  
+`findName`: Is the name of the character to find if `findMode` is set to `name` or `name_then_id`. If `findMode` is not
+set, `characterData.name` will be used.  
 Imported JSON files will be automatically deleted after the game is saved (unless the config
 option `DeleteImportedCharacters` is set to `false`).
 
 ## Uploading mods
 
-You can upload your mods on [Thunderstore](https://thunderstore.io/c/wrestling-empire/create/). In order to do this, you first need to connect either your Discord or GitHub account to Thunderstore and create a team in your account settings (if you haven't already).
+You can upload your mods on [Thunderstore](https://thunderstore.io/c/wrestling-empire/create/). In order to do this, you
+first need to connect either your Discord or GitHub account to Thunderstore and create a team in your account settings (
+if you haven't already).
 Thunderstore uses the following format:
+
 ```
 📁ModName.zip
  ┣📂plugins (required if you want your mod to actually do something)
@@ -308,9 +343,11 @@ Thunderstore uses the following format:
  
  * The files in Assets and Overrides are just examples. You can have any number of files with any name and valid extension in these folders. Neither of them is required.
 ```
+
 `plugins` is a folder which contains all the files that your mod needs to function.
 `icon.png` is a 256x256 PNG file which will be used as the icon for your mod on Thunderstore.
-`manifest.json` is a JSON file which must contain the following:  
+`manifest.json` is a JSON file which must contain the following:
+
 ```json
 {
   "namespace": "IngoH",
@@ -324,14 +361,19 @@ Thunderstore uses the following format:
   "website_url": "(Add GitHub link here, or leave empty)"
 }
 ```
+
 `namespace` must be your team name on Thunderstore.
 `name` may only contain alphanumeric characters and underscores (A-Z, a-z, 0-9, _).
 `version_number` must be in [semver](https://semver.org/) (semantic versioning) format.
-`dependencies` is a list of dependencies. You can find the dependencies of mod on the Thunderstore page of the mod, listed under "Dependency string".
-`website_url` should be empty, or a link to the GitHub page of the mod or any other page where users can find more information about the mod.
+`dependencies` is a list of dependencies. You can find the dependencies of mod on the Thunderstore page of the mod,
+listed under "Dependency string".
+`website_url` should be empty, or a link to the GitHub page of the mod or any other page where users can find more
+information about the mod.
 
-`README.md` is a [Markdown](https://www.markdownguide.org/cheat-sheet/) file that will be displayed on the mod page. It should contain the description of the mod, and any additional information that might be useful.  
-`CHANGELOG.md` is also a Markdown file that will be displayed on the mod page if it exists. It should contain a list of changes for each version of the mod.
+`README.md` is a [Markdown](https://www.markdownguide.org/cheat-sheet/) file that will be displayed on the mod page. It
+should contain the description of the mod, and any additional information that might be useful.  
+`CHANGELOG.md` is also a Markdown file that will be displayed on the mod page if it exists. It should contain a list of
+changes for each version of the mod.
 
 ## Modding Discord
 
@@ -340,14 +382,16 @@ creators!
 
 ## Donations
 
-Donations are always appreciated. You can donate on my [Ko-fi page](https://ko-fi.com/IngoH).  
+Donations are always appreciated. You can donate on my [Ko-fi page](https://ko-fi.com/IngoH).
 
 ## Contributors
+
 **IngoH**  
 **GamingMaster**  
-**Street**  
+**Street**
 
 ## Special Thanks
+
 **Mat Dickie** for generously donating €1,000  
 **All the Discord Testers**  
 **Everyone who published mods using WECCL**

@@ -6,6 +6,10 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 public class WorldPatch
 {
+    private static int _tempLocation = -999;
+
+    private static readonly LimitedDictionary<string, float> _raycastCache = new(1000);
+
     [HarmonyPatch(typeof(World), nameof(World.ICKGKDOKJEN))]
     [HarmonyPrefix]
     public static bool World_ICKGKDOKJEN(int KDBIJLHICND)
@@ -79,8 +83,6 @@ public class WorldPatch
         return true;
     }
 
-    private static int _tempLocation = -999;
-
     [HarmonyPatch(typeof(GameCollision), nameof(GameCollision.BAEIJIILOHL))]
     [HarmonyPrefix]
     public static void GameCollision_BAEIJIILOHL()
@@ -110,7 +112,6 @@ public class WorldPatch
     [HarmonyPostfix]
     public static void GameCollision_BAEIJIILOHL_Postfix()
     {
-
         if (_tempLocation != -999)
         {
             ArenaPatch.SetCustomArenaShape();
@@ -118,19 +119,20 @@ public class WorldPatch
             World.location = _tempLocation;
             _tempLocation = -999;
 
-            var last = GameCollision.DGPJFOABPND;
+            int last = GameCollision.DGPJFOABPND;
             GameCollision.BELIFAOEFAK = last;
 
-            var colliders = World.gArena.GetComponentsInChildren<MeshCollider>();
-            foreach (var collider in colliders)
+            MeshCollider[] colliders = World.gArena.GetComponentsInChildren<MeshCollider>();
+            foreach (MeshCollider collider in colliders)
             {
                 if (Math.Abs(collider.transform.rotation.eulerAngles.x - 90) > 1)
                 {
                     continue;
                 }
+
                 Matrix4x4 matrix = collider.transform.localToWorldMatrix;
-                var corners = new Vector3[4];
-                var up = collider.transform.up * 5;
+                Vector3[] corners = new Vector3[4];
+                Vector3 up = collider.transform.up * 5;
                 corners[0] = matrix.MultiplyPoint3x4(new Vector3(5, 0, 5));
                 corners[1] = matrix.MultiplyPoint3x4(new Vector3(5, 0, -5));
                 corners[2] = matrix.MultiplyPoint3x4(new Vector3(-5, 0, 5));
@@ -140,16 +142,16 @@ public class WorldPatch
                 {
                     return a.y.CompareTo(b.y);
                 });
-                var yBottom = corners[0].y;
-                var yTop = corners[3].y;
+                float yBottom = corners[0].y;
+                float yTop = corners[3].y;
 
                 corners[0] -= up;
                 corners[1] -= up;
-                corners[2] = corners[1] + up * 2;
-                corners[3] = corners[0] + up * 2;
+                corners[2] = corners[1] + (up * 2);
+                corners[3] = corners[0] + (up * 2);
 
-                var xSorted = new Vector3[4];
-                var zSorted = new Vector3[4];
+                Vector3[] xSorted = new Vector3[4];
+                Vector3[] zSorted = new Vector3[4];
                 Array.Copy(corners, xSorted, 4);
                 Array.Copy(corners, zSorted, 4);
                 Array.Sort(xSorted, (a, b) =>
@@ -176,6 +178,7 @@ public class WorldPatch
                     topRight = zSorted[2];
                     bottomRight = zSorted[3];
                 }
+
                 if (zSorted[1].x < zSorted[0].x)
                 {
                     bottomLeft = zSorted[1];
@@ -189,7 +192,7 @@ public class WorldPatch
 
                 // Create block
                 GameCollision.BELIFAOEFAK++;
-                var BELIFAOEFAK = GameCollision.BELIFAOEFAK;
+                int BELIFAOEFAK = GameCollision.BELIFAOEFAK;
                 GameCollision.LKMAEOFENHG();
                 GameCollision.DKPMHGHNHEH[BELIFAOEFAK].EPGJJDJAACP = 0f;
                 GameCollision.DKPMHGHNHEH[BELIFAOEFAK].EDHBIOFAKNL = yBottom;
@@ -206,8 +209,8 @@ public class WorldPatch
             }
 
             foreach (GameObject gameObject in (from t in World.gArena.GetComponentsInChildren<Transform>()
-                                               where t.gameObject != null && t.gameObject.name.StartsWith("Barrier_Climbables")
-                                               select t.gameObject).ToArray<GameObject>())
+                         where t.gameObject != null && t.gameObject.name.StartsWith("Barrier_Climbables")
+                         select t.gameObject).ToArray())
             {
                 MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
 
@@ -241,7 +244,6 @@ public class WorldPatch
                 GameCollision.DKPMHGHNHEH[peifijckaoc].EDHBIOFAKNL = worldCorners[0].y;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].DIDCENDAHFF = 1;
-                //Below controls the type of collision, tempted to replicate this foreach loop for other object names for other collision types like "Cage"
                 GameCollision.DKPMHGHNHEH[peifijckaoc].BGJDFONPLFK = "Barrier";
                 GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[1] = worldCorners[4].x + 2.5f;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[1] = worldCorners[4].z + 2.5f;
@@ -252,33 +254,87 @@ public class WorldPatch
                 GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[2] = worldCorners[0].x + 2.5f;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[2] = worldCorners[0].z - 2.5f;
             }
-            for (GameCollision.BELIFAOEFAK = last + 1; GameCollision.BELIFAOEFAK <= GameCollision.DGPJFOABPND; GameCollision.BELIFAOEFAK++)
+
+            foreach (GameObject gameObject in (from t in World.gArena.GetComponentsInChildren<Transform>()
+                         where t.gameObject != null && t.gameObject.name.StartsWith("Fence_Climbables")
+                         select t.gameObject).ToArray())
+            {
+                MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
+
+                Bounds bounds = meshCollider.sharedMesh.bounds;
+
+                Vector3 center = bounds.center;
+                Vector3 extents = bounds.extents;
+
+                // Calculate the 8 corners of the bounding box
+                Vector3[] corners = new Vector3[8];
+                corners[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
+                corners[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
+                corners[2] = center + new Vector3(extents.x, -extents.y, extents.z);
+                corners[3] = center + new Vector3(extents.x, -extents.y, -extents.z);
+                corners[4] = center + new Vector3(-extents.x, extents.y, -extents.z);
+                corners[5] = center + new Vector3(-extents.x, extents.y, extents.z);
+                corners[6] = center + new Vector3(extents.x, extents.y, extents.z);
+                corners[7] = center + new Vector3(extents.x, extents.y, -extents.z);
+
+                // Get the 8 corners of the bounding box as world position
+                Vector3[] worldCorners = new Vector3[corners.Length];
+                for (int i = 0; i < corners.Length; i++)
+                {
+                    worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
+                }
+
+                GameCollision.BELIFAOEFAK++;
+                int peifijckaoc = GameCollision.BELIFAOEFAK;
+                GameCollision.LKMAEOFENHG();
+                GameCollision.DKPMHGHNHEH[peifijckaoc].EPGJJDJAACP = 0f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].EDHBIOFAKNL = worldCorners[0].y;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].DIDCENDAHFF = 1;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].BGJDFONPLFK = "Cage";
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[1] = worldCorners[4].x + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[1] = worldCorners[4].z + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[4] = worldCorners[7].x - 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[4] = worldCorners[7].z + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[3] = worldCorners[3].x - 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[3] = worldCorners[3].z - 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[2] = worldCorners[0].x + 2.5f;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].NGLDIFNHFED[2] = worldCorners[0].z - 2.5f;
+            }
+
+            for (GameCollision.BELIFAOEFAK = last + 1;
+                 GameCollision.BELIFAOEFAK <= GameCollision.DGPJFOABPND;
+                 GameCollision.BELIFAOEFAK++)
             {
                 if (GameCollision.DKPMHGHNHEH[GameCollision.BELIFAOEFAK].HFNGNNHNFIC != null)
                 {
-                    GameCollision.DKPMHGHNHEH[GameCollision.BELIFAOEFAK].PMDKOLCNCJA = GameCollision.DKPMHGHNHEH[GameCollision.BELIFAOEFAK].HFNGNNHNFIC.transform.localEulerAngles;
+                    GameCollision.DKPMHGHNHEH[GameCollision.BELIFAOEFAK].PMDKOLCNCJA = GameCollision
+                        .DKPMHGHNHEH[GameCollision.BELIFAOEFAK].HFNGNNHNFIC.transform.localEulerAngles;
                     GameCollision.IFFPPAPAEEK = 1;
                 }
             }
-            var doors = World.gArena.GetComponentsInChildren<Transform>().Where(t => t.gameObject != null && t.gameObject.name.StartsWith("Exit")).Select(t => t.gameObject).ToArray();
-            foreach (var door in doors)
+
+            GameObject[] doors = World.gArena.GetComponentsInChildren<Transform>()
+                .Where(t => t.gameObject != null && t.gameObject.name.StartsWith("Exit")).Select(t => t.gameObject)
+                .ToArray();
+            foreach (GameObject door in doors)
             {
-                var corners = new Vector3[4];
-                var center = door.transform.position;
-                var localScale = door.transform.localScale;
-                var up = localScale.y;
-                var right = localScale.x;
-                var forward = localScale.z;
+                Vector3[] corners = new Vector3[4];
+                Vector3 center = door.transform.position;
+                Vector3 localScale = door.transform.localScale;
+                float up = localScale.y;
+                float right = localScale.x;
+                float forward = localScale.z;
                 corners[0] = center + new Vector3(right, 0, forward);
                 corners[1] = center + new Vector3(right, 0, -forward);
                 corners[2] = center + new Vector3(-right, 0, forward);
                 corners[3] = center + new Vector3(-right, 0, -forward);
 
-                var yTop = center.y + up;
-                var yBottom = center.y - up;
+                float yTop = center.y + up;
+                float yBottom = center.y - up;
 
-                var xSorted = new Vector3[4];
-                var zSorted = new Vector3[4];
+                Vector3[] xSorted = new Vector3[4];
+                Vector3[] zSorted = new Vector3[4];
 
                 Array.Copy(corners, xSorted, 4);
                 Array.Copy(corners, zSorted, 4);
@@ -307,6 +363,7 @@ public class WorldPatch
                     topRight = zSorted[2];
                     bottomRight = zSorted[3];
                 }
+
                 if (zSorted[1].x < zSorted[0].x)
                 {
                     bottomLeft = zSorted[1];
@@ -336,23 +393,22 @@ public class WorldPatch
                 GameCollision.LJFPLPEHCPK[0].NDHLPIPJBKD = int.Parse(door.name.Substring(4));
                 GameCollision.LJFPLPEHCPK[0].MLMDNNNKJDI = door.transform.rotation.eulerAngles.y + 180f;
             }
-
         }
 
         if (Plugin.DebugRender.Value)
         {
-            var arr = GameCollision.DKPMHGHNHEH;
+            MNPJKGBMPFH[] arr = GameCollision.DKPMHGHNHEH;
             for (int i = 1; i < arr.Length; i++)
             {
                 try
                 {
-                    var scene = World.gArena;
-                    var x4 = arr[i].MIFAPPFHEPA; // float[5], x4[0] is always 0
-                    var z4 = arr[i].NGLDIFNHFED; // float[5], z4[0] is always 0
-                    var yLow = arr[i].EDHBIOFAKNL; // float
-                    var yHigh = arr[i].HHMMCHPDDPF; // float
-                    var type = arr[i].DIDCENDAHFF; // int
-                    var color = Color.red;
+                    GameObject scene = World.gArena;
+                    float[] x4 = arr[i].MIFAPPFHEPA; // float[5], x4[0] is always 0
+                    float[] z4 = arr[i].NGLDIFNHFED; // float[5], z4[0] is always 0
+                    float yLow = arr[i].EDHBIOFAKNL; // float
+                    float yHigh = arr[i].HHMMCHPDDPF; // float
+                    int type = arr[i].DIDCENDAHFF; // int
+                    Color color = Color.red;
                     switch (type)
                     {
                         case -6:
@@ -388,9 +444,9 @@ public class WorldPatch
 
                     if (arr[i].DLDGGLMCKMF != null)
                     {
-                        var xl = arr[i].DLDGGLMCKMF.Skip(1);
-                        var zl = arr[i].HLODEKCEPPM.Skip(1);
-                        var color2 = new Color(1f, 1f, 1f);
+                        IEnumerable<float> xl = arr[i].DLDGGLMCKMF.Skip(1);
+                        IEnumerable<float> zl = arr[i].HLODEKCEPPM.Skip(1);
+                        Color color2 = new Color(1f, 1f, 1f);
                         DrawLines(scene.transform, xl.ToArray(), yLow, yHigh, zl.ToArray(), color2, "Seating");
                     }
                 }
@@ -400,17 +456,17 @@ public class WorldPatch
                 }
             }
 
-            var arr2 = GameCollision.MGJIOKKBCJM;
+            HHKHKMMOLNL[] arr2 = GameCollision.MGJIOKKBCJM;
             for (int i = 1; i < arr2.Length; i++)
             {
                 try
                 {
-                    var scene = World.gArena;
-                    var x4 = arr2[i].MIFAPPFHEPA; // float[5], x4[0] is always 0
-                    var z4 = arr2[i].NGLDIFNHFED; // float[5], z4[0] is always 0
-                    var yLow = 0;
-                    var yHigh = 0;
-                    var color = new Color(1f, 0.5f, 0f);
+                    GameObject scene = World.gArena;
+                    float[] x4 = arr2[i].MIFAPPFHEPA; // float[5], x4[0] is always 0
+                    float[] z4 = arr2[i].NGLDIFNHFED; // float[5], z4[0] is always 0
+                    int yLow = 0;
+                    int yHigh = 0;
+                    Color color = new Color(1f, 0.5f, 0f);
                     DrawCube(scene.transform, x4, yLow, yHigh, z4, color);
                 }
                 catch (Exception e)
@@ -419,18 +475,18 @@ public class WorldPatch
                 }
             }
 
-            var arr3 = GameCollision.LJFPLPEHCPK;
+            DIAOCEFCCAE[] arr3 = GameCollision.LJFPLPEHCPK;
             for (int i = 1; i < arr3.Length; i++)
             {
                 try
                 {
-                    var scene = World.gArena;
-                    var x4 = arr3[i].MIFAPPFHEPA; // float[5], x4[0] is always 0
-                    var z4 = arr3[i].NGLDIFNHFED; // float[5], z4[0] is always 0
-                    var yLow = World.ground - 5f;
-                    var yHigh = arr3[i].HHMMCHPDDPF; // float
+                    GameObject scene = World.gArena;
+                    float[] x4 = arr3[i].MIFAPPFHEPA; // float[5], x4[0] is always 0
+                    float[] z4 = arr3[i].NGLDIFNHFED; // float[5], z4[0] is always 0
+                    float yLow = World.ground - 5f;
+                    float yHigh = arr3[i].HHMMCHPDDPF; // float
 
-                    var color = new Color(0.5f, 1f, 0f);
+                    Color color = new Color(0.5f, 1f, 0f);
                     DrawCube(scene.transform, x4, yLow, yHigh, z4, color);
                 }
                 catch (Exception e)
@@ -444,9 +500,9 @@ public class WorldPatch
     private static void DrawCube(Transform parent, float[] x4, float yLow, float yHigh, float[] z4, Color color)
     {
         // Bottom
-        var child = new GameObject("Bottom");
+        GameObject child = new GameObject("Bottom");
         child.transform.parent = parent;
-        var lineRenderer = child.AddComponent<LineRenderer>();
+        LineRenderer lineRenderer = child.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.startColor = color;
         lineRenderer.endColor = color;
@@ -534,17 +590,17 @@ public class WorldPatch
     private static void DrawLines(Transform parent, float[] xl, float yLow, float yHigh, float[] zl, Color color,
         string name = "Lines")
     {
-        var count = Math.Min(xl.Length, zl.Length);
-        var child = new GameObject(name);
+        int count = Math.Min(xl.Length, zl.Length);
+        GameObject child = new GameObject(name);
         child.transform.parent = parent;
-        var lineRenderer = child.AddComponent<LineRenderer>();
+        LineRenderer lineRenderer = child.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.startColor = color;
         lineRenderer.endColor = color;
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
         lineRenderer.positionCount = count;
-        for (var i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             lineRenderer.SetPosition(i, new Vector3(xl[i], yLow, zl[i]));
         }
@@ -599,21 +655,34 @@ public class WorldPatch
     {
         if (World.location > VanillaCounts.NoLocations)
         {
-            if (World.ringShape != 0 && DPDOBMIPMKE > -40f && DPDOBMIPMKE < 40f && MALHMMKLEHG > -40f && MALHMMKLEHG < 40f)
+            if (World.ringShape != 0 && DPDOBMIPMKE > -40f && DPDOBMIPMKE < 40f && MALHMMKLEHG > -40f &&
+                MALHMMKLEHG < 40f)
             {
                 return;
             }
 
-            var coords = new Vector3(DPDOBMIPMKE, HONKBFJOEMG, MALHMMKLEHG);
+            Vector3 coords = new Vector3(DPDOBMIPMKE, HONKBFJOEMG, MALHMMKLEHG).Round(2);
+            string cstr = coords.ToString();
+            if (_raycastCache.TryGetValue(cstr, out float cached))
+            {
+                __result = cached;
+                return;
+            }
+
             // Raycast down to find the ground
-            var ray = new Ray(coords + new Vector3(0, 5f, 0f), Vector3.down);
-            if (Physics.Raycast(ray, out var hit, 105f, 1 << 0))
+            Ray ray = new Ray(coords + new Vector3(0, 5f, 0f), Vector3.down);
+            if (Physics.Raycast(ray, out RaycastHit hit, 105f, 1 << 0))
             {
                 __result = hit.point.y;
             }
             else
             {
                 __result = World.ground;
+            }
+
+            if (!_raycastCache.ContainsKey(cstr))
+            {
+                _raycastCache.Add(cstr, __result);
             }
         }
     }

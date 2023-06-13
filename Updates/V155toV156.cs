@@ -2,16 +2,143 @@ namespace WECCL.Updates;
 
 internal class V155toV156 : VersionDiff
 {
-    public V155toV156() {
-        MaterialCountsDiff = new() {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        FleshCountsDiff = new() {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        ShapeCountsDiff = new() {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        BodyFemaleCountDiff = 0;
-        FaceFemaleCountDiff = 0;
-        SpecialFootwearCountDiff = 0;
-        TransparentHairMaterialCountDiff = 0;
-        TransparentHairHairstyleCountDiff = 0;
-        KneepadCountDiff = 0;
-        MusicCountDiff = 4;
+    public V155toV156()
+    {
+        this.MaterialCountsDiff = new List<int>
+        {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        };
+        this.FleshCountsDiff = new List<int>
+        {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        };
+        this.ShapeCountsDiff = new List<int>
+        {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        };
+        this.BodyFemaleCountDiff = 0;
+        this.FaceFemaleCountDiff = 0;
+        this.SpecialFootwearCountDiff = 0;
+        this.TransparentHairMaterialCountDiff = 0;
+        this.TransparentHairHairstyleCountDiff = 0;
+        this.KneepadCountDiff = 0;
+        this.MusicCountDiff = 4;
     }
 }

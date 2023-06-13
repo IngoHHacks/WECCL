@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using WECCL.Utils;
 
 namespace WECCL.Saves;
 
@@ -36,11 +35,11 @@ internal class ContentMappings
     public ContentList KneepadNameMap { get; set; } = new();
 
     public ContentList MusicNameMap { get; set; } = new();
-    
+
     public List<string> PreviouslyImportedCharacters { get; set; } = new();
-    
+
     public List<int> PreviouslyImportedCharacterIds { get; set; } = new();
-    
+
     public float GameVersion { get; set; } = Plugin.CharactersVersion;
 
     public void Save()
@@ -62,7 +61,7 @@ internal class ContentMappings
         try
         {
             string json = File.ReadAllText(path);
-            var obj = JsonConvert.DeserializeObject<ContentMappings>(json,
+            ContentMappings obj = JsonConvert.DeserializeObject<ContentMappings>(json,
                 new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
             for (int i = 0; i < obj.PreviouslyImportedCharacters.Count; i++)
@@ -87,7 +86,7 @@ internal class ContentMappings
             return new ContentMappings();
         }
     }
-    
+
     public void AddPreviouslyImportedCharacter(string name, int id)
     {
         if (name.EndsWith(".json"))
@@ -98,13 +97,16 @@ internal class ContentMappings
         {
             name = name.Substring(0, name.Length - 10);
         }
-        
+
         if (this.PreviouslyImportedCharacters.Contains(name))
         {
             return;
         }
-        
+
         this.PreviouslyImportedCharacters.Add(name);
-        this.PreviouslyImportedCharacterIds.Add(id);
+        if (id > 0 && !this.PreviouslyImportedCharacterIds.Contains(id))
+        {
+            this.PreviouslyImportedCharacterIds.Add(id);
+        }
     }
 }
