@@ -14,6 +14,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
+
     public const string PluginVer = "1.3.7";
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.58f;
@@ -54,7 +55,7 @@ public class Plugin : BaseUnityPlugin
         ".s3m"
     };
 
-    private static readonly List<string> MeshExtensions = new() { ".mesh", "" };
+    private static readonly List<string> AssetBundleExtensions = new() { ".mesh", ".assetbundle", ".bundle", "" };
 
     private static readonly List<string> PromoExtensions = new() { ".promo" };
     public static string[] PreReleaseReasons = { };
@@ -92,6 +93,11 @@ public class Plugin : BaseUnityPlugin
             {
                 Directory.CreateDirectory(PersistentDataPath);
             }
+            if (!Directory.Exists(Locations.WECCL.FullName))
+            {
+                throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
+            }
+            Locations.LoadWECCL();
             // End of keep on top
             
             if (PreRelease)
@@ -641,93 +647,22 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static IEnumerator LoadMeshes(DirectoryInfo dir)
+    internal static IEnumerator LoadAssetBundles(DirectoryInfo dir)
     {
-        int meshCount = 0;
-        // Load custom meshes
+        int assetBundleCount = 0;
+        // Load custom AssetBundles
         if (!dir.Exists)
         {
             yield break;
         }
 
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
-            .Where(f => MeshExtensions.Contains(f.Extension.ToLower())).ToArray();
+            .Where(f => AssetBundleExtensions.Contains(f.Extension.ToLower())).ToArray();
         long lastProgressUpdate = DateTime.Now.Ticks;
         int cur = 0;
         foreach (FileInfo file in files)
         {
             string fileName = file.Name;
-            foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
-            {
-                if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
-                {
-                    CostumeData costumeData = pair.Value;
-                    Mesh mesh = null;
-                    try
-                    {
-                        if (costumeData.Type != typeof(Mesh))
-                        {
-                            Log.LogError($"{costumeData.FilePrefix} is not a mesh.");
-                        }
-                        else
-                        {
-                            mesh = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<Mesh>().First();
-                            mesh.name = fileName;
-
-                            string modGuid = FindPluginName(file.DirectoryName);
-                            if (modGuid != null && modGuid != "plugins")
-                            {
-                                fileName = $"{modGuid}/{fileName}";
-                            }
-
-                            LoadContent._lastItemLoaded = fileName;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Log.LogError(e);
-                    }
-
-                    yield return null;
-                    try
-                    {
-                        string meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
-                        if (File.Exists(Path.Combine(file.DirectoryName, meta)))
-                        {
-                            List<string> metaLines =
-                                File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
-                            Dictionary<string, string> metaDict = new();
-                            foreach (string line in metaLines)
-                            {
-                                string[] split = line.Split(new[] { ':' }, 2);
-                                if (split.Length == 2)
-                                {
-                                    metaDict.Add(split[0].Trim(), split[1].Trim());
-                                }
-                                else if (split.Length == 1)
-                                {
-                                    metaDict.Add(split[0].Trim(), "");
-                                }
-                            }
-
-                            costumeData.AddCustomObject(fileName, mesh, metaDict);
-                        }
-                        else
-                        {
-                            costumeData.AddCustomObject(fileName, mesh, new Dictionary<string, string>());
-                        }
-
-                        meshCount++;
-                    }
-                    catch (Exception e)
-                    {
-                        Log.LogError(e);
-                    }
-
-                    break;
-                }
-            }
-
             if (file.Directory?.Name == "arena")
             {
                 GameObject arena;
@@ -737,11 +672,113 @@ public class Plugin : BaseUnityPlugin
                     arena.name = fileName;
                     CustomArenaPrefabs.Add(arena);
                     World.no_locations++;
-                    meshCount++;
+                    assetBundleCount++;
                 }
                 catch (Exception e)
                 {
                     Log.LogError(e);
+                }
+            }
+            else if (file.Directory?.Name == "animation")
+            {
+                try {
+                    string metaPath = file.FullName.Contains(".") ? Path.GetFileNameWithoutExtension(file.FullName) + ".meta" : file.FullName + ".meta";
+                    if (!File.Exists(metaPath))
+                    {
+                        Log.LogError($"No meta file found for {file.FullName}");
+                        continue;
+                    }
+                    var anim = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<AnimationClip>().First();
+                    anim.name = fileName;
+                    var ad = AnimationData.ParseFile(metaPath);;
+                    string receivePath = file.FullName.Contains(".") ? Path.GetFileNameWithoutExtension(file.FullName) + ".receive" : file.FullName + ".receive";
+                    if (File.Exists(receivePath))
+                    {
+                        var anim2 = AssetBundle.LoadFromFile(receivePath).LoadAllAssets<AnimationClip>().First();
+                        anim2.name = fileName;
+                        ad.ReceiveAnim = anim2;
+                    }
+                    CustomAnimationClips.Add(new(anim, ad));
+                    assetBundleCount++;
+                }
+                catch (Exception e)
+                {
+                    Log.LogError(e);
+                }
+            }
+            else
+            {
+                foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
+                {
+                    if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
+                    {
+                        CostumeData costumeData = pair.Value;
+                        Mesh mesh = null;
+                        try
+                        {
+                            if (costumeData.Type != typeof(Mesh))
+                            {
+                                Log.LogError($"{costumeData.FilePrefix} is not a mesh.");
+                            }
+                            else
+                            {
+                                mesh = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<Mesh>().First();
+                                mesh.name = fileName;
+
+                                var modGuid = FindPluginName(file.DirectoryName);
+                                if (modGuid != null && modGuid != "plugins")
+                                {
+                                    fileName = $"{modGuid}/{fileName}";
+                                }
+
+                                LoadContent._lastItemLoaded = fileName;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.LogError(e);
+                        }
+
+                        yield return null;
+                        try
+                        {
+                            var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
+                            if (File.Exists(Path.Combine(file.DirectoryName, meta)))
+                            {
+
+                                List<string> metaLines =
+                                    File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
+                                Dictionary<string, string> metaDict = new();
+                                foreach (string line in metaLines)
+                                {
+                                    string[] split = line.Split(new[] { ':' }, 2);
+                                    if (split.Length == 2)
+                                    {
+                                        metaDict.Add(split[0].Trim(), split[1].Trim());
+                                    }
+                                    else if (split.Length == 1)
+                                    {
+                                        metaDict.Add(split[0].Trim(), "");
+                                    }
+                                }
+
+                                costumeData.AddCustomObject(fileName, mesh, metaDict);
+                            }
+                            else
+                            {
+                                costumeData.AddCustomObject(fileName, mesh, new());
+                            }
+
+                            assetBundleCount++;
+                        }
+                        catch (Exception e)
+                        {
+
+                            Log.LogError(e);
+                        }
+
+                        break;
+                    }
                 }
             }
 
@@ -749,13 +786,13 @@ public class Plugin : BaseUnityPlugin
             if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
             {
                 lastProgressUpdate = DateTime.Now.Ticks;
-                UpdateConsoleLogLoadingBar($"Loading custom meshes from {dir.FullName}", cur, files.Length);
+                UpdateConsoleLogLoadingBar($"Loading custom AssetBundles from {dir.FullName}", cur, files.Length);
             }
         }
 
-        if (meshCount != 0)
+        if (assetBundleCount != 0)
         {
-            Log.LogInfo($"Loaded {meshCount} custom meshes from {dir.FullName}");
+            Log.LogInfo($"Loaded {assetBundleCount} custom AssetBundles from {dir.FullName}");
         }
     }
 
@@ -1038,7 +1075,7 @@ public class Plugin : BaseUnityPlugin
 
             if ((type & LoadContent.ContentType.Mesh) != 0)
             {
-                extensions.AddRange(MeshExtensions);
+                extensions.AddRange(AssetBundleExtensions);
             }
 
             if ((type & LoadContent.ContentType.Promo) != 0)

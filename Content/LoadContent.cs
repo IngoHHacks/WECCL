@@ -110,7 +110,7 @@ public static class LoadContent
                 yield return Plugin.LoadPromos(modAssetsDir);
                 yield return Plugin.LoadAudioClips(modAssetsDir);
                 yield return Plugin.LoadCostumes(modAssetsDir);
-                yield return Plugin.LoadMeshes(modAssetsDir);
+                yield return Plugin.LoadAssetBundles(modAssetsDir);
             }
         }
 
