@@ -109,7 +109,7 @@ public class Plugin : BaseUnityPlugin
         "Yo, what's up, it's ya boi, IngoH, back at it again with another video. Don't forget to SMASH that like and subscribe button, and hit that bell icon to get notified whenever I upload a new video.",
         "Your feedback is important to us. If you have any, please shout it into the void. We will not listen to it, but it will make you feel better.",
     };
-
+    
     private void Awake()
     {
         try
@@ -123,6 +123,11 @@ public class Plugin : BaseUnityPlugin
             {
                 Directory.CreateDirectory(PersistentDataPath);
             }
+            if (!Directory.Exists(Locations.WECCL.FullName))
+            {
+                throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
+            }
+            Locations.LoadWECCL();
             // End of keep on top
 
             if (Random.Range(0, 100) == 0)
@@ -703,6 +708,13 @@ public class Plugin : BaseUnityPlugin
                     var anim = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<AnimationClip>().First();
                     anim.name = fileName;
                     var ad = AnimationData.ParseFile(metaPath);;
+                    string receivePath = file.FullName.Contains(".") ? Path.GetFileNameWithoutExtension(file.FullName) + ".receive" : file.FullName + ".receive";
+                    if (File.Exists(receivePath))
+                    {
+                        var anim2 = AssetBundle.LoadFromFile(receivePath).LoadAllAssets<AnimationClip>().First();
+                        anim2.name = fileName;
+                        ad.ReceiveAnim = anim2;
+                    }
                     CustomAnimationClips.Add(new(anim, ad));
                     assetBundleCount++;
                 }

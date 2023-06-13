@@ -6,6 +6,8 @@ public class AnimationData
     
     public List<AnimationCommand> AnimationCommands = new();
 
+    public AnimationClip ReceiveAnim = null;
+
     public class AnimationCommand
     {
         public int Indent;
@@ -82,6 +84,12 @@ public class AnimationData
                 case MoveType.RunningAttack:
                     NBPIEPNKBDG.BKLMJELJJGE = NBPIEPNKBDG.BKLMJELJJGE.Concat(new[] {id}).ToArray();
                     break;
+                case MoveType.FrontGrapple:
+                    NBPIEPNKBDG.AJLLOKLHBJP = NBPIEPNKBDG.AJLLOKLHBJP.Concat(new[] {id}).ToArray();
+                    break;
+                case MoveType.BackGrapple:
+                    NBPIEPNKBDG.OIKHOLPMHGF = NBPIEPNKBDG.OIKHOLPMHGF.Concat(new[] {id}).ToArray();
+                    break;
             }
         }
         numAnimations++;
@@ -129,5 +137,7 @@ public class AnimationData
         StrikeLow,
         BigAttack,
         RunningAttack,
+        FrontGrapple,
+        BackGrapple,
     }
 }

@@ -12,42 +12,56 @@ internal class AnimationPatch
         if (__instance.MDOCJJELCBG >= 1000000)
         {
             var anim = __instance.MKEAFINLGIO;
-            var orig = anim.runtimeAnimatorController;
-            if (orig.name != "CustomAnimation" + __instance.MDOCJJELCBG)
+            var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
+            if (CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ReceiveAnim != null) return;
+            if (controller.name != "CustomAnimation" + __instance.MDOCJJELCBG)
             {
-                if (orig.name.StartsWith("CustomAnimation"))
-                {
-                    orig = __instance.MKEAFINLGIO.runtimeAnimatorController;
-                }
-                var newController = new AnimatorOverrideController(orig);
-                newController.name = "CustomAnimation" + __instance.MDOCJJELCBG;
-                newController["Standard00"] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1;
-                __instance.MKEAFINLGIO.runtimeAnimatorController = newController;
+                controller.name = "CustomAnimation" + __instance.MDOCJJELCBG;
+                controller["Custom00"] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1;
                 NBPIEPNKBDG.KCIBKFDHPPD[100] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.length * CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.frameRate;
                 NBPIEPNKBDG.AKKFFGMMCHD[100] = 1f / NBPIEPNKBDG.KCIBKFDHPPD[100];
             }
             Animations.DoCustomAnimation(__instance, __instance.MDOCJJELCBG, CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ForwardSpeedMultiplier);
         }
-        else
-        {
-            var orig = __instance.MKEAFINLGIO.runtimeAnimatorController;
-            if (orig.name.StartsWith("CustomAnimation"))
-            {
-                __instance.MKEAFINLGIO.runtimeAnimatorController = ((AnimatorOverrideController) orig).runtimeAnimatorController;
-            }
-        }
     }
     
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.LCENEGBMIEJ))]
+    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.JAHCFDMANAI))]
     [HarmonyPrefix]
-    public static void GamePlayer_LCENEGBMIEJ(ref GamePlayer __instance)
+    public static bool GamePlayer_JAHCFDMANAI(ref GamePlayer __instance)
     {
-        if (__instance.MDOCJJELCBG >= 1000000) return;
-        var orig = __instance.MKEAFINLGIO.runtimeAnimatorController;
-        if (orig.name.StartsWith("CustomAnimation"))
+        if (__instance.MDOCJJELCBG >= 1000000)
         {
-            __instance.MKEAFINLGIO.runtimeAnimatorController = ((AnimatorOverrideController) orig).runtimeAnimatorController;
+            var anim = __instance.MKEAFINLGIO;
+            var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
+            if (CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ReceiveAnim == null) return true;
+            __instance.CMMMEGLFLNJ = 0;
+            __instance.OJHKNFHFOCO = 0f;
+            __instance.MPNLGGMEJOC = 0;
+            __instance.CLGGNCLADPG = 0f;
+            if (controller.name != "CustomAnimation" + __instance.MDOCJJELCBG)
+            {
+                controller.name = "CustomAnimation" + __instance.MDOCJJELCBG;
+                controller["Custom00"] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1;
+                NBPIEPNKBDG.KCIBKFDHPPD[100] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.length * CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item1.frameRate;
+                NBPIEPNKBDG.AKKFFGMMCHD[100] = 1f / NBPIEPNKBDG.KCIBKFDHPPD[100];
+            }
+            var opponent = AMJONEKIAID.NCPIJJFEDFL[__instance.PDMDFGNJCPN];
+            if (opponent?.MKEAFINLGIO?.runtimeAnimatorController == null) return true;
+            var oppController = (AnimatorOverrideController) opponent.MKEAFINLGIO.runtimeAnimatorController;
+            if (oppController.name != "CustomAnimationReceive" + __instance.MDOCJJELCBG)
+            {
+                oppController.name = "CustomAnimationReceive" + __instance.MDOCJJELCBG;
+                oppController["Custom01"] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ReceiveAnim;
+                NBPIEPNKBDG.KCIBKFDHPPD[101] = CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ReceiveAnim.length * CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ReceiveAnim.frameRate;
+                NBPIEPNKBDG.AKKFFGMMCHD[101] = 1f / NBPIEPNKBDG.KCIBKFDHPPD[101];
+            }
+            //Animations.DoCustomAnimation(__instance, __instance.MDOCJJELCBG, CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.PerformTestAnimation(__instance, __instance.MDOCJJELCBG, CustomAnimationClips[__instance.MDOCJJELCBG - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.PerformPostGrappleCode(__instance);
+            return false;
         }
+
+        return true;
     }
 
     [HarmonyPatch(typeof(NBPIEPNKBDG), nameof(NBPIEPNKBDG.LODJNNLLCEM))]
@@ -56,7 +70,7 @@ internal class AnimationPatch
     {
         if (FJIFJEGHJCA >= 100)
         {
-            __result = "Standard" + (FJIFJEGHJCA - 100).ToString("00");
+            __result = "Custom" + (FJIFJEGHJCA - 100).ToString("00");
             return false;
         }
         return true;
@@ -87,5 +101,18 @@ internal class AnimationPatch
     public static bool GamePlayer_AJOOKABNAOE(ref GamePlayer __instance)
     {
         return __instance.MDOCJJELCBG < 1000000;
+    }
+    
+    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.APJAPBDDLOC))]
+    [HarmonyPostfix]
+    public static void GamePlayer_APJAPBDDLOC(ref GamePlayer __instance)
+    {
+        var orig = __instance.MKEAFINLGIO.runtimeAnimatorController;
+        var overrideController = new AnimatorOverrideController(AO.AnimationController);
+        foreach (var clip in orig.animationClips)
+        {
+            overrideController[clip.name] = clip;
+        }
+        __instance.MKEAFINLGIO.runtimeAnimatorController = overrideController;
     }
 }
