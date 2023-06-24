@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using WECCL.Content;
 using WECCL.Updates;
@@ -95,6 +96,22 @@ internal class ContentPatch
     {
         if (ResourceOverridesTextures.ContainsKey(name))
         {
+            if (__result == null)   //manual overrides
+            {
+                switch (true)
+                {
+                    case bool when Regex.IsMatch(name, @"Fed[0-9]+_Texture[0-9]+"):  //missing fed belt textures
+                        __result = new Texture2D(512, 256);
+                        break;
+
+                       case bool when Regex.IsMatch(name, @"Fed[0-9]+_Sprite[0-9]+"):   //missing fed belt sprites
+                           __result = Sprite.Create(new Texture2D(256, 64), new Rect(0, 0, 256, 64), new Vector2(0.5f, 0.5f), 50);
+                           break;
+
+                    default:
+                        break;
+                }
+            }
             if (__result is Texture2D texture)
             {
                 Texture2D overrideTexture = GetHighestPriorityTextureOverride(name);
