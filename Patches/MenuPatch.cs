@@ -1,3 +1,6 @@
+using UnityEngine.UI;
+using WECCL.Content;
+
 namespace WECCL.Patches;
 
 [HarmonyPatch]
@@ -10,10 +13,22 @@ internal class MenuPatch
 
     [HarmonyPatch(typeof(Characters), nameof(Characters.PBNPILLGGLH))]
     [HarmonyPrefix]
-    public static void Characters_PBNPILLGGLH(int HCKDAHDFLIF) // Second argument
+    public static bool Characters_PBNPILLGGLH(int LOIILHLDKKE, int HCKDAHDFLIF, int IDNKMKFMPOG) // Second argument
     {
         _lastFed = HCKDAHDFLIF;
         _expectedNextId = 0;
+        if (HCKDAHDFLIF == VanillaCounts.NoFeds + 1)
+        {
+            DNDIEGNJOKN.MNJEEKGMEEC = Characters.no_chars;
+            DNDIEGNJOKN.FDJHLFJLILM = Characters.c.Skip(1).SortBy(LOIILHLDKKE).Select(x => x.id).ToArray().Prepend(0).ToArray();
+            DNDIEGNJOKN.GJNFOKIHEON = new int[Characters.no_chars + 1];
+            for (int i = 0; i < DNDIEGNJOKN.FDJHLFJLILM.Length; i++)
+            {
+                DNDIEGNJOKN.GJNFOKIHEON[DNDIEGNJOKN.FDJHLFJLILM[i]] = i;
+            }
+            return false;
+        }
+        return true;
     }
 
     /*
@@ -50,7 +65,14 @@ internal class MenuPatch
                 int startX;
                 int startY;
 
-                FindBestFit(fedSize, -525, -310, 525, 110, out rows, out columns, out scale, out startX, out startY);
+                var y = 110;
+                
+                if (_lastFed == VanillaCounts.NoFeds + 1)
+                {
+                    y = 70;
+                }
+                
+                FindBestFit(fedSize, -525, -310, 525, y, out rows, out columns, out scale, out startX, out startY);
 
                 GLMFADFPECG = scale;
                 BKBCELICBON = scale;
@@ -63,4 +85,37 @@ internal class MenuPatch
             Plugin.Log.LogError(e);
         }
     }
+
+    [HarmonyPatch(typeof(Scene_Select_Char), nameof(Scene_Select_Char.Update))]
+    [HarmonyPrefix]
+    public static void Scene_Select_Char_Update()
+    {
+        Characters.no_feds = VanillaCounts.NoFeds + 1;
+        if (Characters.fedData.Length <= Characters.no_feds)
+        {
+            Array.Resize(ref Characters.fedData, Characters.no_feds + 1);
+            Characters.fedData[Characters.no_feds] = new Roster();
+            Characters.fedData[Characters.no_feds].size = Characters.no_chars;
+        }
+    }
+
+    [HarmonyPatch(typeof(Scene_Select_Char), nameof(Scene_Select_Char.Update))]
+    [HarmonyPostfix]
+    public static void Scene_Select_Char_Update_Postfix()
+    {
+        Characters.no_feds = VanillaCounts.NoFeds;
+    }
+    
+    /*
+    [HarmonyPatch(typeof(DNDIEGNJOKN), nameof(DNDIEGNJOKN.ICKGKDOKJEN))]
+    [HarmonyPostfix]
+    public static void DNDIEGNJOKN_ICKGKDOKJEN()
+    {
+        if (DNDIEGNJOKN.OBNLIIMODBI == 11 && Characters.fed == VanillaCounts.NoFeds + 1)
+        {
+            DNDIEGNJOKN.LKMAEOFENHG();
+            DNDIEGNJOKN.FPLAGLKCKII[DNDIEGNJOKN.CFPJFAKOKMD].ICKGKDOKJEN(2, "Search", 0, 110, 1, 1);
+        }
+    }
+    */
 }

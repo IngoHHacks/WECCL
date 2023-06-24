@@ -26,3 +26,4 @@ global using static WECCL.Utils.TextureUtils;
 global using static WECCL.Utils.MenuUtils;
 global using static WECCL.Content.CustomContent;
 global using static WECCL.Utils.FileNameUtils;
+global using static WECCL.Utils.ArrayUtils;

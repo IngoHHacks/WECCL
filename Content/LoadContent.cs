@@ -97,6 +97,7 @@ public static class LoadContent
 
         VanillaCounts.MusicCount = JKPIHABGBGP.CDAIKKJLDDD;
         VanillaCounts.NoLocations = World.no_locations;
+        VanillaCounts.NoFeds = Characters.no_feds;
 
         foreach (DirectoryInfo dir in AllModsLibrariesDirs)
         {

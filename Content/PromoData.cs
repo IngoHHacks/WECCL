@@ -173,22 +173,6 @@ public class PromoData
         return FromString(lines);
     }
 
-    private static int[] GenerateArrayForNum(int characters)
-    {
-        if (characters <= 0)
-        {
-            return new[] { -1 };
-        }
-
-        int[] arr = new int[characters + 1];
-        for (int i = 1; i <= characters; i++)
-        {
-            arr[i] = i;
-        }
-
-        return arr;
-    }
-
     public class PromoLine
     {
         public string Line1 { get; set; } = "Line 1";
