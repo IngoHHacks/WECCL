@@ -115,7 +115,7 @@ internal class ContentPatch
             if (__result is Texture2D texture)
             {
                 Texture2D overrideTexture = GetHighestPriorityTextureOverride(name);
-                if (texture.width != overrideTexture.width || texture.height != overrideTexture.height)
+                if ((texture.width != overrideTexture.width || texture.height != overrideTexture.height) && !Plugin.UseFullQualityTextures.Value)
                 {
                     overrideTexture = ResizeTexture(overrideTexture, texture.width, texture.height);
                     SetHighestPriorityTextureOverride(name, overrideTexture);
@@ -179,8 +179,9 @@ internal class ContentPatch
                                                               material.mainTexture))
                     {
                         Texture2D tex = GetHighestPriorityTextureOverride(material.mainTexture.name);
-                        if (material.mainTexture.width != tex.width ||
-                            material.mainTexture.height != tex.height)
+                        if ((material.mainTexture.width != tex.width ||
+                            material.mainTexture.height != tex.height) &&
+                             !Plugin.UseFullQualityTextures.Value)
                         {
                             tex = ResizeTexture(tex, material.mainTexture.width, material.mainTexture.height);
                             SetHighestPriorityTextureOverride(material.mainTexture.name, tex);
