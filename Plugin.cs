@@ -64,6 +64,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> AutoExportCharacters { get; set; }
     internal static ConfigEntry<bool> EnableOverrides { get; set; }
     internal static ConfigEntry<bool> EnableCustomContent { get; set; }
+    internal static ConfigEntry<bool> UseFullQualityTextures { get; set; }
     internal static ConfigEntry<bool> AllowImportingCharacters { get; set; }
     internal static ConfigEntry<bool> DeleteImportedCharacters { get; set; }
     internal static ConfigEntry<bool> EnableGameUnityLog { get; set; }
@@ -126,6 +127,8 @@ public class Plugin : BaseUnityPlugin
                 "Enable custom content overrides from /Overrides.");
             EnableCustomContent = this.Config.Bind("General", "EnableCustomContent", true,
                 "Enable custom content loading from /Assets.");
+            UseFullQualityTextures = this.Config.Bind("General", "UseFullQualityTextures", false,
+                "(EXPERIMENTAL) Allow WECCL to use the full resolution textures without scaling them down (the game will still change the aspect ratio to fit the texture).");
             AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
                 "Allow importing characters from /Import");
             DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
