@@ -2,6 +2,11 @@
 
 ## GV 1.58:
 
+### Release 1.3.8
+
+- Added manual overrides for custom belt textures which are copied from other belts in vanilla.
+- Added experimental config option to allow WECCL to use the full resolution textures without downscaling them; UseFullQualityTextures.
+
 ### Release 1.3.7
 
 - Fixed the 'Special FX' setting being set to 0 when using vanilla arenas.

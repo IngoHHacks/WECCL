@@ -14,11 +14,12 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.3.7";
+    public const string PluginVer = "1.3.8";
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.58f;
 
-    public const bool PreRelease = false;
+    public const bool PreRelease = true;
+    public static string[] PreReleaseReasons = { "Testing" };
 
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
@@ -57,7 +58,6 @@ public class Plugin : BaseUnityPlugin
     private static readonly List<string> MeshExtensions = new() { ".mesh", "" };
 
     private static readonly List<string> PromoExtensions = new() { ".promo" };
-    public static string[] PreReleaseReasons = { };
 
     internal static Plugin Instance { get; private set; }
 
@@ -97,21 +97,32 @@ public class Plugin : BaseUnityPlugin
             
             if (PreRelease)
             {
-                Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
-                foreach (string reason in PreReleaseReasons)
+                if (PreReleaseReasons.Length == 0)
                 {
-                    switch (reason)
+                    Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
+                }
+                else
+                {
+                    foreach (string reason in PreReleaseReasons)
                     {
-                        case "GameUpdate":
-                            Log.LogWarning("Due to a recent game update, some features may not work as intended.");
-                            break;
-                        case "Experimental":
-                            Log.LogWarning(
-                                "This version contains experimental features that may not work as intended.");
-                            break;
-                        default:
-                            Log.LogWarning("This version may not work as intended for the following reason: " + reason);
-                            break;
+                        switch (reason)
+                        {
+                            case "GameUpdate":
+                                Log.LogWarning("Due to a recent game update, some features may not work as intended.");
+                                break;
+                            case "Experimental":
+                                Log.LogWarning(
+                                    "This version contains experimental features that may not work as intended.");
+                                break;
+                            case "Testing":
+                                Log.LogWarning(
+                                    "This is an early release of a future version that may not be ready for release yet.");
+                                break;
+                            default:
+                                Log.LogWarning("This version may not work as intended for the following reason: " +
+                                               reason);
+                                break;
+                        }
                     }
                 }
             }
