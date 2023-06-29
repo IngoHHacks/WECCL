@@ -6,6 +6,7 @@
 
 - Added manual overrides for custom belt textures which are copied from other belts in vanilla.
 - Added experimental config option to allow WECCL to use the full resolution textures without downscaling them; UseFullQualityTextures.
+- Added a wrestler search screen to the roster menu.
 
 ### Release 1.3.7
 
