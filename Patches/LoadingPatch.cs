@@ -19,7 +19,7 @@ public class LoadingPatch
         if (_text == null)
         {
             Transform parent = __instance.gLoader.transform.parent;
-            GameObject go = new GameObject("LoadingText", typeof(Text));
+            GameObject go = new("LoadingText", typeof(Text));
             go.transform.SetParent(parent);
             go.transform.position = __instance.gLoader.transform.position + new Vector3(0f, -100f, 0f);
             _text = go.GetComponent<Text>();
@@ -29,7 +29,7 @@ public class LoadingPatch
             _text.alignment = TextAnchor.MiddleCenter;
             _text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             _text.rectTransform.sizeDelta = new Vector2(10000f, 100f);
-            GameObject go2 = new GameObject("LoadingTextSub", typeof(Text));
+            GameObject go2 = new("LoadingTextSub", typeof(Text));
             go2.transform.SetParent(parent);
             go2.transform.position = __instance.gLoader.transform.position + new Vector3(0f, -130f, 0f);
             _text2 = go2.GetComponent<Text>();

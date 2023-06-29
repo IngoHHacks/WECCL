@@ -67,15 +67,13 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> UseFullQualityTextures { get; set; }
     internal static ConfigEntry<bool> AllowImportingCharacters { get; set; }
     internal static ConfigEntry<bool> DeleteImportedCharacters { get; set; }
+    internal static ConfigEntry<bool> EnableWrestlerSearchScreen { get; set; }
     internal static ConfigEntry<bool> EnableGameUnityLog { get; set; }
     internal static ConfigEntry<string> GameUnityLogLevel { get; set; }
     internal static ConfigEntry<int> BaseFedLimit { get; set; }
     internal static ConfigEntry<int> MaxBackups { get; set; }
-
     internal static ConfigEntry<bool> CacheEnabled { get; set; }
-
     internal static ConfigEntry<bool> Debug { get; set; }
-
     internal static ConfigEntry<bool> DebugRender { get; set; }
 
     public static float CharactersVersion => Characters.latestVersion;
@@ -144,6 +142,8 @@ public class Plugin : BaseUnityPlugin
                 "Allow importing characters from /Import");
             DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
                 "Delete imported characters from /Import after importing them (and saving the game).");
+            EnableWrestlerSearchScreen = this.Config.Bind("General", "EnableWrestlerSearchScreen", true,
+                "Enable the wrestler search screen in the roster menu.");
             EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
                 "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
             GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
