@@ -1,3 +1,4 @@
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WECCL.Content;
 
@@ -13,8 +14,12 @@ internal class MenuPatch
 
     [HarmonyPatch(typeof(Characters), nameof(Characters.PBNPILLGGLH))]
     [HarmonyPrefix]
-    public static bool Characters_PBNPILLGGLH(int LOIILHLDKKE, int HCKDAHDFLIF, int IDNKMKFMPOG) // Second argument
+    public static bool Characters_PBNPILLGGLH(int LOIILHLDKKE, int HCKDAHDFLIF, int IDNKMKFMPOG)
     {
+        if (SceneManager.GetActiveScene().name != "Select_Char")
+        {
+            return true;
+        }
         _lastFed = HCKDAHDFLIF;
         _expectedNextId = 0;
         if (HCKDAHDFLIF == VanillaCounts.NoFeds + 1)
