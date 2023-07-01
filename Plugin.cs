@@ -18,7 +18,7 @@ public class Plugin : BaseUnityPlugin
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.58f;
 
-    public const bool PreRelease = true;
+    public const bool PreRelease = false;
     public static string[] PreReleaseReasons = { "Testing" };
 
 
