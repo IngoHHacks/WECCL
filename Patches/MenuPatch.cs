@@ -247,6 +247,8 @@ internal class MenuPatch
                 Characters.fedData[Characters.no_feds].MMIIOIIPKHB(-1);
                 Characters.fedData[Characters.no_feds].CHFOPKHMHJA();
                 Characters.fedData[Characters.no_feds].size = Characters.no_chars;
+                Characters.fedData[Characters.no_feds].booker = Characters.fedData[Characters.no_feds-1].booker;
+                Characters.fedData[Characters.no_feds].owner = Characters.fedData[Characters.no_feds-1].owner;
             }
         }
         return true;
