@@ -243,6 +243,9 @@ internal class MenuPatch
             {
                 Array.Resize(ref Characters.fedData, Characters.no_feds + 1);
                 Characters.fedData[Characters.no_feds] = new Roster();
+                Characters.fedData[Characters.no_feds].MMIIOIIPKHB(-1);
+                Characters.fedData[Characters.no_feds].CHFOPKHMHJA();
+                Characters.fedData[Characters.no_feds].roster = Characters.c.Select(x => x.id).ToArray();
                 Characters.fedData[Characters.no_feds].size = Characters.no_chars;
             }
         }
