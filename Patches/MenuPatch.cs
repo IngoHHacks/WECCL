@@ -247,16 +247,14 @@ internal class MenuPatch
                 Characters.fedData[Characters.no_feds].MMIIOIIPKHB(-1);
                 Characters.fedData[Characters.no_feds].CHFOPKHMHJA();
                 Characters.fedData[Characters.no_feds].size = Characters.no_chars;
-                Characters.fedData[Characters.no_feds].booker = Characters.fedData[Characters.no_feds-1].booker;
-                Characters.fedData[Characters.no_feds].owner = Characters.fedData[Characters.no_feds-1].owner;
             }
         }
         return true;
     }
 
-    [HarmonyPatch(typeof(Scene_Select_Char), nameof(Scene_Select_Char.Update))]
+    [HarmonyPatch(typeof(CEBGDNMEBCE), nameof(CEBGDNMEBCE.JAAOOCGLBNN))]
     [HarmonyPostfix]
-    public static void Scene_Select_Char_Update_Postfix()
+    public static void CEBGDNMEBCE_JAAOOCGLBNN()
     {
         Characters.no_feds = VanillaCounts.NoFeds;
     }
