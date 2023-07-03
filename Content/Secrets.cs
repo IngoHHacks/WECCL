@@ -229,15 +229,15 @@ public static class Secrets
         }
 
         // System Quirks
-        if (SystemInfo.batteryStatus != BatteryStatus.Unknown && SystemInfo.batteryLevel < 0.10f)
-        {
-            return
-                "Psst, hey! I just wanted to let you know that your battery is running low. You should probably plug in your computer.";
-        }
-
         if (SystemInfo.batteryStatus != BatteryStatus.Unknown && SystemInfo.batteryLevel == 0f)
         {
             return "Oh no, your battery level is at 0%! What are you waiting for? Plug it in right now!";
+        }
+        
+        if (SystemInfo.batteryStatus != BatteryStatus.Unknown && SystemInfo.batteryLevel < 0.10 && SystemInfo.batteryLevel > 0f)
+        {
+            return
+                "Psst, hey! I just wanted to let you know that your battery is running low. You should probably plug in your computer.";
         }
 
         if (SystemInfo.usesReversedZBuffer && Random.Range(0, 1000) == 0)
