@@ -2,6 +2,9 @@
 
 ## GV 1.58:
 
+### Release 1.3.9
+- Fixed the owner of booking career being set to a random wrestler if the original owner is selected as booker.
+
 ### Release 1.3.8
 
 - Added manual overrides for custom belt textures which are copied from other belts in vanilla.
