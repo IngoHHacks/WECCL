@@ -196,7 +196,7 @@ public class WorldPatch
                 GameCollision.LKMAEOFENHG();
                 GameCollision.DKPMHGHNHEH[BELIFAOEFAK].EPGJJDJAACP = 0f;
                 GameCollision.DKPMHGHNHEH[BELIFAOEFAK].EDHBIOFAKNL = yBottom;
-                GameCollision.DKPMHGHNHEH[BELIFAOEFAK].HHMMCHPDDPF = yTop;
+                GameCollision.DKPMHGHNHEH[BELIFAOEFAK].HHMMCHPDDPF = yTop - yBottom;
                 GameCollision.DKPMHGHNHEH[BELIFAOEFAK].DIDCENDAHFF = 0;
                 GameCollision.DKPMHGHNHEH[BELIFAOEFAK].MIFAPPFHEPA[1] = topRight.x;
                 GameCollision.DKPMHGHNHEH[BELIFAOEFAK].NGLDIFNHFED[1] = topRight.z;
@@ -242,7 +242,7 @@ public class WorldPatch
                 GameCollision.LKMAEOFENHG();
                 GameCollision.DKPMHGHNHEH[peifijckaoc].EPGJJDJAACP = 0f;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].EDHBIOFAKNL = worldCorners[0].y;
-                GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y - worldCorners[0].y;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].DIDCENDAHFF = 1;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].BGJDFONPLFK = "Barrier";
                 GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[1] = worldCorners[4].x + 2.5f;
@@ -289,7 +289,7 @@ public class WorldPatch
                 GameCollision.LKMAEOFENHG();
                 GameCollision.DKPMHGHNHEH[peifijckaoc].EPGJJDJAACP = 0f;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].EDHBIOFAKNL = worldCorners[0].y;
-                GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y;
+                GameCollision.DKPMHGHNHEH[peifijckaoc].HHMMCHPDDPF = worldCorners[1].y - worldCorners[0].y;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].DIDCENDAHFF = 1;
                 GameCollision.DKPMHGHNHEH[peifijckaoc].BGJDFONPLFK = "Cage";
                 GameCollision.DKPMHGHNHEH[peifijckaoc].MIFAPPFHEPA[1] = worldCorners[4].x + 2.5f;
@@ -386,7 +386,7 @@ public class WorldPatch
                 GameCollision.LJFPLPEHCPK[0].NGLDIFNHFED[3] = bottomLeft.z;
                 GameCollision.LJFPLPEHCPK[0].MIFAPPFHEPA[2] = topLeft.x;
                 GameCollision.LJFPLPEHCPK[0].NGLDIFNHFED[2] = topLeft.z;
-                GameCollision.LJFPLPEHCPK[0].HHMMCHPDDPF = yTop;
+                GameCollision.LJFPLPEHCPK[0].HHMMCHPDDPF = yTop - yBottom;
                 GameCollision.LJFPLPEHCPK[0].LHBBEOPJHHD = door.transform.rotation.eulerAngles.y;
                 GameCollision.LJFPLPEHCPK[0].AFEEIHIFOIB = 1f;
                 GameCollision.LJFPLPEHCPK[0].KDAHMGKJNGA = JKPIHABGBGP.LJFPLPEHCPK[1];
