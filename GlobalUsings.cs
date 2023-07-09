@@ -27,3 +27,4 @@ global using static WECCL.Utils.MenuUtils;
 global using static WECCL.Content.CustomContent;
 global using static WECCL.Utils.FileNameUtils;
 global using static WECCL.Utils.ArrayUtils;
+global using static WECCL.Utils.DataSharing;

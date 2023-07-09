@@ -26,7 +26,7 @@ internal class ContentPatch
         {
             if (CKLFGNMEILD.StartsWith("Theme") && int.Parse(CKLFGNMEILD.Substring(5)) > VanillaCounts.MusicCount)
             {
-                __result = CustomClips[int.Parse(CKLFGNMEILD.Substring(5)) - VanillaCounts.MusicCount - 1];
+                __result = CustomClips[int.Parse(CKLFGNMEILD.Substring(5)) - VanillaCounts.MusicCount - 1].AudioClip;
                 return false;
             }
         }

@@ -2,6 +2,10 @@
 
 ## GV 1.58:
 
+### Release 1.3.11
+- Custom music now has names instead of IDs in the editor.
+- Added anonymous data collection for exceptions and crashes (this can be disabled in the config).
+
 ### Release 1.3.10
 - More fixes for search menu and booking career.
 

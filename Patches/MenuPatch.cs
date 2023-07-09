@@ -315,4 +315,32 @@ internal class MenuPatch
             }
         }
     }
+    
+    [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
+    [HarmonyPostfix]
+    public static void Scene_Editor_Update()
+    {
+        if (DNDIEGNJOKN.HMMHJLDCGFJ == 1)
+        {
+            GMIKIMHFABP gMIKIMHFABP = AMJONEKIAID.NCPIJJFEDFL[1];
+            Character iPNKFGHIDJP = gMIKIMHFABP.IPNKFGHIDJP;
+            if (iPNKFGHIDJP.music > VanillaCounts.MusicCount)
+            {
+                int index = iPNKFGHIDJP.music - VanillaCounts.MusicCount - 1;
+                string name = CustomClips[index].Name;
+                DNDIEGNJOKN.FPLAGLKCKII[8].ANONBHFAOEP = name;
+                
+            }
+            else if (iPNKFGHIDJP.music == 0)
+            {
+                DNDIEGNJOKN.FPLAGLKCKII[8].ANONBHFAOEP = "None";
+            }
+            else if (CustomClips.Count > 0)
+            {
+                DNDIEGNJOKN.FPLAGLKCKII[8].ANONBHFAOEP = "Vanilla " + iPNKFGHIDJP.music;
+            }
+            DNDIEGNJOKN.DGIBKBFIJJD();
+            
+        }
+    }
 }

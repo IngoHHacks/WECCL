@@ -14,7 +14,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.3.10";
+    public const string PluginVer = "1.3.11";
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.58f;
 
@@ -75,6 +75,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> CacheEnabled { get; set; }
     internal static ConfigEntry<bool> Debug { get; set; }
     internal static ConfigEntry<bool> DebugRender { get; set; }
+    internal static ConfigEntry<string> DataSharingLevel { get; set; }
 
     public static float CharactersVersion => Characters.latestVersion;
 
@@ -160,6 +161,10 @@ public class Plugin : BaseUnityPlugin
                 "Enable debug mode. This will create debugging files in the /Debug folder.");
             DebugRender = this.Config.Bind("General", "DebugRender", false,
                 "Enable debug rendering. This will render debug information on the screen, such as collision boxes.");
+            DataSharingLevel = this.Config.Bind("General", "DataSharingLevel", "Full",
+                new ConfigDescription(
+                    "The level of data to share with the developer of this plugin. This data will be used to improve the plugin. If you don't want to share any data, set this to None. All data is anonymous.",
+                    new AcceptableValueList<string>("None", "Basic", "Full")));
             
             
             string egg = Secrets.GetEasterEgg();
@@ -330,8 +335,9 @@ public class Plugin : BaseUnityPlugin
                 }
 
                 clip.name = fileName;
+                string shortFileName = Path.GetFileNameWithoutExtension(file.Name);
 
-                CustomClips.Add(clip);
+                CustomClips.Add(new NamedAudioClip(shortFileName, clip));
                 clipsCount++;
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
@@ -366,7 +372,7 @@ public class Plugin : BaseUnityPlugin
             JKPIHABGBGP.BDMIHNKDBDF = new AudioClip[JKPIHABGBGP.CDAIKKJLDDD + 1];
         }
 
-        ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
+        ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.AudioClip.name));
     }
 
     private static void CacheAudioClip(AudioClip clip, long ticks, string chksum)
@@ -1016,6 +1022,11 @@ public class Plugin : BaseUnityPlugin
         {
             Directory.CreateDirectory(bd!);
         }
+        
+        if (Directory.GetFiles(bd, "Save-*.bytes").Length == 0)
+        {
+            File.Copy(save, Path.Combine(bd, "InitialSave.bytes"));
+        }
 
         File.Copy(save, backup);
         string[] files = Directory.GetFiles(bd, "Save-*.bytes");
@@ -1066,5 +1077,16 @@ public class Plugin : BaseUnityPlugin
         }
 
         return count;
+    }
+
+    public static string GetConfigValues()
+    {
+        string result = "";
+        foreach (KeyValuePair<ConfigDefinition, ConfigEntryBase> pair in Instance.Config.Select(x => new KeyValuePair<ConfigDefinition, ConfigEntryBase>(x.Key, x.Value)))
+        {
+            result += $"{pair.Key.Key}={pair.Value.BoxedValue}\n";
+        }
+
+        return result;
     }
 }
