@@ -182,6 +182,8 @@ characters: 1,2
 an array from 1 to that integer will be created. When using a list, the list will be used as the array.  
 1 and 2 are the default characters as selected by the user, 3 is another character, -1 is the referee, and 11 and 22 are
 the tag team partners of 1 and 2 respectively. Other values are not supported.  
+Optional `use_names: True` will allow you to use character names in `surprise_entrants`, `speaker`, `target` and commands instead of their ids. Their names can be used even if they are not selected in the `characters` field.  
+Optional `surprise_entrants: `will set these wrestlers (and their managers) as surprise entrants, who will only come out through the curtain once the promo ends. Must be an comma-separated list of match character ids.
 `"line1"` and `"line2"` must be strings. The quotes are required. For quotes inside the string, use `\"`.  
 `$name#` will be replaced with the name of the character with the corresponding id.  
 `@him/his/etc#` will be replaced with the pronoun of the character with the corresponding id,
