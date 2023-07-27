@@ -1,4 +1,4 @@
-﻿namespace WECCL.Utils;
+namespace WECCL.Utils;
 
 public static class ArrayUtils
 {

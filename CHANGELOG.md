@@ -1,5 +1,10 @@
 # Changelog
 
+## GV 1.59:
+
+### Release 1.4.0
+- UPDATE TO GAME VERSION 1.59
+
 ## GV 1.58:
 
 ### Release 1.3.11

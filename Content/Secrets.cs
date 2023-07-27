@@ -1,4 +1,4 @@
-﻿using WECCL.Saves;
+using WECCL.Saves;
 using Random = UnityEngine.Random;
 
 namespace WECCL.Content;

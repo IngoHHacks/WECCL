@@ -14,9 +14,9 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.3.11";
+    public const string PluginVer = "1.4.0";
     public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.58f;
+    public const float PluginVersion = 1.59f;
 
     public const bool PreRelease = false;
     public static string[] PreReleaseReasons = { "Testing" };
@@ -368,8 +368,8 @@ public class Plugin : BaseUnityPlugin
         if (CustomClips.Count != 0)
         {
             // Update the number of audio clips in the game
-            JKPIHABGBGP.CDAIKKJLDDD = VanillaCounts.MusicCount + CustomClips.Count;
-            JKPIHABGBGP.BDMIHNKDBDF = new AudioClip[JKPIHABGBGP.CDAIKKJLDDD + 1];
+            IKPECOJMCAB.PJIECBLCGFB = VanillaCounts.MusicCount + CustomClips.Count;
+            IKPECOJMCAB.FFMBDMFIJHL = new AudioClip[IKPECOJMCAB.PJIECBLCGFB + 1];
         }
 
         ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.AudioClip.name));
@@ -631,6 +631,10 @@ public class Plugin : BaseUnityPlugin
             try
             {
                 PromoData promo = PromoData.CreatePromo(file.FullName);
+                if (promo == null)
+                {
+                    continue;
+                }
                 promoCount++;
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
