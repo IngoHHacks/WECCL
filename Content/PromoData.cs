@@ -168,13 +168,13 @@ public class PromoData
             return null;
         }
     }
-    public bool IsCharacterSurprise(GMIKIMHFABP character)
+    public bool IsCharacterSurprise(DJEKCMMMFJM character)
     {
-        if (UseCharacterNames && SurpriseEntrantsNames.Contains(character.IPNKFGHIDJP.name))
+        if (UseCharacterNames && SurpriseEntrantsNames.Contains(character.LLEGGMCIALJ.name))
         {
             return true;
         }
-        else if (SurpriseEntrants.Contains(character.NMKACNOOPPC))
+        else if (SurpriseEntrants.Contains(character.DHBIELODIAN))
         {
             return true;
         }
@@ -216,11 +216,11 @@ public class PromoData
         {
             if (NameToID.TryGetValue(arg, out int id))
             {
-                return AMJONEKIAID.NCPIJJFEDFL[id].IPNKFGHIDJP;
+                return FFKMIEMAJML.FJCOPECCEKN[id].LLEGGMCIALJ;
             }
-            return AMJONEKIAID.NCPIJJFEDFL[0].IPNKFGHIDJP;
+            return FFKMIEMAJML.FJCOPECCEKN[0].LLEGGMCIALJ;
         }
-        return GameDialog.GNNMHIENJIA[int.Parse(arg)];
+        return GameDialog.HGJNAEDAMDO[int.Parse(arg)];
     }
 
     public static PromoData CreatePromo(string file)

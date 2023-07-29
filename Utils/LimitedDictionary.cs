@@ -1,4 +1,4 @@
-﻿namespace WECCL.Utils;
+namespace WECCL.Utils;
 
 public class LimitedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>
 {

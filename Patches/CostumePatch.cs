@@ -5,7 +5,7 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 public class CostumePatch
 {
-    [HarmonyPatch(typeof(Costume), nameof(Costume.IFDJGOBNCMG))]
+    [HarmonyPatch(typeof(Costume), nameof(Costume.KACONPJOALO))]
     [HarmonyPostfix]
     public static void CostumePostfix(ref Color __result, Costume __instance)
     {

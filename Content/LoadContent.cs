@@ -95,7 +95,7 @@ public static class LoadContent
         _totalAssets += Plugin.CountFiles(AllModsOverridesDirs, ContentType.All);
 
 
-        VanillaCounts.MusicCount = JKPIHABGBGP.CDAIKKJLDDD;
+        VanillaCounts.MusicCount = IKPECOJMCAB.PJIECBLCGFB;
         VanillaCounts.NoLocations = World.no_locations;
         VanillaCounts.NoFeds = Characters.no_feds;
 
@@ -128,211 +128,211 @@ public static class LoadContent
         yield return new WaitUntil(() => ContentPatch._contentLoaded);
 
         ContentPatch._internalCostumeCounts[CustomCostumes["legs_material"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[1];
-        GameTextures.LNMBKFHJKBD[1] += CustomCostumes["legs_material"].Count;
+            GameTextures.PGGBCDPCBDC[1];
+        GameTextures.PGGBCDPCBDC[1] += CustomCostumes["legs_material"].Count;
         ContentMappings.ContentMap.MaterialNameMap[1]
             .AddRange(CustomCostumes["legs_material"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["legs_flesh"].InternalPrefix] = GameTextures.COAEICPABJO[1];
-        GameTextures.COAEICPABJO[1] += CustomCostumes["legs_flesh"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["legs_flesh"].InternalPrefix] = GameTextures.PECMEJKJOJJ[1];
+        GameTextures.PECMEJKJOJJ[1] += CustomCostumes["legs_flesh"].Count;
         ContentMappings.ContentMap.FleshNameMap[1]
             .AddRange(CustomCostumes["legs_flesh"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["legs_shape"].InternalPrefix] = GameTextures.DNFPMKLACHM[1];
-        GameTextures.DNFPMKLACHM[1] += CustomCostumes["legs_shape"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["legs_shape"].InternalPrefix] = GameTextures.JMOFBHKFODO[1];
+        GameTextures.JMOFBHKFODO[1] += CustomCostumes["legs_shape"].Count;
         ContentMappings.ContentMap.ShapeNameMap[1]
             .AddRange(CustomCostumes["legs_shape"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["body_material"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[2];
-        GameTextures.LNMBKFHJKBD[2] += CustomCostumes["body_material"].Count;
+            GameTextures.PGGBCDPCBDC[2];
+        GameTextures.PGGBCDPCBDC[2] += CustomCostumes["body_material"].Count;
         ContentMappings.ContentMap.MaterialNameMap[2]
             .AddRange(CustomCostumes["body_material"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["body_flesh_male"].InternalPrefix] =
-            GameTextures.COAEICPABJO[2];
-        GameTextures.COAEICPABJO[2] += CustomCostumes["body_flesh_male"].Count;
+            GameTextures.PECMEJKJOJJ[2];
+        GameTextures.PECMEJKJOJJ[2] += CustomCostumes["body_flesh_male"].Count;
         ContentMappings.ContentMap.FleshNameMap[2]
             .AddRange(CustomCostumes["body_flesh_male"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["body_flesh_female"].InternalPrefix] =
-            GameTextures.AMOGDCDAIPN;
-        GameTextures.AMOGDCDAIPN += CustomCostumes["body_flesh_female"].Count;
+            GameTextures.GGDEHKODMKK;
+        GameTextures.GGDEHKODMKK += CustomCostumes["body_flesh_female"].Count;
         ContentMappings.ContentMap.BodyFemaleNameMap.AddRange(CustomCostumes["body_flesh_female"].CustomObjects
             .Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["body_shape"].InternalPrefix] = GameTextures.DNFPMKLACHM[2];
-        GameTextures.DNFPMKLACHM[2] += CustomCostumes["body_shape"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["body_shape"].InternalPrefix] = GameTextures.JMOFBHKFODO[2];
+        GameTextures.JMOFBHKFODO[2] += CustomCostumes["body_shape"].Count;
         ContentMappings.ContentMap.ShapeNameMap[2]
             .AddRange(CustomCostumes["body_shape"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["face_female"].InternalPrefix] = GameTextures.DAIOGKFPBML;
-        GameTextures.DAIOGKFPBML += CustomCostumes["face_female"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["face_female"].InternalPrefix] = GameTextures.PJMNJIFAGCO;
+        GameTextures.PJMNJIFAGCO += CustomCostumes["face_female"].Count;
         ContentMappings.ContentMap.FaceFemaleNameMap.AddRange(CustomCostumes["face_female"].CustomObjects
             .Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["face_male"].InternalPrefix] = GameTextures.LNMBKFHJKBD[3];
-        GameTextures.LNMBKFHJKBD[3] += CustomCostumes["face_male"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["face_male"].InternalPrefix] = GameTextures.PGGBCDPCBDC[3];
+        GameTextures.PGGBCDPCBDC[3] += CustomCostumes["face_male"].Count;
         ContentMappings.ContentMap.MaterialNameMap[3]
             .AddRange(CustomCostumes["face_male"].CustomObjects.Select(c => c.Item1));
-        GameTextures.COAEICPABJO[3] += 0; // face_flesh (default 0)
-        ContentPatch._internalCostumeCounts[CustomCostumes["face_shape"].InternalPrefix] = GameTextures.COAEICPABJO[3];
-        GameTextures.DNFPMKLACHM[3] += CustomCostumes["face_shape"].Count;
+        GameTextures.PECMEJKJOJJ[3] += 0; // face_flesh (default 0)
+        ContentPatch._internalCostumeCounts[CustomCostumes["face_shape"].InternalPrefix] = GameTextures.PECMEJKJOJJ[3];
+        GameTextures.JMOFBHKFODO[3] += CustomCostumes["face_shape"].Count;
         ContentMappings.ContentMap.ShapeNameMap[3]
             .AddRange(CustomCostumes["face_shape"].CustomObjects.Select(c => c.Item1));
-        for (GameTextures.FNLOGBBADOD = 4; GameTextures.FNLOGBBADOD <= 7; GameTextures.FNLOGBBADOD++)
+        for (GameTextures.MHFLLOFKLLF = 4; GameTextures.MHFLLOFKLLF <= 7; GameTextures.MHFLLOFKLLF++)
         {
-            GameTextures.LNMBKFHJKBD[GameTextures.FNLOGBBADOD] +=
+            GameTextures.PGGBCDPCBDC[GameTextures.MHFLLOFKLLF] +=
                 CustomCostumes["face_male"].Count; // Unknown (default face_male)
-            ContentMappings.ContentMap.MaterialNameMap[GameTextures.FNLOGBBADOD]
+            ContentMappings.ContentMap.MaterialNameMap[GameTextures.MHFLLOFKLLF]
                 .AddRange(CustomCostumes["face_male"].CustomObjects.Select(c => c.Item1));
-            GameTextures.COAEICPABJO[GameTextures.FNLOGBBADOD] += 0; // face_flesh2 (default face_flesh)
-            GameTextures.DNFPMKLACHM[GameTextures.FNLOGBBADOD] +=
+            GameTextures.PECMEJKJOJJ[GameTextures.MHFLLOFKLLF] += 0; // face_flesh2 (default face_flesh)
+            GameTextures.JMOFBHKFODO[GameTextures.MHFLLOFKLLF] +=
                 CustomCostumes["face_shape"].Count; // Unknown (default face shapes)
-            ContentMappings.ContentMap.ShapeNameMap[GameTextures.FNLOGBBADOD]
+            ContentMappings.ContentMap.ShapeNameMap[GameTextures.MHFLLOFKLLF]
                 .AddRange(CustomCostumes["face_shape"].CustomObjects.Select(c => c.Item1));
         }
 
-        for (GameTextures.FNLOGBBADOD = 8; GameTextures.FNLOGBBADOD <= 12; GameTextures.FNLOGBBADOD++)
+        for (GameTextures.MHFLLOFKLLF = 8; GameTextures.MHFLLOFKLLF <= 12; GameTextures.MHFLLOFKLLF++)
         {
-            if (GameTextures.FNLOGBBADOD != 10)
+            if (GameTextures.MHFLLOFKLLF != 10)
             {
                 ContentPatch._internalCostumeCounts[CustomCostumes["arms_material"].InternalPrefix] =
-                    GameTextures.LNMBKFHJKBD[GameTextures.FNLOGBBADOD];
-                GameTextures.LNMBKFHJKBD[GameTextures.FNLOGBBADOD] += CustomCostumes["arms_material"].Count;
-                ContentMappings.ContentMap.MaterialNameMap[GameTextures.FNLOGBBADOD]
+                    GameTextures.PGGBCDPCBDC[GameTextures.MHFLLOFKLLF];
+                GameTextures.PGGBCDPCBDC[GameTextures.MHFLLOFKLLF] += CustomCostumes["arms_material"].Count;
+                ContentMappings.ContentMap.MaterialNameMap[GameTextures.MHFLLOFKLLF]
                     .AddRange(CustomCostumes["arms_material"].CustomObjects.Select(c => c.Item1));
                 ContentPatch._internalCostumeCounts[CustomCostumes["arms_flesh"].InternalPrefix] =
-                    GameTextures.COAEICPABJO[GameTextures.FNLOGBBADOD];
-                GameTextures.COAEICPABJO[GameTextures.FNLOGBBADOD] += CustomCostumes["arms_flesh"].Count;
-                ContentMappings.ContentMap.FleshNameMap[GameTextures.FNLOGBBADOD]
+                    GameTextures.PECMEJKJOJJ[GameTextures.MHFLLOFKLLF];
+                GameTextures.PECMEJKJOJJ[GameTextures.MHFLLOFKLLF] += CustomCostumes["arms_flesh"].Count;
+                ContentMappings.ContentMap.FleshNameMap[GameTextures.MHFLLOFKLLF]
                     .AddRange(CustomCostumes["arms_flesh"].CustomObjects.Select(c => c.Item1));
                 ContentPatch._internalCostumeCounts[CustomCostumes["arms_shape"].InternalPrefix] =
-                    GameTextures.DNFPMKLACHM[GameTextures.FNLOGBBADOD];
-                GameTextures.DNFPMKLACHM[GameTextures.FNLOGBBADOD] += CustomCostumes["arms_shape"].Count;
-                ContentMappings.ContentMap.ShapeNameMap[GameTextures.FNLOGBBADOD]
+                    GameTextures.JMOFBHKFODO[GameTextures.MHFLLOFKLLF];
+                GameTextures.JMOFBHKFODO[GameTextures.MHFLLOFKLLF] += CustomCostumes["arms_shape"].Count;
+                ContentMappings.ContentMap.ShapeNameMap[GameTextures.MHFLLOFKLLF]
                     .AddRange(CustomCostumes["arms_shape"].CustomObjects.Select(c => c.Item1));
             }
         }
 
-        ContentPatch._internalCostumeCounts[CustomCostumes["arms_glove"].InternalPrefix] = GameTextures.LNMBKFHJKBD[10];
-        GameTextures.LNMBKFHJKBD[10] += CustomCostumes["arms_glove"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["arms_glove"].InternalPrefix] = GameTextures.PGGBCDPCBDC[10];
+        GameTextures.PGGBCDPCBDC[10] += CustomCostumes["arms_glove"].Count;
         ContentMappings.ContentMap.MaterialNameMap[10]
             .AddRange(CustomCostumes["arms_glove"].CustomObjects.Select(c => c.Item1));
-        GameTextures.COAEICPABJO[10] += 0; // arms_glove_flesh (default 1)
-        GameTextures.DNFPMKLACHM[10] += 0; // arms_glove_shape (default 1)
-        GameTextures.LNMBKFHJKBD[13] += CustomCostumes["arms_glove"].Count;
+        GameTextures.PECMEJKJOJJ[10] += 0; // arms_glove_flesh (default 1)
+        GameTextures.JMOFBHKFODO[10] += 0; // arms_glove_shape (default 1)
+        GameTextures.PGGBCDPCBDC[13] += CustomCostumes["arms_glove"].Count;
         ContentMappings.ContentMap.MaterialNameMap[13]
             .AddRange(CustomCostumes["arms_glove"].CustomObjects.Select(c => c.Item1));
-        GameTextures.COAEICPABJO[13] += 0; // arms_glove_flesh2 (default arms_glove_flesh)
-        GameTextures.DNFPMKLACHM[13] += 0; // arms_glove_shape2 (default arms_glove_shape)
+        GameTextures.PECMEJKJOJJ[13] += 0; // arms_glove_flesh2 (default arms_glove_flesh)
+        GameTextures.JMOFBHKFODO[13] += 0; // arms_glove_shape2 (default arms_glove_shape)
         ContentPatch._internalCostumeCounts[CustomCostumes["legs_footwear_special"].InternalPrefix] =
-            GameTextures.ILFFOFONPPO;
-        GameTextures.ILFFOFONPPO += CustomCostumes["legs_footwear_special"].Count;
+            GameTextures.FFKLFABJAGA;
+        GameTextures.FFKLFABJAGA += CustomCostumes["legs_footwear_special"].Count;
         ContentMappings.ContentMap.SpecialFootwearNameMap.AddRange(CustomCostumes["legs_footwear_special"]
             .CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["legs_footwear"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[14];
-        GameTextures.LNMBKFHJKBD[14] += CustomCostumes["legs_footwear"].Count;
+            GameTextures.PGGBCDPCBDC[14];
+        GameTextures.PGGBCDPCBDC[14] += CustomCostumes["legs_footwear"].Count;
         ContentMappings.ContentMap.MaterialNameMap[14]
             .AddRange(CustomCostumes["legs_footwear"].CustomObjects.Select(c => c.Item1));
-        GameTextures.COAEICPABJO[14] += 0; // legs_footwear_flesh (default 0)
-        GameTextures.DNFPMKLACHM[14] += 0; // legs_footwear_shape (default 0)
-        GameTextures.LNMBKFHJKBD[15] += CustomCostumes["legs_footwear"].Count;
+        GameTextures.PECMEJKJOJJ[14] += 0; // legs_footwear_flesh (default 0)
+        GameTextures.JMOFBHKFODO[14] += 0; // legs_footwear_shape (default 0)
+        GameTextures.PGGBCDPCBDC[15] += CustomCostumes["legs_footwear"].Count;
         ContentMappings.ContentMap.MaterialNameMap[15]
             .AddRange(CustomCostumes["legs_footwear"].CustomObjects.Select(c => c.Item1));
-        GameTextures.COAEICPABJO[15] += 0; // legs_footwear_flesh2 (default legs_footwear_flesh)
-        GameTextures.DNFPMKLACHM[15] += 0; // legs_footwear_shape2 (default legs_footwear_shape)
+        GameTextures.PECMEJKJOJJ[15] += 0; // legs_footwear_flesh2 (default legs_footwear_flesh)
+        GameTextures.JMOFBHKFODO[15] += 0; // legs_footwear_shape2 (default legs_footwear_shape)
         ContentPatch._internalCostumeCounts[CustomCostumes["body_collar"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[16];
-        GameTextures.LNMBKFHJKBD[16] += CustomCostumes["body_collar"].Count;
+            GameTextures.PGGBCDPCBDC[16];
+        GameTextures.PGGBCDPCBDC[16] += CustomCostumes["body_collar"].Count;
         ContentMappings.ContentMap.MaterialNameMap[16]
             .AddRange(CustomCostumes["body_collar"].CustomObjects.Select(c => c.Item1));
-        GameTextures.COAEICPABJO[16] += 0; // body_collar_flesh (default 1)  
-        GameTextures.DNFPMKLACHM[16] += 0; // body_collar_shape (default 0)
+        GameTextures.PECMEJKJOJJ[16] += 0; // body_collar_flesh (default 1)  
+        GameTextures.JMOFBHKFODO[16] += 0; // body_collar_shape (default 0)
         ContentPatch._internalCostumeCounts[CustomCostumes["hair_texture_transparent"].InternalPrefix] =
-            GameTextures.NCDJIAOEADB;
-        GameTextures.NCDJIAOEADB += CustomCostumes["hair_texture_transparent"].Count;
+            GameTextures.OEMIEAFDIAB;
+        GameTextures.OEMIEAFDIAB += CustomCostumes["hair_texture_transparent"].Count;
         ContentMappings.ContentMap.TransparentHairMaterialNameMap.AddRange(
             CustomCostumes["hair_texture_transparent"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["hair_texture_solid"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[17];
-        GameTextures.LNMBKFHJKBD[17] += CustomCostumes["hair_texture_solid"].Count;
+            GameTextures.PGGBCDPCBDC[17];
+        GameTextures.PGGBCDPCBDC[17] += CustomCostumes["hair_texture_solid"].Count;
         ContentMappings.ContentMap.MaterialNameMap[17]
             .AddRange(CustomCostumes["hair_texture_solid"].CustomObjects.Select(c => c.Item1));
-        GameTextures.COAEICPABJO[17] += 0; // hair_texture_solid_flesh (default 100)
+        GameTextures.PECMEJKJOJJ[17] += 0; // hair_texture_solid_flesh (default 100)
         ContentPatch._internalCostumeCounts[CustomCostumes["hair_hairstyle_solid"].InternalPrefix] =
-            GameTextures.DNFPMKLACHM[17];
-        GameTextures.DNFPMKLACHM[17] += CustomCostumes["hair_hairstyle_solid"].Count;
+            GameTextures.JMOFBHKFODO[17];
+        GameTextures.JMOFBHKFODO[17] += CustomCostumes["hair_hairstyle_solid"].Count;
         ContentMappings.ContentMap.ShapeNameMap[17]
             .AddRange(CustomCostumes["hair_hairstyle_solid"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["hair_hairstyle_transparent"].InternalPrefix] =
-            GameTextures.HBCJJDDDEJO;
-        GameTextures.HBCJJDDDEJO += CustomCostumes["hair_hairstyle_transparent"].Count;
+            GameTextures.KJDGKNNINBC;
+        GameTextures.KJDGKNNINBC += CustomCostumes["hair_hairstyle_transparent"].Count;
         ContentMappings.ContentMap.TransparentHairHairstyleNameMap.AddRange(
             CustomCostumes["hair_hairstyle_transparent"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[18] += 0; // hair_hairstyle_transparent_texture (default 2)
-        GameTextures.COAEICPABJO[18] += 0; // hair_hairstyle_transparent_flesh (default 100)
+        GameTextures.PGGBCDPCBDC[18] += 0; // hair_hairstyle_transparent_texture (default 2)
+        GameTextures.PECMEJKJOJJ[18] += 0; // hair_hairstyle_transparent_flesh (default 100)
         ContentPatch._internalCostumeCounts[CustomCostumes["hair_extension"].InternalPrefix] =
-            GameTextures.DNFPMKLACHM[18];
-        GameTextures.DNFPMKLACHM[18] += CustomCostumes["hair_extension"].Count;
+            GameTextures.JMOFBHKFODO[18];
+        GameTextures.JMOFBHKFODO[18] += CustomCostumes["hair_extension"].Count;
         ContentMappings.ContentMap.ShapeNameMap[18]
             .AddRange(CustomCostumes["hair_extension"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["hair_shave"].InternalPrefix] = GameTextures.LNMBKFHJKBD[19];
-        GameTextures.LNMBKFHJKBD[19] += CustomCostumes["hair_shave"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["hair_shave"].InternalPrefix] = GameTextures.PGGBCDPCBDC[19];
+        GameTextures.PGGBCDPCBDC[19] += CustomCostumes["hair_shave"].Count;
         ContentMappings.ContentMap.MaterialNameMap[19]
             .AddRange(CustomCostumes["hair_shave"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["face_beard"].InternalPrefix] = GameTextures.LNMBKFHJKBD[20];
-        GameTextures.LNMBKFHJKBD[20] += CustomCostumes["face_beard"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["face_beard"].InternalPrefix] = GameTextures.PGGBCDPCBDC[20];
+        GameTextures.PGGBCDPCBDC[20] += CustomCostumes["face_beard"].Count;
         ContentMappings.ContentMap.MaterialNameMap[20]
             .AddRange(CustomCostumes["face_beard"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["face_mask"].InternalPrefix] = GameTextures.LNMBKFHJKBD[21];
-        GameTextures.LNMBKFHJKBD[21] += CustomCostumes["face_mask"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["face_mask"].InternalPrefix] = GameTextures.PGGBCDPCBDC[21];
+        GameTextures.PGGBCDPCBDC[21] += CustomCostumes["face_mask"].Count;
         ContentMappings.ContentMap.MaterialNameMap[21]
             .AddRange(CustomCostumes["face_mask"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[22] += CustomCostumes["face_mask"].Count;
+        GameTextures.PGGBCDPCBDC[22] += CustomCostumes["face_mask"].Count;
         ContentMappings.ContentMap.MaterialNameMap[22]
             .AddRange(CustomCostumes["face_mask"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[23] += CustomCostumes["body_pattern"].Count;
+        GameTextures.PGGBCDPCBDC[23] += CustomCostumes["body_pattern"].Count;
         ContentMappings.ContentMap.MaterialNameMap[23]
             .AddRange(CustomCostumes["body_pattern"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["body_pattern"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[24];
-        GameTextures.LNMBKFHJKBD[24] += CustomCostumes["body_pattern"].Count;
+            GameTextures.PGGBCDPCBDC[24];
+        GameTextures.PGGBCDPCBDC[24] += CustomCostumes["body_pattern"].Count;
         ContentMappings.ContentMap.MaterialNameMap[24]
             .AddRange(CustomCostumes["body_pattern"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["legs_kneepad"].InternalPrefix] = GameTextures.IBFPEKPLBIJ;
-        GameTextures.IBFPEKPLBIJ += CustomCostumes["legs_kneepad"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["legs_kneepad"].InternalPrefix] = GameTextures.LDJBMKDKOBO;
+        GameTextures.LDJBMKDKOBO += CustomCostumes["legs_kneepad"].Count;
         ContentMappings.ContentMap.KneepadNameMap.AddRange(CustomCostumes["legs_kneepad"].CustomObjects
             .Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["legs_pattern"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[25];
-        GameTextures.LNMBKFHJKBD[25] += CustomCostumes["legs_pattern"].Count;
+            GameTextures.PGGBCDPCBDC[25];
+        GameTextures.PGGBCDPCBDC[25] += CustomCostumes["legs_pattern"].Count;
         ContentMappings.ContentMap.MaterialNameMap[25]
             .AddRange(CustomCostumes["legs_pattern"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[26] += CustomCostumes["legs_pattern"].Count;
+        GameTextures.PGGBCDPCBDC[26] += CustomCostumes["legs_pattern"].Count;
         ContentMappings.ContentMap.MaterialNameMap[26]
             .AddRange(CustomCostumes["legs_pattern"].CustomObjects.Select(c => c.Item1));
-        ContentPatch._internalCostumeCounts[CustomCostumes["legs_laces"].InternalPrefix] = GameTextures.LNMBKFHJKBD[27];
-        GameTextures.LNMBKFHJKBD[27] += CustomCostumes["legs_laces"].Count;
+        ContentPatch._internalCostumeCounts[CustomCostumes["legs_laces"].InternalPrefix] = GameTextures.PGGBCDPCBDC[27];
+        GameTextures.PGGBCDPCBDC[27] += CustomCostumes["legs_laces"].Count;
         ContentMappings.ContentMap.MaterialNameMap[27]
             .AddRange(CustomCostumes["legs_laces"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[28] += 0; // face_eyewear_texture (default 1)
+        GameTextures.PGGBCDPCBDC[28] += 0; // face_eyewear_texture (default 1)
         ContentPatch._internalCostumeCounts[CustomCostumes["face_headwear"].InternalPrefix] =
-            GameTextures.DNFPMKLACHM[28];
-        GameTextures.DNFPMKLACHM[28] += CustomCostumes["face_headwear"].Count;
+            GameTextures.JMOFBHKFODO[28];
+        GameTextures.JMOFBHKFODO[28] += CustomCostumes["face_headwear"].Count;
         ContentMappings.ContentMap.ShapeNameMap[28]
             .AddRange(CustomCostumes["face_headwear"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["arms_elbow_pad"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[29];
-        GameTextures.LNMBKFHJKBD[29] += CustomCostumes["arms_elbow_pad"].Count;
+            GameTextures.PGGBCDPCBDC[29];
+        GameTextures.PGGBCDPCBDC[29] += CustomCostumes["arms_elbow_pad"].Count;
         ContentMappings.ContentMap.MaterialNameMap[29]
             .AddRange(CustomCostumes["arms_elbow_pad"].CustomObjects.Select(c => c.Item1));
         ContentPatch._internalCostumeCounts[CustomCostumes["arms_wristband"].InternalPrefix] =
-            GameTextures.LNMBKFHJKBD[30];
-        GameTextures.LNMBKFHJKBD[30] += CustomCostumes["arms_wristband"].Count;
+            GameTextures.PGGBCDPCBDC[30];
+        GameTextures.PGGBCDPCBDC[30] += CustomCostumes["arms_wristband"].Count;
         ContentMappings.ContentMap.MaterialNameMap[30]
             .AddRange(CustomCostumes["arms_wristband"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[31] += 0; // face_headwear_texture (default face_eyewear_texture)
-        GameTextures.DNFPMKLACHM[31] += CustomCostumes["face_headwear"].Count;
+        GameTextures.PGGBCDPCBDC[31] += 0; // face_headwear_texture (default face_eyewear_texture)
+        GameTextures.JMOFBHKFODO[31] += CustomCostumes["face_headwear"].Count;
         ContentMappings.ContentMap.ShapeNameMap[31]
             .AddRange(CustomCostumes["face_headwear"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[32] += CustomCostumes["arms_elbow_pad"].Count;
+        GameTextures.PGGBCDPCBDC[32] += CustomCostumes["arms_elbow_pad"].Count;
         ContentMappings.ContentMap.MaterialNameMap[32]
             .AddRange(CustomCostumes["arms_elbow_pad"].CustomObjects.Select(c => c.Item1));
-        GameTextures.LNMBKFHJKBD[33] += CustomCostumes["arms_wristband"].Count;
+        GameTextures.PGGBCDPCBDC[33] += CustomCostumes["arms_wristband"].Count;
         ContentMappings.ContentMap.MaterialNameMap[33]
             .AddRange(CustomCostumes["arms_wristband"].CustomObjects.Select(c => c.Item1));
 
