@@ -391,5 +391,24 @@ internal class PromoPatch
                 }
             }
         }
+
+        if(CustomContent.PromoData[index].NextPromo != "")
+        {
+            int next =  CustomContent.PromoData.FindIndex(a => a.Title == CustomContent.PromoData[index].NextPromo);
+            if (next != -1)
+            {
+                PHECEOMIMND.LPHFJGGHBED = next + 1000000;
+                if (CustomContent.PromoData[next].UseCharacterNames)
+                {
+                    CustomContent.PromoData[next].NameToID = new();
+                    for (int i = 1; i < FFKMIEMAJML.FJCOPECCEKN.Length; i++)
+                    {
+                        DJEKCMMMFJM person = FFKMIEMAJML.FJCOPECCEKN[i];
+
+                        CustomContent.PromoData[next].NameToID.Add(person.LLEGGMCIALJ.name, i);
+                    }
+                }
+            }
+        }
     }
 }

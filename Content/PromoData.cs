@@ -13,6 +13,7 @@ public class PromoData
     public HashSet<int> SurpriseEntrants { get; set; } = new HashSet<int>();
     public HashSet<int> SurpirseExtras { get; set; } = new HashSet<int>();
     public HashSet<string> SurpriseEntrantsNames { get; set; } = new HashSet<string>();
+    public string NextPromo { get; set; } = "";
 
     public int NumLines => this.PromoLines.Count;
 
@@ -83,7 +84,13 @@ public class PromoData
                     }
                     continue;
                 }
-                    c = 0;
+
+                if(line.ToLower().StartsWith("next_promo:"))
+                {
+                    promoData.NextPromo = line.Substring(11).Trim();
+                    continue;
+                }
+                c = 0;
                 PromoLine promoLine = new PromoLine();
                 bool stringMode = false;
                 string currentString = "";
