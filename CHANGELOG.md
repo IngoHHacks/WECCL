@@ -2,6 +2,9 @@
 
 ## GV 1.59:
 
+### Release 1.4.1
+- Hotfix for promos not working.
+
 ### Release 1.4.0
 - UPDATE TO GAME VERSION 1.59
 

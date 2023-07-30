@@ -173,17 +173,17 @@ internal class PromoPatch
             return;
         }
 
-        GameDialog.INHHDMCONJD++;
-        Array.Resize(ref GameDialog.JDJMBJHKNAB, GameDialog.INHHDMCONJD + 1);
-        ResizeArray(ref GameDialog.KIGJPKBDCKK, GameDialog.INHHDMCONJD + 1,
+        GameDialog.LEKNPAAEBAE++;
+        Array.Resize(ref GameDialog.JDJMBJHKNAB, GameDialog.LEKNPAAEBAE + 1);
+        ResizeArray(ref GameDialog.KIGJPKBDCKK, GameDialog.LEKNPAAEBAE + 1,
             Math.Max(40, CustomContent.PromoData.Count));
-        Array.Resize(ref GameDialog.OIDMOHCDEHK, GameDialog.INHHDMCONJD + 1);
-        GameDialog.OIDMOHCDEHK[GameDialog.INHHDMCONJD] = CustomContent.PromoData.Count;
-        GameDialog.JDJMBJHKNAB[GameDialog.INHHDMCONJD] = "Custom";
-        GameDialog.KIGJPKBDCKK[GameDialog.INHHDMCONJD, 0] = 0;
+        Array.Resize(ref GameDialog.OIDMOHCDEHK, GameDialog.LEKNPAAEBAE + 1);
+        GameDialog.OIDMOHCDEHK[GameDialog.LEKNPAAEBAE] = CustomContent.PromoData.Count;
+        GameDialog.JDJMBJHKNAB[GameDialog.LEKNPAAEBAE] = "Custom";
+        GameDialog.KIGJPKBDCKK[GameDialog.LEKNPAAEBAE, 0] = 0;
         for (int i = 0; i < CustomContent.PromoData.Count; i++)
         {
-            GameDialog.KIGJPKBDCKK[GameDialog.INHHDMCONJD, i + 1] = 1000000 + i;
+            GameDialog.KIGJPKBDCKK[GameDialog.LEKNPAAEBAE, i + 1] = 1000000 + i;
         }
     }
 

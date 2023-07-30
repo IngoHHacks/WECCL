@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using UnityEngine.SceneManagement;
 
@@ -30,9 +31,14 @@ public static class DataSharing
         Plugin.Log.LogDebug("Loaded Data UUID: " + uuid);
         return uuid;
     }
+    
+    const string PATH_PATTERN = @"([A-Z]:[\\/](?:[^\\/:\n]*[\\/])*)([^\\/:\n]*)";
 
     public static void SendExceptionToServer(string message, string stackTrace, string dataSharingLevel)
     {
+        message = Regex.Replace(message, PATH_PATTERN, @"#:\2");
+        stackTrace = Regex.Replace(stackTrace, PATH_PATTERN, @"#:\2");
+        
         if (dataSharingLevel == "None") return;
         Dictionary<string, string> data;
         if (dataSharingLevel == "Full")
@@ -43,12 +49,12 @@ public static class DataSharing
                 { "type", "exception" },
                 { "message", message },
                 { "stackTrace", stackTrace },
-                { "wecclVersion", Plugin.PluginVersion.ToString(CultureInfo.CurrentCulture) },
+                { "wecclVersion", Plugin.PluginVer},
                 { "installedMods", string.Join(",", BepInEx.Bootstrap.Chainloader.PluginInfos.Select(x => x.Key)) },
                 { "prefixes", string.Join(",", Prefixes) },
-                { "nonDefaultConfigValues", Plugin.GetConfigValues() },
+                { "nonDefaultConfigValues", Plugin.GetNonDefaultConfigValues() },
                 { "currentScene", SceneManager.GetActiveScene().name },
-                { "numberOfCharacters", Characters.c.Length.ToString() }
+                { "numberOfCharacters", (Characters.c.Length - 1).ToString() }
             };
 
         }
@@ -59,7 +65,7 @@ public static class DataSharing
                 { "type", "exception" },
                 { "message", message },
                 { "stackTrace", stackTrace },
-                { "wecclVersion", Plugin.PluginVersion.ToString(CultureInfo.CurrentCulture) }
+                { "wecclVersion", Plugin.PluginVer }
             };
         }
         Thread thread = new(() =>
