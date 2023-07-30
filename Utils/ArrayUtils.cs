@@ -1,6 +1,5 @@
 namespace WECCL.Utils;
 
-[HarmonyPatch]
 public static class ArrayUtils
 {
     public static int[] GenerateArrayForNum(int characters)

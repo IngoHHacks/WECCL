@@ -2,6 +2,13 @@
 
 ## GV 1.59:
 
+### Release 1.4.2
+- Support for surprise promo entrants and multiple consecutive promos.
+- Data collection fixes and path masking for file paths.
+- Proper save remapping for new materials added in GV 1.59.
+- Support for remapping saves that are multiple versions behind (up to 1.55).
+- 
+
 ### Release 1.4.1
 - Hotfix for promos not working.
 

@@ -36,8 +36,8 @@ public static class DataSharing
 
     public static void SendExceptionToServer(string message, string stackTrace, string dataSharingLevel)
     {
-        message = Regex.Replace(message, PATH_PATTERN, @"#:\2");
-        stackTrace = Regex.Replace(stackTrace, PATH_PATTERN, @"#:\2");
+        message = Regex.Replace(message, PATH_PATTERN, @"#:$2");
+        stackTrace = Regex.Replace(stackTrace, PATH_PATTERN, @"#:$2");
         
         if (dataSharingLevel == "None") return;
         Dictionary<string, string> data;

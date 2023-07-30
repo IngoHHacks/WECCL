@@ -250,13 +250,12 @@ internal class PromoPatch
         {
             return;
         }
-        int index = LPHFJGGHBED - 1000000;
+        int index = PHECEOMIMND.LPHFJGGHBED - 1000000;
 
         GameDialog.CCFHFGBDIHE = CustomContent.PromoData[index].Title;
         GameDialog.EPPMEBCMEMD = CustomContent.PromoData[index].Description;
         GameDialog.LKEGBIECEGM = CustomContent.PromoData[index].Characters;
-      
-        int index = PHECEOMIMND.LPHFJGGHBED - 1000000;
+
         CustomContent.PromoData[index].NameToID = new();
         CustomContent.PromoData[index].SurpirseExtras = new();
         for (int i = 1; i < FFKMIEMAJML.FJCOPECCEKN.Length; i++)
