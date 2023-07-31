@@ -56,34 +56,34 @@ internal class PromoPatch
                     switch (cmd)
                     {
                         case PromoData.AdvFeatures.CommandType.SetFace:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])].ICONKAPNPGL(0);
+                            promo.GetCharacterForCmd(feature.Args[0]).ICONKAPNPGL(0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetHeel:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])].ICONKAPNPGL(-1);
+                            promo.GetCharacterForCmd(feature.Args[0]).ICONKAPNPGL(-1);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetRealEnemy:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])]
-                                .EGHFNFMHOIL(GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[1])].id, -1, 0);
+                            promo.GetCharacterForCmd(feature.Args[0])
+                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, -1, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetStoryEnemy:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])]
-                                .EGHFNFMHOIL(GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[1])].id, -1);
+                            promo.GetCharacterForCmd(feature.Args[0])
+                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, -1);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetRealFriend:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])]
-                                .EGHFNFMHOIL(GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[1])].id, 1, 0);
+                            promo.GetCharacterForCmd(feature.Args[0])
+                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 1, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetStoryFriend:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])]
-                                .EGHFNFMHOIL(GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[1])].id, 1);
+                            promo.GetCharacterForCmd(feature.Args[0])
+                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 1);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetRealNeutral:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])]
-                                .EGHFNFMHOIL(GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[1])].id, 0, 0);
+                            promo.GetCharacterForCmd(feature.Args[0])
+                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 0, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetStoryNeutral:
-                            GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[0])]
-                                .EGHFNFMHOIL(GameDialog.HGJNAEDAMDO[int.Parse(feature.Args[1])].id, 0);
+                            promo.GetCharacterForCmd(feature.Args[0])
+                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.PlayAudio:
                             if (feature.Args[0] == "-1")
@@ -117,7 +117,6 @@ internal class PromoPatch
             GameDialog.GLHDGKIGFLG(GameDialog.FMGHIAMFFCJ[from], GameDialog.FMGHIAMFFCJ[to], demeanor, taunt);
         }
 
-        GameDialog.GLHDGKIGFLG(GameDialog.FMGHIAMFFCJ[from], GameDialog.FMGHIAMFFCJ[to], demeanor, taunt);
         GameDialog.PHAAJGLNMAP[1] = line1;
         GameDialog.PHAAJGLNMAP[2] = line2;
     }
