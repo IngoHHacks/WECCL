@@ -32,7 +32,7 @@ public class MetaFile
             string path = Locations.Meta.FullName;
             if (!File.Exists(path))
             {
-                return new MetaFile();
+                return new MetaFile().IncrementTimesLaunched();
             }
 
             string json = File.ReadAllText(path);
