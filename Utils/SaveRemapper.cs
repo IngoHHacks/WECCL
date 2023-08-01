@@ -312,7 +312,7 @@ public class SaveRemapper
                         if (costume.flesh[i] > VanillaCounts.FleshCounts[i])
                         {
                             int oldIndex = costume.flesh[i] - VanillaCounts.FleshCounts[i] - 1;
-                            if (oldIndex >= savedMap.FleshNameMap.Count)
+                            if (oldIndex >= savedMap.FleshNameMap[i].Count)
                             {
                                 Plugin.Log.LogWarning(
                                     $"Custom flesh index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");

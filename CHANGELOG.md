@@ -2,6 +2,9 @@
 
 ## GV 1.59:
 
+### Release 1.4.4
+- Fixed invalid flesh not being reset correctly.
+
 ### Release 1.4.3
 - Fixed custom content remapping.
 - Fixed launch count not incrementing on first launch.
