@@ -40,7 +40,7 @@ internal class ContentMappings
 
     public List<int> PreviouslyImportedCharacterIds { get; set; } = new();
 
-    public float GameVersion { get; set; } = Plugin.CharactersVersion;
+    public float GameVersion { get; set; } = Plugin.PluginVersion;
 
     public void Save()
     {
