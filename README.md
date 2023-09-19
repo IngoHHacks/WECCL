@@ -6,10 +6,10 @@ Loads custom content for Wrestling Empire.
 
 ## Disclaimer
 
-WECCl is not officially supported by MDickie.  
+WECCL is not officially supported by MDickie.  
 Updates may cause it to break. Use at your own risk.  
 Make sure to backup your save files.  
-WECCL collects anonymous usage data to help improve the mod.  
+WECCL collects anonymous data to help improve the mod.  
 This can be disabled in the config file by setting `DataSharingLevel` to `None` (or `Basic` for reduced data collection).  
 Data is anonymous and only contains information about state of the mod(s) and the game in case of errors.  
 If data sharing set to Full, a unique ID is generated and stored locally. There is no way to identify you from this ID. It only serves to prevent duplicate data.
