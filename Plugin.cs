@@ -14,7 +14,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.4.4";
+    public const string PluginVer = "1.4.5";
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.59f;
 
@@ -927,6 +927,33 @@ public class Plugin : BaseUnityPlugin
         if (dir == null)
         {
             throw new Exception($"Could not find 'plugins' directory for {fileDirectoryName}");
+        }
+        
+        string manifestPath = Path.Combine(child.FullName, "manifest.txt");
+        if (File.Exists(manifestPath))
+        {
+            string[] lines = File.ReadAllLines(manifestPath);
+            string author = null;
+            string name = null;
+            foreach (string line in lines)
+            {
+                if (line.Trim().ToLower().StartsWith("author:"))
+                {
+                    author = line.Trim().Substring(7).Trim();
+                }
+                else if (line.Trim().ToLower().StartsWith("modname:"))
+                {
+                    name = line.Trim().Substring(8).Trim();
+                }
+            }
+            if (author != null)
+            {
+                return $"{author}-{name}";
+            }
+            if (name != null)
+            {
+                return name;
+            }
         }
 
         return child.Name;
