@@ -31,5 +31,5 @@ jobs:
       with:
         name: WECCL
         path: |
-          bin/Debug/WECCL/WECCL.dll
+          WECCL.dll
           
