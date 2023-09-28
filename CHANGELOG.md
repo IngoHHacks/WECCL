@@ -2,6 +2,12 @@
 
 ## GV 1.59:
 
+### Release 1.5.0
+- Fixed a lot of character importing issues.
+
+### Release 1.4.5
+- Some fixes for Steam Workshop support.
+
 ### Release 1.4.4
 - Fixed invalid flesh not being reset correctly.
 

@@ -346,6 +346,7 @@ public static class LoadContent
         {
             foreach (DirectoryInfo modImportDir in Plugin.AllModsImportDirs)
             {
+                Plugin.Log.LogDebug($"Importing characters from {modImportDir.Name}...");
                 Plugin.ImportCharacters(modImportDir);
             }
         }

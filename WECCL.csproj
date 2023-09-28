@@ -51,7 +51,7 @@
 
     <PropertyGroup>
         <!-- Change this to the BepInEx folder of your game if necessary -->
-        <BepInExPath>C:\Program Files (x86)\Steam\steamapps\common\Wrestling Empire\BepInEx</BepInExPath>
+        <BepInExPath>C:\Program Files (x86)\Steam\steamapps\common\Wrestling Empire\BepInEx\plugins\IngoH-WECCL</BepInExPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -61,10 +61,10 @@
     <Target Name="PostBuild" AfterTargets="Build">
         <Delete Files="$(OutputPath)\$(AssemblyName).deps.json" />
         <!-- Comment the lines below if you don't want to automatically copy the plugin to BepInEx -->
-        <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(BepInExPath)\plugins" />
-        <Move SourceFiles="$(OutputPath)\$(AssemblyName).pdb" DestinationFolder="$(BepInExPath)\plugins" />
+        <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(BepInExPath)" />
+        <Move SourceFiles="$(OutputPath)\$(AssemblyName).pdb" DestinationFolder="$(BepInExPath)" />
         <MakeDir Directories="$(OutputPath)\plugins" />
-        <Move SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(OutputPath)\plugins" />
+        <Move SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(OutputPath)" />
     </Target>
 
 </Project>

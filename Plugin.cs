@@ -14,7 +14,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.4.5";
+    public const string PluginVer = "1.5.0";
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.59f;
 
@@ -141,7 +141,7 @@ public class Plugin : BaseUnityPlugin
                 "(EXPERIMENTAL) Allow WECCL to use the full resolution textures without scaling them down (the game will still change the aspect ratio to fit the texture).");
             AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
                 "Allow importing characters from /Import");
-            DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
+            DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", false,
                 "Delete imported characters from /Import after importing them (and saving the game).");
             EnableWrestlerSearchScreen = this.Config.Bind("General", "EnableWrestlerSearchScreen", true,
                 "Enable the wrestler search screen in the roster menu.");
@@ -192,7 +192,12 @@ public class Plugin : BaseUnityPlugin
         {
             return;
         }
-
+        string save = Application.persistentDataPath + "/Save.bytes";
+        if (!File.Exists(save))
+        {
+            GameSaveFile.OKDAOPACMLB(); // Restore default
+            GameSaveFile.IFNAOOEOLLK(); // Save
+        }
         try
         {
             Harmony.PatchAll();
@@ -974,32 +979,41 @@ public class Plugin : BaseUnityPlugin
             int count = files.Length;
             long lastProgressUpdate = DateTime.Now.Ticks;
             int cur = 0;
+            Log.LogDebug($"Importing {count} character(s) from {dir.FullName}");
             foreach (FileInfo file in files)
             {
-                string json = File.ReadAllText(file.FullName);
-                BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
-                if (character == null)
+                try
                 {
-                    Log.LogError($"Failed to import character from {file.FullName}.");
-                    continue;
+                    string json = File.ReadAllText(file.FullName);
+                    BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
+                    if (character == null)
+                    {
+                        Log.LogError($"Failed to import character from {file.FullName}.");
+                        continue;
+                    }
+
+                    string name = file.Name;
+                    string guid = Directory.GetParent(file.DirectoryName!)?.Name;
+                    if (guid != null && guid != "plugins")
+                    {
+                        name = $"{guid}/{name}";
+                    }
+
+                    character._guid = name;
+
+                    ImportedCharacters.Add(character);
+                    FilesToDeleteOnSave.Add(file.FullName);
+                    cur++;
+                    if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
+                    {
+                        lastProgressUpdate = DateTime.Now.Ticks;
+                        UpdateConsoleLogLoadingBar($"Importing characters from {dir.FullName}", cur, count);
+                    }
+                    Log.LogDebug($"Imported character {character.CharacterData?.name} from {file.FullName}");
                 }
-
-                string name = file.Name;
-                string guid = Directory.GetParent(file.DirectoryName!)?.Name;
-                if (guid != null && guid != "plugins")
+                catch (Exception e)
                 {
-                    name = $"{guid}/{name}";
-                }
-
-                character._guid = name;
-
-                ImportedCharacters.Add(character);
-                FilesToDeleteOnSave.Add(file.FullName);
-                cur++;
-                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
-                {
-                    lastProgressUpdate = DateTime.Now.Ticks;
-                    UpdateConsoleLogLoadingBar($"Importing characters from {dir.FullName}", cur, count);
+                    Log.LogError(e);
                 }
             }
 

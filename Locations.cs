@@ -14,6 +14,8 @@ public static class Locations
 
     public static DirectoryInfo ContentMappings { get; } =
         new(Path.Combine(Plugin.PersistentDataPath, "ContentMappings.mappings"));
+    public static DirectoryInfo CharacterMappings { get; } =
+        new(Path.Combine(Plugin.PersistentDataPath, "CharacterMappings.mappings"));
 
     internal static void CreateDirectories()
     {
