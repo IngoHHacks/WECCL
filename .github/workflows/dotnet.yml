@@ -32,5 +32,4 @@ jobs:
         name: WECCL
         path: |
           bin/Debug/WECCL/WECCL.dll
-          bin/Debug/WECCL/WECCL.pdb
           
