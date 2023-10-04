@@ -18,11 +18,15 @@ public static class MenuUtils
             return;
         }
 
-        int itemWidth = 210;
-        int itemHeight = 50;
+        int itemWidth = size > 35 ? 210 : 245;
+        int itemHeight = size > 48 ? 50 : 60;
         int totalWidth = maxX - minX;
         int totalHeight = maxY - minY;
-        float curScale = 1f;
+        float curScale = 1.25f;
+        if (size > 48)
+        {
+            curScale = 1.0f;
+        }
         while (true)
         {
             int scaledTotalWidth = totalWidth + (int)(itemWidth * curScale);

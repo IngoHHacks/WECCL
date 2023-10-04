@@ -8,6 +8,12 @@ public class PromoData
     public string Description { get; set; } = "Description";
 
     public int[] Characters { get; set; } = new int[3];
+    public bool UseCharacterNames { get; set; } = false;
+    public Dictionary<string, int> NameToID { get; set; } = new Dictionary<string, int>();
+    public HashSet<int> SurpriseEntrants { get; set; } = new HashSet<int>();
+    public HashSet<int> SurpirseExtras { get; set; } = new HashSet<int>();
+    public HashSet<string> SurpriseEntrantsNames { get; set; } = new HashSet<string>();
+    public string NextPromo { get; set; } = "";
 
     public int NumLines => this.PromoLines.Count;
 
@@ -59,6 +65,31 @@ public class PromoData
                     continue;
                 }
 
+                if (line.ToLower().StartsWith("use_names:"))
+                {
+                    bool.TryParse(line.Substring(10).Trim(), out bool useNames);
+                    promoData.UseCharacterNames = useNames;
+                    continue;
+                }
+
+                if (line.ToLower().StartsWith("surprise_entrants:"))
+                {
+                    if (!promoData.UseCharacterNames)
+                    {
+                        promoData.SurpriseEntrants = new HashSet<int>(line.Substring(19).Trim().Split(',').Select(x => int.Parse(x.Trim())).ToList());
+                    }
+                    else
+                    {
+                        promoData.SurpriseEntrantsNames = new HashSet<string>(line.Substring(19).Trim().Split(',').Select(x => x.Trim()).ToList());
+                    }
+                    continue;
+                }
+
+                if(line.ToLower().StartsWith("next_promo:"))
+                {
+                    promoData.NextPromo = line.Substring(11).Trim();
+                    continue;
+                }
                 c = 0;
                 PromoLine promoLine = new PromoLine();
                 bool stringMode = false;
@@ -119,8 +150,17 @@ public class PromoData
                 }
 
                 string[] meta2 = line.Substring(last + 1).Split(',');
-                promoLine.From = meta2.Length > 0 ? int.Parse(meta2[0].Trim()) : 1;
-                promoLine.To = meta2.Length > 1 ? int.Parse(meta2[1].Trim()) : 2;
+                if(promoData.UseCharacterNames)
+                {
+                    promoLine.FromName = meta2.Length > 0 ? meta2[0].Trim() : "";
+                    promoLine.ToName = meta2.Length > 1 ? meta2[1].Trim() : "";
+                }
+                else
+                {
+                    promoLine.From = meta2.Length > 0 ? int.Parse(meta2[0].Trim()) : 1;
+                    promoLine.To = meta2.Length > 1 ? int.Parse(meta2[1].Trim()) : 2;
+                }
+
                 promoLine.TauntAnim = meta2.Length > 2 ? Indices.ParseTauntAnim(meta2[2].Trim()) : 0;
                 promoLine.Demeanor = meta2.Length > 3 ? float.Parse(meta2[3].Trim()) : 0;
                 promoLine.Features = meta2.Length > 4 ? SetUpFeatures(meta2[4].Trim()) : null;
@@ -135,7 +175,18 @@ public class PromoData
             return null;
         }
     }
-
+    public bool IsCharacterSurprise(DJEKCMMMFJM character)
+    {
+        if (UseCharacterNames && SurpriseEntrantsNames.Contains(character.LLEGGMCIALJ.name))
+        {
+            return true;
+        }
+        else if (SurpriseEntrants.Contains(character.DHBIELODIAN))
+        {
+            return true;
+        }
+        return false;
+    }
     //format: command:arg:arg;command:arg
     public static List<AdvFeatures> SetUpFeatures(string commands)
     {
@@ -166,27 +217,23 @@ public class PromoData
 
         return advFeatures;
     }
+    public Character GetCharacterForCmd(string arg)
+    {
+        if(UseCharacterNames)
+        {
+            if (NameToID.TryGetValue(arg, out int id))
+            {
+                return FFKMIEMAJML.FJCOPECCEKN[id].LLEGGMCIALJ;
+            }
+            return FFKMIEMAJML.FJCOPECCEKN[0].LLEGGMCIALJ;
+        }
+        return GameDialog.HGJNAEDAMDO[int.Parse(arg)];
+    }
 
     public static PromoData CreatePromo(string file)
     {
         List<string> lines = File.ReadAllLines(file).ToList();
         return FromString(lines);
-    }
-
-    private static int[] GenerateArrayForNum(int characters)
-    {
-        if (characters <= 0)
-        {
-            return new[] { -1 };
-        }
-
-        int[] arr = new int[characters + 1];
-        for (int i = 1; i <= characters; i++)
-        {
-            arr[i] = i;
-        }
-
-        return arr;
     }
 
     public class PromoLine
@@ -196,6 +243,9 @@ public class PromoData
 
         public int From { get; set; } = 1;
         public int To { get; set; } = 2;
+
+        public string FromName { get; set; } = "";
+        public string ToName { get; set; } = "";
 
         public float Demeanor { get; set; }
         public int TauntAnim { get; set; }

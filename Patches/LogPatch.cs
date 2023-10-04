@@ -8,9 +8,9 @@ public class LogPatch
     /*
      * This patch is used to enable the game's unity logger if the user has enabled it in the config.
      */
-    [HarmonyPatch(typeof(GameGlobals), nameof(GameGlobals.AGLLFBBHDDP))]
+    [HarmonyPatch(typeof(GameGlobals), nameof(GameGlobals.FCNKHBIIJLG))]
     [HarmonyPostfix]
-    public static void GameGlobals_AGLLFBBHDDP()
+    public static void GameGlobals_FCNKHBIIJLG()
     {
         Debug.unityLogger.logEnabled = Plugin.EnableGameUnityLog.Value;
         Debug.unityLogger.filterLogType = Plugin.GameUnityLogLevel.Value.ToLower() == "error" ? LogType.Error :

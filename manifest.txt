@@ -1,0 +1,3 @@
+modName: WECCL
+author: IngoH
+version: 1.5.0

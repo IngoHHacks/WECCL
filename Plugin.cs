@@ -14,12 +14,12 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-
-    public const string PluginVer = "1.3.7";
+    public const string PluginVer = "1.5.0";
     public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.58f;
+    public const float PluginVersion = 1.59f;
 
     public const bool PreRelease = false;
+    public static string[] PreReleaseReasons = { "Testing" };
 
 
     internal static List<DirectoryInfo> AllModsImportDirs = new();
@@ -58,7 +58,6 @@ public class Plugin : BaseUnityPlugin
     private static readonly List<string> AssetBundleExtensions = new() { ".mesh", ".assetbundle", ".bundle", "" };
 
     private static readonly List<string> PromoExtensions = new() { ".promo" };
-    public static string[] PreReleaseReasons = { };
 
     internal static Plugin Instance { get; private set; }
 
@@ -68,16 +67,15 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> UseFullQualityTextures { get; set; }
     internal static ConfigEntry<bool> AllowImportingCharacters { get; set; }
     internal static ConfigEntry<bool> DeleteImportedCharacters { get; set; }
+    internal static ConfigEntry<bool> EnableWrestlerSearchScreen { get; set; }
     internal static ConfigEntry<bool> EnableGameUnityLog { get; set; }
     internal static ConfigEntry<string> GameUnityLogLevel { get; set; }
     internal static ConfigEntry<int> BaseFedLimit { get; set; }
     internal static ConfigEntry<int> MaxBackups { get; set; }
-
     internal static ConfigEntry<bool> CacheEnabled { get; set; }
-
     internal static ConfigEntry<bool> Debug { get; set; }
-
     internal static ConfigEntry<bool> DebugRender { get; set; }
+    internal static ConfigEntry<string> DataSharingLevel { get; set; }
 
     public static float CharactersVersion => Characters.latestVersion;
 
@@ -103,21 +101,32 @@ public class Plugin : BaseUnityPlugin
             
             if (PreRelease)
             {
-                Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
-                foreach (string reason in PreReleaseReasons)
+                if (PreReleaseReasons.Length == 0)
                 {
-                    switch (reason)
+                    Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
+                }
+                else
+                {
+                    foreach (string reason in PreReleaseReasons)
                     {
-                        case "GameUpdate":
-                            Log.LogWarning("Due to a recent game update, some features may not work as intended.");
-                            break;
-                        case "Experimental":
-                            Log.LogWarning(
-                                "This version contains experimental features that may not work as intended.");
-                            break;
-                        default:
-                            Log.LogWarning("This version may not work as intended for the following reason: " + reason);
-                            break;
+                        switch (reason)
+                        {
+                            case "GameUpdate":
+                                Log.LogWarning("Due to a recent game update, some features may not work as intended.");
+                                break;
+                            case "Experimental":
+                                Log.LogWarning(
+                                    "This version contains experimental features that may not work as intended.");
+                                break;
+                            case "Testing":
+                                Log.LogWarning(
+                                    "This is an early release of a future version that may not be ready for release yet.");
+                                break;
+                            default:
+                                Log.LogWarning("This version may not work as intended for the following reason: " +
+                                               reason);
+                                break;
+                        }
                     }
                 }
             }
@@ -137,8 +146,10 @@ public class Plugin : BaseUnityPlugin
                 "(EXPERIMENTAL) Allow WECCL to use the full resolution textures without scaling them down (the game will still change the aspect ratio to fit the texture).");
             AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
                 "Allow importing characters from /Import");
-            DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", true,
+            DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", false,
                 "Delete imported characters from /Import after importing them (and saving the game).");
+            EnableWrestlerSearchScreen = this.Config.Bind("General", "EnableWrestlerSearchScreen", true,
+                "Enable the wrestler search screen in the roster menu.");
             EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
                 "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
             GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
@@ -155,6 +166,10 @@ public class Plugin : BaseUnityPlugin
                 "Enable debug mode. This will create debugging files in the /Debug folder.");
             DebugRender = this.Config.Bind("General", "DebugRender", false,
                 "Enable debug rendering. This will render debug information on the screen, such as collision boxes.");
+            DataSharingLevel = this.Config.Bind("General", "DataSharingLevel", "Full",
+                new ConfigDescription(
+                    "The level of data to share with the developer of this plugin. This data will be used to improve the plugin. If you don't want to share any data, set this to None. All data is anonymous.",
+                    new AcceptableValueList<string>("None", "Basic", "Full")));
             
             
             string egg = Secrets.GetEasterEgg();
@@ -182,7 +197,12 @@ public class Plugin : BaseUnityPlugin
         {
             return;
         }
-
+        string save = Application.persistentDataPath + "/Save.bytes";
+        if (!File.Exists(save))
+        {
+            GameSaveFile.OKDAOPACMLB(); // Restore default
+            GameSaveFile.IFNAOOEOLLK(); // Save
+        }
         try
         {
             Harmony.PatchAll();
@@ -325,8 +345,9 @@ public class Plugin : BaseUnityPlugin
                 }
 
                 clip.name = fileName;
+                string shortFileName = Path.GetFileNameWithoutExtension(file.Name);
 
-                CustomClips.Add(clip);
+                CustomClips.Add(new NamedAudioClip(shortFileName, clip));
                 clipsCount++;
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
@@ -357,11 +378,11 @@ public class Plugin : BaseUnityPlugin
         if (CustomClips.Count != 0)
         {
             // Update the number of audio clips in the game
-            JKPIHABGBGP.CDAIKKJLDDD = VanillaCounts.MusicCount + CustomClips.Count;
-            JKPIHABGBGP.BDMIHNKDBDF = new AudioClip[JKPIHABGBGP.CDAIKKJLDDD + 1];
+            IKPECOJMCAB.PJIECBLCGFB = VanillaCounts.MusicCount + CustomClips.Count;
+            IKPECOJMCAB.FFMBDMFIJHL = new AudioClip[IKPECOJMCAB.PJIECBLCGFB + 1];
         }
 
-        ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.name));
+        ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.AudioClip.name));
     }
 
     private static void CacheAudioClip(AudioClip clip, long ticks, string chksum)
@@ -620,6 +641,10 @@ public class Plugin : BaseUnityPlugin
             try
             {
                 PromoData promo = PromoData.CreatePromo(file.FullName);
+                if (promo == null)
+                {
+                    continue;
+                }
                 promoCount++;
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
@@ -944,6 +969,33 @@ public class Plugin : BaseUnityPlugin
         {
             throw new Exception($"Could not find 'plugins' directory for {fileDirectoryName}");
         }
+        
+        string manifestPath = Path.Combine(child.FullName, "manifest.txt");
+        if (File.Exists(manifestPath))
+        {
+            string[] lines = File.ReadAllLines(manifestPath);
+            string author = null;
+            string name = null;
+            foreach (string line in lines)
+            {
+                if (line.Trim().ToLower().StartsWith("author:"))
+                {
+                    author = line.Trim().Substring(7).Trim();
+                }
+                else if (line.Trim().ToLower().StartsWith("modname:"))
+                {
+                    name = line.Trim().Substring(8).Trim();
+                }
+            }
+            if (author != null)
+            {
+                return $"{author}-{name}";
+            }
+            if (name != null)
+            {
+                return name;
+            }
+        }
 
         return child.Name;
     }
@@ -963,32 +1015,41 @@ public class Plugin : BaseUnityPlugin
             int count = files.Length;
             long lastProgressUpdate = DateTime.Now.Ticks;
             int cur = 0;
+            Log.LogDebug($"Importing {count} character(s) from {dir.FullName}");
             foreach (FileInfo file in files)
             {
-                string json = File.ReadAllText(file.FullName);
-                BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
-                if (character == null)
+                try
                 {
-                    Log.LogError($"Failed to import character from {file.FullName}.");
-                    continue;
+                    string json = File.ReadAllText(file.FullName);
+                    BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
+                    if (character == null)
+                    {
+                        Log.LogError($"Failed to import character from {file.FullName}.");
+                        continue;
+                    }
+
+                    string name = file.Name;
+                    string guid = Directory.GetParent(file.DirectoryName!)?.Name;
+                    if (guid != null && guid != "plugins")
+                    {
+                        name = $"{guid}/{name}";
+                    }
+
+                    character._guid = name;
+
+                    ImportedCharacters.Add(character);
+                    FilesToDeleteOnSave.Add(file.FullName);
+                    cur++;
+                    if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
+                    {
+                        lastProgressUpdate = DateTime.Now.Ticks;
+                        UpdateConsoleLogLoadingBar($"Importing characters from {dir.FullName}", cur, count);
+                    }
+                    Log.LogDebug($"Imported character {character.CharacterData?.name} from {file.FullName}");
                 }
-
-                string name = file.Name;
-                string guid = Directory.GetParent(file.DirectoryName!)?.Name;
-                if (guid != null && guid != "plugins")
+                catch (Exception e)
                 {
-                    name = $"{guid}/{name}";
-                }
-
-                character._guid = name;
-
-                ImportedCharacters.Add(character);
-                FilesToDeleteOnSave.Add(file.FullName);
-                cur++;
-                if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
-                {
-                    lastProgressUpdate = DateTime.Now.Ticks;
-                    UpdateConsoleLogLoadingBar($"Importing characters from {dir.FullName}", cur, count);
+                    Log.LogError(e);
                 }
             }
 
@@ -1042,6 +1103,11 @@ public class Plugin : BaseUnityPlugin
         {
             Directory.CreateDirectory(bd!);
         }
+        
+        if (Directory.GetFiles(bd, "Save-*.bytes").Length == 0)
+        {
+            File.Copy(save, Path.Combine(bd, "InitialSave.bytes"));
+        }
 
         File.Copy(save, backup);
         string[] files = Directory.GetFiles(bd, "Save-*.bytes");
@@ -1092,5 +1158,20 @@ public class Plugin : BaseUnityPlugin
         }
 
         return count;
+    }
+
+    public static string GetNonDefaultConfigValues()
+    {
+        string result = "";
+        foreach (KeyValuePair<ConfigDefinition, ConfigEntryBase> pair in Instance.Config.Select(x => new KeyValuePair<ConfigDefinition, ConfigEntryBase>(x.Key, x.Value)))
+        {
+            if (pair.Value.BoxedValue.ToString() == pair.Value.DefaultValue.ToString())
+            {
+                continue;
+            }
+            result += $"{pair.Key.Key}={pair.Value.BoxedValue}\n";
+        }
+
+        return result;
     }
 }

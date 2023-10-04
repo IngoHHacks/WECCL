@@ -1,6 +1,49 @@
 # Changelog
 
+## GV 1.59:
+
+### Release 1.5.0
+- Fixed a lot of character importing issues.
+
+### Release 1.4.5
+- Some fixes for Steam Workshop support.
+
+### Release 1.4.4
+- Fixed invalid flesh not being reset correctly.
+
+### Release 1.4.3
+- Fixed custom content remapping.
+- Fixed launch count not incrementing on first launch.
+
+### Release 1.4.2
+- Support for surprise promo entrants and multiple consecutive promos.
+- Data collection fixes and path masking for file paths.
+- Proper save remapping for new materials added in GV 1.59.
+- Support for remapping saves that are multiple versions behind (up to 1.55).
+
+### Release 1.4.1
+- Hotfix for promos not working.
+
+### Release 1.4.0
+- UPDATE TO GAME VERSION 1.59
+
 ## GV 1.58:
+
+### Release 1.3.11
+- Custom music now has names instead of IDs in the editor.
+- Added anonymous data collection for exceptions and crashes (this can be disabled in the config).
+
+### Release 1.3.10
+- More fixes for search menu and booking career.
+
+### Release 1.3.9
+- Fixed the owner of booking career being set to a random wrestler if the original owner is selected as booker.
+
+### Release 1.3.8
+
+- Added manual overrides for custom belt textures which are copied from other belts in vanilla.
+- Added experimental config option to allow WECCL to use the full resolution textures without downscaling them; UseFullQualityTextures.
+- Added a wrestler search screen to the roster menu.
 
 ### Release 1.3.7
 

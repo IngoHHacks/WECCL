@@ -5,7 +5,7 @@ namespace WECCL.Content;
 
 public static class CustomContent
 {
-    internal static readonly List<AudioClip> CustomClips = new();
+    internal static readonly List<NamedAudioClip> CustomClips = new();
 
     internal static readonly Dictionary<string, CostumeData> CustomCostumes = new()
     {
@@ -271,5 +271,17 @@ public static class CustomContent
         }
 
         return Color.white;
+    }
+}
+
+internal class NamedAudioClip
+{
+    internal string Name;
+    internal AudioClip AudioClip;
+
+    internal NamedAudioClip(string name, AudioClip audioClip)
+    {
+        Name = name;
+        AudioClip = audioClip;
     }
 }

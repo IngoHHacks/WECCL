@@ -4,6 +4,17 @@ Wrestling Empire Custom Content Loader
 
 Loads custom content for Wrestling Empire.
 
+## Disclaimer
+
+WECCL is not officially supported by MDickie.  
+Updates may cause it to break. Use at your own risk.  
+Make sure to backup your save files.  
+WECCL collects anonymous data to help improve the mod.  
+This can be disabled in the config file by setting `DataSharingLevel` to `None` (or `Basic` for reduced data collection).  
+Data is anonymous and only contains information about state of the mod(s) and the game in case of errors.  
+If data sharing set to Full, a unique ID is generated and stored locally. There is no way to identify you from this ID. It only serves to prevent duplicate data.
+No personal information or data about your computer is collected.
+
 ## Current Features
 
 It is currently possible to add:
@@ -167,6 +178,9 @@ characters: 1,2
 an array from 1 to that integer will be created. When using a list, the list will be used as the array.  
 1 and 2 are the default characters as selected by the user, 3 is another character, -1 is the referee, and 11 and 22 are
 the tag team partners of 1 and 2 respectively. Other values are not supported.  
+Optional `use_names: True` will allow you to use character names in `surprise_entrants`, `speaker`, `target` and commands instead of their ids. Their names can be used even if they are not selected in the `characters` field.  
+Optional `surprise_entrants:` will set these wrestlers (and their managers) as surprise entrants, who will only come out through the curtain once the promo ends. Must be an comma-separated list of match character ids.  
+Optional `next_promo:` will set another custom promo to happen once this one ends. Must be a title of another custom promo. This allows you to have surprise entrants have voice lines once they enter the ring.  
 `"line1"` and `"line2"` must be strings. The quotes are required. For quotes inside the string, use `\"`.  
 `$name#` will be replaced with the name of the character with the corresponding id.  
 `@him/his/etc#` will be replaced with the pronoun of the character with the corresponding id,
@@ -395,3 +409,4 @@ Donations are always appreciated. You can donate on my [Ko-fi page](https://ko-f
 **Mat Dickie** for generously donating €1,000  
 **All the Discord Testers**  
 **Everyone who published mods using WECCL**
+

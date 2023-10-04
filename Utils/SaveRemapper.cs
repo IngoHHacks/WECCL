@@ -15,23 +15,23 @@ public class SaveRemapper
         bool changed = false;
 
         int oldVersion = Mathf.RoundToInt(ContentMappings.ContentMap.GameVersion * 100);
-        int newVersion = Mathf.RoundToInt(Plugin.CharactersVersion * 100);
+        int newVersion = Mathf.RoundToInt(Plugin.PluginVersion * 100);
 
         VersionDiff versionDiff = null;
 
         if (oldVersion != newVersion)
         {
             Plugin.Log.LogInfo($"Game version changed from {oldVersion} to {newVersion}. Updating custom content map.");
-
-            if (oldVersion == 155 && newVersion == 156)
+            List<VersionDiff> versionDiffs = new();
+            if (oldVersion < 156 && newVersion >= 156)
             {
-                versionDiff = new V155toV156();
+                versionDiffs.Add(new V155toV156());   
             }
-            else
+            if (oldVersion < 159 && newVersion >= 159)
             {
-                Plugin.Log.LogError(
-                    $"No update data found for version change from {oldVersion} to {newVersion}. Please report this to the mod author.");
+                versionDiffs.Add(new V158toV159());
             }
+            versionDiff = new VersionDiffGroup(versionDiffs.ToArray());
         }
 
         if (!VanillaCounts.IsInitialized)
@@ -305,7 +305,7 @@ public class SaveRemapper
                         if (costume.flesh[i] > VanillaCounts.FleshCounts[i])
                         {
                             int oldIndex = costume.flesh[i] - VanillaCounts.FleshCounts[i] - 1;
-                            if (oldIndex >= savedMap.FleshNameMap.Count)
+                            if (oldIndex >= savedMap.FleshNameMap[i].Count)
                             {
                                 Plugin.Log.LogWarning(
                                     $"Custom flesh index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");

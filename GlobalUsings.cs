@@ -1,17 +1,17 @@
 // Global using directives
 
-global using GameSaveFile = KCJAANIHGBM;
-global using GameGlobals = JGKBBDPDIBC;
-global using GameTextures = DHHHGMELCCL;
-global using GameMenus = OHAJKFJEAFN;
-global using GamePlayer = GMIKIMHFABP;
-global using GameDialog = DNMADBBLNDC;
-global using GameAudio = JKPIHABGBGP;
-global using GameScreens = DNDIEGNJOKN;
-global using GameSprites = CEBGDNMEBCE;
-global using GameControls = IODAJCMGILB;
-global using GameKeyboard = CBJBIEGINJE;
-global using GameCollision = AKHBGBPEJHB;
+global using GameSaveFile = CGDFANINCGL;
+global using GameGlobals = LFNJDEGJLLJ;
+global using GameTextures = LAHFDHJJGKH;
+global using GameMenus = BOAPBLKGGHL;
+global using GamePlayer = DJEKCMMMFJM;
+global using GameDialog = FMHJNNGPMKG;
+global using GameAudio = IKPECOJMCAB;
+global using GameScreens = JJDCNALMPCI;
+global using GameSprites = KPJNFJKBCDF;
+global using GameControls = MFCAJFKKFFE;
+global using GameKeyboard = BCJPMAHPHEP;
+global using GameCollision = LFDENAEGJBJ;
 global using HarmonyLib;
 global using System;
 global using System.Collections.Generic;
@@ -26,3 +26,5 @@ global using static WECCL.Utils.TextureUtils;
 global using static WECCL.Utils.MenuUtils;
 global using static WECCL.Content.CustomContent;
 global using static WECCL.Utils.FileNameUtils;
+global using static WECCL.Utils.ArrayUtils;
+global using static WECCL.Utils.DataSharing;
