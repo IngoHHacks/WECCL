@@ -888,7 +888,7 @@ public class ArenaPatch
 
                     //Set this to zero to stop original pyro from going off
                     stored_FJPJNBKADDJ = LFNJDEGJLLJ.FJPJNBKADDJ;
-                    Debug.LogError("Pre Patch LFNJDEGJLLJ.FJPJNBKADDJ" + LFNJDEGJLLJ.FJPJNBKADDJ);
+                    
                     LFNJDEGJLLJ.FJPJNBKADDJ = 0;
                 }
             }
