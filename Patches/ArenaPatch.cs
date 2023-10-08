@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using WECCL.Content;
 using Object = UnityEngine.Object;
@@ -302,6 +305,8 @@ public class ArenaPatch
         {
             if (World.location > VanillaCounts.NoLocations)
             {
+                ILPOGGNCJENPrePatch.HBFKOOEPFLHReduced = false;
+
                 GameObject[] freezeObj = Object.FindObjectsOfType<GameObject>();
                 GameObject[] announcerFreezeObj =
                     freezeObj.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
@@ -333,7 +338,7 @@ public class ArenaPatch
                         }
                         else
                         {
-                            Debug.LogError("Failed to parse camDistance: " + distance);
+                            UnityEngine.Debug.LogError("Failed to parse camDistance: " + distance);
                         }
                     }
                 }
@@ -841,13 +846,39 @@ public class ArenaPatch
         }
     }
 
+    [HarmonyPatch(typeof(ILPOGGNCJEN))]
+    public static class ILPOGGNCJENPrePatch
+    {
+        public static bool HBFKOOEPFLHReduced = false;
+
+        [HarmonyPrefix]
+        [HarmonyPatch("DLADNAFPGPJ")]
+        public static void LDLADNAFPGPJPrePatch(ILPOGGNCJEN __instance, float DKOBDIJJOGO, float LDEAEOHOCPO, float MFCNEPBJODD = 0f)
+        {
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                //Force set these to 20 / -20 to match original arena so it can trigger (Think its related to size of the door in original as custom arenas seem to have these a values of around 1.5 instead).
+                __instance.LABFAOEKOBM[1] = 20;
+                __instance.LABFAOEKOBM[2] = 20;
+                __instance.LABFAOEKOBM[3] = -20;
+                __instance.LABFAOEKOBM[4] = -20;
+                if (!HBFKOOEPFLHReduced)
+                {
+                    //Also once only per map load, set this value to 5 less as otherwise the wrestlers needed to stand on a near exact spot to exit which the AI would almost never do.
+                    __instance.HBFKOOEPFLH[3] -= 5;
+                    HBFKOOEPFLHReduced = true;
+                }
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(DJEKCMMMFJM))]
     public static class DJEKCMMMFJMPrePatch
     {
         private static int stored_FJPJNBKADDJ;
         private static bool ifStatementOnePassed;
         private static bool ifStatementTwoPassed;
-
+        
         [HarmonyPrefix]
         [HarmonyPatch("LDFLNBABOOK")]
         public static void LDFLNBABOOKPrePatch(DJEKCMMMFJM __instance)
