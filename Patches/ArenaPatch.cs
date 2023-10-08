@@ -305,8 +305,6 @@ public class ArenaPatch
         {
             if (World.location > VanillaCounts.NoLocations)
             {
-                ILPOGGNCJENPrePatch.HBFKOOEPFLHReduced = false;
-
                 GameObject[] freezeObj = Object.FindObjectsOfType<GameObject>();
                 GameObject[] announcerFreezeObj =
                     freezeObj.Where(obj => obj.name.StartsWith("AnnouncerFreeze")).ToArray();
@@ -990,6 +988,7 @@ public class ArenaPatch
         [HarmonyPatch("ICEOBEPGFNC")]
         public static void ICEOBEPGFNCPrePatch()
         {
+            ILPOGGNCJENPrePatch.HBFKOOEPFLHReduced = false;
             //Reset these to null so loading custom map second time onwards doesn't force all outside ring weapons to a weapon spawn point
             newWeaponPosition = null;
             newWeaponRotation = null;
