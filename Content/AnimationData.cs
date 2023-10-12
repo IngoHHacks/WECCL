@@ -1,4 +1,4 @@
-﻿namespace WECCL.Content;
+namespace WECCL.Content;
 
 public class AnimationData
 {
@@ -75,20 +75,20 @@ public class AnimationData
             switch (type)
             {
                 case MoveType.StrikeHigh:
-                    NBPIEPNKBDG.PDHKBHKKNDC = NBPIEPNKBDG.PDHKBHKKNDC.Concat(new[] {id}).ToArray();
+                    BCKHHMIMAEN.FFOHBJOPHNJ = BCKHHMIMAEN.FFOHBJOPHNJ.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.StrikeLow:
-                    NBPIEPNKBDG.EMMDKGJFGOD = NBPIEPNKBDG.EMMDKGJFGOD.Concat(new[] {id}).ToArray();
+                    BCKHHMIMAEN.NCFGPPEBGFK = BCKHHMIMAEN.NCFGPPEBGFK.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.BigAttack:
                 case MoveType.RunningAttack:
-                    NBPIEPNKBDG.BKLMJELJJGE = NBPIEPNKBDG.BKLMJELJJGE.Concat(new[] {id}).ToArray();
+                    BCKHHMIMAEN.MLNCKDLFOLB = BCKHHMIMAEN.MLNCKDLFOLB.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.FrontGrapple:
-                    NBPIEPNKBDG.AJLLOKLHBJP = NBPIEPNKBDG.AJLLOKLHBJP.Concat(new[] {id}).ToArray();
+                    BCKHHMIMAEN.NGLGCIHEEIA = BCKHHMIMAEN.NGLGCIHEEIA.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.BackGrapple:
-                    NBPIEPNKBDG.OIKHOLPMHGF = NBPIEPNKBDG.OIKHOLPMHGF.Concat(new[] {id}).ToArray();
+                    BCKHHMIMAEN.GNGKAHBFOJG = BCKHHMIMAEN.GNGKAHBFOJG.Concat(new[] {id}).ToArray();
                     break;
             }
         }
@@ -126,7 +126,7 @@ public class AnimationData
         return Animations.ExecuteCommand(player, command, args, currentFrame, startFrame, endFrame);
     }
 
-    public static void DoCustomAnimation(int anim, GMIKIMHFABP player, float frame)
+    public static void DoCustomAnimation(int anim, DJEKCMMMFJM player, float frame)
     {
         CustomAnimationClips[anim].Item2.Play(player, (int)frame);
     }
