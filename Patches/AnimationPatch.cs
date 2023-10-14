@@ -5,68 +5,70 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class AnimationPatch
 {
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.CECEJCFDOEP))]
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.CECEJCFDOEP))]
     [HarmonyPrefix]
-    public static void GamePlayer_CECEJCFDOEP(ref GamePlayer __instance)
+    public static void Player_CECEJCFDOEP(UnmappedPlayer __instance)
     {
-        if (__instance.JGPFJIBNLFC >= 1000000)
+        MappedPlayer p = __instance;
+        if (p.anim >= 1000000)
         {
-            var anim = __instance.BFGNHPHILHK;
+            var anim = p.animator;
             var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
-            if (CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ReceiveAnim != null) return;
-            if (controller.name != "CustomAnimation" + __instance.JGPFJIBNLFC)
+            if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim != null) return;
+            if (controller.name != "CustomAnimation" + p.anim)
             {
-                controller.name = "CustomAnimation" + __instance.JGPFJIBNLFC;
-                controller["Custom00"] = CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item1;
-                BCKHHMIMAEN.AEAMFLIMHGN[100] = CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item1.length * CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item1.frameRate;
-                BCKHHMIMAEN.EENMACFDDEE[100] = 1f / BCKHHMIMAEN.AEAMFLIMHGN[100];
+                controller.name = "CustomAnimation" + p.anim;
+                controller["Custom00"] = CustomAnimationClips[p.anim - 1000000].Item1;
+                MappedAnims.length[100] = CustomAnimationClips[p.anim - 1000000].Item1.length * CustomAnimationClips[p.anim - 1000000].Item1.frameRate;
+                MappedAnims.timing[100] = 1f / MappedAnims.length[100];
             }
-            Animations.DoCustomAnimation(__instance, __instance.JGPFJIBNLFC, CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
         }
     }
     
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.GJPOIDFLOLO))]
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.GJPOIDFLOLO))]
     [HarmonyPrefix]
-    public static bool GamePlayer_GJPOIDFLOLO(ref GamePlayer __instance)
+    public static bool Player_GJPOIDFLOLO(ref UnmappedPlayer __instance)
     {
-        if (__instance.JGPFJIBNLFC >= 1000000)
+        MappedPlayer p = __instance;
+        if (p.anim >= 1000000)
         {
-            var anim = __instance.BFGNHPHILHK;
+            var anim = p.BFGNHPHILHK;
             var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
-            if (CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ReceiveAnim == null) return true;
-            __instance.AKLPBFADAMB = 0;
-            __instance.NMJNOMIGHPF = 0f;
-            __instance.JGKCHHHIDFE = 0;
-            __instance.DPIMBMHANLC = 0f;
-            if (controller.name != "CustomAnimation" + __instance.JGPFJIBNLFC)
+            if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim == null) return true;
+            p.fileA = 0;
+            p.frameA = 0f;
+            p.fileB = 0;
+            p.frameB = 0f;
+            if (controller.name != "CustomAnimation" + p.anim)
             {
-                controller.name = "CustomAnimation" + __instance.JGPFJIBNLFC;
-                controller["Custom00"] = CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item1;
-                BCKHHMIMAEN.AEAMFLIMHGN[100] = CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item1.length * CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item1.frameRate;
-                BCKHHMIMAEN.EENMACFDDEE[100] = 1f / BCKHHMIMAEN.AEAMFLIMHGN[100];
+                controller.name = "CustomAnimation" + p.anim;
+                controller["Custom00"] = CustomAnimationClips[p.anim - 1000000].Item1;
+                MappedAnims.length[100] = CustomAnimationClips[p.anim - 1000000].Item1.length * CustomAnimationClips[p.anim - 1000000].Item1.frameRate;
+                MappedAnims.timing[100] = 1f / MappedAnims.length[100];
             }
-            var opponent = FFKMIEMAJML.FJCOPECCEKN[__instance.CJGHFHCHDNN];
+            var opponent = FFKMIEMAJML.FJCOPECCEKN[p.foc];
             if (opponent?.BFGNHPHILHK?.runtimeAnimatorController == null) return true;
             var oppController = (AnimatorOverrideController) opponent.BFGNHPHILHK.runtimeAnimatorController;
-            if (oppController.name != "CustomAnimationReceive" + __instance.JGPFJIBNLFC)
+            if (oppController.name != "CustomAnimationReceive" + p.anim)
             {
-                oppController.name = "CustomAnimationReceive" + __instance.JGPFJIBNLFC;
-                oppController["Custom01"] = CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ReceiveAnim;
-                BCKHHMIMAEN.AEAMFLIMHGN[101] = CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ReceiveAnim.length * CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ReceiveAnim.frameRate;
-                BCKHHMIMAEN.EENMACFDDEE[101] = 1f / BCKHHMIMAEN.AEAMFLIMHGN[101];
+                oppController.name = "CustomAnimationReceive" + p.anim;
+                oppController["Custom01"] = CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim;
+                MappedAnims.length[101] = CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.length * CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.frameRate;
+                MappedAnims.timing[101] = 1f / MappedAnims.length[101];
             }
-            //Animations.DoCustomAnimation(__instance, __instance.JGPFJIBNLFC, CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ForwardSpeedMultiplier);
-            Animations.PerformTestAnimation(__instance, __instance.JGPFJIBNLFC, CustomAnimationClips[__instance.JGPFJIBNLFC - 1000000].Item2.ForwardSpeedMultiplier);
-            Animations.PerformPostGrappleCode(__instance);
+            //Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.PerformTestAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.PerformPostGrappleCode(p);
             return false;
         }
 
         return true;
     }
 
-    [HarmonyPatch(typeof(BCKHHMIMAEN), nameof(BCKHHMIMAEN.JCEIBJPONOM))]
+    [HarmonyPatch(typeof(MappedAnims), nameof(MappedAnims.JCEIBJPONOM))]
     [HarmonyPrefix]
-    public static bool BCKHHMIMAEN_JCEIBJPONOM(ref string __result, int NNIHHMADKHI)
+    public static bool MappedAnims_JCEIBJPONOM(ref string __result, int NNIHHMADKHI)
     {
         if (NNIHHMADKHI >= 100)
         {
@@ -76,17 +78,17 @@ internal class AnimationPatch
         return true;
     }
     
-    [HarmonyPatch(typeof(BCKHHMIMAEN), nameof(BCKHHMIMAEN.IIPHLNJKONO))]
+    [HarmonyPatch(typeof(MappedAnims), nameof(MappedAnims.IIPHLNJKONO))]
     [HarmonyPostfix]
-    public static void BCKHHMIMAEN_IIPHLNJKONO()
+    public static void MappedAnims_IIPHLNJKONO()
     {
-        Array.Resize(ref BCKHHMIMAEN.AEAMFLIMHGN, 200);
-        Array.Resize(ref BCKHHMIMAEN.EENMACFDDEE, 200);
+        Array.Resize(ref UnmappedAnims.AEAMFLIMHGN, 200);
+        Array.Resize(ref UnmappedAnims.EENMACFDDEE, 200);
     }
     
-    [HarmonyPatch(typeof(BCKHHMIMAEN), nameof(BCKHHMIMAEN.OOKPOBBPPOD))]
+    [HarmonyPatch(typeof(MappedAnims), nameof(MappedAnims.OOKPOBBPPOD))]
     [HarmonyPrefix]
-    public static bool BCKHHMIMAEN_OOKPOBBPPOD(ref string __result, int FLGDADINOPK)
+    public static bool MappedAnims_OOKPOBBPPOD(ref string __result, int FLGDADINOPK)
     {
         if (FLGDADINOPK >= 1000000)
         {
@@ -96,23 +98,25 @@ internal class AnimationPatch
         return true;
     }
     
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.GPADNIMNGBA))]
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.GPADNIMNGBA))]
     [HarmonyPrefix]
-    public static bool GamePlayer_GPADNIMNGBA(ref GamePlayer __instance)
+    public static bool Player_GPADNIMNGBA(ref UnmappedPlayer __instance)
     {
-        return __instance.JGPFJIBNLFC < 1000000;
+        MappedPlayer p = __instance;
+        return p.anim < 1000000;
     }
     
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.CMHHOLOLIAM))]
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.CMHHOLOLIAM))]
     [HarmonyPostfix]
-    public static void GamePlayer_CMHHOLOLIAM(ref GamePlayer __instance)
+    public static void Player_CMHHOLOLIAM(ref UnmappedPlayer __instance)
     {
-        var orig = __instance.BFGNHPHILHK.runtimeAnimatorController;
+        MappedPlayer p = __instance;
+        var orig = p.animator.runtimeAnimatorController;
         var overrideController = new AnimatorOverrideController(AO.AnimationController);
         foreach (var clip in orig.animationClips)
         {
             overrideController[clip.name] = clip;
         }
-        __instance.BFGNHPHILHK.runtimeAnimatorController = overrideController;
+        p.animator.runtimeAnimatorController = overrideController;
     }
 }

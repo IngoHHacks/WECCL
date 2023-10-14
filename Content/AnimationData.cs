@@ -75,20 +75,20 @@ public class AnimationData
             switch (type)
             {
                 case MoveType.StrikeHigh:
-                    BCKHHMIMAEN.FFOHBJOPHNJ = BCKHHMIMAEN.FFOHBJOPHNJ.Concat(new[] {id}).ToArray();
+                    UnmappedAnims.FFOHBJOPHNJ = UnmappedAnims.FFOHBJOPHNJ.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.StrikeLow:
-                    BCKHHMIMAEN.NCFGPPEBGFK = BCKHHMIMAEN.NCFGPPEBGFK.Concat(new[] {id}).ToArray();
+                    UnmappedAnims.NCFGPPEBGFK = UnmappedAnims.NCFGPPEBGFK.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.BigAttack:
                 case MoveType.RunningAttack:
-                    BCKHHMIMAEN.MLNCKDLFOLB = BCKHHMIMAEN.MLNCKDLFOLB.Concat(new[] {id}).ToArray();
+                    UnmappedAnims.MLNCKDLFOLB = UnmappedAnims.MLNCKDLFOLB.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.FrontGrapple:
-                    BCKHHMIMAEN.NGLGCIHEEIA = BCKHHMIMAEN.NGLGCIHEEIA.Concat(new[] {id}).ToArray();
+                    UnmappedAnims.NGLGCIHEEIA = UnmappedAnims.NGLGCIHEEIA.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.BackGrapple:
-                    BCKHHMIMAEN.GNGKAHBFOJG = BCKHHMIMAEN.GNGKAHBFOJG.Concat(new[] {id}).ToArray();
+                    UnmappedAnims.GNGKAHBFOJG = UnmappedAnims.GNGKAHBFOJG.Concat(new[] {id}).ToArray();
                     break;
             }
         }
@@ -101,7 +101,7 @@ public class AnimationData
         return ParseString(File.ReadAllText(path));
     }
 
-    public void Play(GamePlayer player, float frame)
+    public void Play(UnmappedPlayer player, float frame)
     {
         int indent = 0;
         foreach (var command in AnimationCommands)
@@ -121,12 +121,12 @@ public class AnimationData
         }
     }
 
-    public bool ExecuteCommand(GamePlayer player, string command, string[] args, float currentFrame, int startFrame, int endFrame)
+    public bool ExecuteCommand(MappedPlayer player, string command, string[] args, float currentFrame, int startFrame, int endFrame)
     {
         return Animations.ExecuteCommand(player, command, args, currentFrame, startFrame, endFrame);
     }
 
-    public static void DoCustomAnimation(int anim, DJEKCMMMFJM player, float frame)
+    public static void DoCustomAnimation(int anim, MappedPlayer player, float frame)
     {
         CustomAnimationClips[anim].Item2.Play(player, (int)frame);
     }

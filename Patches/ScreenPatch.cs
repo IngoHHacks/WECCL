@@ -12,7 +12,7 @@ public class ScreenPatch
     private static int _dd = 10;
     private static int foc;
     private static int dir;
-    private static GameMenus _menu;
+    private static UnmappedMenu _menu;
 
     [HarmonyPatch(typeof(Scene_Titles), "Start")]
     [HarmonyPostfix]
@@ -24,20 +24,20 @@ public class ScreenPatch
         _dd = 10;
         if (MetaFile.Data.FirstLaunch)
         {
-            GameScreens.IIFOHKLHALM();
-            GameScreens.AAAIDOOHBCM = 1002;
-            GameScreens.PJHNMEEFCME = 0;
-            GameScreens.NJJPPLCPOIA = 0;
-            GameScreens.GBDGLHHCLCI();
+            UnmappedMenus.IIFOHKLHALM();
+            UnmappedMenus.AAAIDOOHBCM = 1002;
+            UnmappedMenus.PJHNMEEFCME = 0;
+            UnmappedMenus.NJJPPLCPOIA = 0;
+            UnmappedMenus.GBDGLHHCLCI();
             __instance.gLicense.SetActive(false);
-            GameScreens.EOANIBNAACO.SetActive(false);
+            UnmappedMenus.EOANIBNAACO.SetActive(false);
             Object.Destroy(GameObject.Find("Logo"));
-            GameObject obj = Object.Instantiate(GameSprites.JCNCOJEJDJC[1]);
+            GameObject obj = Object.Instantiate(UnmappedSprites.JCNCOJEJDJC[1]);
             obj.transform.position = new Vector3(0f, 50f, 0f);
             obj.transform.localScale = new Vector3(1f, 1f, 1f);
             RectTransform rt = obj.transform.Find("Title").transform as RectTransform;
             rt.sizeDelta *= 5;
-            obj.transform.SetParent(GameScreens.BJNOPDGKOEI.transform, false);
+            obj.transform.SetParent(UnmappedMenus.BJNOPDGKOEI.transform, false);
             Object.Destroy(obj.transform.Find("Background").gameObject);
             Object.Destroy(obj.transform.Find("Border").gameObject);
             Object.Destroy(obj.transform.Find("Sheen").gameObject);
@@ -47,21 +47,21 @@ public class ScreenPatch
         }
         else if (!_initialized && HasConflictingOverrides && !MetaFile.Data.HidePriorityScreenNextTime)
         {
-            GameScreens.IIFOHKLHALM();
-            GameScreens.AAAIDOOHBCM = 1001;
-            GameScreens.PJHNMEEFCME = 0;
-            GameScreens.NJJPPLCPOIA = 0;
-            GameScreens.GBDGLHHCLCI();
+            UnmappedMenus.IIFOHKLHALM();
+            UnmappedMenus.AAAIDOOHBCM = 1001;
+            UnmappedMenus.PJHNMEEFCME = 0;
+            UnmappedMenus.NJJPPLCPOIA = 0;
+            UnmappedMenus.GBDGLHHCLCI();
             __instance.gLicense.SetActive(false);
-            GameScreens.EOANIBNAACO.SetActive(false);
+            UnmappedMenus.EOANIBNAACO.SetActive(false);
             Object.Destroy(GameObject.Find("Logo"));
 
-            GameObject obj = Object.Instantiate(GameSprites.JCNCOJEJDJC[1]);
+            GameObject obj = Object.Instantiate(UnmappedSprites.JCNCOJEJDJC[1]);
             obj.transform.position = new Vector3(0f, 315f, 0f);
             obj.transform.localScale = new Vector3(1f, 1f, 1f);
             RectTransform rt = obj.transform.Find("Title").transform as RectTransform;
             rt.sizeDelta *= 2;
-            obj.transform.SetParent(GameScreens.BJNOPDGKOEI.transform, false);
+            obj.transform.SetParent(UnmappedMenus.BJNOPDGKOEI.transform, false);
             Object.Destroy(obj.transform.Find("Background").gameObject);
             Object.Destroy(obj.transform.Find("Border").gameObject);
             Object.Destroy(obj.transform.Find("Sheen").gameObject);
@@ -80,55 +80,55 @@ public class ScreenPatch
     {
         try
         {
-            if (GameScreens.AAAIDOOHBCM == 1001)
+            if (UnmappedMenus.AAAIDOOHBCM == 1001)
             {
-                GameControls.PAOEHLEJKIJ();
-                GameScreens.MDLFJLFKLJH();
+                UnmappedControls.PAOEHLEJKIJ();
+                UnmappedMenus.MDLFJLFKLJH();
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    foc = GameScreens.CJGHFHCHDNN;
+                    foc = UnmappedMenus.CJGHFHCHDNN;
                 }
                 else if (Input.GetMouseButtonUp(0))
                 {
                     foc = 0;
-                    GameScreens.CJGHFHCHDNN = 0;
+                    UnmappedMenus.CJGHFHCHDNN = 0;
                     _dd = 10;
                     dir = 0;
                     if (_menu != null)
                     {
-                        GameSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.8f, 0.8f, 0.8f);
+                        UnmappedSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.8f, 0.8f, 0.8f);
                     }
                 }
 
-                if (GameScreens.CJGHFHCHDNN >= Prefixes.Count + 1)
+                if (UnmappedMenus.CJGHFHCHDNN >= Prefixes.Count + 1)
                 {
-                    if (GameScreens.CJGHFHCHDNN == Prefixes.Count + 2)
+                    if (UnmappedMenus.CJGHFHCHDNN == Prefixes.Count + 2)
                     {
                         MetaFile.Data.HidePriorityScreenNextTime = true;
                     }
 
-                    GameAudio.NMHGFGAEKEJ(GameAudio.IMLNJEMFJNK, 0f, 0.5f);
+                    UnmappedSound.NMHGFGAEKEJ(UnmappedSound.IMLNJEMFJNK, 0f, 0.5f);
                     List<string> prefixes = new();
                     for (int i = 1; i < Prefixes.Count + 1; i++)
                     {
-                        string text = GameScreens.ECEJOIDPOCN[i].NBNIGADOOJD.transform.Find("Value").gameObject
+                        string text = UnmappedMenus.ECEJOIDPOCN[i].NBNIGADOOJD.transform.Find("Value").gameObject
                             .GetComponent<Text>().text;
                         prefixes.Add(text);
                     }
 
                     Prefixes = prefixes;
                     SavePrefixes();
-                    GameAudio.HMEHNDBNCEB.Stop();
-                    GameAudio.FFMBDMFIJHL[0] = GameGlobals.HBNLBOOPFOJ("Music", "Theme00") as AudioClip;
-                    GameAudio.HMEHNDBNCEB.clip = GameAudio.FFMBDMFIJHL[0];
-                    GameAudio.HMEHNDBNCEB.time = 0f;
-                    GameAudio.HMEHNDBNCEB.Play();
-                    GameScreens.NCIBLEAKGFH(1);
+                    UnmappedSound.HMEHNDBNCEB.Stop();
+                    UnmappedSound.FFMBDMFIJHL[0] = UnmappedGlobals.HBNLBOOPFOJ("Music", "Theme00") as AudioClip;
+                    UnmappedSound.HMEHNDBNCEB.clip = UnmappedSound.FFMBDMFIJHL[0];
+                    UnmappedSound.HMEHNDBNCEB.time = 0f;
+                    UnmappedSound.HMEHNDBNCEB.Play();
+                    UnmappedMenus.NCIBLEAKGFH(1);
                 }
                 else if (foc > 0 && _delay <= 0)
                 {
-                    BOAPBLKGGHL menu = GameScreens.ECEJOIDPOCN[foc];
+                    UnmappedMenu menu = UnmappedMenus.ECEJOIDPOCN[foc];
                     if (dir == 0)
                     {
                         dir = menu.DFFIHDMCJGL >= 0 ? 1 : -1;
@@ -138,7 +138,7 @@ public class ScreenPatch
                     {
                         if (foc > 1)
                         {
-                            BOAPBLKGGHL menu2 = GameScreens.ECEJOIDPOCN[foc - 1];
+                            UnmappedMenu menu2 = UnmappedMenus.ECEJOIDPOCN[foc - 1];
                             Text text1 = menu.NBNIGADOOJD.transform.Find("Value").gameObject.GetComponent<Text>();
                             Text text2 = menu2.NBNIGADOOJD.transform.Find("Value").gameObject.GetComponent<Text>();
                             menu2.CCFHFGBDIHE = text1.text;
@@ -146,12 +146,12 @@ public class ScreenPatch
                             (text1.text, text2.text) = (text2.text, text1.text);
                             if (_menu != null)
                             {
-                                GameSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.8f, 0.8f, 0.8f);
+                                UnmappedSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.8f, 0.8f, 0.8f);
                             }
 
                             _menu = menu2;
-                            GameSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.3f, 0.9f, 0.3f);
-                            GameScreens.CJGHFHCHDNN--;
+                            UnmappedSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.3f, 0.9f, 0.3f);
+                            UnmappedMenus.CJGHFHCHDNN--;
                             _delay = _dd;
                             if (_dd > 1)
                             {
@@ -165,18 +165,18 @@ public class ScreenPatch
                     {
                         if (foc < Prefixes.Count)
                         {
-                            BOAPBLKGGHL menu2 = GameScreens.ECEJOIDPOCN[foc + 1];
+                            UnmappedMenu menu2 = UnmappedMenus.ECEJOIDPOCN[foc + 1];
                             Text text1 = menu.NBNIGADOOJD.transform.Find("Value").gameObject.GetComponent<Text>();
                             Text text2 = menu2.NBNIGADOOJD.transform.Find("Value").gameObject.GetComponent<Text>();
                             (text1.text, text2.text) = (text2.text, text1.text);
                             if (_menu != null)
                             {
-                                GameSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.8f, 0.8f, 0.8f);
+                                UnmappedSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.8f, 0.8f, 0.8f);
                             }
 
                             _menu = menu2;
-                            GameSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.9f, 0.3f, 0.3f);
-                            GameScreens.CJGHFHCHDNN++;
+                            UnmappedSprites.IJHBLDHOEOH(_menu.FCFPMEDHPML, 0.9f, 0.3f, 0.3f);
+                            UnmappedMenus.CJGHFHCHDNN++;
                             _delay = _dd;
                             if (_dd > 1)
                             {
@@ -188,39 +188,39 @@ public class ScreenPatch
                     }
                 }
 
-                GameScreens.NLNBFBCGKCN = GameScreens.CJGHFHCHDNN;
+                UnmappedMenus.NLNBFBCGKCN = UnmappedMenus.CJGHFHCHDNN;
 
                 _delay--;
 
                 return false;
             }
 
-            if (GameScreens.AAAIDOOHBCM == 1002)
+            if (UnmappedMenus.AAAIDOOHBCM == 1002)
             {
-                GameControls.PAOEHLEJKIJ();
-                GameScreens.MDLFJLFKLJH();
-                GameScreens.BKCLHHDGBEC();
+                UnmappedControls.PAOEHLEJKIJ();
+                UnmappedMenus.MDLFJLFKLJH();
+                UnmappedMenus.BKCLHHDGBEC();
 
-                for (int num = 1; num <= GameScreens.LHEGOJODLAF; num++)
+                for (int num = 1; num <= UnmappedMenus.LHEGOJODLAF; num++)
                 {
-                    if (GameScreens.ECEJOIDPOCN[num].DFFIHDMCJGL != 0f && GameScreens.EJDHJPCLOBP == 0 &&
-                        GameScreens.FKLIHLHEECO > 10f && GameControls.JOPPDHFINKD == 0f &&
-                        GameScreens.ECEJOIDPOCN[num].DBEKNIFAGLK() == 0)
+                    if (UnmappedMenus.ECEJOIDPOCN[num].DFFIHDMCJGL != 0f && UnmappedMenus.EJDHJPCLOBP == 0 &&
+                        UnmappedMenus.FKLIHLHEECO > 10f && UnmappedControls.JOPPDHFINKD == 0f &&
+                        UnmappedMenus.ECEJOIDPOCN[num].DBEKNIFAGLK() == 0)
                     {
-                        if (GameScreens.CJGHFHCHDNN > 0)
+                        if (UnmappedMenus.CJGHFHCHDNN > 0)
                         {
-                            GameScreens.EJDHJPCLOBP = 1;
-                            JJDCNALMPCI.CJGHFHCHDNN = -1;
+                            UnmappedMenus.EJDHJPCLOBP = 1;
+                            UnmappedMenus.CJGHFHCHDNN = -1;
                         }
                     }
                 }
 
-                if (GameScreens.EJDHJPCLOBP >= 5 && GameScreens.CJGHFHCHDNN == -1)
+                if (UnmappedMenus.EJDHJPCLOBP >= 5 && UnmappedMenus.CJGHFHCHDNN == -1)
                 {
-                    GameAudio.NMHGFGAEKEJ(GameAudio.IMLNJEMFJNK, 0f, 0.5f);
+                    UnmappedSound.NMHGFGAEKEJ(UnmappedSound.IMLNJEMFJNK, 0f, 0.5f);
                     MetaFile.Data.FirstLaunch = false;
                     MetaFile.Data.Save();
-                    GameScreens.NCIBLEAKGFH(1);
+                    UnmappedMenus.NCIBLEAKGFH(1);
                 }
 
                 return false;
@@ -234,33 +234,33 @@ public class ScreenPatch
         return true;
     }
 
-    [HarmonyPatch(typeof(GameScreens), nameof(GameScreens.GBDGLHHCLCI))]
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.GBDGLHHCLCI))]
     [HarmonyPrefix]
-    public static bool GameScreens_GBDGLHHCLCI(int EJFCAOFBHMC)
+    public static bool Menus_GBDGLHHCLCI(int EJFCAOFBHMC)
     {
-        if (GameScreens.AAAIDOOHBCM > 1000)
+        if (UnmappedMenus.AAAIDOOHBCM > 1000)
         {
-            GameScreens.IIFOHKLHALM();
-            GameScreens.CJGHFHCHDNN = 0;
-            GameScreens.LHEGOJODLAF = EJFCAOFBHMC;
-            GameScreens.ECEJOIDPOCN = new GameMenus[GameScreens.LHEGOJODLAF + 1];
-            for (GameScreens.LBDCLOPBBJF = 1;
-                 GameScreens.LBDCLOPBBJF <= GameScreens.LHEGOJODLAF;
-                 GameScreens.LBDCLOPBBJF++)
+            UnmappedMenus.IIFOHKLHALM();
+            UnmappedMenus.CJGHFHCHDNN = 0;
+            UnmappedMenus.LHEGOJODLAF = EJFCAOFBHMC;
+            UnmappedMenus.ECEJOIDPOCN = new UnmappedMenu[UnmappedMenus.LHEGOJODLAF + 1];
+            for (UnmappedMenus.LBDCLOPBBJF = 1;
+                 UnmappedMenus.LBDCLOPBBJF <= UnmappedMenus.LHEGOJODLAF;
+                 UnmappedMenus.LBDCLOPBBJF++)
             {
-                GameScreens.ECEJOIDPOCN[GameScreens.LBDCLOPBBJF] = new GameMenus();
-                GameScreens.ECEJOIDPOCN[GameScreens.LBDCLOPBBJF].DHBIELODIAN = GameScreens.LBDCLOPBBJF;
+                UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LBDCLOPBBJF] = new UnmappedMenu();
+                UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LBDCLOPBBJF].DHBIELODIAN = UnmappedMenus.LBDCLOPBBJF;
             }
 
-            GameScreens.KFMIBDFGKJL = 0f;
-            GameScreens.OPGFFOJJHBL = 0f;
-            GameScreens.BHFMJHOPEAL = 0f;
-            GameScreens.JLGBEDGJKIP = 0f;
+            UnmappedMenus.KFMIBDFGKJL = 0f;
+            UnmappedMenus.OPGFFOJJHBL = 0f;
+            UnmappedMenus.BHFMJHOPEAL = 0f;
+            UnmappedMenus.JLGBEDGJKIP = 0f;
             float num = 0f;
             float num2 = 0f;
             float num3 = 80f;
             float num4 = 1.6f;
-            if (GameScreens.AAAIDOOHBCM == 1001)
+            if (UnmappedMenus.AAAIDOOHBCM == 1001)
             {
                 int rows;
                 int columns;
@@ -272,46 +272,46 @@ public class ScreenPatch
                 int index = 0;
                 foreach (string prefix in Prefixes)
                 {
-                    GameScreens.MFDCLFKDDFB();
+                    UnmappedMenus.MFDCLFKDDFB();
                     float x = startX + (index % columns * 210 * scale);
                     float y = startY - (index / columns * 50 * scale);
-                    GameScreens.ECEJOIDPOCN[GameScreens.LHEGOJODLAF].GBDGLHHCLCI(6,
+                    UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].GBDGLHHCLCI(6,
                         "#" + (index + 1) +
                         (index == 0 ? " (highest)" : index == Prefixes.Count - 1 ? " (lowest)" : ""), x, y, scale,
                         scale);
-                    GameScreens.ECEJOIDPOCN[GameScreens.LHEGOJODLAF].NBNIGADOOJD.transform.Find("Value").gameObject
+                    UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].NBNIGADOOJD.transform.Find("Value").gameObject
                         .GetComponent<Text>().text = prefix;
-                    GameSprites.IJHBLDHOEOH(GameScreens.ECEJOIDPOCN[GameScreens.LHEGOJODLAF].FCFPMEDHPML, 0.8f, 0.8f,
+                    UnmappedSprites.IJHBLDHOEOH(UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].FCFPMEDHPML, 0.8f, 0.8f,
                         0.8f);
                     index++;
                 }
 
-                GameScreens.MFDCLFKDDFB();
-                GameScreens.ECEJOIDPOCN[GameScreens.LHEGOJODLAF].GBDGLHHCLCI(1, "Proceed", -150f, -280, 1.25f, 1.25f);
-                GameScreens.MFDCLFKDDFB();
-                GameScreens.ECEJOIDPOCN[GameScreens.LHEGOJODLAF]
+                UnmappedMenus.MFDCLFKDDFB();
+                UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].GBDGLHHCLCI(1, "Proceed", -150f, -280, 1.25f, 1.25f);
+                UnmappedMenus.MFDCLFKDDFB();
+                UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF]
                     .GBDGLHHCLCI(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
             }
-            else if (GameScreens.AAAIDOOHBCM == 1002)
+            else if (UnmappedMenus.AAAIDOOHBCM == 1002)
             {
-                GameScreens.MFDCLFKDDFB();
-                GameScreens.ECEJOIDPOCN[GameScreens.LHEGOJODLAF].GBDGLHHCLCI(1, "Proceed", 0f, -280, 1.25f, 1.25f);
+                UnmappedMenus.MFDCLFKDDFB();
+                UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].GBDGLHHCLCI(1, "Proceed", 0f, -280, 1.25f, 1.25f);
             }
 
-            GameScreens.KBAEPPOEEIG();
-            if (GameScreens.NNEAIJGCPNF() > 0 && GameScreens.LHEGOJODLAF > 0 && foc == 0)
+            UnmappedMenus.KBAEPPOEEIG();
+            if (UnmappedMenus.NNEAIJGCPNF() > 0 && UnmappedMenus.LHEGOJODLAF > 0 && foc == 0)
             {
                 foc = 1;
             }
 
-            GameScreens.NLNBFBCGKCN = foc;
-            GameScreens.EJDHJPCLOBP = 0;
-            GameKeyboard.FPAFHMCMOEF = 0;
-            GameScreens.NFEAFIEMMOJ = 0;
-            GameScreens.NCAKGGALEFE = 0;
-            GameScreens.OOILEGABJLC = 0;
-            GameScreens.FKLIHLHEECO = 0f;
-            GameControls.JOPPDHFINKD = 10f;
+            UnmappedMenus.NLNBFBCGKCN = foc;
+            UnmappedMenus.EJDHJPCLOBP = 0;
+            UnmappedKeyboard.FPAFHMCMOEF = 0;
+            UnmappedMenus.NFEAFIEMMOJ = 0;
+            UnmappedMenus.NCAKGGALEFE = 0;
+            UnmappedMenus.OOILEGABJLC = 0;
+            UnmappedMenus.FKLIHLHEECO = 0f;
+            UnmappedControls.JOPPDHFINKD = 10f;
             return false;
         }
 

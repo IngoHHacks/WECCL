@@ -15,12 +15,12 @@ internal class ContentPatch
     internal static bool _contentLoaded;
 
     /*
-     * GameGlobals.HBNLBOOPFOJ loads an object from an AssetBundle.
+     * Globals.HBNLBOOPFOJ loads an object from an AssetBundle.
      * This patch is used to load custom objects from the Assets folder(s).
      */
-    [HarmonyPatch(typeof(GameGlobals), nameof(GameGlobals.HBNLBOOPFOJ))]
+    [HarmonyPatch(typeof(UnmappedGlobals), nameof(UnmappedGlobals.HBNLBOOPFOJ))]
     [HarmonyPrefix]
-    public static bool GameGlobals_HBNLBOOPFOJ(ref Object __result, string GMAHLKOBDBF, string IBDBKFNKGPI)
+    public static bool Globals_HBNLBOOPFOJ(ref Object __result, string GMAHLKOBDBF, string IBDBKFNKGPI)
     {
         if (GMAHLKOBDBF.StartsWith("Music"))
         {
@@ -60,22 +60,22 @@ internal class ContentPatch
     }
 
     /*
-     * GameTextures.FFHGCMDOHJL is called when the game loads the vanilla content constants.
+     * Textures.FFHGCMDOHJL is called when the game loads the vanilla content constants.
      * This patch is used to update the vanilla content constants with the custom content counts.
      */
-    [HarmonyPatch(typeof(GameTextures), nameof(GameTextures.FFHGCMDOHJL))]
+    [HarmonyPatch(typeof(UnmappedTextures), nameof(UnmappedTextures.FFHGCMDOHJL))]
     [HarmonyPostfix]
-    public static void GameTextures_FFHGCMDOHJL()
+    public static void Textures_FFHGCMDOHJL()
     {
-        VanillaCounts.MaterialCounts = GameTextures.PGGBCDPCBDC.ToList();
-        VanillaCounts.FleshCounts = GameTextures.PECMEJKJOJJ.ToList();
-        VanillaCounts.ShapeCounts = GameTextures.JMOFBHKFODO.ToList();
-        VanillaCounts.BodyFemaleCount = GameTextures.GGDEHKODMKK;
-        VanillaCounts.FaceFemaleCount = GameTextures.PJMNJIFAGCO;
-        VanillaCounts.SpecialFootwearCount = GameTextures.FFKLFABJAGA;
-        VanillaCounts.TransparentHairMaterialCount = GameTextures.OEMIEAFDIAB;
-        VanillaCounts.TransparentHairHairstyleCount = GameTextures.KJDGKNNINBC;
-        VanillaCounts.KneepadCount = GameTextures.LDJBMKDKOBO;
+        VanillaCounts.MaterialCounts = UnmappedTextures.PGGBCDPCBDC.ToList();
+        VanillaCounts.FleshCounts = UnmappedTextures.PECMEJKJOJJ.ToList();
+        VanillaCounts.ShapeCounts = UnmappedTextures.JMOFBHKFODO.ToList();
+        VanillaCounts.BodyFemaleCount = UnmappedTextures.GGDEHKODMKK;
+        VanillaCounts.FaceFemaleCount = UnmappedTextures.PJMNJIFAGCO;
+        VanillaCounts.SpecialFootwearCount = UnmappedTextures.FFKLFABJAGA;
+        VanillaCounts.TransparentHairMaterialCount = UnmappedTextures.OEMIEAFDIAB;
+        VanillaCounts.TransparentHairHairstyleCount = UnmappedTextures.KJDGKNNINBC;
+        VanillaCounts.KneepadCount = UnmappedTextures.LDJBMKDKOBO;
         VanillaCounts.IsInitialized = true;
 
         if (Plugin.Debug.Value)
@@ -237,9 +237,9 @@ internal class ContentPatch
     /*
      * DLKADFPEAGC is the method that is called when the game applies the meshes to the player.
      */
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.DLKADFPEAGC))]
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.DLKADFPEAGC))]
     [HarmonyPostfix]
-    public static void GamePlayer_DLKADFPEAGC(ref GamePlayer __instance, int MHFLLOFKLLF)
+    public static void Player_DLKADFPEAGC(ref UnmappedPlayer __instance, int MHFLLOFKLLF)
     {
         if ((MHFLLOFKLLF == 4 && __instance.JKPAIJGCMPH.shape[MHFLLOFKLLF] > 50 &&
              __instance.JKPAIJGCMPH.shape[MHFLLOFKLLF] % 10 == 0) || VanillaCounts.ShapeCounts[MHFLLOFKLLF] == 0)
@@ -309,66 +309,66 @@ internal class ContentPatch
         }
     }
 
-    [HarmonyPatch(typeof(GameTextures), nameof(GameTextures.PIMHNLDNBOE))]
+    [HarmonyPatch(typeof(UnmappedTextures), nameof(UnmappedTextures.PIMHNLDNBOE))]
     [HarmonyPostfix]
-    public static void GameTextures_PIMHNLDNBOE(GamePlayer FJCOPECCEKN)
+    public static void Textures_PIMHNLDNBOE(UnmappedPlayer FJCOPECCEKN)
     {
         FixMeshes(FJCOPECCEKN);
     }
 
-    [HarmonyPatch(typeof(GamePlayer), nameof(GamePlayer.JAIOJDGDCLP))]
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.JAIOJDGDCLP))]
     [HarmonyPostfix]
-    public static void GamePlayer_JAIOJDGDCLP(GamePlayer __instance)
+    public static void Player_JAIOJDGDCLP(UnmappedPlayer __instance)
     {
         FixMeshes(__instance);
     }
 
-    private static void FixMeshes(GamePlayer player)
+    private static void FixMeshes(UnmappedPlayer player)
     {
         try
         {
-            for (GameTextures.MHFLLOFKLLF = 1;
-                 GameTextures.MHFLLOFKLLF <= GameTextures.IJDEFKDCNAN;
-                 GameTextures.MHFLLOFKLLF++)
+            for (UnmappedTextures.MHFLLOFKLLF = 1;
+                 UnmappedTextures.MHFLLOFKLLF <= UnmappedTextures.IJDEFKDCNAN;
+                 UnmappedTextures.MHFLLOFKLLF++)
             {
-                if ((GameTextures.MHFLLOFKLLF == 4 && player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] > 50 &&
-                     player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] % 10 == 0) ||
-                    player.OOPKPKCHBEN[GameTextures.MHFLLOFKLLF] == null ||
-                    VanillaCounts.ShapeCounts[GameTextures.MHFLLOFKLLF] == 0)
+                if ((UnmappedTextures.MHFLLOFKLLF == 4 && player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] > 50 &&
+                     player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] % 10 == 0) ||
+                    player.OOPKPKCHBEN[UnmappedTextures.MHFLLOFKLLF] == null ||
+                    VanillaCounts.ShapeCounts[UnmappedTextures.MHFLLOFKLLF] == 0)
                 {
                     continue;
                 }
 
-                if (player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] >
-                    VanillaCounts.ShapeCounts[GameTextures.MHFLLOFKLLF]
-                    || (GameTextures.MHFLLOFKLLF == 17 && -player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] >
+                if (player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] >
+                    VanillaCounts.ShapeCounts[UnmappedTextures.MHFLLOFKLLF]
+                    || (UnmappedTextures.MHFLLOFKLLF == 17 && -player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] >
                         VanillaCounts.TransparentHairHairstyleCount))
                 {
-                    Mesh mesh = player.OOPKPKCHBEN[GameTextures.MHFLLOFKLLF].GetComponent<MeshFilter>().mesh;
-                    if (player.OOPKPKCHBEN[GameTextures.MHFLLOFKLLF].GetComponent<MeshRenderer>().materials.Length <
+                    Mesh mesh = player.OOPKPKCHBEN[UnmappedTextures.MHFLLOFKLLF].GetComponent<MeshFilter>().mesh;
+                    if (player.OOPKPKCHBEN[UnmappedTextures.MHFLLOFKLLF].GetComponent<MeshRenderer>().materials.Length <
                         mesh.subMeshCount)
                     {
-                        int shape = player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] > 0
-                            ? player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] -
-                              VanillaCounts.ShapeCounts[GameTextures.MHFLLOFKLLF] - 1
-                            : -player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] -
+                        int shape = player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] > 0
+                            ? player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] -
+                              VanillaCounts.ShapeCounts[UnmappedTextures.MHFLLOFKLLF] - 1
+                            : -player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] -
                               VanillaCounts.TransparentHairHairstyleCount - 1;
                         Dictionary<string, string> meta = new();
                         if (CustomCostumes.Values.Any(
-                                x => x.InternalPrefix.Contains("shape" + GameTextures.MHFLLOFKLLF)))
+                                x => x.InternalPrefix.Contains("shape" + UnmappedTextures.MHFLLOFKLLF)))
                         {
                             meta = CustomCostumes.Values
-                                .First(x => x.InternalPrefix.Contains("shape" + GameTextures.MHFLLOFKLLF))
+                                .First(x => x.InternalPrefix.Contains("shape" + UnmappedTextures.MHFLLOFKLLF))
                                 .CustomObjects[shape]
                                 .Item3;
                         }
 
                         Material[] materials = new Material[mesh.subMeshCount];
-                        materials[0] = player.OOPKPKCHBEN[GameTextures.MHFLLOFKLLF].GetComponent<MeshRenderer>()
+                        materials[0] = player.OOPKPKCHBEN[UnmappedTextures.MHFLLOFKLLF].GetComponent<MeshRenderer>()
                             .material;
                         for (int i = 1; i < materials.Length; i++)
                         {
-                            materials[i] = new Material(player.OOPKPKCHBEN[GameTextures.MHFLLOFKLLF]
+                            materials[i] = new Material(player.OOPKPKCHBEN[UnmappedTextures.MHFLLOFKLLF]
                                 .GetComponent<MeshRenderer>().material);
 
                             if (meta.ContainsKey("submesh" + i + "color"))
@@ -388,7 +388,7 @@ internal class ContentPatch
                             }
                         }
 
-                        player.OOPKPKCHBEN[GameTextures.MHFLLOFKLLF].GetComponent<MeshRenderer>().materials =
+                        player.OOPKPKCHBEN[UnmappedTextures.MHFLLOFKLLF].GetComponent<MeshRenderer>().materials =
                             materials;
                     }
                 }
@@ -397,8 +397,8 @@ internal class ContentPatch
         catch (Exception e)
         {
             Plugin.Log.LogError(e);
-            Plugin.Log.LogError("MHFLLOFKLLF: " + GameTextures.MHFLLOFKLLF + " (" +
-                                player.JKPAIJGCMPH.shape[GameTextures.MHFLLOFKLLF] + ")");
+            Plugin.Log.LogError("MHFLLOFKLLF: " + UnmappedTextures.MHFLLOFKLLF + " (" +
+                                player.JKPAIJGCMPH.shape[UnmappedTextures.MHFLLOFKLLF] + ")");
         }
     }
 }

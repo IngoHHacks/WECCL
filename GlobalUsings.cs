@@ -1,17 +1,18 @@
 // Global using directives
 
-global using GameSaveFile = CGDFANINCGL;
-global using GameGlobals = LFNJDEGJLLJ;
-global using GameTextures = LAHFDHJJGKH;
-global using GameMenus = BOAPBLKGGHL;
-global using GamePlayer = DJEKCMMMFJM;
-global using GameDialog = FMHJNNGPMKG;
-global using GameAudio = IKPECOJMCAB;
-global using GameScreens = JJDCNALMPCI;
-global using GameSprites = KPJNFJKBCDF;
-global using GameControls = MFCAJFKKFFE;
-global using GameKeyboard = BCJPMAHPHEP;
-global using GameCollision = LFDENAEGJBJ;
+global using UnmappedSaveData = CGDFANINCGL;
+global using UnmappedGlobals = LFNJDEGJLLJ;
+global using UnmappedTextures = LAHFDHJJGKH;
+global using UnmappedMenu = BOAPBLKGGHL;
+global using UnmappedPlayer = DJEKCMMMFJM;
+global using UnmappedPromo = FMHJNNGPMKG;
+global using UnmappedSound = IKPECOJMCAB;
+global using UnmappedMenus = JJDCNALMPCI;
+global using UnmappedSprites = KPJNFJKBCDF;
+global using UnmappedControls = MFCAJFKKFFE;
+global using UnmappedKeyboard = BCJPMAHPHEP;
+global using UnmappedBlocks = LFDENAEGJBJ;
+global using UnmappedAnims = BCKHHMIMAEN;
 global using HarmonyLib;
 global using System;
 global using System.Collections.Generic;

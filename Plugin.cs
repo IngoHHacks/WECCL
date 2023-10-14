@@ -200,8 +200,8 @@ public class Plugin : BaseUnityPlugin
         string save = Application.persistentDataPath + "/Save.bytes";
         if (!File.Exists(save))
         {
-            GameSaveFile.OKDAOPACMLB(); // Restore default
-            GameSaveFile.IFNAOOEOLLK(); // Save
+            UnmappedSaveData.OKDAOPACMLB(); // Restore default
+            UnmappedSaveData.IFNAOOEOLLK(); // Save
         }
         try
         {
@@ -378,8 +378,8 @@ public class Plugin : BaseUnityPlugin
         if (CustomClips.Count != 0)
         {
             // Update the number of audio clips in the game
-            IKPECOJMCAB.PJIECBLCGFB = VanillaCounts.MusicCount + CustomClips.Count;
-            IKPECOJMCAB.FFMBDMFIJHL = new AudioClip[IKPECOJMCAB.PJIECBLCGFB + 1];
+            UnmappedSound.PJIECBLCGFB = VanillaCounts.MusicCount + CustomClips.Count;
+            UnmappedSound.FFMBDMFIJHL = new AudioClip[UnmappedSound.PJIECBLCGFB + 1];
         }
 
         ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.AudioClip.name));
