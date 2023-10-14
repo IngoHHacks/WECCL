@@ -75,20 +75,22 @@ public class AnimationData
             switch (type)
             {
                 case MoveType.StrikeHigh:
-                    UnmappedAnims.FFOHBJOPHNJ = UnmappedAnims.FFOHBJOPHNJ.Concat(new[] {id}).ToArray();
+                    MappedAnims.moveUpper = MappedAnims.moveUpper.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.StrikeLow:
-                    UnmappedAnims.NCFGPPEBGFK = UnmappedAnims.NCFGPPEBGFK.Concat(new[] {id}).ToArray();
+                    MappedAnims.moveLower = MappedAnims.moveLower.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.BigAttack:
+                    MappedAnims.moveBigAttack = MappedAnims.moveBigAttack.Concat(new[] {id}).ToArray();
+                    break;
                 case MoveType.RunningAttack:
-                    UnmappedAnims.MLNCKDLFOLB = UnmappedAnims.MLNCKDLFOLB.Concat(new[] {id}).ToArray();
+                    MappedAnims.moveRunning = MappedAnims.moveRunning.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.FrontGrapple:
-                    UnmappedAnims.NGLGCIHEEIA = UnmappedAnims.NGLGCIHEEIA.Concat(new[] {id}).ToArray();
+                    MappedAnims.moveFront = MappedAnims.moveFront.Concat(new[] {id}).ToArray();
                     break;
                 case MoveType.BackGrapple:
-                    UnmappedAnims.GNGKAHBFOJG = UnmappedAnims.GNGKAHBFOJG.Concat(new[] {id}).ToArray();
+                    MappedAnims.moveBack = MappedAnims.moveBack.Concat(new[] {id}).ToArray();
                     break;
             }
         }
