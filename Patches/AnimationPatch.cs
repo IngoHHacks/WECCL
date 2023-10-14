@@ -66,9 +66,9 @@ internal class AnimationPatch
         return true;
     }
 
-    [HarmonyPatch(typeof(MappedAnims), nameof(MappedAnims.JCEIBJPONOM))]
+    [HarmonyPatch(typeof(UnmappedAnims), nameof(UnmappedAnims.JCEIBJPONOM))]
     [HarmonyPrefix]
-    public static bool MappedAnims_JCEIBJPONOM(ref string __result, int NNIHHMADKHI)
+    public static bool Anims_JCEIBJPONOM(ref string __result, int NNIHHMADKHI)
     {
         if (NNIHHMADKHI >= 100)
         {
@@ -78,17 +78,17 @@ internal class AnimationPatch
         return true;
     }
     
-    [HarmonyPatch(typeof(MappedAnims), nameof(MappedAnims.IIPHLNJKONO))]
+    [HarmonyPatch(typeof(UnmappedAnims), nameof(UnmappedAnims.IIPHLNJKONO))]
     [HarmonyPostfix]
-    public static void MappedAnims_IIPHLNJKONO()
+    public static void Anims_IIPHLNJKONO()
     {
         Array.Resize(ref UnmappedAnims.AEAMFLIMHGN, 200);
         Array.Resize(ref UnmappedAnims.EENMACFDDEE, 200);
     }
     
-    [HarmonyPatch(typeof(MappedAnims), nameof(MappedAnims.OOKPOBBPPOD))]
+    [HarmonyPatch(typeof(UnmappedAnims), nameof(UnmappedAnims.OOKPOBBPPOD))]
     [HarmonyPrefix]
-    public static bool MappedAnims_OOKPOBBPPOD(ref string __result, int FLGDADINOPK)
+    public static bool Anims_OOKPOBBPPOD(ref string __result, int FLGDADINOPK)
     {
         if (FLGDADINOPK >= 1000000)
         {
