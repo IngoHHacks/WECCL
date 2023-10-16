@@ -45,11 +45,12 @@ public static class CustomContent
         { "arms_wristband", new CostumeData("arms_wristband", "wristband", typeof(Texture2D)) }
     };
 
-    internal static readonly Dictionary<string, Dictionary<string, Texture2D>> ResourceOverridesTextures = new();
-    internal static readonly Dictionary<string, Dictionary<string, AudioClip>> ResourceOverridesAudio = new();
-    internal static readonly Dictionary<string, Dictionary<string, Mesh>> ResourceOverridesMeshes = new();
-
-    internal static readonly List<GameObject> CustomArenaPrefabs = new();
+    internal static readonly Dictionary<string, Dictionary<string,Texture2D>> ResourceOverridesTextures = new();
+    internal static readonly Dictionary<string, Dictionary<string,AudioClip>> ResourceOverridesAudio = new();
+    internal static readonly Dictionary<string, Dictionary<string,Mesh>> ResourceOverridesMeshes = new();
+    
+    internal static readonly List<GameObject>  CustomArenaPrefabs = new();
+    internal static readonly List<Tuple<AnimationClip, AnimationData>> CustomAnimationClips = new();
     internal static readonly List<PromoData> PromoData = new();
 
     public static bool HasConflictingOverrides;

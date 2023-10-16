@@ -23,6 +23,7 @@ It is currently possible to add:
 - Custom costume textures
 - Custom costume meshes
 - Custom promos
+- Custom arenas
 
 It is currently possible to override:
 
@@ -38,7 +39,7 @@ Additional features:
 
 Experimental features:
 
-- Custom arenas
+- Custom moves
 
 ## Getting Started
 
@@ -115,11 +116,10 @@ The following keys are supported:
 
 ## Meshes
 
-As with textures, meshes can be added by placing them in `./BepInEx/plugins/Assets`. Meshes must be in a subfolder by
-the mesh name.
-Example: `body_mesh/abc`. The extension must be `.mesh` or no extension at all.
-Meshes should be inside an asset bundle with it being the only mesh in the bundle. The first submesh will be the one
-affected by the game's mesh color setting. Others can be manually set in the metadata file.
+As with textures, meshes can be added by placing them in `./BepInEx/plugins/Assets`. Meshes must be in a subfolder by the mesh name.
+Example: `body_mesh/abc`. The extension must be `.assetbundle` or no extension at all. (Note that `.mesh` works too, but is deprecated and may be removed in the future).  
+Meshes should be inside an asset bundle with it being the only mesh in the bundle. The first submesh will be the one affected by the game's mesh color setting. Others can be manually set in the metadata file.
+
 
 | Supported Mesh Names       |
 |----------------------------|
@@ -149,13 +149,9 @@ The following keys are supported:
 
 ### Custom Arenas
 
-**Custom arenas are very experimental and may not work as intended. Use at your own risk.**  
-Custom arenas work the same as meshes, but require a GameObject as the root object and should be placed in a subfolder
-named `arena`.  
-Example: `arena/abc`. The extension must be `.mesh` or no extension at all (Please note that it is still not actually a
-mesh, but a GameObject. This will be changed in the future).  
-There is functionality in place to automatically assign collision to the arena, but this doesn't work for diagonal
-walls, i.e. walls that are not aligned with the X or Z axis. It may also not work as expected with some wall shapes.
+Custom arenas work the same as meshes, but require a GameObject as the root object and should be placed in a subfolder named `arena`.  
+Example: `arena/abc`. The extension must be `.assetbundle` or no extension at all (Note that `.mesh` works too, but is deprecated and may be removed in the future).  
+There is functionality in place to automatically assign collision to the arena, but this doesn't work for diagonal walls, i.e. walls that are not aligned with the X or Z axis. It may also not work as expected with some wall shapes.
 
 ## Custom Promos
 
@@ -214,6 +210,82 @@ The following commands are supported:
 | PlayAudio       | audioName/Id             | Plays the given crowd audio.                             | `PlayAudio:Cheer`     |
 
 Commands and names are case-insensitive.
+
+## Custom Moves
+
+**Custom moves are very experimental and may not work as intended. Use at your own risk.**
+Custom moves work the same way as meshes and arenas, but require an AnimationClip as the root object and should be placed in a subfolder named `animation` alongside a `.meta` file with the same name as the animation clip. The `.meta` file uses the following formats:
+```
+tag: value
+[start(-(end))] command arg1 arg2 arg3...
+[start(-(end))] condition?
+ [start(-(end))] command arg1 arg2 arg3...
+```
+`tag` must be `name`, `types`, or `forwardspeedmultiplier. Valid `types` are `StrikeHigh`, `StrikeLow`, `BigAttack (== RunningAttack)`. Types should be separated by a space. `forwardspeedmultiplier` must be a float. This value is multiplied by the animation speed to determine the forward speed of the move. Default is 4.  
+`start` and `end` must be integers. `end` is optional and defaults to `start` (without `-`) or *infinity* (with `-`).  
+`command` must be a string. The following commands are supported:
+
+| Command            | Arguments                                                   | Description                                                                                  | Example                                   |
+|--------------------|-------------------------------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------|
+| StartAnimation     | speed ticks per frame, buildupFrames, (forwardMomentum = 0) | Starts the animation "buildup" with the given parameters. Speed is ticks per frame           | `0-99 StartAnimation -10 5`               |
+| SetAnimation       | file, frame, duration                                       | Sets the animation to the given file and frame.                                              | `101- SetAnimation 100 2`                 |
+| EnableHitbox       | distance, damage, limb, (angle = 0) (particle = 0)          | Enables a hitbox with the given parameters.                                                  | `110-129 EnableHitbox 8 1000 R_Hand 10 1` |
+| PlayAudio          | audio                                                       | Plays the given audio.                                                                       | `110 PlayAudio -1`                        |
+| SetAnimationId     | id (id2, id3, etc.)                                         | Sets the animation to the given id. If multiple ids are given, one will be chosen at random. | `130 SetAnimationId 9 10`                 |
+| StopAnimation      |                                                             | Stops the animation.                                                                         | `140 StopAnimation`                       |
+
+`condition` must be a string followed by a question mark.  
+If the `condition` is met, the script will continue with the next line one indentation level deeper.
+If the `condition` is not met, the script will continue with the next line at the same indentation level.  
+Indentation is done with spaces and must always be 1 space per indentation level. Tabs are not supported.
+The following conditions are supported:
+
+| Condition     | Description                                                                         | Example          |
+|---------------|-------------------------------------------------------------------------------------|------------------|
+| HitConnected  | Checks if current attack connected with an opponent.                                | `HitConnected?`  |
+| StrengthCheck | Happens randomly based on the wrestler's strength (lower strength = higher chance). | `StrengthCheck?` |
+
+Note that `command` and `condition` are case-insensitive, but `limb` (in `EnableHitbox`) is not.
+Limbs are:
+```
+Base
+Hips
+Body
+Head
+R_Thigh
+R_Leg
+L_Thigh
+L_Leg
+R_Bicep
+R_Arm
+R_Hand
+L_Bicep
+L_Arm
+L_Hand
+R_Foot
+L_Foot
+Neck
+Hair
+H_Long
+Headwear
+HeadwearB
+```
+
+Full example:
+```
+name: Big Punch
+types: BigAttack
+forwardspeedmultiplier: 1.5
+0-99 SetAnimation 100 1 -2
+0-99 StartAnimation -10 5 0.5
+101- SetAnimation 100 2
+110-129 EnableHitbox 8 1000 R_Hand 10 1
+110 Playaudio -1
+130 HitConnected?
+ 130 StrengthCheck?
+  130 SetAnimationId 9 10
+140 StopAnimation
+```
 
 ## Aliases
 

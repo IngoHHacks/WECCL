@@ -26,28 +26,28 @@ internal class MenuPatch
         {
             if (_searchString == "")
             {
-                JJDCNALMPCI.OICIMMOPFPG = Characters.no_chars;
-                JJDCNALMPCI.ELGGCLPAICP = Characters.c.Skip(1).SortBy(INHHDMCONJD).Select(x => x.id).Prepend(0).ToArray();
-                JJDCNALMPCI.AHJHELDAAJP = new int[Characters.no_chars + 1];
+                UnmappedMenus.OICIMMOPFPG = Characters.no_chars;
+                UnmappedMenus.ELGGCLPAICP = Characters.c.Skip(1).SortBy(INHHDMCONJD).Select(x => x.id).Prepend(0).ToArray();
+                UnmappedMenus.AHJHELDAAJP = new int[Characters.no_chars + 1];
             }
             else
             {
-                JJDCNALMPCI.ELGGCLPAICP = Characters.c.Skip(1).Where(x => x.name.ToLower().Contains(_searchString.ToLower())).SortBy(INHHDMCONJD).Select(x => x.id).Prepend(0).ToArray();
-                JJDCNALMPCI.OICIMMOPFPG = JJDCNALMPCI.ELGGCLPAICP.Length - 1;
-                JJDCNALMPCI.AHJHELDAAJP = new int[Characters.no_chars + 1];
-                if (JJDCNALMPCI.OICIMMOPFPG < 25 && INHHDMCONJD == 0)
+                UnmappedMenus.ELGGCLPAICP = Characters.c.Skip(1).Where(x => x.name.ToLower().Contains(_searchString.ToLower())).SortBy(INHHDMCONJD).Select(x => x.id).Prepend(0).ToArray();
+                UnmappedMenus.OICIMMOPFPG = UnmappedMenus.ELGGCLPAICP.Length - 1;
+                UnmappedMenus.AHJHELDAAJP = new int[Characters.no_chars + 1];
+                if (UnmappedMenus.OICIMMOPFPG < 25 && INHHDMCONJD == 0)
                 {
                     IEnumerable<Character> c = Characters.c.Skip(1).Where(x => x.name.ToLower().Contains(_searchString.ToLower())).Concat(Characters.c.Skip(1).Where(x => !x.name.ToLower().Contains(_searchString.ToLower())).OrderBy(x => SubstringDamerauLevenshteinDistance(x.name.ToLower(), _searchString.ToLower()))).Take(25);
-                    JJDCNALMPCI.ELGGCLPAICP = c.Select(x => x.id).Prepend(0).ToArray();
-                    JJDCNALMPCI.OICIMMOPFPG = JJDCNALMPCI.ELGGCLPAICP.Length - 1;
+                    UnmappedMenus.ELGGCLPAICP = c.Select(x => x.id).Prepend(0).ToArray();
+                    UnmappedMenus.OICIMMOPFPG = UnmappedMenus.ELGGCLPAICP.Length - 1;
                 }
             }
-            for (int i = 0; i < JJDCNALMPCI.ELGGCLPAICP.Length; i++)
+            for (int i = 0; i < UnmappedMenus.ELGGCLPAICP.Length; i++)
             {
-                JJDCNALMPCI.AHJHELDAAJP[JJDCNALMPCI.ELGGCLPAICP[i]] = i;
+                UnmappedMenus.AHJHELDAAJP[UnmappedMenus.ELGGCLPAICP[i]] = i;
             }
 
-            Characters.fedData[NALFBHCGLGA].size = JJDCNALMPCI.OICIMMOPFPG;
+            Characters.fedData[NALFBHCGLGA].size = UnmappedMenus.OICIMMOPFPG;
             return false;
         }
         return true;
@@ -122,12 +122,12 @@ internal class MenuPatch
 
 
     /*
-     * GameMenus.GBDGLHHCLCI is called when the player opens the editor (including the fed editor)
+     * Menu.GBDGLHHCLCI is called when the player opens the editor (including the fed editor)
      * This patch is used to resize the character editor to fit the roster size if it is larger than 48 (vanilla max)
      */
-    [HarmonyPatch(typeof(GameMenus), nameof(GameMenus.GBDGLHHCLCI))]
+    [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.GBDGLHHCLCI))]
     [HarmonyPrefix]
-    public static void GameMenus_GBDGLHHCLCI(int ACBEHIAKAPB, string IGAPGCFCPKC, ref float FINKCELCANI,
+    public static void Menu_GBDGLHHCLCI(int ACBEHIAKAPB, string IGAPGCFCPKC, ref float FINKCELCANI,
         ref float BIHCCGJAHAB, ref float BALKEOIBHFM, ref float AHGEKIBLHPM)
     {
         try
@@ -195,30 +195,30 @@ internal class MenuPatch
         {
             if (_lastFed == VanillaCounts.NoFeds + 1)
             {
-                if (JJDCNALMPCI.CJGHFHCHDNN == 0)
+                if (UnmappedMenus.CJGHFHCHDNN == 0)
                 {
                     if (Input.inputString != "" && Input.inputString != "\b")
                     {
                         String str = Input.inputString.Replace("\b", "").Replace("\n", "").Replace("\r", "")
                             .Replace("\t", "")
                             .Replace("\0", "");
-                        JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD += str;
-                        _searchString = JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD;
+                        UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD += str;
+                        _searchString = UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD;
                         _searchUpdate = true;
-                        JJDCNALMPCI.GBDGLHHCLCI();
+                        UnmappedMenus.GBDGLHHCLCI();
                         return false;
                     }
 
                     if (Input.inputString == "\b" || Input.GetKeyDown(KeyCode.Delete))
                     {
-                        if (JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD.Length > 0)
+                        if (UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD.Length > 0)
                         {
-                            JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD = JJDCNALMPCI
-                                .ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD.Substring(0,
-                                    JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD.Length - 1);
-                            _searchString = JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD;
+                            UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD = UnmappedMenus
+                                .ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD.Substring(0,
+                                    UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD.Length - 1);
+                            _searchString = UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD;
                             _searchUpdate = true;
-                            JJDCNALMPCI.GBDGLHHCLCI();
+                            UnmappedMenus.GBDGLHHCLCI();
                         }
 
                         return false;
@@ -229,12 +229,12 @@ internal class MenuPatch
                         return _searchString.Length == 0;
                     }
 
-                    __instance.gFed.GetComponent<Image>().sprite = KPJNFJKBCDF.MEHGBLJMPBF[VanillaCounts.NoFeds + 1];
+                    __instance.gFed.GetComponent<Image>().sprite = UnmappedSprites.MEHGBLJMPBF[VanillaCounts.NoFeds + 1];
                 }
                 else
                 {
                     __instance.gFed.GetComponent<Image>().sprite =
-                        KPJNFJKBCDF.MEHGBLJMPBF[Characters.c[Characters.foc].fed];
+                        UnmappedSprites.MEHGBLJMPBF[Characters.c[Characters.foc].fed];
                 }
             }
 
@@ -252,26 +252,26 @@ internal class MenuPatch
         return true;
     }
 
-    [HarmonyPatch(typeof(KPJNFJKBCDF), nameof(KPJNFJKBCDF.IJHBLDHOEOH))]
+    [HarmonyPatch(typeof(UnmappedSprites), nameof(UnmappedSprites.IJHBLDHOEOH))]
     [HarmonyPostfix]
-    public static void KPJNFJKBCDF_IJHBLDHOEOH()
+    public static void UnmappedSprites_IJHBLDHOEOH()
     {
         Characters.no_feds = VanillaCounts.NoFeds;
     }
 
-    [HarmonyPatch(typeof(JJDCNALMPCI), nameof(JJDCNALMPCI.GBDGLHHCLCI))]
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.GBDGLHHCLCI))]
     [HarmonyPostfix]
-    public static void JJDCNALMPCI_GBDGLHHCLCI()
+    public static void UnmappedMenus_GBDGLHHCLCI()
     {
-        if (JJDCNALMPCI.AAAIDOOHBCM == 11 && Characters.fed == VanillaCounts.NoFeds + 1)
+        if (UnmappedMenus.AAAIDOOHBCM == 11 && Characters.fed == VanillaCounts.NoFeds + 1)
         {
-            JJDCNALMPCI.MFDCLFKDDFB();
-            JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].GBDGLHHCLCI(2, "\u200BSearch\u200B", 0, 110, 1, 1);
-            JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].BHAAOLGFAOD = _searchString;
-            JJDCNALMPCI.ECEJOIDPOCN[JJDCNALMPCI.LHEGOJODLAF].DHBIELODIAN = 999999999;
+            UnmappedMenus.MFDCLFKDDFB();
+            UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].GBDGLHHCLCI(2, "\u200BSearch\u200B", 0, 110, 1, 1);
+            UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].BHAAOLGFAOD = _searchString;
+            UnmappedMenus.ECEJOIDPOCN[UnmappedMenus.LHEGOJODLAF].DHBIELODIAN = 999999999;
             if (_searchUpdate)
             {
-                JJDCNALMPCI.CJGHFHCHDNN = 0;
+                UnmappedMenus.CJGHFHCHDNN = 0;
                 _searchUpdate = false;
             }
         }
@@ -281,9 +281,9 @@ internal class MenuPatch
         }
     }
 
-    [HarmonyPatch(typeof(BOAPBLKGGHL), nameof(BOAPBLKGGHL.DLADNAFPGPJ))]
+    [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.DLADNAFPGPJ))]
     [HarmonyPrefix]
-    public static bool BOAPBLKGGHL_DLADNAFPGPJ(ref int __result, BOAPBLKGGHL __instance, float DKOBDIJJOGO, float IBDKLAELPND, float MFCNEPBJODD)
+    public static bool UnmappedMenu_DLADNAFPGPJ(ref int __result, UnmappedMenu __instance, float DKOBDIJJOGO, float IBDKLAELPND, float MFCNEPBJODD)
     {
         if (__instance.CCFHFGBDIHE.Equals("\u200BSearch\u200B"))
         {
@@ -293,25 +293,25 @@ internal class MenuPatch
         return true;
     }
     
-    [HarmonyPatch(typeof(BOAPBLKGGHL), nameof(BOAPBLKGGHL.BKCLHHDGBEC))]
+    [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.BKCLHHDGBEC))]
     [HarmonyPostfix]
-    public static void BOAPBLKGGHL_BKCLHHDGBEC(BOAPBLKGGHL __instance)
+    public static void UnmappedMenu_BKCLHHDGBEC(UnmappedMenu __instance)
     {
-        if (__instance.CCFHFGBDIHE.Equals("\u200BSearch\u200B") && JJDCNALMPCI.CJGHFHCHDNN == 0)
+        if (__instance.CCFHFGBDIHE.Equals("\u200BSearch\u200B") && UnmappedMenus.CJGHFHCHDNN == 0)
         {
-            KPJNFJKBCDF.IJHBLDHOEOH(__instance.FCFPMEDHPML, JJDCNALMPCI.NGDHHIIMOFK.r, JJDCNALMPCI.NGDHHIIMOFK.g, JJDCNALMPCI.NGDHHIIMOFK.b);
-            KPJNFJKBCDF.IJHBLDHOEOH(__instance.ALCICLMKKDB, JJDCNALMPCI.DEOFJPGNMMC.r, JJDCNALMPCI.DEOFJPGNMMC.g, JJDCNALMPCI.DEOFJPGNMMC.b);
+            UnmappedSprites.IJHBLDHOEOH(__instance.FCFPMEDHPML, UnmappedMenus.NGDHHIIMOFK.r, UnmappedMenus.NGDHHIIMOFK.g, UnmappedMenus.NGDHHIIMOFK.b);
+            UnmappedSprites.IJHBLDHOEOH(__instance.ALCICLMKKDB, UnmappedMenus.DEOFJPGNMMC.r, UnmappedMenus.DEOFJPGNMMC.g, UnmappedMenus.DEOFJPGNMMC.b);
             if (__instance.FNIDHNNCLBB == 3)
             {
-                KPJNFJKBCDF.IJHBLDHOEOH(__instance.CBINJLAMDCI, JJDCNALMPCI.DEOFJPGNMMC.r, JJDCNALMPCI.DEOFJPGNMMC.g, JJDCNALMPCI.DEOFJPGNMMC.b);
+                UnmappedSprites.IJHBLDHOEOH(__instance.CBINJLAMDCI, UnmappedMenus.DEOFJPGNMMC.r, UnmappedMenus.DEOFJPGNMMC.g, UnmappedMenus.DEOFJPGNMMC.b);
             }
             if (__instance.KGBFPNENBBP != null)
             {
-                __instance.KGBFPNENBBP.color = new Color(JJDCNALMPCI.EHPPGJOCJJI.r, JJDCNALMPCI.EHPPGJOCJJI.g, JJDCNALMPCI.EHPPGJOCJJI.b, __instance.KGBFPNENBBP.color.a);
+                __instance.KGBFPNENBBP.color = new Color(UnmappedMenus.EHPPGJOCJJI.r, UnmappedMenus.EHPPGJOCJJI.g, UnmappedMenus.EHPPGJOCJJI.b, __instance.KGBFPNENBBP.color.a);
             }
             if (__instance.BPKEDBIMCJG != null)
             {
-                __instance.BPKEDBIMCJG.color = new Color(JJDCNALMPCI.OCHCAGGLEOD.r, JJDCNALMPCI.OCHCAGGLEOD.g, JJDCNALMPCI.OCHCAGGLEOD.b, __instance.BPKEDBIMCJG.color.a);
+                __instance.BPKEDBIMCJG.color = new Color(UnmappedMenus.OCHCAGGLEOD.r, UnmappedMenus.OCHCAGGLEOD.g, UnmappedMenus.OCHCAGGLEOD.b, __instance.BPKEDBIMCJG.color.a);
             }
         }
     }
@@ -320,26 +320,26 @@ internal class MenuPatch
     [HarmonyPostfix]
     public static void Scene_Editor_Update()
     {
-        if (JJDCNALMPCI.PJHNMEEFCME == 1)
+        if (UnmappedMenus.PJHNMEEFCME == 1)
         {
-            DJEKCMMMFJM gMIKIMHFABP = FFKMIEMAJML.FJCOPECCEKN[1];
+            UnmappedPlayer gMIKIMHFABP = FFKMIEMAJML.FJCOPECCEKN[1];
             Character iPNKFGHIDJP = gMIKIMHFABP.LLEGGMCIALJ;
             if (iPNKFGHIDJP.music > VanillaCounts.MusicCount)
             {
                 int index = iPNKFGHIDJP.music - VanillaCounts.MusicCount - 1;
                 string name = CustomClips[index].Name;
-                JJDCNALMPCI.ECEJOIDPOCN[8].BHAAOLGFAOD = name;
+                UnmappedMenus.ECEJOIDPOCN[8].BHAAOLGFAOD = name;
                 
             }
             else if (iPNKFGHIDJP.music == 0)
             {
-                JJDCNALMPCI.ECEJOIDPOCN[8].BHAAOLGFAOD = "None";
+                UnmappedMenus.ECEJOIDPOCN[8].BHAAOLGFAOD = "None";
             }
             else if (CustomClips.Count > 0)
             {
-                JJDCNALMPCI.ECEJOIDPOCN[8].BHAAOLGFAOD = "Vanilla " + iPNKFGHIDJP.music;
+                UnmappedMenus.ECEJOIDPOCN[8].BHAAOLGFAOD = "Vanilla " + iPNKFGHIDJP.music;
             }
-            JJDCNALMPCI.BKCLHHDGBEC();
+            UnmappedMenus.BKCLHHDGBEC();
             
         }
     }
