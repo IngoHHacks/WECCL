@@ -238,7 +238,7 @@ public class WorldPatch
                 }
 
                 UnmappedBlocks.JLJKOBEBPAO++;
-                int peifijckaoc = GameCollision.JLJKOBEBPAO;
+                int peifijckaoc = UnmappedBlocks.JLJKOBEBPAO;
                 UnmappedBlocks.MFDCLFKDDFB();
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].NBAJKICHHFK = 0f;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].BEHMHIINOGM = worldCorners[0].y;
@@ -300,7 +300,7 @@ public class WorldPatch
                 }
               
                 UnmappedBlocks.JLJKOBEBPAO++;
-                int peifijckaoc = GameCollision.JLJKOBEBPAO;
+                int peifijckaoc = UnmappedBlocks.JLJKOBEBPAO;
                 UnmappedBlocks.MFDCLFKDDFB();
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].NBAJKICHHFK = 0f;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].BEHMHIINOGM = worldCorners[0].y;
