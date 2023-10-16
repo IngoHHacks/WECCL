@@ -7,11 +7,11 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class PromoPatch
 {
-    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.NOFIKEFIHFO))]
+    [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.NOFIKEFIHFO))]
     [HarmonyPrefix]
-    public static void GameDialog_NOFIKEFIHFO()
+    public static void Promo_NOFIKEFIHFO()
     {
-        int promoId = GameDialog.JEEDCAOBBKN - 1000000;
+        int promoId = UnmappedPromo.JEEDCAOBBKN - 1000000;
         if (promoId < 0)
         {
             return;
@@ -19,10 +19,10 @@ internal class PromoPatch
 
         PromoData promo = CustomContent.PromoData[promoId];
 
-        int page = GameDialog.NJJPPLCPOIA - 1;
+        int page = UnmappedPromo.NJJPPLCPOIA - 1;
         if (page >= promo.NumLines)
         {
-            GameDialog.JEEDCAOBBKN = 0;
+            UnmappedPromo.JEEDCAOBBKN = 0;
         }
         else
         {
@@ -46,7 +46,7 @@ internal class PromoPatch
             }
         }
 
-        if (GameDialog.AMBGCJOBKFN >= 100f && GameDialog.IIMHNJLHJFM < GameDialog.NJJPPLCPOIA)
+        if (UnmappedPromo.AMBGCJOBKFN >= 100f && UnmappedPromo.IIMHNJLHJFM < UnmappedPromo.NJJPPLCPOIA)
         {
             if (promo.PromoLines[page].Features != null)
             {
@@ -88,12 +88,12 @@ internal class PromoPatch
                         case PromoData.AdvFeatures.CommandType.PlayAudio:
                             if (feature.Args[0] == "-1")
                             {
-                                GameAudio.GNILNDHIFEG(GameDialog.CJGHFHCHDNN, -1, 1f);
+                                UnmappedSound.GNILNDHIFEG(UnmappedPromo.CJGHFHCHDNN, -1, 1f);
                             }
                             else
                             {
-                                GameAudio.IJDAPEMMDJC.PlayOneShot(
-                                    GameAudio.NAGGJJNCEEK[Indices.ParseCrowdAudio(feature.Args[0])], 1);
+                                UnmappedSound.IJDAPEMMDJC.PlayOneShot(
+                                    UnmappedSound.NAGGJJNCEEK[Indices.ParseCrowdAudio(feature.Args[0])], 1);
                             }
 
                             break;
@@ -101,7 +101,7 @@ internal class PromoPatch
                 }
             }
 
-            GameDialog.IIMHNJLHJFM = GameDialog.NJJPPLCPOIA;
+            UnmappedPromo.IIMHNJLHJFM = UnmappedPromo.NJJPPLCPOIA;
         }
     }
     private static void ExecutePromoLine(string line1, string line2, int from, int to, float demeanor, int taunt, bool useNames)
@@ -110,15 +110,15 @@ internal class PromoPatch
         line2 = ReplaceVars(line2);
         if(useNames)
         {
-            GameDialog.GLHDGKIGFLG(from, to, demeanor, taunt);
+            UnmappedPromo.GLHDGKIGFLG(from, to, demeanor, taunt);
         }
         else
         {
-            GameDialog.GLHDGKIGFLG(GameDialog.FMGHIAMFFCJ[from], GameDialog.FMGHIAMFFCJ[to], demeanor, taunt);
+            UnmappedPromo.GLHDGKIGFLG(UnmappedPromo.FMGHIAMFFCJ[from], UnmappedPromo.FMGHIAMFFCJ[to], demeanor, taunt);
         }
 
-        GameDialog.PHAAJGLNMAP[1] = line1;
-        GameDialog.PHAAJGLNMAP[2] = line2;
+        UnmappedPromo.PHAAJGLNMAP[1] = line1;
+        UnmappedPromo.PHAAJGLNMAP[2] = line2;
     }
 
     private static string ReplaceVars(string line)
@@ -134,8 +134,8 @@ internal class PromoPatch
                 string test = "";
                 string varValue = varName switch
                 {
-                    "name" => GameDialog.HGJNAEDAMDO[varIndex].name,
-                    "promotion" => GameDialog.KHDBDEJBIAL[varIndex].name,
+                    "name" => UnmappedPromo.HGJNAEDAMDO[varIndex].name,
+                    "promotion" => UnmappedPromo.KHDBDEJBIAL[varIndex].name,
                     _ => "UNKNOWN"
                 };
 
@@ -159,8 +159,8 @@ internal class PromoPatch
                 int varIndex2 = int.Parse(match.Groups[3].Value);
                 string varValue = varName switch
                 {
-                    "belt" => GameDialog.KHDBDEJBIAL[varIndex1].beltName[varIndex2],
-                    "champ" => Characters.c[GameDialog.KHDBDEJBIAL[varIndex1].champ[varIndex2, 1]]
+                    "belt" => UnmappedPromo.KHDBDEJBIAL[varIndex1].beltName[varIndex2],
+                    "champ" => Characters.c[UnmappedPromo.KHDBDEJBIAL[varIndex1].champ[varIndex2, 1]]
                         .name //1 - current champ, then 2 - previous?
                     ,
                     _ => "UNKNOWN"
@@ -180,7 +180,7 @@ internal class PromoPatch
         {
             string varName = match.Groups[1].Value;
             int varIndex = int.Parse(match.Groups[2].Value);
-            string varValue = GameDialog.HGJNAEDAMDO[varIndex].LCEFDFPALCJ(varName);
+            string varValue = UnmappedPromo.HGJNAEDAMDO[varIndex].LCEFDFPALCJ(varName);
 
             line = line.Replace(match.Value, varValue + match.Groups[3].Value);
         }
@@ -195,17 +195,17 @@ internal class PromoPatch
             return;
         }
 
-        GameDialog.LEKNPAAEBAE++;
-        Array.Resize(ref GameDialog.JDJMBJHKNAB, GameDialog.LEKNPAAEBAE + 1);
-        ResizeArray(ref GameDialog.KIGJPKBDCKK, GameDialog.LEKNPAAEBAE + 1,
+        UnmappedPromo.LEKNPAAEBAE++;
+        Array.Resize(ref UnmappedPromo.JDJMBJHKNAB, UnmappedPromo.LEKNPAAEBAE + 1);
+        ResizeArray(ref UnmappedPromo.KIGJPKBDCKK, UnmappedPromo.LEKNPAAEBAE + 1,
             Math.Max(40, CustomContent.PromoData.Count));
-        Array.Resize(ref GameDialog.OIDMOHCDEHK, GameDialog.LEKNPAAEBAE + 1);
-        GameDialog.OIDMOHCDEHK[GameDialog.LEKNPAAEBAE] = CustomContent.PromoData.Count;
-        GameDialog.JDJMBJHKNAB[GameDialog.LEKNPAAEBAE] = "Custom";
-        GameDialog.KIGJPKBDCKK[GameDialog.LEKNPAAEBAE, 0] = 0;
+        Array.Resize(ref UnmappedPromo.OIDMOHCDEHK, UnmappedPromo.LEKNPAAEBAE + 1);
+        UnmappedPromo.OIDMOHCDEHK[UnmappedPromo.LEKNPAAEBAE] = CustomContent.PromoData.Count;
+        UnmappedPromo.JDJMBJHKNAB[UnmappedPromo.LEKNPAAEBAE] = "Custom";
+        UnmappedPromo.KIGJPKBDCKK[UnmappedPromo.LEKNPAAEBAE, 0] = 0;
         for (int i = 0; i < CustomContent.PromoData.Count; i++)
         {
-            GameDialog.KIGJPKBDCKK[GameDialog.LEKNPAAEBAE, i + 1] = 1000000 + i;
+            UnmappedPromo.KIGJPKBDCKK[UnmappedPromo.LEKNPAAEBAE, i + 1] = 1000000 + i;
         }
     }
 
@@ -225,9 +225,9 @@ internal class PromoPatch
     }
 
 
-    [HarmonyPatch(typeof(GameDialog), nameof(GameDialog.BHFAHIOEPFJ))]
+    [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.BHFAHIOEPFJ))]
     [HarmonyPostfix]
-    public static void GameDialog_BHFAHIOEPFJ(int LPHFJGGHBED)
+    public static void Promo_BHFAHIOEPFJ(int LPHFJGGHBED)
     {
         if (LPHFJGGHBED < 1000000)
         {
@@ -236,30 +236,30 @@ internal class PromoPatch
 
         int index = LPHFJGGHBED - 1000000;
 
-        GameDialog.CCFHFGBDIHE = CustomContent.PromoData[index].Title;
-        GameDialog.EPPMEBCMEMD = CustomContent.PromoData[index].Description;
-        GameDialog.LKEGBIECEGM = CustomContent.PromoData[index].Characters;
+        UnmappedPromo.CCFHFGBDIHE = CustomContent.PromoData[index].Title;
+        UnmappedPromo.EPPMEBCMEMD = CustomContent.PromoData[index].Description;
+        UnmappedPromo.LKEGBIECEGM = CustomContent.PromoData[index].Characters;
     }
 
     [HarmonyPatch(typeof(FFKMIEMAJML), nameof(FFKMIEMAJML.AICCEAHJDCB))]
     [HarmonyPostfix]
     public static void FFKMIEMAJML_AICCEAHJDCB()  //setting up surprises
     {
-        if (PHECEOMIMND.LPHFJGGHBED < 1000000 || JJDCNALMPCI.AAAIDOOHBCM != 50)
+        if (PHECEOMIMND.LPHFJGGHBED < 1000000 || UnmappedMenus.AAAIDOOHBCM != 50)
         {
             return;
         }
         int index = PHECEOMIMND.LPHFJGGHBED - 1000000;
 
-        GameDialog.CCFHFGBDIHE = CustomContent.PromoData[index].Title;
-        GameDialog.EPPMEBCMEMD = CustomContent.PromoData[index].Description;
-        GameDialog.LKEGBIECEGM = CustomContent.PromoData[index].Characters;
+        UnmappedPromo.CCFHFGBDIHE = CustomContent.PromoData[index].Title;
+        UnmappedPromo.EPPMEBCMEMD = CustomContent.PromoData[index].Description;
+        UnmappedPromo.LKEGBIECEGM = CustomContent.PromoData[index].Characters;
 
         CustomContent.PromoData[index].NameToID = new();
         CustomContent.PromoData[index].SurpirseExtras = new();
         for (int i = 1; i < FFKMIEMAJML.FJCOPECCEKN.Length; i++)
         {
-            DJEKCMMMFJM person = FFKMIEMAJML.FJCOPECCEKN[i];
+            UnmappedPlayer person = FFKMIEMAJML.FJCOPECCEKN[i];
             if (CustomContent.PromoData[index].UseCharacterNames)
             {
                 CustomContent.PromoData[index].NameToID.Add(person.LLEGGMCIALJ.name, i);
@@ -277,14 +277,14 @@ internal class PromoPatch
         }
     }
   
-    public static void RespawnSurprise(DJEKCMMMFJM __instance)
+    public static void RespawnSurprise(UnmappedPlayer __instance)
     {
             __instance.FKPIGOJCEAK = -1;  //setting surprise entrants
             ILPOGGNCJEN diaocefccae;
             int num2;
             do
             {
-                diaocefccae = LFDENAEGJBJ.JNBNDGANKDE[LFNJDEGJLLJ.NBNFJOFFMHO(1, LFDENAEGJBJ.IGLHKCAMDKO, 0)]; //resetting their spawns in case they spawn in ring
+                diaocefccae = UnmappedBlocks.JNBNDGANKDE[UnmappedGlobals.NBNFJOFFMHO(1, UnmappedBlocks.IGLHKCAMDKO, 0)]; //resetting their spawns in case they spawn in ring
                 num2 = 1;
                 if (World.location == 9 && diaocefccae.NCHCAJDNMKK() > 50f)
                 {
@@ -300,7 +300,7 @@ internal class PromoPatch
             __instance.FFEONFCEHDF = diaocefccae.NCHCAJDNMKK();
             __instance.PDEGHHLLFDG = diaocefccae.NAMDOACBNED;
             __instance.DOOCGGBPAFM = World.JMFAKOLINLF(__instance.DCLLKPILCBP, __instance.BEHMHIINOGM, __instance.FFEONFCEHDF);
-            if (LFDENAEGJBJ.LLAGNIPIDOO(__instance.DCLLKPILCBP, __instance.FFEONFCEHDF, 0f) > 0)
+            if (UnmappedBlocks.LLAGNIPIDOO(__instance.DCLLKPILCBP, __instance.FFEONFCEHDF, 0f) > 0)
             {
                 __instance.DOOCGGBPAFM = World.ringGround;
             }
@@ -313,7 +313,7 @@ internal class PromoPatch
             __instance.OOPKPKCHBEN[0].SetActive(false);
             __instance.FPELIOPLHFE.SetActive(false);
     }
-    public static void RespawnTogetherWith(DJEKCMMMFJM manager, DJEKCMMMFJM wrestler)
+    public static void RespawnTogetherWith(UnmappedPlayer manager, UnmappedPlayer wrestler)
     {
         manager.FKPIGOJCEAK = -1;
         manager.FCKMCPMNLJM = 0;
@@ -331,7 +331,7 @@ internal class PromoPatch
     [HarmonyPostfix]
     public static void PHECEOMIMND_MPPIMFNMGJK(string BEBDCBJKINE, string BLMNLKOPMBJ = "", string FMEMPJHPGKL = "")  //mimicking "Guest Partner" promo behaviour to hide the names
     {
-        if (Mathf.Abs(PHECEOMIMND.LPHFJGGHBED) < 1000000 || JJDCNALMPCI.AAAIDOOHBCM != 50 || PHECEOMIMND.IINDGFPADFM <= 0 || PHECEOMIMND.KGFJGDMFNLL == 0)
+        if (Mathf.Abs(PHECEOMIMND.LPHFJGGHBED) < 1000000 || UnmappedMenus.AAAIDOOHBCM != 50 || PHECEOMIMND.IINDGFPADFM <= 0 || PHECEOMIMND.KGFJGDMFNLL == 0)
         {
             return;
         }
@@ -340,7 +340,7 @@ internal class PromoPatch
         {
             return;
         }
-        DJEKCMMMFJM character = FFKMIEMAJML.FJCOPECCEKN[PHECEOMIMND.KGFJGDMFNLL];
+        UnmappedPlayer character = FFKMIEMAJML.FJCOPECCEKN[PHECEOMIMND.KGFJGDMFNLL];
         int num = character.LLEGGMCIALJ.KDKGBDLCHLJ(0);
         PHECEOMIMND.OFANDPIMPNA[2].text = character.LLEGGMCIALJ.name;
         if (num > 0)
@@ -408,7 +408,7 @@ internal class PromoPatch
                     CustomContent.PromoData[next].NameToID = new();
                     for (int i = 1; i < FFKMIEMAJML.FJCOPECCEKN.Length; i++)
                     {
-                        DJEKCMMMFJM person = FFKMIEMAJML.FJCOPECCEKN[i];
+                        UnmappedPlayer person = FFKMIEMAJML.FJCOPECCEKN[i];
 
                         CustomContent.PromoData[next].NameToID.Add(person.LLEGGMCIALJ.name, i);
                     }

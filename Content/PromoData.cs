@@ -175,7 +175,7 @@ public class PromoData
             return null;
         }
     }
-    public bool IsCharacterSurprise(DJEKCMMMFJM character)
+    public bool IsCharacterSurprise(UnmappedPlayer character)
     {
         if (UseCharacterNames && SurpriseEntrantsNames.Contains(character.LLEGGMCIALJ.name))
         {
@@ -227,7 +227,7 @@ public class PromoData
             }
             return FFKMIEMAJML.FJCOPECCEKN[0].LLEGGMCIALJ;
         }
-        return GameDialog.HGJNAEDAMDO[int.Parse(arg)];
+        return UnmappedPromo.HGJNAEDAMDO[int.Parse(arg)];
     }
 
     public static PromoData CreatePromo(string file)

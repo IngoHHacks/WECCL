@@ -1,3 +1,5 @@
+using WECCL.Content;
+
 namespace WECCL;
 
 public static class Locations
@@ -10,6 +12,7 @@ public static class Locations
     public static DirectoryInfo Cache { get; } = new(Path.Combine(Plugin.PersistentDataPath, ".cache"));
     public static DirectoryInfo Debug { get; } = new(Path.Combine(Plugin.PluginPath, "Debug"));
 
+    public static DirectoryInfo WECCL { get; } = new(Path.Combine(Plugin.PluginPath, "WECCL"));
     public static DirectoryInfo Meta { get; } = new(Path.Combine(Plugin.PersistentDataPath, "Meta.meta"));
 
     public static DirectoryInfo ContentMappings { get; } =
@@ -40,6 +43,13 @@ public static class Locations
     internal static void MoveLegacyLocations()
     {
         LegacyLocations.MoveLegacyLocations();
+    }
+
+    public static void LoadWECCL()
+    {
+        var animationController = AssetBundle.LoadFromFile(Path.Combine(WECCL.FullName, "animationcontroller")).LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault();
+        if (animationController == null) throw new Exception("Failed to load WECCL animation controller");
+        AO.AnimationController = animationController;
     }
 }
 

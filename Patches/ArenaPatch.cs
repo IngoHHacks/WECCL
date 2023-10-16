@@ -163,8 +163,8 @@ public class ArenaPatch
         }
     }
 
-    [HarmonyPatch(typeof(LFDENAEGJBJ))]
-    public static class LFDENAEGJBJPatch
+    [HarmonyPatch(typeof(UnmappedBlocks))]
+    public static class UnmappedBlocksPatch
     {
         [HarmonyPrefix]
         [HarmonyPatch("AOKBJAAKFKD")]
@@ -424,7 +424,7 @@ public class ArenaPatch
         {
             if (World.location > VanillaCounts.NoLocations)
             {
-                int num4 = LFNJDEGJLLJ.NBNFJOFFMHO(1, 6);
+                int num4 = UnmappedGlobals.NBNFJOFFMHO(1, 6);
                 int num5;
                 Transform[] signTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
                 int count = 0;
@@ -447,7 +447,7 @@ public class ArenaPatch
                     }
 
                     int num6 = 0;
-                    if (LFNJDEGJLLJ.OOGBIHFJOIH > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
+                    if (UnmappedGlobals.OOGBIHFJOIH > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
                     {
                         if ((i <= 18 && World.crowdSize >= 0.25f) || World.crowdSize >= 0.6f)
                         {
@@ -459,8 +459,8 @@ public class ArenaPatch
                             num6 = 0;
                         }
 
-                        if (JJDCNALMPCI.AAAIDOOHBCM == 50 && LFNJDEGJLLJ.OOGBIHFJOIH == 1 &&
-                            LFNJDEGJLLJ.NBNFJOFFMHO(0, 1) == 0)
+                        if (UnmappedMenus.AAAIDOOHBCM == 50 && UnmappedGlobals.OOGBIHFJOIH == 1 &&
+                            UnmappedGlobals.NBNFJOFFMHO(0, 1) == 0)
                         {
                             num6 = 0;
                         }
@@ -469,18 +469,18 @@ public class ArenaPatch
                     if (num6 > 0)
                     {
                         transform4.gameObject.SetActive(true);
-                        if (JJDCNALMPCI.AAAIDOOHBCM == 50 && EALGGMEGJNL == 0)
+                        if (UnmappedMenus.AAAIDOOHBCM == 50 && EALGGMEGJNL == 0)
                         {
-                            if (LFNJDEGJLLJ.OOGBIHFJOIH >= 2)
+                            if (UnmappedGlobals.OOGBIHFJOIH >= 2)
                             {
-                                num4 = LFNJDEGJLLJ.NBNFJOFFMHO(1, 6);
+                                num4 = UnmappedGlobals.NBNFJOFFMHO(1, 6);
                             }
 
                             transform4.gameObject.GetComponent<Renderer>().sharedMaterial =
-                                LAHFDHJJGKH.IHAPGLGAILI[num4];
+                                UnmappedTextures.IHAPGLGAILI[num4];
                         }
                     }
-                    else if (JJDCNALMPCI.AAAIDOOHBCM == 50)
+                    else if (UnmappedMenus.AAAIDOOHBCM == 50)
                     {
                         Object.Destroy(transform4.gameObject);
                     }
@@ -492,14 +492,14 @@ public class ArenaPatch
             }
         }
 
-        [HarmonyPatch(typeof(DJEKCMMMFJM))]
-        public static class DJEKCMMMFJMPatch
+        [HarmonyPatch(typeof(UnmappedPlayer))]
+        public static class UnmappedPlayerPatch
         {
             public static int storedValue;
 
             [HarmonyPrefix]
             [HarmonyPatch("PAOEHLEJKIJ")]
-            public static void PAOEHLEJKIJPatch(DJEKCMMMFJM __instance)
+            public static void PAOEHLEJKIJPatch(UnmappedPlayer __instance)
             {
                 if (freezeAnnouncers)
                 {
@@ -513,7 +513,7 @@ public class ArenaPatch
 
             [HarmonyPostfix]
             [HarmonyPatch("PAOEHLEJKIJ")]
-            public static void PAOEHLEJKIJPostPatch(DJEKCMMMFJM __instance)
+            public static void PAOEHLEJKIJPostPatch(UnmappedPlayer __instance)
             {
                 if (freezeAnnouncers)
                 {
@@ -796,7 +796,7 @@ public class ArenaPatch
 
                     World.MFACINIEEPI();
                     World.AOECADAKFHI();
-                    if (LFNJDEGJLLJ.NHDABIOCLFH > 0)
+                    if (UnmappedGlobals.NHDABIOCLFH > 0)
                     {
                         Progress.arenaFog = World.fog;
                     }
@@ -843,7 +843,6 @@ public class ArenaPatch
             }
         }
     }
-
     [HarmonyPatch(typeof(ILPOGGNCJEN))]
     public static class ILPOGGNCJENPrePatch
     {
@@ -870,8 +869,8 @@ public class ArenaPatch
         }
     }
 
-    [HarmonyPatch(typeof(DJEKCMMMFJM))]
-    public static class DJEKCMMMFJMPrePatch
+    [HarmonyPatch(typeof(UnmappedPlayer))]
+    public static class UnmappedPlayerPrePatch
     {
         private static int stored_FJPJNBKADDJ;
         private static bool ifStatementOnePassed;
@@ -879,7 +878,7 @@ public class ArenaPatch
         
         [HarmonyPrefix]
         [HarmonyPatch("LDFLNBABOOK")]
-        public static void LDFLNBABOOKPrePatch(DJEKCMMMFJM __instance)
+        public static void LDFLNBABOOKPrePatch(UnmappedPlayer __instance)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -895,7 +894,7 @@ public class ArenaPatch
                         __instance.DCLLKPILCBP < World.farEast && __instance.FFEONFCEHDF > World.farSouth &&
                         __instance.FFEONFCEHDF < World.farNorth &&
                         __instance.HIMOPKGMFKO(__instance.DCLLKPILCBP, __instance.BEHMHIINOGM, __instance.FFEONFCEHDF) >
-                        0 && (LFDENAEGJBJ.JDJPKOBBNLG(__instance.DCLLKPILCBP, __instance.FFEONFCEHDF) > 0 ||
+                        0 && (UnmappedBlocks.JDJPKOBBNLG(__instance.DCLLKPILCBP, __instance.FFEONFCEHDF) > 0 ||
                               World.arenaShape * World.arenaBarriers == 0))
                     {
                         ifStatementOnePassed = true;
@@ -906,7 +905,7 @@ public class ArenaPatch
                     }
 
                     if (PHECEOMIMND.IPAFPBPKIKP == 1 && PHECEOMIMND.KGFJGDMFNLL == __instance.DHBIELODIAN &&
-                        World.arenaShape > 0 && LFNJDEGJLLJ.FJPJNBKADDJ > 0)
+                        World.arenaShape > 0 && UnmappedGlobals.FJPJNBKADDJ > 0)
                     {
                         ifStatementTwoPassed = true;
                     }
@@ -916,21 +915,21 @@ public class ArenaPatch
                     }
 
                     //Set this to zero to stop original pyro from going off
-                    stored_FJPJNBKADDJ = LFNJDEGJLLJ.FJPJNBKADDJ;
+                    stored_FJPJNBKADDJ = UnmappedGlobals.FJPJNBKADDJ;
                     
-                    LFNJDEGJLLJ.FJPJNBKADDJ = 0;
+                    UnmappedGlobals.FJPJNBKADDJ = 0;
                 }
             }
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("LDFLNBABOOK")]
-        public static void LDFLNBABOOKPostPatch(DJEKCMMMFJM __instance)
+        public static void LDFLNBABOOKPostPatch(UnmappedPlayer __instance)
         {
             //Set GFEDPBPDALB.AFJDBIAFGKE back at postfix
             if (stored_FJPJNBKADDJ != 0)
             {
-                LFNJDEGJLLJ.FJPJNBKADDJ = stored_FJPJNBKADDJ;
+                UnmappedGlobals.FJPJNBKADDJ = stored_FJPJNBKADDJ;
             }
 
             if (ifStatementOnePassed)
@@ -960,7 +959,7 @@ public class ArenaPatch
 
                         if (__instance.LLEGGMCIALJ.pyro == 3 || __instance.LLEGGMCIALJ.pyro < 0)
                         {
-                            IKPECOJMCAB.OBLNONIKENE(__instance.MLDLMDCFHOM, IKPECOJMCAB.BBLGKPMJOBA, -0.1f);
+                            UnmappedSound.OBLNONIKENE(__instance.MLDLMDCFHOM, UnmappedSound.BBLGKPMJOBA, -0.1f);
                             CLJNCLLMLAO.GDIEKCLACCI(91, Color.white, 8f, null, 0f, newPyroPosition.y + 7f,
                                 newPyroPosition.z, 180f, 0.2f);
                         }
@@ -1072,7 +1071,7 @@ public class ArenaPatch
                 if (weaponName == "Random")
                 {
                     rotationX = 0f;
-                    __instance.NAMDOACBNED = LFNJDEGJLLJ.NBNFJOFFMHO(0, 359);
+                    __instance.NAMDOACBNED = UnmappedGlobals.NBNFJOFFMHO(0, 359);
                     rotationZ = 0f;
                 }
 
