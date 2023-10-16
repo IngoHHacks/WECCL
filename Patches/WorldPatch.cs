@@ -7,7 +7,7 @@ namespace WECCL.Patches;
 public class WorldPatch
 {
     private static int _tempLocation = -999;
-
+    private static bool checkedArenaRotation;
     private static readonly LimitedDictionary<string, float> _raycastCache = new(1000);
 
     [HarmonyPatch(typeof(World), nameof(World.GBDGLHHCLCI))]
@@ -238,21 +238,36 @@ public class WorldPatch
                 }
 
                 UnmappedBlocks.JLJKOBEBPAO++;
-                int peifijckaoc = UnmappedBlocks.JLJKOBEBPAO;
+                int peifijckaoc = GameCollision.JLJKOBEBPAO;
                 UnmappedBlocks.MFDCLFKDDFB();
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].NBAJKICHHFK = 0f;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].BEHMHIINOGM = worldCorners[0].y;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].PKAAALALAKD = worldCorners[1].y - worldCorners[0].y;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].ACPDNMBGGLI = 1;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].JOKKOGKMHLN = "Barrier";
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[1] = worldCorners[4].x + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[1] = worldCorners[4].z + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[4] = worldCorners[7].x - 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[4] = worldCorners[7].z + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[3] = worldCorners[3].x - 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[3] = worldCorners[3].z - 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[2] = worldCorners[0].x + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[2] = worldCorners[0].z - 2.5f;
+                GameObject arenaObject = GetTopLevelParent(gameObject);
+                if (arenaObject.transform.rotation == Quaternion.Euler(0f, 180f, 0f))
+                {
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[1] = worldCorners[4].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[1] = worldCorners[4].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[4] = worldCorners[7].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[4] = worldCorners[7].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[3] = worldCorners[3].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[3] = worldCorners[3].z - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[2] = worldCorners[0].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[2] = worldCorners[0].z - 2.5f;
+                }
+                else
+                {
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[1] = worldCorners[3].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[1] = worldCorners[3].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[4] = worldCorners[0].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[4] = worldCorners[0].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[3] = worldCorners[4].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[3] = worldCorners[4].z - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[2] = worldCorners[7].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[2] = worldCorners[7].z - 2.5f;
+                }
             }
 
             foreach (GameObject gameObject in (from t in World.gArena.GetComponentsInChildren<Transform>()
@@ -283,23 +298,38 @@ public class WorldPatch
                 {
                     worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
                 }
-
+              
                 UnmappedBlocks.JLJKOBEBPAO++;
-                int peifijckaoc = UnmappedBlocks.JLJKOBEBPAO;
+                int peifijckaoc = GameCollision.JLJKOBEBPAO;
                 UnmappedBlocks.MFDCLFKDDFB();
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].NBAJKICHHFK = 0f;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].BEHMHIINOGM = worldCorners[0].y;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].PKAAALALAKD = worldCorners[1].y - worldCorners[0].y;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].ACPDNMBGGLI = 1;
                 UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].JOKKOGKMHLN = "Cage";
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[1] = worldCorners[4].x + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[1] = worldCorners[4].z + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[4] = worldCorners[7].x - 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[4] = worldCorners[7].z + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[3] = worldCorners[3].x - 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[3] = worldCorners[3].z - 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[2] = worldCorners[0].x + 2.5f;
-                UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[2] = worldCorners[0].z - 2.5f;
+                GameObject arenaObject = GetTopLevelParent(gameObject);
+                if (arenaObject.transform.rotation == Quaternion.Euler(0f, 180f, 0f))
+                {
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[1] = worldCorners[4].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[1] = worldCorners[4].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[4] = worldCorners[7].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[4] = worldCorners[7].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[3] = worldCorners[3].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[3] = worldCorners[3].z - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[2] = worldCorners[0].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[2] = worldCorners[0].z - 2.5f;
+                }
+                else
+                {
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[1] = worldCorners[3].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[1] = worldCorners[3].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[4] = worldCorners[0].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[4] = worldCorners[0].z + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[3] = worldCorners[4].x - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[3] = worldCorners[4].z - 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].LABFAOEKOBM[2] = worldCorners[7].x + 2.5f;
+                    UnmappedBlocks.BBAOMBAGGBC[peifijckaoc].HBFKOOEPFLH[2] = worldCorners[7].z - 2.5f;
+                }
             }
 
             for (UnmappedBlocks.JLJKOBEBPAO = last + 1;
@@ -495,6 +525,20 @@ public class WorldPatch
                 }
             }
         }
+    }
+
+    public static GameObject GetTopLevelParent(GameObject childObject)
+    {
+        Transform currentTransform = childObject.transform;
+
+        // Traverse up the hierarchy until there's no parent
+        while (currentTransform.parent != null)
+        {
+            currentTransform = currentTransform.parent;
+        }
+
+        // Return the top-level parent GameObject
+        return currentTransform.gameObject;
     }
 
     private static void DrawCube(Transform parent, float[] x4, float yLow, float yHigh, float[] z4, Color color)
