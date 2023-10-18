@@ -1,18 +1,18 @@
 // Global using directives
 
-global using UnmappedSaveData = CGDFANINCGL;
-global using UnmappedGlobals = LFNJDEGJLLJ;
-global using UnmappedTextures = LAHFDHJJGKH;
-global using UnmappedMenu = BOAPBLKGGHL;
-global using UnmappedPlayer = DJEKCMMMFJM;
-global using UnmappedPromo = FMHJNNGPMKG;
-global using UnmappedSound = IKPECOJMCAB;
-global using UnmappedMenus = JJDCNALMPCI;
-global using UnmappedSprites = KPJNFJKBCDF;
-global using UnmappedControls = MFCAJFKKFFE;
-global using UnmappedKeyboard = BCJPMAHPHEP;
-global using UnmappedBlocks = LFDENAEGJBJ;
-global using UnmappedAnims = BCKHHMIMAEN;
+global using UnmappedSaveData = GLPGLJAJJOP;
+global using UnmappedGlobals = NAEEIFNFBBO;
+global using UnmappedTextures = PFKAPGFJKHH;
+global using UnmappedMenu = AKFIIKOMPLL;
+global using UnmappedPlayer = DFOGOCNBECG;
+global using UnmappedPromo = NEGAFEHECNL;
+global using UnmappedSound = CHLPMKEGJBJ;
+global using UnmappedMenus = LIPNHOMGGHF;
+global using UnmappedSprites = MCDCDEBALPI;
+global using UnmappedControls = HKJOAJOKOIJ;
+global using UnmappedKeyboard = MOIHOCAMOOE;
+global using UnmappedBlocks = GIMNNPMAKNJ;
+global using UnmappedAnims = MBLIOKEDHHB;
 global using HarmonyLib;
 global using System;
 global using System.Collections.Generic;

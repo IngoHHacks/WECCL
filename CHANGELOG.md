@@ -1,5 +1,12 @@
 # Changelog
 
+## GV 1.60:
+
+### Release 1.6.0
+- UPDATE TO GAME VERSION 1.60
+- Added door logic to custom arenas.
+- Improved fence/barrier logic for custom arenas.
+
 ## GV 1.59:
 
 ### Release 1.5.0

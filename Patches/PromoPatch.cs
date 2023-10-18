@@ -7,11 +7,11 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class PromoPatch
 {
-    [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.NOFIKEFIHFO))]
+    [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.KMFBNADPGMF))]
     [HarmonyPrefix]
-    public static void Promo_NOFIKEFIHFO()
+    public static void Promo_KMFBNADPGMF()
     {
-        int promoId = UnmappedPromo.JEEDCAOBBKN - 1000000;
+        int promoId = UnmappedPromo.LODPJDDLEKI - 1000000;
         if (promoId < 0)
         {
             return;
@@ -19,10 +19,10 @@ internal class PromoPatch
 
         PromoData promo = CustomContent.PromoData[promoId];
 
-        int page = UnmappedPromo.NJJPPLCPOIA - 1;
+        int page = UnmappedPromo.ODOAPLMOJPD - 1;
         if (page >= promo.NumLines)
         {
-            UnmappedPromo.JEEDCAOBBKN = 0;
+            UnmappedPromo.LODPJDDLEKI = 0;
         }
         else
         {
@@ -46,7 +46,7 @@ internal class PromoPatch
             }
         }
 
-        if (UnmappedPromo.AMBGCJOBKFN >= 100f && UnmappedPromo.IIMHNJLHJFM < UnmappedPromo.NJJPPLCPOIA)
+        if (UnmappedPromo.IMJHCHECCED >= 100f && UnmappedPromo.KJPJODMIPGO < UnmappedPromo.ODOAPLMOJPD)
         {
             if (promo.PromoLines[page].Features != null)
             {
@@ -56,44 +56,44 @@ internal class PromoPatch
                     switch (cmd)
                     {
                         case PromoData.AdvFeatures.CommandType.SetFace:
-                            promo.GetCharacterForCmd(feature.Args[0]).ICONKAPNPGL(0);
+                            promo.GetCharacterForCmd(feature.Args[0]).MFICBPFFDLC(0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetHeel:
-                            promo.GetCharacterForCmd(feature.Args[0]).ICONKAPNPGL(-1);
+                            promo.GetCharacterForCmd(feature.Args[0]).MFICBPFFDLC(-1);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetRealEnemy:
                             promo.GetCharacterForCmd(feature.Args[0])
-                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, -1, 0);
+                                .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, -1, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetStoryEnemy:
                             promo.GetCharacterForCmd(feature.Args[0])
-                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, -1);
+                                .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, -1);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetRealFriend:
                             promo.GetCharacterForCmd(feature.Args[0])
-                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 1, 0);
+                                .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 1, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetStoryFriend:
                             promo.GetCharacterForCmd(feature.Args[0])
-                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 1);
+                                .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 1);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetRealNeutral:
                             promo.GetCharacterForCmd(feature.Args[0])
-                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 0, 0);
+                                .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 0, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.SetStoryNeutral:
                             promo.GetCharacterForCmd(feature.Args[0])
-                                .EGHFNFMHOIL(promo.GetCharacterForCmd(feature.Args[1]).id, 0);
+                                .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 0);
                             break;
                         case PromoData.AdvFeatures.CommandType.PlayAudio:
                             if (feature.Args[0] == "-1")
                             {
-                                UnmappedSound.GNILNDHIFEG(UnmappedPromo.CJGHFHCHDNN, -1, 1f);
+                                UnmappedSound.KIKKPCJGDLM(UnmappedPromo.NNMDEFLLNBF, -1, 1f);
                             }
                             else
                             {
-                                UnmappedSound.IJDAPEMMDJC.PlayOneShot(
-                                    UnmappedSound.NAGGJJNCEEK[Indices.ParseCrowdAudio(feature.Args[0])], 1);
+                                UnmappedSound.AFLOJPBKNFB.PlayOneShot(
+                                    UnmappedSound.JOPLJHCBICG[Indices.ParseCrowdAudio(feature.Args[0])], 1);
                             }
 
                             break;
@@ -101,7 +101,7 @@ internal class PromoPatch
                 }
             }
 
-            UnmappedPromo.IIMHNJLHJFM = UnmappedPromo.NJJPPLCPOIA;
+            UnmappedPromo.KJPJODMIPGO = UnmappedPromo.ODOAPLMOJPD;
         }
     }
     private static void ExecutePromoLine(string line1, string line2, int from, int to, float demeanor, int taunt, bool useNames)
@@ -110,15 +110,15 @@ internal class PromoPatch
         line2 = ReplaceVars(line2);
         if(useNames)
         {
-            UnmappedPromo.GLHDGKIGFLG(from, to, demeanor, taunt);
+            UnmappedPromo.LIHAMAIBHFN(from, to, demeanor, taunt);
         }
         else
         {
-            UnmappedPromo.GLHDGKIGFLG(UnmappedPromo.FMGHIAMFFCJ[from], UnmappedPromo.FMGHIAMFFCJ[to], demeanor, taunt);
+            UnmappedPromo.LIHAMAIBHFN(UnmappedPromo.ACELMDKGHEK[from], UnmappedPromo.ACELMDKGHEK[to], demeanor, taunt);
         }
 
-        UnmappedPromo.PHAAJGLNMAP[1] = line1;
-        UnmappedPromo.PHAAJGLNMAP[2] = line2;
+        UnmappedPromo.MLLPFEKAONO[1] = line1;
+        UnmappedPromo.MLLPFEKAONO[2] = line2;
     }
 
     private static string ReplaceVars(string line)
@@ -134,8 +134,8 @@ internal class PromoPatch
                 string test = "";
                 string varValue = varName switch
                 {
-                    "name" => UnmappedPromo.HGJNAEDAMDO[varIndex].name,
-                    "promotion" => UnmappedPromo.KHDBDEJBIAL[varIndex].name,
+                    "name" => UnmappedPromo.BBPPMGDKCBJ[varIndex].name,
+                    "promotion" => UnmappedPromo.ANMBLMKJLFI[varIndex].name,
                     _ => "UNKNOWN"
                 };
 
@@ -159,8 +159,8 @@ internal class PromoPatch
                 int varIndex2 = int.Parse(match.Groups[3].Value);
                 string varValue = varName switch
                 {
-                    "belt" => UnmappedPromo.KHDBDEJBIAL[varIndex1].beltName[varIndex2],
-                    "champ" => Characters.c[UnmappedPromo.KHDBDEJBIAL[varIndex1].champ[varIndex2, 1]]
+                    "belt" => UnmappedPromo.ANMBLMKJLFI[varIndex1].beltName[varIndex2],
+                    "champ" => Characters.c[UnmappedPromo.ANMBLMKJLFI[varIndex1].champ[varIndex2, 1]]
                         .name //1 - current champ, then 2 - previous?
                     ,
                     _ => "UNKNOWN"
@@ -180,7 +180,7 @@ internal class PromoPatch
         {
             string varName = match.Groups[1].Value;
             int varIndex = int.Parse(match.Groups[2].Value);
-            string varValue = UnmappedPromo.HGJNAEDAMDO[varIndex].LCEFDFPALCJ(varName);
+            string varValue = UnmappedPromo.BBPPMGDKCBJ[varIndex].POOMHHMDABP(varName);
 
             line = line.Replace(match.Value, varValue + match.Groups[3].Value);
         }
@@ -195,17 +195,17 @@ internal class PromoPatch
             return;
         }
 
-        UnmappedPromo.LEKNPAAEBAE++;
-        Array.Resize(ref UnmappedPromo.JDJMBJHKNAB, UnmappedPromo.LEKNPAAEBAE + 1);
-        ResizeArray(ref UnmappedPromo.KIGJPKBDCKK, UnmappedPromo.LEKNPAAEBAE + 1,
+        UnmappedPromo.LOKLOANCDPO++;
+        Array.Resize(ref UnmappedPromo.ALPFKHEBGII, UnmappedPromo.LOKLOANCDPO + 1);
+        ResizeArray(ref UnmappedPromo.KIDIEPFFPOO, UnmappedPromo.LOKLOANCDPO + 1,
             Math.Max(40, CustomContent.PromoData.Count));
-        Array.Resize(ref UnmappedPromo.OIDMOHCDEHK, UnmappedPromo.LEKNPAAEBAE + 1);
-        UnmappedPromo.OIDMOHCDEHK[UnmappedPromo.LEKNPAAEBAE] = CustomContent.PromoData.Count;
-        UnmappedPromo.JDJMBJHKNAB[UnmappedPromo.LEKNPAAEBAE] = "Custom";
-        UnmappedPromo.KIGJPKBDCKK[UnmappedPromo.LEKNPAAEBAE, 0] = 0;
+        Array.Resize(ref UnmappedPromo.FNMHOMDBCJE, UnmappedPromo.LOKLOANCDPO + 1);
+        UnmappedPromo.FNMHOMDBCJE[UnmappedPromo.LOKLOANCDPO] = CustomContent.PromoData.Count;
+        UnmappedPromo.ALPFKHEBGII[UnmappedPromo.LOKLOANCDPO] = "Custom";
+        UnmappedPromo.KIDIEPFFPOO[UnmappedPromo.LOKLOANCDPO, 0] = 0;
         for (int i = 0; i < CustomContent.PromoData.Count; i++)
         {
-            UnmappedPromo.KIGJPKBDCKK[UnmappedPromo.LEKNPAAEBAE, i + 1] = 1000000 + i;
+            UnmappedPromo.KIDIEPFFPOO[UnmappedPromo.LOKLOANCDPO, i + 1] = 1000000 + i;
         }
     }
 
@@ -225,140 +225,140 @@ internal class PromoPatch
     }
 
 
-    [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.BHFAHIOEPFJ))]
+    [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.GGCFFJNAKFM))]
     [HarmonyPostfix]
-    public static void Promo_BHFAHIOEPFJ(int LPHFJGGHBED)
+    public static void Promo_GGCFFJNAKFM(int NJPKCMBLMLG)
     {
-        if (LPHFJGGHBED < 1000000)
+        if (NJPKCMBLMLG < 1000000)
         {
             return;
         }
 
-        int index = LPHFJGGHBED - 1000000;
+        int index = NJPKCMBLMLG - 1000000;
 
-        UnmappedPromo.CCFHFGBDIHE = CustomContent.PromoData[index].Title;
-        UnmappedPromo.EPPMEBCMEMD = CustomContent.PromoData[index].Description;
-        UnmappedPromo.LKEGBIECEGM = CustomContent.PromoData[index].Characters;
+        UnmappedPromo.NKEDCLBOOMJ = CustomContent.PromoData[index].Title;
+        UnmappedPromo.OLHNMPPACFE = CustomContent.PromoData[index].Description;
+        UnmappedPromo.JPOHPEOOIMK = CustomContent.PromoData[index].Characters;
     }
 
-    [HarmonyPatch(typeof(FFKMIEMAJML), nameof(FFKMIEMAJML.AICCEAHJDCB))]
+    [HarmonyPatch(typeof(NJBJIIIACEP), nameof(NJBJIIIACEP.BGIDMGILIEG))]
     [HarmonyPostfix]
-    public static void FFKMIEMAJML_AICCEAHJDCB()  //setting up surprises
+    public static void NJBJIIIACEP_BGIDMGILIEG()  //setting up surprises
     {
-        if (PHECEOMIMND.LPHFJGGHBED < 1000000 || UnmappedMenus.AAAIDOOHBCM != 50)
+        if (FFCEGMEAIBP.NJPKCMBLMLG < 1000000 || UnmappedMenus.FAKHAFKOBPB != 50)
         {
             return;
         }
-        int index = PHECEOMIMND.LPHFJGGHBED - 1000000;
+        int index = FFCEGMEAIBP.NJPKCMBLMLG - 1000000;
 
-        UnmappedPromo.CCFHFGBDIHE = CustomContent.PromoData[index].Title;
-        UnmappedPromo.EPPMEBCMEMD = CustomContent.PromoData[index].Description;
-        UnmappedPromo.LKEGBIECEGM = CustomContent.PromoData[index].Characters;
+        UnmappedPromo.NKEDCLBOOMJ = CustomContent.PromoData[index].Title;
+        UnmappedPromo.OLHNMPPACFE = CustomContent.PromoData[index].Description;
+        UnmappedPromo.JPOHPEOOIMK = CustomContent.PromoData[index].Characters;
 
         CustomContent.PromoData[index].NameToID = new();
         CustomContent.PromoData[index].SurpirseExtras = new();
-        for (int i = 1; i < FFKMIEMAJML.FJCOPECCEKN.Length; i++)
+        for (int i = 1; i < NJBJIIIACEP.OAAMGFLINOB.Length; i++)
         {
-            UnmappedPlayer person = FFKMIEMAJML.FJCOPECCEKN[i];
+            UnmappedPlayer person = NJBJIIIACEP.OAAMGFLINOB[i];
             if (CustomContent.PromoData[index].UseCharacterNames)
             {
-                CustomContent.PromoData[index].NameToID.Add(person.LLEGGMCIALJ.name, i);
+                CustomContent.PromoData[index].NameToID.Add(person.EMDMDLNJFKP.name, i);
             }
 
             if(CustomContent.PromoData[index].IsCharacterSurprise(person))
             {
                 RespawnSurprise(person);
             }
-            if (CustomContent.PromoData[index].IsCharacterSurprise(FFKMIEMAJML.FJCOPECCEKN[person.KFHDEANBHDB])) //person they are managing
+            if (CustomContent.PromoData[index].IsCharacterSurprise(NJBJIIIACEP.OAAMGFLINOB[person.FHMLNCBCALP])) //person they are managing
             {
                 CustomContent.PromoData[index].SurpirseExtras.Add(i);
-                RespawnTogetherWith(person, FFKMIEMAJML.FJCOPECCEKN[person.KFHDEANBHDB]);
+                RespawnTogetherWith(person, NJBJIIIACEP.OAAMGFLINOB[person.FHMLNCBCALP]);
             }
         }
     }
   
     public static void RespawnSurprise(UnmappedPlayer __instance)
     {
-            __instance.FKPIGOJCEAK = -1;  //setting surprise entrants
-            ILPOGGNCJEN diaocefccae;
+            __instance.AHBNKMMMGFI = -1;  //setting surprise entrants
+            OGAJMOPCPLJ diaocefccae;
             int num2;
             do
             {
-                diaocefccae = UnmappedBlocks.JNBNDGANKDE[UnmappedGlobals.NBNFJOFFMHO(1, UnmappedBlocks.IGLHKCAMDKO, 0)]; //resetting their spawns in case they spawn in ring
+                diaocefccae = UnmappedBlocks.FBEMAEDLBLN[UnmappedGlobals.PMEEFNOLAGF(1, UnmappedBlocks.BAOOLJCLBIH, 0)]; //resetting their spawns in case they spawn in ring
                 num2 = 1;
-                if (World.location == 9 && diaocefccae.NCHCAJDNMKK() > 50f)
+                if (World.location == 9 && diaocefccae.OCPIPKGHABK() > 50f)
                 {
                     num2 = 0;
                 }
-                if (diaocefccae.FKPIGOJCEAK == 0)
+                if (diaocefccae.AHBNKMMMGFI == 0)
                 {
                     num2 = 0;
                 }
             }
             while (num2 == 0);
-            __instance.DCLLKPILCBP = diaocefccae.JKJBCGJHCIG();
-            __instance.FFEONFCEHDF = diaocefccae.NCHCAJDNMKK();
-            __instance.PDEGHHLLFDG = diaocefccae.NAMDOACBNED;
-            __instance.DOOCGGBPAFM = World.JMFAKOLINLF(__instance.DCLLKPILCBP, __instance.BEHMHIINOGM, __instance.FFEONFCEHDF);
-            if (UnmappedBlocks.LLAGNIPIDOO(__instance.DCLLKPILCBP, __instance.FFEONFCEHDF, 0f) > 0)
+            __instance.NJDGEELLAKG = diaocefccae.APJMFOCJLNJ();
+            __instance.BMFDFFLPBOJ = diaocefccae.OCPIPKGHABK();
+            __instance.MPFFANIIEDG = diaocefccae.AAPMLHAGBGF;
+            __instance.EKOHAKPAOGN = World.KJOEBADBOME(__instance.NJDGEELLAKG, __instance.FNNBCDPJBIO, __instance.BMFDFFLPBOJ);
+            if (UnmappedBlocks.MDLFHNCMFDO(__instance.NJDGEELLAKG, __instance.BMFDFFLPBOJ, 0f) > 0)
             {
-                __instance.DOOCGGBPAFM = World.ringGround;
+                __instance.EKOHAKPAOGN = World.ringGround;
             }
-            __instance.BEHMHIINOGM = __instance.DOOCGGBPAFM;
-            if (__instance.BEHMHIINOGM < __instance.DOOCGGBPAFM)
+            __instance.FNNBCDPJBIO = __instance.EKOHAKPAOGN;
+            if (__instance.FNNBCDPJBIO < __instance.EKOHAKPAOGN)
             {
-                __instance.BEHMHIINOGM = __instance.DOOCGGBPAFM;
+                __instance.FNNBCDPJBIO = __instance.EKOHAKPAOGN;
             }
-            __instance.FCKMCPMNLJM = 0;  //seat
-            __instance.OOPKPKCHBEN[0].SetActive(false);
-            __instance.FPELIOPLHFE.SetActive(false);
+            __instance.NELODEMHJHN = 0;  //seat
+            __instance.PCNHIIPBNEK[0].SetActive(false);
+            __instance.IFOCOECLBAF.SetActive(false);
     }
     public static void RespawnTogetherWith(UnmappedPlayer manager, UnmappedPlayer wrestler)
     {
-        manager.FKPIGOJCEAK = -1;
-        manager.FCKMCPMNLJM = 0;
-        manager.DCLLKPILCBP = wrestler.DCLLKPILCBP;
-        manager.FFEONFCEHDF = wrestler.FFEONFCEHDF;
-        manager.PDEGHHLLFDG = wrestler.PDEGHHLLFDG;
-        manager.DOOCGGBPAFM = wrestler.DOOCGGBPAFM;
-        manager.BEHMHIINOGM = wrestler.BEHMHIINOGM;
-        manager.OOPKPKCHBEN[0].SetActive(false);
-        manager.FPELIOPLHFE.SetActive(false);
+        manager.AHBNKMMMGFI = -1;
+        manager.NELODEMHJHN = 0;
+        manager.NJDGEELLAKG = wrestler.NJDGEELLAKG;
+        manager.BMFDFFLPBOJ = wrestler.BMFDFFLPBOJ;
+        manager.MPFFANIIEDG = wrestler.MPFFANIIEDG;
+        manager.EKOHAKPAOGN = wrestler.EKOHAKPAOGN;
+        manager.FNNBCDPJBIO = wrestler.FNNBCDPJBIO;
+        manager.PCNHIIPBNEK[0].SetActive(false);
+        manager.IFOCOECLBAF.SetActive(false);
 
     }
 
-    [HarmonyPatch(typeof(PHECEOMIMND), nameof(PHECEOMIMND.MPPIMFNMGJK))]
+    [HarmonyPatch(typeof(FFCEGMEAIBP), nameof(FFCEGMEAIBP.CDKIEOBHCKE))]
     [HarmonyPostfix]
-    public static void PHECEOMIMND_MPPIMFNMGJK(string BEBDCBJKINE, string BLMNLKOPMBJ = "", string FMEMPJHPGKL = "")  //mimicking "Guest Partner" promo behaviour to hide the names
+    public static void FFCEGMEAIBP_CDKIEOBHCKE(string LLGKFOKJILF, string EBKFKAKBBKI = "", string GMGANODNCGH = "")  //mimicking "Guest Partner" promo behaviour to hide the names
     {
-        if (Mathf.Abs(PHECEOMIMND.LPHFJGGHBED) < 1000000 || UnmappedMenus.AAAIDOOHBCM != 50 || PHECEOMIMND.IINDGFPADFM <= 0 || PHECEOMIMND.KGFJGDMFNLL == 0)
+        if (Mathf.Abs(FFCEGMEAIBP.NJPKCMBLMLG) < 1000000 || UnmappedMenus.FAKHAFKOBPB != 50 || FFCEGMEAIBP.OLJFOJOLLOM <= 0 || FFCEGMEAIBP.LPBCEGPJNMF == 0)
         {
             return;
         }
-        int index = Mathf.Abs(PHECEOMIMND.LPHFJGGHBED) - 1000000;
+        int index = Mathf.Abs(FFCEGMEAIBP.NJPKCMBLMLG) - 1000000;
         if (CustomContent.PromoData[index].SurpriseEntrants.Count == 0 && CustomContent.PromoData[index].SurpriseEntrantsNames.Count == 0)
         {
             return;
         }
-        UnmappedPlayer character = FFKMIEMAJML.FJCOPECCEKN[PHECEOMIMND.KGFJGDMFNLL];
-        int num = character.LLEGGMCIALJ.KDKGBDLCHLJ(0);
-        PHECEOMIMND.OFANDPIMPNA[2].text = character.LLEGGMCIALJ.name;
+        UnmappedPlayer character = NJBJIIIACEP.OAAMGFLINOB[FFCEGMEAIBP.LPBCEGPJNMF];
+        int num = character.EMDMDLNJFKP.FBIIPBMKAGK(0);
+        FFCEGMEAIBP.PGPFHDLODFG[2].text = character.EMDMDLNJFKP.name;
         if (num > 0)
         {
-            PHECEOMIMND.OFANDPIMPNA[1].text = Characters.fedData[character.LLEGGMCIALJ.fed].beltName[num] + " Champion";
+            FFCEGMEAIBP.PGPFHDLODFG[1].text = Characters.fedData[character.EMDMDLNJFKP.fed].beltName[num] + " Champion";
         }
     }
 
-    [HarmonyPatch(typeof(PHECEOMIMND), nameof(PHECEOMIMND.GMIGIAFOAAF))]
+    [HarmonyPatch(typeof(FFCEGMEAIBP), nameof(FFCEGMEAIBP.FGFMHFNMLMA))]
     [HarmonyPrefix]
-    public static void PHECEOMIMND_GMIGIAFOAAF()  //releasing surprise entrants
+    public static void FFCEGMEAIBP_FGFMHFNMLMA()  //releasing surprise entrants
     {
-        if (PHECEOMIMND.LPHFJGGHBED > -1000000)
+        if (FFCEGMEAIBP.NJPKCMBLMLG > -1000000)
         {
             return;
         }
 
-        int index = -PHECEOMIMND.LPHFJGGHBED - 1000000;
+        int index = -FFCEGMEAIBP.NJPKCMBLMLG - 1000000;
         if(CustomContent.PromoData[index].SurpriseEntrants.Count == 0 && CustomContent.PromoData[index].SurpriseEntrantsNames.Count == 0)
         {
             return;
@@ -367,32 +367,32 @@ internal class PromoPatch
         if (CustomContent.PromoData[index].UseCharacterNames)
         {
             CustomContent.PromoData[index].NameToID.TryGetValue(CustomContent.PromoData[index].SurpriseEntrantsNames.First(), out int first);
-            if (FFKMIEMAJML.FJCOPECCEKN[first].FKPIGOJCEAK == -1)
+            if (NJBJIIIACEP.OAAMGFLINOB[first].AHBNKMMMGFI == -1)
             {
                 foreach (string name in CustomContent.PromoData[index].SurpriseEntrantsNames)
                 {
                     if (CustomContent.PromoData[index].NameToID.TryGetValue(name, out int id))
                     {
-                        FFKMIEMAJML.FJCOPECCEKN[id].FKPIGOJCEAK = 0;
+                        NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                     }
                 }
                 foreach (int id in CustomContent.PromoData[index].SurpirseExtras)
                 {
-                    FFKMIEMAJML.FJCOPECCEKN[id].FKPIGOJCEAK = 0;
+                    NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                 }
             }
         }
         else
         {
-            if (FFKMIEMAJML.FJCOPECCEKN[CustomContent.PromoData[index].SurpriseEntrants.First()].FKPIGOJCEAK == -1)
+            if (NJBJIIIACEP.OAAMGFLINOB[CustomContent.PromoData[index].SurpriseEntrants.First()].AHBNKMMMGFI == -1)
             {
                 foreach (int id in CustomContent.PromoData[index].SurpriseEntrants)
                 {
-                    FFKMIEMAJML.FJCOPECCEKN[id].FKPIGOJCEAK = 0;
+                    NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                 }
                 foreach (int id in CustomContent.PromoData[index].SurpirseExtras)
                 {
-                    FFKMIEMAJML.FJCOPECCEKN[id].FKPIGOJCEAK = 0;
+                    NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                 }
             }
         }
@@ -402,15 +402,15 @@ internal class PromoPatch
             int next =  CustomContent.PromoData.FindIndex(a => a.Title == CustomContent.PromoData[index].NextPromo);
             if (next != -1)
             {
-                PHECEOMIMND.LPHFJGGHBED = next + 1000000;
+                FFCEGMEAIBP.NJPKCMBLMLG = next + 1000000;
                 if (CustomContent.PromoData[next].UseCharacterNames)
                 {
                     CustomContent.PromoData[next].NameToID = new();
-                    for (int i = 1; i < FFKMIEMAJML.FJCOPECCEKN.Length; i++)
+                    for (int i = 1; i < NJBJIIIACEP.OAAMGFLINOB.Length; i++)
                     {
-                        UnmappedPlayer person = FFKMIEMAJML.FJCOPECCEKN[i];
+                        UnmappedPlayer person = NJBJIIIACEP.OAAMGFLINOB[i];
 
-                        CustomContent.PromoData[next].NameToID.Add(person.LLEGGMCIALJ.name, i);
+                        CustomContent.PromoData[next].NameToID.Add(person.EMDMDLNJFKP.name, i);
                     }
                 }
             }

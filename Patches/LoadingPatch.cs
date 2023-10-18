@@ -58,7 +58,7 @@ public class LoadingPatch
         }
 
         __instance.gLoader.SetActive(true);
-        _progressGradual = UnmappedGlobals.LGEGFIEJODE(_progressGradual, _progress, 0.2f, 0.01f);
+        _progressGradual = UnmappedGlobals.IFDOICDHAFC(_progressGradual, _progress, 0.2f, 0.01f);
         __instance.gLoadMeter.transform.localScale =
             new Vector3(_progressGradual, 1f, 1f);
         __instance.gLoadMeter.GetComponent<Image>().color =

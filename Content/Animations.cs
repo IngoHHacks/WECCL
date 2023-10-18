@@ -208,7 +208,7 @@ public static class Animations
     {
         if (player.grappling > 0 && player.reverse != 0f)
         {
-            player.animTim -= 2f * UnmappedAnims.PGMACJDMLPP;
+            player.animTim -= 2f * UnmappedAnims.MCJHGEHEPMD;
             player.t += 2f;
             if (player.animTim <= player.reverse || (player.reverse < 0f && player.animTim <= 0f))
             {

@@ -31,6 +31,10 @@ public class SaveRemapper
             {
                 versionDiffs.Add(new V158toV159());
             }
+            if (oldVersion < 160 && newVersion >= 160)
+            {
+                versionDiffs.Add(new V159toV160());
+            }
             versionDiff = new VersionDiffGroup(versionDiffs.ToArray());
         }
 

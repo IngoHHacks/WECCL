@@ -177,11 +177,11 @@ public class PromoData
     }
     public bool IsCharacterSurprise(UnmappedPlayer character)
     {
-        if (UseCharacterNames && SurpriseEntrantsNames.Contains(character.LLEGGMCIALJ.name))
+        if (UseCharacterNames && SurpriseEntrantsNames.Contains(character.EMDMDLNJFKP.name))
         {
             return true;
         }
-        else if (SurpriseEntrants.Contains(character.DHBIELODIAN))
+        else if (SurpriseEntrants.Contains(character.PLFGKLGCOMD))
         {
             return true;
         }
@@ -223,11 +223,11 @@ public class PromoData
         {
             if (NameToID.TryGetValue(arg, out int id))
             {
-                return FFKMIEMAJML.FJCOPECCEKN[id].LLEGGMCIALJ;
+                return NJBJIIIACEP.OAAMGFLINOB[id].EMDMDLNJFKP;
             }
-            return FFKMIEMAJML.FJCOPECCEKN[0].LLEGGMCIALJ;
+            return NJBJIIIACEP.OAAMGFLINOB[0].EMDMDLNJFKP;
         }
-        return UnmappedPromo.HGJNAEDAMDO[int.Parse(arg)];
+        return UnmappedPromo.BBPPMGDKCBJ[int.Parse(arg)];
     }
 
     public static PromoData CreatePromo(string file)

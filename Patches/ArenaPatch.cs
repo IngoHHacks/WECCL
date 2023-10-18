@@ -167,8 +167,8 @@ public class ArenaPatch
     public static class UnmappedBlocksPatch
     {
         [HarmonyPrefix]
-        [HarmonyPatch("AOKBJAAKFKD")]
-        public static void AOKBJAAKFKDPrePatch()
+        [HarmonyPatch("NALPMNNGKAE")]
+        public static void NALPMNNGKAEPrePatch()
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -183,29 +183,29 @@ public class ArenaPatch
         internal static int _tempLocation;
 
         [HarmonyPostfix]
-        [HarmonyPatch("IBKGGNIDBEG")]
-        public static void IBKGGNIDBEGPatch()
+        [HarmonyPatch("KELMLPGMAPC")]
+        public static void KELMLPGMAPCPatch()
         {
             SetCustomArenaShape();
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("GBDGLHHCLCI")]
-        public static void GBDGLHHCLCIPatch()
+        [HarmonyPatch("ICGNAJFLAHL")]
+        public static void ICGNAJFLAHLPatch()
         {
             SetCustomArenaShape();
             if (World.location > VanillaCounts.NoLocations)
             {
-                World.AIDICBALEKM();
+                World.PFKOJOFJHGB();
             }
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("ANEBLMBCGGF")]
-        public static void ANEBLMBCGGFPatch(ref string __result, ref int CKKJILCHIGF, string AAJMFOHFOOK)
+        [HarmonyPatch("CIHOMEHEECL")]
+        public static void CIHOMEHEECLPatch(ref string __result, ref int DHONCJINBMN, string DOEEMNKCGCA)
         {
             string originalResult = __result;
-            string text = "Location " + CKKJILCHIGF;
+            string text = "Location " + DHONCJINBMN;
 
             GameObject arenaName = FindGameObjectWithNameStartingWith("Arena Name:");
             if (arenaName != null)
@@ -236,8 +236,8 @@ public class ArenaPatch
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("FPKIMMEMMHM")]
-        public static void FPKIMMEMMHMPatch(ref Vector3 __result, int KNEDMBFJJAA, int OKBNFDJOAKH)
+        [HarmonyPatch("DIHKHJLKFNC")]
+        public static void DIHKHJLKFNCPatch(ref Vector3 __result, int HJANGKEJCJE, int HPJACBFOLCI)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -300,8 +300,8 @@ public class ArenaPatch
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("LJMEMIODMEO")]
-        public static void LJMEMIODMEOPatch(ref int KNEDMBFJJAA)
+        [HarmonyPatch("JOLFKJKNBLP")]
+        public static void JOLFKJKNBLPPatch(ref int HJANGKEJCJE)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -419,12 +419,12 @@ public class ArenaPatch
 
         //Get signs to randomise on custom arenas
         [HarmonyPostfix]
-        [HarmonyPatch("AIDICBALEKM")]
-        public static void AIDICBALEKMPatch(int EALGGMEGJNL = 0)
+        [HarmonyPatch("PFKOJOFJHGB")]
+        public static void PFKOJOFJHGBPatch(int JNHFFNPHMOC = 0)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
-                int num4 = UnmappedGlobals.NBNFJOFFMHO(1, 6);
+                int num4 = UnmappedGlobals.PMEEFNOLAGF(1, 6);
                 int num5;
                 Transform[] signTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
                 int count = 0;
@@ -447,7 +447,7 @@ public class ArenaPatch
                     }
 
                     int num6 = 0;
-                    if (UnmappedGlobals.OOGBIHFJOIH > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
+                    if (UnmappedGlobals.GNCLMNEDIPL > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
                     {
                         if ((i <= 18 && World.crowdSize >= 0.25f) || World.crowdSize >= 0.6f)
                         {
@@ -459,8 +459,8 @@ public class ArenaPatch
                             num6 = 0;
                         }
 
-                        if (UnmappedMenus.AAAIDOOHBCM == 50 && UnmappedGlobals.OOGBIHFJOIH == 1 &&
-                            UnmappedGlobals.NBNFJOFFMHO(0, 1) == 0)
+                        if (UnmappedMenus.FAKHAFKOBPB == 50 && UnmappedGlobals.GNCLMNEDIPL == 1 &&
+                            UnmappedGlobals.PMEEFNOLAGF(0, 1) == 0)
                         {
                             num6 = 0;
                         }
@@ -469,18 +469,18 @@ public class ArenaPatch
                     if (num6 > 0)
                     {
                         transform4.gameObject.SetActive(true);
-                        if (UnmappedMenus.AAAIDOOHBCM == 50 && EALGGMEGJNL == 0)
+                        if (UnmappedMenus.FAKHAFKOBPB == 50 && JNHFFNPHMOC == 0)
                         {
-                            if (UnmappedGlobals.OOGBIHFJOIH >= 2)
+                            if (UnmappedGlobals.GNCLMNEDIPL >= 2)
                             {
-                                num4 = UnmappedGlobals.NBNFJOFFMHO(1, 6);
+                                num4 = UnmappedGlobals.PMEEFNOLAGF(1, 6);
                             }
 
                             transform4.gameObject.GetComponent<Renderer>().sharedMaterial =
-                                UnmappedTextures.IHAPGLGAILI[num4];
+                                UnmappedTextures.LILJCAEGEIP[num4];
                         }
                     }
-                    else if (UnmappedMenus.AAAIDOOHBCM == 50)
+                    else if (UnmappedMenus.FAKHAFKOBPB == 50)
                     {
                         Object.Destroy(transform4.gameObject);
                     }
@@ -498,100 +498,100 @@ public class ArenaPatch
             public static int storedValue;
 
             [HarmonyPrefix]
-            [HarmonyPatch("PAOEHLEJKIJ")]
-            public static void PAOEHLEJKIJPatch(UnmappedPlayer __instance)
+            [HarmonyPatch("NCOEPCFFBJA")]
+            public static void NCOEPCFFBJAPatch(UnmappedPlayer __instance)
             {
                 if (freezeAnnouncers)
                 {
-                    if (__instance.FOPIBFHEBHM == 0)
+                    if (__instance.FIEMGOLBHIO == 0)
                     {
-                        storedValue = __instance.MKBFLJJAFPE;
-                        __instance.MKBFLJJAFPE = 0;
+                        storedValue = __instance.OJAJENJLBMF;
+                        __instance.OJAJENJLBMF = 0;
                     }
                 }
             }
 
             [HarmonyPostfix]
-            [HarmonyPatch("PAOEHLEJKIJ")]
-            public static void PAOEHLEJKIJPostPatch(UnmappedPlayer __instance)
+            [HarmonyPatch("NCOEPCFFBJA")]
+            public static void NCOEPCFFBJAPostPatch(UnmappedPlayer __instance)
             {
                 if (freezeAnnouncers)
                 {
-                    if (__instance.FOPIBFHEBHM == 0 && storedValue != __instance.MKBFLJJAFPE)
+                    if (__instance.FIEMGOLBHIO == 0 && storedValue != __instance.OJAJENJLBMF)
                     {
-                        __instance.MKBFLJJAFPE = storedValue;
+                        __instance.OJAJENJLBMF = storedValue;
                     }
                 }
             }
         }
     }
 
-    [HarmonyPatch(typeof(JOCFFDIGAGD))]
-    public static class JOCFFDIGAGDPatch
+    [HarmonyPatch(typeof(HAPFAOIMGOL))]
+    public static class HAPFAOIMGOLPatch
     {
         public static bool furnitureAdded;
         public static List<string> furnitureList;
 
         [HarmonyPostfix]
-        [HarmonyPatch("OCHAKPEPNOC")]
-        public static void OCHAKPEPNOCPatch(ref int __result, int CLIEPAGIKOH, int KNHFAEABEPK, int BKLMEHCJBLK = 0)
+        [HarmonyPatch("PKIDFEPEMIC")]
+        public static void PKIDFEPEMICPatch(ref int __result, int DHAKKDKJGCE, int KPHPHMODHPO, int MBIOIEAIDLD = 0)
         {
             int num = __result;
             furnitureAdded = false;
-            if (KNHFAEABEPK == 1)
+            if (KPHPHMODHPO == 1)
             {
                 //Code is making new list of arena items so set our list back to empty here
                 furnitureList = new List<string>();
             }
 
-            if (CLIEPAGIKOH > VanillaCounts.NoLocations)
+            if (DHAKKDKJGCE > VanillaCounts.NoLocations)
             {
-                if (JOCFFDIGAGD.CNNFMKADJAH == null)
+                if (HAPFAOIMGOL.LOHDDEFHOIF == null)
                 {
-                    JOCFFDIGAGD.CNNFMKADJAH = new Stock[1];
+                    HAPFAOIMGOL.LOHDDEFHOIF = new Stock[1];
                 }
 
-                JOCFFDIGAGD.CNNFMKADJAH[0] = new Stock();
+                HAPFAOIMGOL.LOHDDEFHOIF[0] = new Stock();
                 {
                     //Maybe consider making this dynamic with map objects too for spawning stairs at any of the 4 (Or 6) corners
                     if (World.ringShape == 1)
                     {
-                        if (KNHFAEABEPK == 1)
+                        if (KPHPHMODHPO == 1)
                         {
                             furnitureAdded = true;
                             furnitureList.Add("Steps1");
                             yOverride = 0f;
-                            JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(4, CLIEPAGIKOH, -35f * World.ringSize,
+                            HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(4, DHAKKDKJGCE, -35f * World.ringSize,
                                 35f * World.ringSize, 315f);
                         }
 
-                        if (KNHFAEABEPK == 2)
+                        if (KPHPHMODHPO == 2)
                         {
                             furnitureList.Add("Steps2");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(4, CLIEPAGIKOH, 35f * World.ringSize,
+                            HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(4, DHAKKDKJGCE, 35f * World.ringSize,
                                 -35f * World.ringSize, 135f);
                         }
                     }
 
                     if (World.ringShape == 2)
                     {
-                        if (KNHFAEABEPK == 1)
+                        if (KPHPHMODHPO == 1)
                         {
                             furnitureList.Add("Steps1");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(4, CLIEPAGIKOH, -21f * World.ringSize,
+                            HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(4, DHAKKDKJGCE, -21f * World.ringSize,
                                 35f * World.ringSize, 330f);
                         }
 
-                        if (KNHFAEABEPK == 2)
+                        if (KPHPHMODHPO == 2)
                         {
                             furnitureList.Add("Steps2");
                             furnitureAdded = true;
                             yOverride = 0f;
-                            JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(4, CLIEPAGIKOH, 21f * World.ringSize,
+                            HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(4, DHAKKDKJGCE, 21f * World.ringSize,
                                 -35f * World.ringSize, 150f);
                         }
                     }
@@ -614,41 +614,41 @@ public class ArenaPatch
                 }
 
 
-                if (JOCFFDIGAGD.MAPEACFCDGA(JOCFFDIGAGD.CNNFMKADJAH[0].type) == 0 ||
-                    JOCFFDIGAGD.CNNFMKADJAH[0].type > JOCFFDIGAGD.CAFMCHDHHEA)
+                if (HAPFAOIMGOL.COMEDPJDBKM(HAPFAOIMGOL.LOHDDEFHOIF[0].type) == 0 ||
+                    HAPFAOIMGOL.LOHDDEFHOIF[0].type > HAPFAOIMGOL.JECOJHEMKFP)
                 {
-                    JOCFFDIGAGD.CNNFMKADJAH[0].type = 0;
+                    HAPFAOIMGOL.LOHDDEFHOIF[0].type = 0;
                 }
 
-                if (BKLMEHCJBLK != 0 && JOCFFDIGAGD.CNNFMKADJAH[0].type != 0)
+                if (MBIOIEAIDLD != 0 && HAPFAOIMGOL.LOHDDEFHOIF[0].type != 0)
                 {
-                    if (BKLMEHCJBLK > 0)
+                    if (MBIOIEAIDLD > 0)
                     {
-                        num = JOCFFDIGAGD.HANCPGHNHOI();
-                        JOCFFDIGAGD.CNNFMKADJAH[num].OKIALPNMFHA(JOCFFDIGAGD.CNNFMKADJAH[0].type,
-                            JOCFFDIGAGD.CNNFMKADJAH[0].location, JOCFFDIGAGD.CNNFMKADJAH[0].x,
-                            JOCFFDIGAGD.CNNFMKADJAH[0].z, JOCFFDIGAGD.CNNFMKADJAH[0].angle);
+                        num = HAPFAOIMGOL.NIIIJBJFHMN();
+                        HAPFAOIMGOL.LOHDDEFHOIF[num].EGGPOIPPDPM(HAPFAOIMGOL.LOHDDEFHOIF[0].type,
+                            HAPFAOIMGOL.LOHDDEFHOIF[0].location, HAPFAOIMGOL.LOHDDEFHOIF[0].x,
+                            HAPFAOIMGOL.LOHDDEFHOIF[0].z, HAPFAOIMGOL.LOHDDEFHOIF[0].angle);
                     }
                     else
                     {
-                        num = JOCFFDIGAGD.MFDCLFKDDFB(JOCFFDIGAGD.CNNFMKADJAH[0].type);
-                        if (JOCFFDIGAGD.CNNFMKADJAH[0].scale != 1f)
+                        num = HAPFAOIMGOL.DFLLBNMHHIH(HAPFAOIMGOL.LOHDDEFHOIF[0].type);
+                        if (HAPFAOIMGOL.LOHDDEFHOIF[0].scale != 1f)
                         {
-                            JOCFFDIGAGD.GOCCMDGLIIA[num].IIMBIPKKEKP = JOCFFDIGAGD.CNNFMKADJAH[0].scale;
-                            JOCFFDIGAGD.GOCCMDGLIIA[num].PPEDAJCCNPK(JOCFFDIGAGD.CNNFMKADJAH[0].type);
-                            JOCFFDIGAGD.GOCCMDGLIIA[num].OOPKPKCHBEN.transform.localScale = new Vector3(
-                                JOCFFDIGAGD.GOCCMDGLIIA[num].IIMBIPKKEKP, JOCFFDIGAGD.GOCCMDGLIIA[num].IIMBIPKKEKP,
-                                JOCFFDIGAGD.GOCCMDGLIIA[num].IIMBIPKKEKP);
+                            HAPFAOIMGOL.OMOGPIJGMKO[num].JNLAJNFCDHA = HAPFAOIMGOL.LOHDDEFHOIF[0].scale;
+                            HAPFAOIMGOL.OMOGPIJGMKO[num].KMOINLEIEFP(HAPFAOIMGOL.LOHDDEFHOIF[0].type);
+                            HAPFAOIMGOL.OMOGPIJGMKO[num].PCNHIIPBNEK.transform.localScale = new Vector3(
+                                HAPFAOIMGOL.OMOGPIJGMKO[num].JNLAJNFCDHA, HAPFAOIMGOL.OMOGPIJGMKO[num].JNLAJNFCDHA,
+                                HAPFAOIMGOL.OMOGPIJGMKO[num].JNLAJNFCDHA);
                         }
 
-                        JOCFFDIGAGD.GOCCMDGLIIA[num].ODDCEOJJDFH(JOCFFDIGAGD.CNNFMKADJAH[0].x, World.ground,
-                            JOCFFDIGAGD.CNNFMKADJAH[0].z, JOCFFDIGAGD.CNNFMKADJAH[0].angle);
+                        HAPFAOIMGOL.OMOGPIJGMKO[num].IBPHHBIPICL(HAPFAOIMGOL.LOHDDEFHOIF[0].x, World.ground,
+                            HAPFAOIMGOL.LOHDDEFHOIF[0].z, HAPFAOIMGOL.LOHDDEFHOIF[0].angle);
                     }
                 }
 
-                if (BKLMEHCJBLK == 0 && JOCFFDIGAGD.CNNFMKADJAH[0].type != 0)
+                if (MBIOIEAIDLD == 0 && HAPFAOIMGOL.LOHDDEFHOIF[0].type != 0)
                 {
-                    num = KNHFAEABEPK;
+                    num = KPHPHMODHPO;
                 }
             }
 
@@ -671,7 +671,7 @@ public class ArenaPatch
                     {
                         furnitureAdded = true;
                         yOverride = newObjectPosition.y;
-                        JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(customObjectId, CLIEPAGIKOH, newObjectPosition.x,
+                        HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(customObjectId, DHAKKDKJGCE, newObjectPosition.x,
                             newObjectPosition.z, newObjectRotation.eulerAngles.y);
                     }
                 }
@@ -709,7 +709,7 @@ public class ArenaPatch
                     furnitureList.Add(deskObject.name);
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(3, CLIEPAGIKOH, newDeskPosition.x, newDeskPosition.z,
+                    HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(3, DHAKKDKJGCE, newDeskPosition.x, newDeskPosition.z,
                         newDeskRotation.eulerAngles.y);
                 }
 
@@ -718,7 +718,7 @@ public class ArenaPatch
                     furnitureList.Add(deskObject.name + "ChairA");
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(2, CLIEPAGIKOH, updatedChair1Position.x,
+                    HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(2, DHAKKDKJGCE, updatedChair1Position.x,
                         updatedChair1Position.z, newDeskRotation.eulerAngles.y);
                 }
 
@@ -727,7 +727,7 @@ public class ArenaPatch
                     furnitureList.Add(deskObject.name + "ChairB");
                     furnitureAdded = true;
                     yOverride = newDeskPosition.y;
-                    JOCFFDIGAGD.CNNFMKADJAH[0].OKIALPNMFHA(2, CLIEPAGIKOH, updatedChair2Position.x,
+                    HAPFAOIMGOL.LOHDDEFHOIF[0].EGGPOIPPDPM(2, DHAKKDKJGCE, updatedChair2Position.x,
                         updatedChair2Position.z, newDeskRotation.eulerAngles.y);
                 }
             }
@@ -750,20 +750,20 @@ public class ArenaPatch
         }
     }
 
-    [HarmonyPatch(typeof(BGLBLDMOHEO))]
-    public static class BGLBLDMOHEOPatch
+    [HarmonyPatch(typeof(GGKBLABCJFN))]
+    public static class GGKBLABCJFNPatch
     {
         [HarmonyPostfix]
-        [HarmonyPatch("ODDCEOJJDFH")]
-        public static void ODDCEOJJDFHPostPatch(BGLBLDMOHEO __instance)
+        [HarmonyPatch("IBPHHBIPICL")]
+        public static void IBPHHBIPICLPostPatch(GGKBLABCJFN __instance)
         {
             if (yOverride != 0f)
             {
                 //This overrides the height for placement of furniture so it can be above ground level.
-                JOCFFDIGAGD.CNNFMKADJAH[__instance.FAFNGINDBMM].y = yOverride;
-                __instance.JNBIGPECCOB = yOverride;
-                __instance.DOOCGGBPAFM = yOverride;
-                __instance.BEHMHIINOGM = yOverride;
+                HAPFAOIMGOL.LOHDDEFHOIF[__instance.LDMGKMEGLIN].y = yOverride;
+                __instance.DOEBJOGHIFL = yOverride;
+                __instance.EKOHAKPAOGN = yOverride;
+                __instance.FNNBCDPJBIO = yOverride;
 
                 //Set yOverride back to 0 afterwards so going to another map doesn't spawn all furniture in the air...
                 yOverride = 0f;
@@ -787,16 +787,16 @@ public class ArenaPatch
                 {
                     if (World.location <= 1 && __instance.oldArena <= 1)
                     {
-                        World.IBKGGNIDBEG(1);
+                        World.KELMLPGMAPC(1);
                     }
                     else
                     {
-                        World.GBDGLHHCLCI(1);
+                        World.ICGNAJFLAHL(1);
                     }
 
-                    World.MFACINIEEPI();
-                    World.AOECADAKFHI();
-                    if (UnmappedGlobals.NHDABIOCLFH > 0)
+                    World.EFNENMKELIA();
+                    World.CJMBGNBDOFI();
+                    if (UnmappedGlobals.CBMHGKFFHJE > 0)
                     {
                         Progress.arenaFog = World.fog;
                     }
@@ -812,14 +812,14 @@ public class ArenaPatch
                         steps = 2;
                     }
 
-                    JOCFFDIGAGD.LMPJNAODHHL = gameObjects.Length + (announcerObjects.Length * 3) + steps -
+                    HAPFAOIMGOL.CCFGHKNBOEL = gameObjects.Length + (announcerObjects.Length * 3) + steps -
                                               oldArenaFurnitureCount;
-                    oldArenaFurnitureCount = JOCFFDIGAGD.LMPJNAODHHL - steps;
-                    JOCFFDIGAGD.IBLGHPIJAGA = 0;
-                    int num = IDHJEMEKEMM.CMKPEAEKHGN(World.location);
-                    if (IDHJEMEKEMM.LMPJNAODHHL < num)
+                    oldArenaFurnitureCount = HAPFAOIMGOL.CCFGHKNBOEL - steps;
+                    HAPFAOIMGOL.OOKPLJBLDBG = 0;
+                    int num = JFLEBEBCGFA.KFKFKMMEFFG(World.location);
+                    if (JFLEBEBCGFA.CCFGHKNBOEL < num)
                     {
-                        IDHJEMEKEMM.LMPJNAODHHL = num;
+                        JFLEBEBCGFA.CCFGHKNBOEL = num;
                     }
                 }
 
@@ -843,27 +843,27 @@ public class ArenaPatch
             }
         }
     }
-    [HarmonyPatch(typeof(ILPOGGNCJEN))]
-    public static class ILPOGGNCJENPrePatch
+    [HarmonyPatch(typeof(OGAJMOPCPLJ))]
+    public static class OGAJMOPCPLJPrePatch
     {
-        public static bool HBFKOOEPFLHReduced = false;
+        public static bool MKOCPPCIKEMReduced = false;
 
         [HarmonyPrefix]
-        [HarmonyPatch("DLADNAFPGPJ")]
-        public static void LDLADNAFPGPJPrePatch(ILPOGGNCJEN __instance, float DKOBDIJJOGO, float LDEAEOHOCPO, float MFCNEPBJODD = 0f)
+        [HarmonyPatch("GBLDMIAPNEP")]
+        public static void LGBLDMIAPNEPPrePatch(OGAJMOPCPLJ __instance, float MMBJPONJJGM, float FNFJENPGCHM, float GJGFOKOEANG = 0f)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
                 //Force set these to 20 / -20 to match original arena so it can trigger (Think its related to size of the door in original as custom arenas seem to have these a values of around 1.5 instead).
-                __instance.LABFAOEKOBM[1] = 20;
-                __instance.LABFAOEKOBM[2] = 20;
-                __instance.LABFAOEKOBM[3] = -20;
-                __instance.LABFAOEKOBM[4] = -20;
-                if (!HBFKOOEPFLHReduced)
+                __instance.EONCNOGEOFC[1] = 20;
+                __instance.EONCNOGEOFC[2] = 20;
+                __instance.EONCNOGEOFC[3] = -20;
+                __instance.EONCNOGEOFC[4] = -20;
+                if (!MKOCPPCIKEMReduced)
                 {
                     //Also once only per map load, set this value to 5 less as otherwise the wrestlers needed to stand on a near exact spot to exit which the AI would almost never do.
-                    __instance.HBFKOOEPFLH[3] -= 5;
-                    HBFKOOEPFLHReduced = true;
+                    __instance.MKOCPPCIKEM[3] -= 5;
+                    MKOCPPCIKEMReduced = true;
                 }
             }
         }
@@ -872,13 +872,13 @@ public class ArenaPatch
     [HarmonyPatch(typeof(UnmappedPlayer))]
     public static class UnmappedPlayerPrePatch
     {
-        private static int stored_FJPJNBKADDJ;
+        private static int stored_ECGKBJEKPPJ;
         private static bool ifStatementOnePassed;
         private static bool ifStatementTwoPassed;
         
         [HarmonyPrefix]
-        [HarmonyPatch("LDFLNBABOOK")]
-        public static void LDFLNBABOOKPrePatch(UnmappedPlayer __instance)
+        [HarmonyPatch("LCAJNIOJAPG")]
+        public static void LCAJNIOJAPGPrePatch(UnmappedPlayer __instance)
         {
             if (World.location > VanillaCounts.NoLocations)
             {
@@ -887,14 +887,14 @@ public class ArenaPatch
 
                 if (pyroObjects.Length > 0)
                 {
-                    if (__instance.FKPIGOJCEAK == 1f && __instance.JGPFJIBNLFC != 54 &&
-                        __instance.DCLLKPILCBP > World.camWest && __instance.DCLLKPILCBP < World.camEast &&
-                        __instance.FFEONFCEHDF > World.camSouth &&
-                        __instance.FFEONFCEHDF < World.camNorth && __instance.DCLLKPILCBP > World.farWest &&
-                        __instance.DCLLKPILCBP < World.farEast && __instance.FFEONFCEHDF > World.farSouth &&
-                        __instance.FFEONFCEHDF < World.farNorth &&
-                        __instance.HIMOPKGMFKO(__instance.DCLLKPILCBP, __instance.BEHMHIINOGM, __instance.FFEONFCEHDF) >
-                        0 && (UnmappedBlocks.JDJPKOBBNLG(__instance.DCLLKPILCBP, __instance.FFEONFCEHDF) > 0 ||
+                    if (__instance.AHBNKMMMGFI == 1f && __instance.NLDPMDNKGIC != 54 &&
+                        __instance.NJDGEELLAKG > World.camWest && __instance.NJDGEELLAKG < World.camEast &&
+                        __instance.BMFDFFLPBOJ > World.camSouth &&
+                        __instance.BMFDFFLPBOJ < World.camNorth && __instance.NJDGEELLAKG > World.farWest &&
+                        __instance.NJDGEELLAKG < World.farEast && __instance.BMFDFFLPBOJ > World.farSouth &&
+                        __instance.BMFDFFLPBOJ < World.farNorth &&
+                        __instance.ENCGDNBNGLP(__instance.NJDGEELLAKG, __instance.FNNBCDPJBIO, __instance.BMFDFFLPBOJ) >
+                        0 && (UnmappedBlocks.JIHKMLJICDO(__instance.NJDGEELLAKG, __instance.BMFDFFLPBOJ) > 0 ||
                               World.arenaShape * World.arenaBarriers == 0))
                     {
                         ifStatementOnePassed = true;
@@ -904,8 +904,8 @@ public class ArenaPatch
                         ifStatementOnePassed = false;
                     }
 
-                    if (PHECEOMIMND.IPAFPBPKIKP == 1 && PHECEOMIMND.KGFJGDMFNLL == __instance.DHBIELODIAN &&
-                        World.arenaShape > 0 && UnmappedGlobals.FJPJNBKADDJ > 0)
+                    if (FFCEGMEAIBP.LOBDMDPMFLK == 1 && FFCEGMEAIBP.LPBCEGPJNMF == __instance.PLFGKLGCOMD &&
+                        World.arenaShape > 0 && UnmappedGlobals.ECGKBJEKPPJ > 0)
                     {
                         ifStatementTwoPassed = true;
                     }
@@ -915,21 +915,21 @@ public class ArenaPatch
                     }
 
                     //Set this to zero to stop original pyro from going off
-                    stored_FJPJNBKADDJ = UnmappedGlobals.FJPJNBKADDJ;
+                    stored_ECGKBJEKPPJ = UnmappedGlobals.ECGKBJEKPPJ;
                     
-                    UnmappedGlobals.FJPJNBKADDJ = 0;
+                    UnmappedGlobals.ECGKBJEKPPJ = 0;
                 }
             }
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("LDFLNBABOOK")]
-        public static void LDFLNBABOOKPostPatch(UnmappedPlayer __instance)
+        [HarmonyPatch("LCAJNIOJAPG")]
+        public static void LCAJNIOJAPGPostPatch(UnmappedPlayer __instance)
         {
             //Set GFEDPBPDALB.AFJDBIAFGKE back at postfix
-            if (stored_FJPJNBKADDJ != 0)
+            if (stored_ECGKBJEKPPJ != 0)
             {
-                UnmappedGlobals.FJPJNBKADDJ = stored_FJPJNBKADDJ;
+                UnmappedGlobals.ECGKBJEKPPJ = stored_ECGKBJEKPPJ;
             }
 
             if (ifStatementOnePassed)
@@ -943,24 +943,24 @@ public class ArenaPatch
                     {
                         Vector3 newPyroPosition = pyroObject.transform.position;
 
-                        if (__instance.LLEGGMCIALJ.pyro == 1 || __instance.LLEGGMCIALJ.pyro < 0)
+                        if (__instance.EMDMDLNJFKP.pyro == 1 || __instance.EMDMDLNJFKP.pyro < 0)
                         {
-                            CLJNCLLMLAO.GDIEKCLACCI(11, Color.white, 10f, null, 0f, newPyroPosition.y + 25f,
+                            ALIGLHEIAGO.BLJNNEDCMEI(11, Color.white, 10f, null, 0f, newPyroPosition.y + 25f,
                                 newPyroPosition.z, 0f, 0f, 0.1f);
                         }
 
-                        if (__instance.LLEGGMCIALJ.pyro == 2 || __instance.LLEGGMCIALJ.pyro < 0)
+                        if (__instance.EMDMDLNJFKP.pyro == 2 || __instance.EMDMDLNJFKP.pyro < 0)
                         {
-                            CLJNCLLMLAO.GDIEKCLACCI(10, Color.white, 10f, null, -7f, newPyroPosition.y,
+                            ALIGLHEIAGO.BLJNNEDCMEI(10, Color.white, 10f, null, -7f, newPyroPosition.y,
                                 newPyroPosition.z);
-                            CLJNCLLMLAO.GDIEKCLACCI(10, Color.white, 10f, null, 7f, newPyroPosition.y,
+                            ALIGLHEIAGO.BLJNNEDCMEI(10, Color.white, 10f, null, 7f, newPyroPosition.y,
                                 newPyroPosition.z);
                         }
 
-                        if (__instance.LLEGGMCIALJ.pyro == 3 || __instance.LLEGGMCIALJ.pyro < 0)
+                        if (__instance.EMDMDLNJFKP.pyro == 3 || __instance.EMDMDLNJFKP.pyro < 0)
                         {
-                            UnmappedSound.OBLNONIKENE(__instance.MLDLMDCFHOM, UnmappedSound.BBLGKPMJOBA, -0.1f);
-                            CLJNCLLMLAO.GDIEKCLACCI(91, Color.white, 8f, null, 0f, newPyroPosition.y + 7f,
+                            UnmappedSound.BPLLANFDDDP(__instance.GPGOFIFBCLP, UnmappedSound.ODBILMKJJKF, -0.1f);
+                            ALIGLHEIAGO.BLJNNEDCMEI(91, Color.white, 8f, null, 0f, newPyroPosition.y + 7f,
                                 newPyroPosition.z, 180f, 0.2f);
                         }
                     }
@@ -969,8 +969,8 @@ public class ArenaPatch
         }
     }
 
-    [HarmonyPatch(typeof(IDHJEMEKEMM))]
-    public static class IDHJEMEKEMMPrePatch
+    [HarmonyPatch(typeof(JFLEBEBCGFA))]
+    public static class JFLEBEBCGFAPrePatch
     {
         internal static Vector3? newWeaponPosition;
         internal static Vector3? newWeaponRotation;
@@ -984,25 +984,25 @@ public class ArenaPatch
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("ICEOBEPGFNC")]
-        public static void ICEOBEPGFNCPrePatch()
+        [HarmonyPatch("HHCPHNIJDKG")]
+        public static void HHCPHNIJDKGPrePatch()
         {
-            ILPOGGNCJENPrePatch.HBFKOOEPFLHReduced = false;
+            OGAJMOPCPLJPrePatch.MKOCPPCIKEMReduced = false;
             //Reset these to null so loading custom map second time onwards doesn't force all outside ring weapons to a weapon spawn point
             newWeaponPosition = null;
             newWeaponRotation = null;
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("ICEOBEPGFNC")]
-        public static void ICEOBEPGFNCPostPatch()
+        [HarmonyPatch("HHCPHNIJDKG")]
+        public static void HHCPHNIJDKGPostPatch()
         {
             newWeaponPosition = null;
             newWeaponRotation = null;
             weaponList = new List<string>();
             System.Random random = new();
 
-            //Loops through here to add weapons, ACBEHIAKAPB = weapon ID
+            //Loops through here to add weapons, CHMHJJNEMKB = weapon ID
             GameObject[] customWeaponObjects = Object.FindObjectsOfType<GameObject>()
                 .Where(obj => obj.name.StartsWith("WeaponObject:")).ToArray();
             foreach (GameObject customWeaponObject in customWeaponObjects)
@@ -1028,7 +1028,7 @@ public class ArenaPatch
                     weaponList.Add(customWeaponObject.name);
                     if (customWeaponId != 0)
                     {
-                        IDHJEMEKEMM.MFDCLFKDDFB(customWeaponId);
+                        JFLEBEBCGFA.DFLLBNMHHIH(customWeaponId);
                     }
                 }
             }
@@ -1051,51 +1051,51 @@ public class ArenaPatch
         }
     }
 
-    [HarmonyPatch(typeof(IAFGPLGNLKO))]
-    public static class IAFGPLGNLKOPrePatch
+    [HarmonyPatch(typeof(GDFKEAMIOAG))]
+    public static class GDFKEAMIOAGPrePatch
     {
         [HarmonyPostfix]
-        [HarmonyPatch("GBDGLHHCLCI")]
-        public static void GBDGLHHCLCIPostPatch(int ECLDPCGPPPL, int IMCLDENKCOE, IAFGPLGNLKO __instance,
-            int ACBEHIAKAPB = 0)
+        [HarmonyPatch("ICGNAJFLAHL")]
+        public static void ICGNAJFLAHLPostPatch(int APCLJHNGGFM, int CDBLEDLMLEF, GDFKEAMIOAG __instance,
+            int CHMHJJNEMKB = 0)
         {
-            if (IDHJEMEKEMMPrePatch.newWeaponPosition != null && IDHJEMEKEMMPrePatch.newWeaponRotation != null)
+            if (JFLEBEBCGFAPrePatch.newWeaponPosition != null && JFLEBEBCGFAPrePatch.newWeaponRotation != null)
             {
-                __instance.DCLLKPILCBP = IDHJEMEKEMMPrePatch.newWeaponPosition.Value.x;
-                __instance.DOOCGGBPAFM = IDHJEMEKEMMPrePatch.newWeaponPosition.Value.y;
-                __instance.FFEONFCEHDF = IDHJEMEKEMMPrePatch.newWeaponPosition.Value.z;
-                __instance.NAMDOACBNED = IDHJEMEKEMMPrePatch.newWeaponRotation.Value.y;
-                float rotationX = IDHJEMEKEMMPrePatch.newWeaponRotation.Value.x;
-                float rotationZ = IDHJEMEKEMMPrePatch.newWeaponRotation.Value.z;
-                string weaponName = IDHJEMEKEMMPrePatch.CustomWeaponName;
+                __instance.NJDGEELLAKG = JFLEBEBCGFAPrePatch.newWeaponPosition.Value.x;
+                __instance.EKOHAKPAOGN = JFLEBEBCGFAPrePatch.newWeaponPosition.Value.y;
+                __instance.BMFDFFLPBOJ = JFLEBEBCGFAPrePatch.newWeaponPosition.Value.z;
+                __instance.AAPMLHAGBGF = JFLEBEBCGFAPrePatch.newWeaponRotation.Value.y;
+                float rotationX = JFLEBEBCGFAPrePatch.newWeaponRotation.Value.x;
+                float rotationZ = JFLEBEBCGFAPrePatch.newWeaponRotation.Value.z;
+                string weaponName = JFLEBEBCGFAPrePatch.CustomWeaponName;
                 if (weaponName == "Random")
                 {
                     rotationX = 0f;
-                    __instance.NAMDOACBNED = UnmappedGlobals.NBNFJOFFMHO(0, 359);
+                    __instance.AAPMLHAGBGF = UnmappedGlobals.PMEEFNOLAGF(0, 359);
                     rotationZ = 0f;
                 }
 
                 //Need to update these for weapons to allow pickup
-                __instance.BEHMHIINOGM = __instance.DOOCGGBPAFM;
-                __instance.LOCLGGLOMNK = __instance.DCLLKPILCBP;
-                __instance.JNBIGPECCOB = __instance.BEHMHIINOGM;
-                __instance.OMHKIDHMBFL = __instance.FFEONFCEHDF;
-                __instance.GDJANGFJJNM = __instance.NAMDOACBNED;
+                __instance.FNNBCDPJBIO = __instance.EKOHAKPAOGN;
+                __instance.IGJHLDNPBPL = __instance.NJDGEELLAKG;
+                __instance.DOEBJOGHIFL = __instance.FNNBCDPJBIO;
+                __instance.IJPOGOBJCGN = __instance.BMFDFFLPBOJ;
+                __instance.BEIBGCMEHCA = __instance.AAPMLHAGBGF;
 
-                __instance.LJMCHNKEPJP.transform.position = new Vector3(__instance.DCLLKPILCBP, __instance.BEHMHIINOGM,
-                    __instance.FFEONFCEHDF);
-                __instance.LJMCHNKEPJP.transform.eulerAngles =
-                    new Vector3(rotationX, __instance.NAMDOACBNED, rotationZ);
+                __instance.BHKGKKLDDBC.transform.position = new Vector3(__instance.NJDGEELLAKG, __instance.FNNBCDPJBIO,
+                    __instance.BMFDFFLPBOJ);
+                __instance.BHKGKKLDDBC.transform.eulerAngles =
+                    new Vector3(rotationX, __instance.AAPMLHAGBGF, rotationZ);
             }
         }
     }
 
-    [HarmonyPatch(typeof(DJLJEFBLPKG))]
-    public static class DJLJEFBLPKG_Patch
+    [HarmonyPatch(typeof(BLNKDHIGFAN))]
+    public static class BLNKDHIGFAN_Patch
     {
         [HarmonyPostfix]
-        [HarmonyPatch("GBDGLHHCLCI")]
-        public static void GBDGLHHCLCI_Patch()
+        [HarmonyPatch("ICGNAJFLAHL")]
+        public static void ICGNAJFLAHL_Patch()
         {
             GameObject titanCamera = GameObject.Find("TitantronCamera");
             if (titanCamera)

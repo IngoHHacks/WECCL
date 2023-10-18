@@ -45,12 +45,12 @@ public static class Locations
         LegacyLocations.MoveLegacyLocations();
     }
 
-    public static void LoadWECCL()
-    {
-        var animationController = AssetBundle.LoadFromFile(Path.Combine(WECCL.FullName, "animationcontroller")).LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault();
-        if (animationController == null) throw new Exception("Failed to load WECCL animation controller");
-        AO.AnimationController = animationController;
-    }
+    // public static void LoadWECCL()
+    // {
+    //     var animationController = AssetBundle.LoadFromFile(Path.Combine(WECCL.FullName, "animationcontroller")).LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault();
+    //     if (animationController == null) throw new Exception("Failed to load WECCL animation controller");
+    //     AO.AnimationController = animationController;
+    // }
 }
 
 internal static class LegacyLocations

@@ -14,9 +14,9 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.5.0";
+    public const string PluginVer = "1.6.0";
     public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.59f;
+    public const float PluginVersion = 1.60f;
 
     public const bool PreRelease = false;
     public static string[] PreReleaseReasons = { "Testing" };
@@ -92,11 +92,11 @@ public class Plugin : BaseUnityPlugin
             {
                 Directory.CreateDirectory(PersistentDataPath);
             }
-            if (!Directory.Exists(Locations.WECCL.FullName))
-            {
-                throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
-            }
-            Locations.LoadWECCL();
+            // if (!Directory.Exists(Locations.WECCL.FullName))
+            // {
+            //     throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
+            // }
+            // Locations.LoadWECCL();
             // End of keep on top
             
             if (PreRelease)
@@ -200,8 +200,8 @@ public class Plugin : BaseUnityPlugin
         string save = Application.persistentDataPath + "/Save.bytes";
         if (!File.Exists(save))
         {
-            UnmappedSaveData.OKDAOPACMLB(); // Restore default
-            UnmappedSaveData.IFNAOOEOLLK(); // Save
+            UnmappedSaveData.NJMFCPGCKNL(); // Restore default
+            UnmappedSaveData.OIIAHNGBNIF(); // Save
         }
         try
         {
@@ -378,8 +378,8 @@ public class Plugin : BaseUnityPlugin
         if (CustomClips.Count != 0)
         {
             // Update the number of audio clips in the game
-            UnmappedSound.PJIECBLCGFB = VanillaCounts.MusicCount + CustomClips.Count;
-            UnmappedSound.FFMBDMFIJHL = new AudioClip[UnmappedSound.PJIECBLCGFB + 1];
+            UnmappedSound.NABPGAFNBMP = VanillaCounts.MusicCount + CustomClips.Count;
+            UnmappedSound.OOFPHCHKOBE = new AudioClip[UnmappedSound.NABPGAFNBMP + 1];
         }
 
         ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.AudioClip.name));
