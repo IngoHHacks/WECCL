@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using UnityEngine;
 using WECCL.Content;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -17,6 +18,11 @@ public class ArenaPatch
     public static float yOverride;
     public static int NoOriginalLocationsValue;
     public static bool freezeAnnouncers;
+    public static int SignCount = 6;
+    public static int CrowdCount = 12;
+    //Below used for textures on custom arenas
+    public static Texture[] signTextures = (Texture[])(object)new Texture[1];
+    public static Texture[] crowdTextures = (Texture[])(object)new Texture[1];
 
     private void Awake()
     {
@@ -417,15 +423,159 @@ public class ArenaPatch
             }
         }
 
-        //Get signs to randomise on custom arenas
-        [HarmonyPostfix]
-        [HarmonyPatch("PFKOJOFJHGB")]
-        public static void PFKOJOFJHGBPatch(int JNHFFNPHMOC = 0)
+        static void FindAndProcessCrowdObjects(Transform parent)
         {
+            // Loop through all children of the current parent
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                Transform child = parent.GetChild(i);
+
+                // Check if the child's name starts with "crowd" and is not an empty parent object
+                // Do this to find any custom arena crowd assets
+                if (child.name.StartsWith("crowd") && child.childCount == 0)
+                {
+                    // Apply your logic to each qualifying "crowd" object
+                    int num3 = UnmappedGlobals.PMEEFNOLAGF(1, CrowdCount - 1);
+                    Material originalMaterial = child.gameObject.GetComponent<Renderer>().sharedMaterial;
+                    Material newMaterial = new Material(originalMaterial);
+                    Texture texture = crowdTextures[num3];
+                    newMaterial.SetTexture("_MainTex", texture);
+                    child.gameObject.GetComponent<Renderer>().material = newMaterial;
+                }
+
+                // Recursively search through the children of the current child
+                FindAndProcessCrowdObjects(child);
+            }
+        }
+
+        //Get signs to randomise on custom arenas
+        [HarmonyPrefix]
+        [HarmonyPatch("PFKOJOFJHGB")]
+        public static bool PFKOJOFJHGBPrePatch(int JNHFFNPHMOC = 0)
+        {
+            //Crowd here
+            int num = NAEEIFNFBBO.PMEEFNOLAGF(1, CrowdCount-1);
+            int num2 = 27;
             if (World.location > VanillaCounts.NoLocations)
             {
-                int num4 = UnmappedGlobals.PMEEFNOLAGF(1, 6);
-                int num5;
+                //Logic so crowd can read from game crowd for custom arenas
+                Transform[] crowdTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
+                int count = 0;
+                for (int i = 0; i < crowdTransforms.Length; i++)
+                {
+                    if (crowdTransforms[i].name.StartsWith("crowd"))
+                    {
+                        count++;
+                    }
+                }
+                num2 = count;
+            } else if (World.location == 21)
+            {
+                num2 = 5;
+            }
+
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                //Replaces crowd textures while keeping materials, shaders etc
+                Transform parentTransform = World.gArena.transform.Find("arena");
+
+                FindAndProcessCrowdObjects(parentTransform);
+            }
+
+            for (int i = 1; i <= num2; i++)
+            {
+                int num3 = 1;
+                if (World.location <= VanillaCounts.NoLocations)
+                {
+                    if (JNHFFNPHMOC == 0)
+                    {
+                        World.crowdTexture[i] = 0;
+                    }
+                    num3 = World.crowdTexture[i];
+                    num = NAEEIFNFBBO.PMEEFNOLAGF(1, CrowdCount - 1);
+                    if (i <= Mathf.RoundToInt(num2 * (World.crowdSize * 1.25f)) || (World.arenaShape > 0 && World.crowdSize > 0.75f))
+                    {
+                        if (World.crowdTexture[i] < 0)
+                        {
+                            World.crowdTexture[i] = -World.crowdTexture[i];
+                        }
+                        if (World.crowdTexture[i] == 0 || (World.crowdSize <= 1f && World.crowdTexture[i] == CrowdCount))
+                        {
+                            World.crowdTexture[i] = num;
+                        }
+                        if (World.crowdSize > 1f || NAEEIFNFBBO.GNCLMNEDIPL < 0)
+                        {
+                            World.crowdTexture[i] = CrowdCount;
+                        }
+                    }
+                    else if (World.crowdTexture[i] > 0)
+                    {
+                        World.crowdTexture[i] = -World.crowdTexture[i];
+                    }
+                    if (LIPNHOMGGHF.FAKHAFKOBPB == 14 && World.location == 21 && i > 4 && World.crowdTexture[i] > 0)
+                    {
+                        World.crowdTexture[i] = -World.crowdTexture[i];
+                    }
+                    if (World.crowdTexture[i] == num3 && JNHFFNPHMOC != 0)
+                    {
+                        continue;
+                    }
+                }
+                Transform val = World.gArena.transform.Find("Crowd/Crowd" + i.ToString("00"));
+                if (val == null)
+                {
+                    val = World.gArena.transform.Find("Crowd" + i.ToString("00"));
+                }
+                if (val != null)
+                {
+                    if (World.location <= VanillaCounts.NoLocations)
+                    {
+                        if (World.crowdTexture[i] > 0)
+                        {
+                            val.gameObject.SetActive(true);
+                            if (Mathf.Abs(World.crowdTexture[i]) != Mathf.Abs(num3))
+                            {
+                                val.gameObject.GetComponent<Renderer>().sharedMaterial = PFKAPGFJKHH.OAAOONFNNBI[World.crowdTexture[i]];
+                            }
+                        }
+                        else if (LIPNHOMGGHF.FAKHAFKOBPB == 50)
+                        {
+                            Object.Destroy(val.gameObject);
+                        }
+                        else
+                        {
+                            val.gameObject.SetActive(false);
+                        }
+                    }
+                }
+                if (World.location <= VanillaCounts.NoLocations)
+                {
+                    Transform val2 = World.gArena.transform.Find("Seats/Seats" + i.ToString("00"));
+                    if (val2 != null)
+                    {
+                        if (World.crowdTexture[i] <= 0 && NAEEIFNFBBO.GNCLMNEDIPL >= 2)
+                        {
+                            val2.gameObject.SetActive(true);
+                        }
+                        else if (LIPNHOMGGHF.FAKHAFKOBPB == 50)
+                        {
+                            Object.Destroy(val2.gameObject);
+                        }
+                        else
+                        {
+                            val2.gameObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+
+            //Signs here
+            int num4 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
+            int num5 = 35;
+
+            if (World.location > VanillaCounts.NoLocations)
+            {
+                //Logic so signs can read from game signs for custom arenas
                 Transform[] signTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
                 int count = 0;
                 for (int i = 0; i < signTransforms.Length; i++)
@@ -435,61 +585,213 @@ public class ArenaPatch
                         count++;
                     }
                 }
-
                 num5 = count;
+            }
+            else if  (World.location >= 2)
+            {
+                num5 = 0;
+            }
 
-                for (int i = 1; i <= num5; i++)
+            for (int i = 1; i <= num5; i++)
+            {
+                Transform transformSigns = null;
+                if (World.location > VanillaCounts.NoLocations)
                 {
-                    Transform transform4 = World.gArena.transform.Find("arena/Signs/Sign" + i.ToString("00"));
-                    if (!(transform4 != null))
+                    //Uses this for custom arenas, otherwise original logic
+                    transformSigns = World.gArena.transform.Find("arena/Signs/Sign" + i.ToString("00"));
+                }
+                else
+                {
+                    transformSigns = World.gArena.transform.Find("Signs/Sign" + i.ToString("00"));
+                }
+                if (!(transformSigns != null))
+                {
+                    continue;
+                }
+
+                int num6 = 0;
+                if (UnmappedGlobals.GNCLMNEDIPL > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
+                {
+                    if ((i <= 18 && World.crowdSize >= 0.25f) || World.crowdSize >= 0.6f)
                     {
-                        continue;
+                        num6 = 1;
                     }
 
-                    int num6 = 0;
-                    if (UnmappedGlobals.GNCLMNEDIPL > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
+                    if (World.crowdSize < 0.7f && (i == 21 || i == 31 || i == 35))
                     {
-                        if ((i <= 18 && World.crowdSize >= 0.25f) || World.crowdSize >= 0.6f)
-                        {
-                            num6 = 1;
-                        }
-
-                        if (World.crowdSize < 0.7f && (i == 21 || i == 31 || i == 35))
-                        {
-                            num6 = 0;
-                        }
-
-                        if (UnmappedMenus.FAKHAFKOBPB == 50 && UnmappedGlobals.GNCLMNEDIPL == 1 &&
-                            UnmappedGlobals.PMEEFNOLAGF(0, 1) == 0)
-                        {
-                            num6 = 0;
-                        }
+                        num6 = 0;
                     }
 
-                    if (num6 > 0)
+                    if (UnmappedMenus.FAKHAFKOBPB == 50 && UnmappedGlobals.GNCLMNEDIPL == 1 &&
+                        UnmappedGlobals.PMEEFNOLAGF(0, 1) == 0)
                     {
-                        transform4.gameObject.SetActive(true);
-                        if (UnmappedMenus.FAKHAFKOBPB == 50 && JNHFFNPHMOC == 0)
-                        {
-                            if (UnmappedGlobals.GNCLMNEDIPL >= 2)
-                            {
-                                num4 = UnmappedGlobals.PMEEFNOLAGF(1, 6);
-                            }
+                        num6 = 0;
+                    }
+                }
 
-                            transform4.gameObject.GetComponent<Renderer>().sharedMaterial =
+                if (num6 > 0)
+                {
+                    transformSigns.gameObject.SetActive(true);
+                    if (UnmappedMenus.FAKHAFKOBPB == 50 && JNHFFNPHMOC == 0)
+                    {
+                        if (UnmappedGlobals.GNCLMNEDIPL >= 2)
+                        {
+                            num4 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
+                        }
+                        if (World.location > VanillaCounts.NoLocations)
+                        {
+                            //This lets us keep any materials etc on the original object but change the texture.
+                            Material originalMaterial = transformSigns.gameObject.GetComponent<Renderer>().sharedMaterial;
+                            Material newMaterial = new Material(originalMaterial);
+                            Texture texture = signTextures[num4];
+                            newMaterial.SetTexture("_MainTex", texture);
+                            transformSigns.gameObject.GetComponent<Renderer>().material = newMaterial;
+                        }
+                        else
+                        {
+                            transformSigns.gameObject.GetComponent<Renderer>().sharedMaterial =
                                 UnmappedTextures.LILJCAEGEIP[num4];
                         }
                     }
-                    else if (UnmappedMenus.FAKHAFKOBPB == 50)
+                }
+                else if (UnmappedMenus.FAKHAFKOBPB == 50)
+                {
+                    Object.Destroy(transformSigns.gameObject);
+                }
+                else
+                {
+                    transformSigns.gameObject.SetActive(false);
+                }
+            }
+            return false;
+        }
+
+        [HarmonyPatch(typeof(UnmappedTextures))]
+        public static class UnmappedTexturesPatch
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch("OGKINFCMNKM")]
+            public static void OGKINFCMNKMPostPatch()
+            {
+                string parentDirectory = GetParentOfParentDirectory();
+                //Crowd
+                CrowdCount = 10;
+                var crowdFolders = Directory.GetDirectories(parentDirectory, "crowd", SearchOption.AllDirectories);
+                var crowdPngFiles = crowdFolders.SelectMany(crowdFolder => Directory.GetFiles(crowdFolder, "*.png")).ToArray();
+
+                foreach (string assetPath in crowdPngFiles)
+                {
+                    CrowdCount += 1;
+                    if (CrowdCount >= UnmappedTextures.OAAOONFNNBI.Length)
                     {
-                        Object.Destroy(transform4.gameObject);
+                        // Resize the array to accommodate new CrowdCount
+                        Material[] newMaterialArray = new Material[CrowdCount + 1];
+                        Array.Copy(UnmappedTextures.OAAOONFNNBI, newMaterialArray, UnmappedTextures.OAAOONFNNBI.Length);
+                        UnmappedTextures.OAAOONFNNBI = newMaterialArray;
+                    }
+                    if (CrowdCount < UnmappedTextures.OAAOONFNNBI.Length)
+                    {
+                        Texture2D texture = LoadTextureFromPath(assetPath);
+                        UnmappedTextures.OAAOONFNNBI[CrowdCount] = new Material(UnmappedTextures.BEKNPDFCADC);
+                        UnmappedTextures.OAAOONFNNBI[CrowdCount].SetTexture("_MainTex", texture);
                     }
                     else
                     {
-                        transform4.gameObject.SetActive(false);
+                        UnityEngine.Debug.LogError("Outside the array");
+                    }
+                }
+
+                if (CrowdCount > 10)
+                {
+                    CrowdCount += 1;
+                    //Don't need to do any of this if CrowdCount hasn't changed, otherwise make sure virtual crowd is the last value
+                    Material[] newMaterialArray = new Material[CrowdCount + 1];
+                    Array.Copy(UnmappedTextures.OAAOONFNNBI, newMaterialArray, UnmappedTextures.OAAOONFNNBI.Length);
+                    UnmappedTextures.OAAOONFNNBI = newMaterialArray;
+
+                    ref Texture reference3 = ref UnmappedTextures.PLBHGOMLDDE[11];
+                    Object obj3 = NAEEIFNFBBO.JFHPHDKKECG("World/Crowds", "crowd_virtual");
+                    reference3 = (Texture)(object)((obj3 is Texture) ? obj3 : null);
+                    UnmappedTextures.OAAOONFNNBI[CrowdCount] = new Material(UnmappedTextures.BEKNPDFCADC);
+                    UnmappedTextures.OAAOONFNNBI[CrowdCount].SetTexture("_MainTex", UnmappedTextures.PLBHGOMLDDE[11]);
+                }
+
+
+                crowdTextures = new Texture[CrowdCount + 1];
+                for (int crowdAmounts = 1; crowdAmounts <= CrowdCount; crowdAmounts++)
+                {
+                    Texture2D mainTexture = (Texture2D)UnmappedTextures.OAAOONFNNBI[crowdAmounts].GetTexture("_MainTex");
+                    if (mainTexture != null)
+                    {
+                        crowdTextures[crowdAmounts] = mainTexture;
+                    }
+                }
+
+                //Signs
+                SignCount = 6;
+                var signFolders = Directory.GetDirectories(parentDirectory, "signs", SearchOption.AllDirectories);
+                var signPngFiles = signFolders.SelectMany(signFolder => Directory.GetFiles(signFolder, "*.png")).ToArray();
+
+                foreach (string assetPath in signPngFiles)
+                {
+                    SignCount += 1;
+                    if (SignCount >= UnmappedTextures.LILJCAEGEIP.Length)
+                    {
+                        // Resize the array to accommodate new SignCount
+                        Material[]  newMaterialArray = new Material[SignCount + 1];
+                        Array.Copy(UnmappedTextures.LILJCAEGEIP, newMaterialArray, UnmappedTextures.LILJCAEGEIP.Length);
+                        UnmappedTextures.LILJCAEGEIP = newMaterialArray;
+                    }
+                    if (SignCount < UnmappedTextures.LILJCAEGEIP.Length)
+                    {
+                        Texture2D texture = LoadTextureFromPath(assetPath);
+                        UnmappedTextures.LILJCAEGEIP[SignCount] = new Material(UnmappedTextures.BEKNPDFCADC);
+                        UnmappedTextures.LILJCAEGEIP[SignCount].SetTexture("_MainTex", texture);
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.LogError("Outside the array");
+                    }
+                }
+
+                signTextures = new Texture[SignCount+1];
+                for (int signsAmounts = 1; signsAmounts <= SignCount; signsAmounts++)
+                {
+                    Texture2D mainTexture = (Texture2D)UnmappedTextures.LILJCAEGEIP[signsAmounts].GetTexture("_MainTex");
+                    if (mainTexture != null)
+                    {
+                        signTextures[signsAmounts] = mainTexture;
                     }
                 }
             }
+        }
+
+        private static Texture2D LoadTextureFromPath(string path)
+        {
+            try
+            {
+                byte[] fileData = File.ReadAllBytes(path);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(fileData); // Assuming PNG format
+                return texture;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"Error loading texture from path {path}: {ex.Message}");
+                return null;
+            }
+        }
+
+        private static string GetParentOfParentDirectory()
+        {
+            // Get the directory where the current executing assembly (your DLL) is located
+            string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+
+            // Get the parent directory of the assembly location
+            string parentDirectory = Path.GetDirectoryName(assemblyLocation);
+            parentDirectory = Path.GetDirectoryName(parentDirectory);
+
+            return parentDirectory;
         }
 
         [HarmonyPatch(typeof(UnmappedPlayer))]
