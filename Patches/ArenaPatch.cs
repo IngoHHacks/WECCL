@@ -692,7 +692,7 @@ public class ArenaPatch
                     if (CrowdCount < UnmappedTextures.OAAOONFNNBI.Length)
                     {
                         Texture2D texture = LoadTextureFromPath(assetPath);
-                        UnmappedTextures.OAAOONFNNBI[CrowdCount] = new Material(UnmappedTextures.BEKNPDFCADC);
+                        UnmappedTextures.OAAOONFNNBI[CrowdCount] = new Material(UnmappedTextures.KAENFJPIIEG);
                         UnmappedTextures.OAAOONFNNBI[CrowdCount].SetTexture("_MainTex", texture);
                     }
                     else
