@@ -40,4 +40,6 @@ In addition, you can use "WeaponObject:Random", "WeaponObject:Random2" etc to sp
 
 -If you have announce desk further from ring and find your announcers leave their seats to go stand at ringside, simply make an object called "AnnouncerFreeze" and the mod will disable the announcer AI so they don't leave their chairs.
 
+-If you have a dedicated titantron camera game object in the arena, make sure to name it "TitantronCamera" so it will get autorotated towards the action.
+
 Any questions try the modding discord here: https://discord.gg/mH56AhUwPR
