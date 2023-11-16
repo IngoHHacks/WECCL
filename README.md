@@ -47,6 +47,11 @@ Experimental features:
 
 This is the recommended way to install the mods.
 
+#### Steam Workshop
+- Subscribe to [WECCL on the Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3022699985)
+- Run the game with mods enabled
+
+#### Thunderstore Mod Manager (deprecated by Steam Workshop but still supported)
 - Download and install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager)
   or [r2modman](https://github.com/ebkr/r2modmanPlus/releases)
 - Click the `Install with Mod Manager` button on top of
