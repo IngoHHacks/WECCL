@@ -1424,4 +1424,423 @@ public class ArenaPatch
             }
         }
     }
+
+    //Below is for applying Shaders from custom Arena to things that need it in WE
+    [HarmonyPatch(typeof(World))]
+    public static class World_ShaderPatch
+    {
+        //Fix cage in Custom Arena shaders
+        [HarmonyPostfix]
+        [HarmonyPatch("MDJMMGCBBFM")]
+        public static void MDJMMGCBBFM_ShaderPatch(int EJDHFNIJFHI = 0)
+        {
+            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0 && World.gCage != null && World.arenaCage == 3)
+            {
+                Transform ReferenceSolidObject = World.gArena.transform.Find("SolidShader");
+                Transform ReferenceTransparentObject = World.gArena.transform.Find("TransparentShader");
+
+                if (ReferenceSolidObject != null && ReferenceTransparentObject != null)
+                {
+                    Material customSolidMaterial = ReferenceSolidObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+                    Material customTransparentMaterial = ReferenceTransparentObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+
+                    GameObject[] targetGameObjects = World.gCage;
+
+                    foreach (GameObject targetGameObject in targetGameObjects)
+                    {
+                        foreach (Renderer renderer in targetGameObject.GetComponentsInChildren<Renderer>())
+                        {
+                            Texture[] existingTextures = new Texture[renderer.materials.Length];
+                            string[] existingShaderName = new string[renderer.materials.Length];
+                            Vector2[] existingTiling = new Vector2[renderer.materials.Length];
+                            Vector2[] existingOffset = new Vector2[renderer.materials.Length];
+
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                existingTextures[i] = renderer.materials[i].mainTexture;
+                                existingShaderName[i] = renderer.materials[i].shader.name;
+                                existingTiling[i] = renderer.materials[i].mainTextureScale;
+                                existingOffset[i] = renderer.materials[i].mainTextureOffset;
+                            }
+
+                            // Change the material for each Renderer component found
+                            Material[] customMaterials = new Material[renderer.materials.Length];
+                            for (int i = 0; i < customMaterials.Length; i++)
+                            {
+                                if (existingShaderName[i] == "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customSolidMaterial;
+                                }
+                                //If it ain't solid, assume its cutout
+                                if (existingShaderName[i] != "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customTransparentMaterial;
+                                }
+
+                                customMaterials[i].mainTextureScale = existingTiling[i];
+                                customMaterials[i].mainTextureOffset = existingOffset[i];
+                            }
+                            renderer.materials = customMaterials;
+
+                            // Restore the existing textures for each material
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                renderer.materials[i].mainTexture = existingTextures[i];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //Fix turnbuckles etc in Custom Arena shaders
+        [HarmonyPostfix]
+        [HarmonyPatch("DBKOAJKLBIF")]
+        public static void DBKOAJKLBIF_ShaderPatch(int EJDHFNIJFHI = 0)
+        {
+            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0 && World.no_ropes > 0)
+            {
+                Transform ReferenceSolidObject = World.gArena.transform.Find("SolidShader");
+                Transform ReferenceTransparentObject = World.gArena.transform.Find("TransparentShader");
+
+                if (ReferenceSolidObject != null && ReferenceTransparentObject != null)
+                {
+                    Material customSolidMaterial = ReferenceSolidObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+                    Material customTransparentMaterial = ReferenceTransparentObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+
+                    GameObject targetGameObject1 = World.gPosts;
+                    GameObject targetGameObject2 = World.gSupports;
+                    GameObject targetGameObject3 = World.gPads;
+
+                    for (int n = 1; n <= 3; n++)
+                    {
+                        GameObject targetGameObject = null;
+                        switch (n)
+                        {
+                            case 1:
+                                targetGameObject = targetGameObject1;
+                                break;
+                            case 2:
+                                targetGameObject = targetGameObject2;
+                                break;
+                            case 3:
+                                targetGameObject = targetGameObject3;
+                                break;
+                        }
+
+                        foreach (Renderer renderer in targetGameObject.GetComponentsInChildren<Renderer>())
+                        {
+                            Texture[] existingTextures = new Texture[renderer.materials.Length];
+                            Color[] existingColor = new Color[renderer.materials.Length];
+                            string[] existingShaderName = new string[renderer.materials.Length];
+                            Material[] existingRenderMaterials = renderer.materials;
+
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                existingTextures[i] = renderer.materials[i].mainTexture;
+                                if (renderer.materials[i].HasProperty("_Color"))
+                                {
+                                    existingColor[i] = renderer.materials[i].color;
+                                }
+                                existingShaderName[i] = renderer.materials[i].shader.name;
+                            }
+
+                            // Change the material for each Renderer component found
+                            Material[] customMaterials = new Material[renderer.materials.Length];
+                            for (int i = 0; i < customMaterials.Length; i++)
+                            {
+                                if (existingShaderName[i] == "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customSolidMaterial;
+                                }
+                                //If it ain't solid, assume its cutout
+                                if (existingShaderName[i] != "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customTransparentMaterial;
+                                }
+                            }
+                            renderer.materials = customMaterials;
+
+                            // Restore the existing textures for each material
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                renderer.materials[i].mainTexture = existingTextures[i];
+                                if (existingRenderMaterials[i].HasProperty("_Color"))
+                                {
+                                    renderer.materials[i].color = existingColor[i];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //Fix ropes in Custom Arena shaders
+        [HarmonyPostfix]
+        [HarmonyPatch("LCKBDNEOBFE")]
+        public static void LCKBDNEOBFE_ShaderPatch(int PLFGKLGCOMD, string CMECDGMCMLC, Material AFFJPPCGHLN)
+        {
+            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            {
+                Transform ReferenceSolidObject = World.gArena.transform.Find("SolidShader");
+                Transform ReferenceTransparentObject = World.gArena.transform.Find("TransparentShader");
+
+                if (ReferenceSolidObject != null && ReferenceTransparentObject != null)
+                {
+                    Material customSolidMaterial = ReferenceSolidObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+                    Material customTransparentMaterial = ReferenceTransparentObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+
+                    GameObject targetGameObject1 = World.gRope[PLFGKLGCOMD].transform.Find(CMECDGMCMLC + "01").gameObject;
+                    GameObject targetGameObject2 = World.gRope[PLFGKLGCOMD].transform.Find(CMECDGMCMLC + "01/" + CMECDGMCMLC + "02").gameObject;
+                    GameObject targetGameObject3 = World.gRope[PLFGKLGCOMD].transform.Find(CMECDGMCMLC + "01/" + CMECDGMCMLC + "02/" + CMECDGMCMLC + "03").gameObject;
+                    GameObject targetGameObject4 = World.gRope[PLFGKLGCOMD].transform.Find(CMECDGMCMLC + "01/" + CMECDGMCMLC + "02/" + CMECDGMCMLC + "03/" + CMECDGMCMLC + "04").gameObject;
+
+                    for (int n = 1; n <= 4; n++)
+                    {
+                        GameObject targetGameObject = null;
+                        switch (n)
+                        {
+                            case 1:
+                                targetGameObject = targetGameObject1;
+                                break;
+                            case 2:
+                                targetGameObject = targetGameObject2;
+                                break;
+                            case 3:
+                                targetGameObject = targetGameObject3;
+                                break;
+                            case 4:
+                                targetGameObject = targetGameObject4;
+                                break;
+                        }
+
+                        foreach (Renderer renderer in targetGameObject.GetComponentsInChildren<Renderer>())
+                        {
+                            Texture[] existingTextures = new Texture[renderer.materials.Length];
+                            Color[] existingColor = new Color[renderer.materials.Length];
+                            string[] existingShaderName = new string[renderer.materials.Length];
+                            Material[] existingRenderMaterials = renderer.materials;
+
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                existingTextures[i] = renderer.materials[i].mainTexture;
+                                if (renderer.materials[i].HasProperty("_Color"))
+                                {
+                                    existingColor[i] = renderer.materials[i].color;
+                                }
+                                existingShaderName[i] = renderer.materials[i].shader.name;
+                            }
+
+                            // Change the material for each Renderer component found
+                            Material[] customMaterials = new Material[renderer.materials.Length];
+                            for (int i = 0; i < customMaterials.Length; i++)
+                            {
+                                if (existingShaderName[i] == "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customSolidMaterial;
+                                }
+                                //If it ain't solid, assume its cutout
+                                if (existingShaderName[i] != "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customTransparentMaterial;
+                                }
+                            }
+                            renderer.materials = customMaterials;
+
+                            // Restore the existing textures for each material
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                renderer.materials[i].mainTexture = existingTextures[i];
+                                if (existingRenderMaterials[i].HasProperty("_Color"))
+                                {
+                                    renderer.materials[i].color = existingColor[i];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(DFOGOCNBECG))]
+    public static class DFOGOCNBECG_ShaderPatch
+    {
+        //Fix wrestler headgear with custom arena shaders
+        [HarmonyPostfix]
+        [HarmonyPatch("DIBPGIMGMAB")]
+        public static void DIBPGIMGMAB_ShaderPatch(DFOGOCNBECG __instance, int IKBHGAKKJMM, int CFNLGGDIFGH = 99)
+        {
+            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            {
+                if ((IKBHGAKKJMM == 28 || IKBHGAKKJMM == 31) && __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 0)
+                {
+                    Transform ReferenceObject = World.gArena.transform.Find("SolidShader");
+
+                    if (ReferenceObject != null)
+                    {
+                        Material customArenaMaterial = ReferenceObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+                        GameObject targetGameObject = __instance.PCNHIIPBNEK[IKBHGAKKJMM];
+                        //This doesn't work, needs more investigating
+                        foreach (Renderer renderer in targetGameObject.GetComponentsInChildren<Renderer>())
+                        {
+                            Texture[] existingTextures = new Texture[renderer.materials.Length];
+                            Color[] existingColor = new Color[renderer.materials.Length];
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                existingTextures[i] = renderer.materials[i].mainTexture;
+                                existingColor[i] = renderer.materials[i].color;
+                            }
+
+                            // Change the material for each Renderer component found
+                            Material[] customMaterials = new Material[renderer.materials.Length];
+                            for (int i = 0; i < customMaterials.Length; i++)
+                            {
+                                customMaterials[i] = customArenaMaterial;
+                            }
+                            renderer.materials = customMaterials;
+
+                            // Restore the existing textures for each material
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                            {
+                                renderer.materials[i].mainTexture = existingTextures[i];
+                                renderer.materials[i].color = existingColor[i];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(GGKBLABCJFN))]
+    public static class GGKBLABCJFN_ShaderPatch
+    {
+        //Fix Furniture with custom arena shaders
+        [HarmonyPostfix]
+        [HarmonyPatch("ICGNAJFLAHL")]
+        public static void ICGNAJFLAHL_ShaderPatch(GGKBLABCJFN __instance)
+        {
+            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            {
+                Transform ReferenceObject = World.gArena.transform.Find("SolidShader");
+
+                if (ReferenceObject != null)
+                {
+                    Material customArenaMaterial = ReferenceObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+
+                    GameObject targetGameObject = __instance.PCNHIIPBNEK;
+
+                    foreach (Renderer renderer in targetGameObject.GetComponentsInChildren<Renderer>())
+                    {
+                        //This works for getting all parts of model like ladder and fixing it, need to do same to hats
+                        Texture[] existingTextures = new Texture[renderer.materials.Length];
+                        for (int i = 0; i < renderer.materials.Length; i++)
+                        {
+                            existingTextures[i] = renderer.materials[i].mainTexture;
+                        }
+
+                        // Change the material for each Renderer component found
+                        Material[] customMaterials = new Material[renderer.materials.Length];
+                        for (int i = 0; i < customMaterials.Length; i++)
+                        {
+                            customMaterials[i] = customArenaMaterial;
+                        }
+                        renderer.materials = customMaterials;
+
+                        // Restore the existing textures for each material
+                        for (int i = 0; i < renderer.materials.Length; i++)
+                        {
+                            renderer.materials[i].mainTexture = existingTextures[i];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(GDFKEAMIOAG))]
+    public static class GDFKEAMIOAG_ShaderPatch
+    {
+        //Fix weapons with custom arena shaders
+        [HarmonyPostfix]
+        [HarmonyPatch("ICGNAJFLAHL")]
+        public static void ICGNAJFLAHL_ShaderPatch(GDFKEAMIOAG __instance)
+        {
+            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            {
+                //Exclude Belts and Glass weapons
+                if (__instance.BPJFLJPKKJK > 0 && __instance.BPJFLJPKKJK != 23 && __instance.BPJFLJPKKJK != 24 && __instance.BPJFLJPKKJK != 25 && __instance.BPJFLJPKKJK != 26 && __instance.BPJFLJPKKJK != 37)
+                {
+                    Transform ReferenceSolidObject = World.gArena.transform.Find("SolidShader");
+                    Transform ReferenceTransparentObject = World.gArena.transform.Find("TransparentShader");
+
+                    if (ReferenceSolidObject != null && ReferenceTransparentObject != null)
+                    {
+                        GameObject targetGameObject = __instance.PCNHIIPBNEK;
+
+                        foreach (var rendererComponent in targetGameObject.GetComponentsInChildren<Renderer>())
+                        {
+                            Material customSolidMaterial = ReferenceSolidObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+                            Material customTransparentMaterial = ReferenceTransparentObject.gameObject.GetComponent<Renderer>().sharedMaterial;
+
+                            Texture[] existingTextures = new Texture[rendererComponent.materials.Length];
+                            int[] existingRenderQueue = new int[rendererComponent.materials.Length];
+                            string[] existingShaderName = new string[rendererComponent.materials.Length];
+                            Material[] existingMaterials = new Material[rendererComponent.materials.Length];
+                            Material[] existingRenderMaterials = rendererComponent.materials;
+                            Vector2[] existingTiling = new Vector2[rendererComponent.materials.Length];
+                            Vector2[] existingOffset = new Vector2[rendererComponent.materials.Length];
+                            Color[] existingColor = new Color[rendererComponent.materials.Length];
+
+                            for (int i = 0; i < rendererComponent.materials.Length; i++)
+                            {
+                                existingTextures[i] = rendererComponent.materials[i].mainTexture;
+                                existingRenderQueue[i] = rendererComponent.materials[i].renderQueue;
+                                existingShaderName[i] = rendererComponent.materials[i].shader.name;
+                                existingMaterials[i] = rendererComponent.materials[i];
+                                if (rendererComponent.materials[i].HasProperty("_Color"))
+                                {
+                                    existingColor[i] = rendererComponent.materials[i].color;
+                                }
+                                existingTiling[i] = rendererComponent.materials[i].mainTextureScale;
+                                existingOffset[i] = rendererComponent.materials[i].mainTextureOffset;
+                            }
+
+                            // Change the material for each Renderer component found
+                            Material[] customMaterials = new Material[rendererComponent.materials.Length];
+                            for (int i = 0; i < customMaterials.Length; i++)
+                            {
+                                if (existingShaderName[i] == "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customSolidMaterial;
+                                }
+                                //If it ain't solid, assume its cutout as we ignore glass weapons
+                                if (existingShaderName[i] != "Custom/My Simple Solid")
+                                {
+                                    customMaterials[i] = customTransparentMaterial;
+                                }
+
+                                customMaterials[i].mainTextureScale = existingTiling[i];
+                                customMaterials[i].mainTextureOffset = existingOffset[i];
+                            }
+                            rendererComponent.materials = customMaterials;
+
+                            // Restore the existing textures and RenderQueue for each material
+                            for (int i = 0; i < rendererComponent.materials.Length; i++)
+                            {
+                                rendererComponent.materials[i].mainTexture = existingTextures[i];
+                                rendererComponent.materials[i].renderQueue = existingRenderQueue[i];
+                                if (existingRenderMaterials[i].HasProperty("_Color"))
+                                {
+                                    rendererComponent.materials[i].color = existingColor[i];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
