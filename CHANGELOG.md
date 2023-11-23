@@ -11,7 +11,7 @@
   warned.
 - P.S. Ingo is very nice and would never do such a thing. But still, back up your save file. Or else...
 
-- ### Release 1.6.1
+### Release 1.6.1
 - Broken save files will now be attempted to be repaired on launch.
 - Added support for mentioning moves in custom promos.
 - Added support for additional crowd and signs in custom arenas.
