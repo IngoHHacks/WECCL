@@ -166,6 +166,8 @@ public class BetterCharacterData
             bcd.musicC = "Vanilla/" + character.music;
         }
 
+        bcd.grudge = 0;
+
         return bcd;
     }
 
@@ -224,6 +226,8 @@ public class BetterCharacterData
         {
             character.music = int.Parse(this.musicC.Substring(8));
         }
+        character.grudge = 0;
+        character.team = 0;
 
         return character;
     }
@@ -268,5 +272,7 @@ public class BetterCharacterData
         // Ignore nulls and nulls in arrays
         JsonConvert.PopulateObject(JsonConvert.SerializeObject(this), character,
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+        character.grudge = 0;
+        character.team = 0;
     }
 }

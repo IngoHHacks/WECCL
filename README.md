@@ -193,6 +193,7 @@ e.g. `@his1 friend` -> `his friend` or `her friend` depending on wrestler #'s ge
 are `He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy`.  
 `$promotion#`, `$$belt(#1)_(#2)`, `$$champ(#1)_(#2)` will be replaced with the name of promotion #, the name of
 promotion #1's belt #2, and the name of promotion #1's champion of belt #2 respectively.
+`$$moveFront(#1)_(#2)`, `$$moveBack(#1)_(#2)`, `$$moveGround(#1)_(#2)`, `$$moveAttack(#1)_(#2)`, `$$moveCrush(#1)_(#2)`, `$$taunt(#1)_(#2)` will be replaced with the name of character #1's front, back, ground, attack, crush, and taunt move number #2 respectively. A list of move indices can be found below the supported commands.
 `speaker` must be an integer.
 `target` must be an integer.
 `taunt` must be a string or integer. A list of taunts can be found in `TauntAnims.md`.
@@ -213,6 +214,17 @@ The following commands are supported:
 | SetRealNeutral  | wrestlerId1, wrestlerId2 | Removes the relationship between the given wrestlers.    | `SetRealNeutral:1:2`  |
 | SetStoryNeutral | wrestlerId1, wrestlerId2 | Removes the relationship between the given wrestlers.    | `SetStoryNeutral:1:2` |
 | PlayAudio       | audioName/Id             | Plays the given crowd audio.                             | `PlayAudio:Cheer`     |
+
+
+| Move Type | 0       | 1               | 2                  | 3             | 4               | 5             | 6                  | 7                  | 8           | 9         | 10            | 11          | 12          | 13       | 14      | 15     | 16  |
+|-----------|---------|-----------------|--------------------|---------------|-----------------|---------------|--------------------|--------------------|-------------|-----------|---------------|-------------|-------------|----------|---------|--------|-----|
+| Front     | Special | Attack + Up     | Attack + Centre    | Attack + Side | Attack + Down   | Run + Up      | Run + Centre       | Run + Side         | Run + Down  | Pick + Up | Pick + Centre | Pick + Side | Pick + Down | Momentum | Running | Flying | ??? |
+| Back      | Special | Attack + Centre | Attack + Direction | Run + Centre  | Run + Direction | Pick + Centre | Pick + Direction   | Rear Running       | Rear Flying |           |               |             |             |          |         |        |     |
+| Ground    |         | Head x Attack   | Head x Run         | Head x Pick   | Legs x Attack   | Legs x Run    | Legs x Pick        |                    |             |           |               |             |             |          |         |        |     |
+| Attack    |         | Upper Attack    | Lower Attack       | Big Attack    | Running Attack  | Flying Attack | Middle Rope Attack | Springboard Attack | Tope Attack |           |               |             |             |          |         |        |     |
+| Crush     |         | ???             | Stomp              | Big Crush     | Running Crush   | Flying Crush  | Middle Rope Crush  | Springboard Crush  | Tope Crush  |           |               |             |             |          |         |        |     |
+| Taunt     |         | Entrance        | Taunt              | Special       | Celebration     |               |                    |                    |             |           |               |             |             |          |         |        |     |
+
 
 Commands and names are case-insensitive.
 
@@ -411,7 +423,7 @@ Donations are always appreciated. You can donate on my [Ko-fi page](https://ko-f
 
 ## Special Thanks
 
-**Mat Dickie** for generously donating €1,000  
+**Mat Dickie** for generously donating €1,000, twice  
 **All the Discord Testers**  
 **Everyone who published mods using WECCL**
 

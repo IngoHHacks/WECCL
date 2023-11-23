@@ -468,4 +468,219 @@ public class SaveRemapper
             Plugin.Log.LogError(e);
         }
     }
+
+    public static void FixBrokenSaveData()
+    {
+        Plugin.Log.LogInfo("Validating save data...");
+        var saveData = UnmappedSaveData.APPDIBENDAH;
+        var numChars = saveData.savedChars.Length;
+        if (saveData.wrestler > numChars)
+        {
+            Plugin.Log.LogWarning(
+                $"Wrestler index {saveData.wrestler} is out of bounds. Resetting to 1.");
+            saveData.wrestler = 1;
+        }
+        if (saveData.booker > numChars)
+        {
+            Plugin.Log.LogWarning(
+                $"Booker index {saveData.booker} is out of bounds. Resetting to 1.");
+            saveData.booker = 1;
+        }
+        if (saveData.missionClient > numChars)
+        {
+            Plugin.Log.LogWarning(
+                $"Mission client index {saveData.missionClient} is out of bounds. Resetting to 1.");
+            saveData.missionClient = 1;
+        }
+        if (saveData.missionTarget > numChars)
+        {
+            Plugin.Log.LogWarning(
+                $"Mission target index {saveData.missionTarget} is out of bounds. Resetting to 1.");
+            saveData.missionTarget = 1;
+        }
+        if (saveData.bookingMissionClient > numChars)
+        {
+            Plugin.Log.LogWarning(
+                $"Booking mission client index {saveData.bookingMissionClient} is out of bounds. Resetting to 1.");
+            saveData.bookingMissionClient = 1;
+        }
+        if (saveData.bookingMissionTarget > numChars)
+        {
+            Plugin.Log.LogWarning(
+                $"Booking mission target index {saveData.bookingMissionTarget} is out of bounds. Resetting to 1.");
+            saveData.bookingMissionTarget = 1;
+        }
+        if (saveData.charUnlock.Length != numChars)
+        {
+            Plugin.Log.LogWarning(
+                $"Character unlock array length {saveData.charUnlock.Length} does not match number of characters {numChars}. Fixing.");
+            int oldLength = saveData.charUnlock.Length;
+            Array.Resize(ref saveData.charUnlock, numChars);
+            if (oldLength < numChars)
+            {
+                for (int i = oldLength; i < numChars; i++)
+                {
+                    saveData.charUnlock[i] = 1;
+                }
+            }
+        }
+        for (int index = 1; index < saveData.opponent.Length; index++)
+        {
+            int opponent = saveData.opponent[index];
+            if (opponent > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Opponent index {opponent} is out of bounds. Resetting to 1.");
+                saveData.opponent[index] = 1;
+            }
+        }
+        for (int index = 1; index < saveData.bookingOpponent.Length; index++)
+        {
+            int opponent = saveData.bookingOpponent[index];
+            if (opponent > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Booking opponent index {opponent} is out of bounds. Resetting to 1.");
+                saveData.bookingOpponent[index] = 1;
+            }
+        }
+        foreach (var card in saveData.card)
+        {
+            if (card == null)
+            {
+                continue;
+            }
+            foreach (var segment in card.segment)
+            {
+                if (segment == null)
+                {
+                    continue;
+                }
+                if (segment.leftChar > numChars)
+                {
+                    Plugin.Log.LogWarning(
+                        $"Left character index {segment.leftChar} is out of bounds. Resetting to 1.");
+                    segment.leftChar = 1;
+                }
+                if (segment.rightChar > numChars)
+                {
+                    Plugin.Log.LogWarning(
+                        $"Right character index {segment.rightChar} is out of bounds. Resetting to 1.");
+                    segment.rightChar = 1;
+                }
+                if (segment.winner > numChars)
+                {
+                    Plugin.Log.LogWarning(
+                        $"Winner index {segment.winner} is out of bounds. Resetting to 1.");
+                    segment.winner = 1;
+                }
+            }
+        }
+        for (int index = 1; index < saveData.hiChar.Length; index++)
+        {
+            int hiChar = saveData.hiChar[index];
+            if (hiChar > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Hi character index {hiChar} is out of bounds. Resetting to 1.");
+                saveData.hiChar[index] = 1;
+            }
+        }
+        foreach (var stockFurniture in saveData.stockFurniture)
+        {
+            if (stockFurniture == null)
+            {
+                continue;
+            }
+            if (stockFurniture.owner > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Furniture owner index {stockFurniture.owner} is out of bounds. Resetting to 1.");
+                stockFurniture.owner = 1;
+            }
+        }
+        foreach (var stockWeapon in saveData.stockWeapons)
+        {
+            if (stockWeapon == null)
+            {
+                continue;
+            }
+            if (stockWeapon.owner > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Weapon owner index {stockWeapon.owner} is out of bounds. Resetting to 1.");
+                stockWeapon.owner = 1;
+            }
+        }
+        foreach (var character in saveData.savedChars)
+        {
+            if (character == null)
+            {
+                continue;
+            }
+            for (int i = 1; i < character.relationship.Length; i++)
+            {
+                if (character.relationship[i] > numChars)
+                {
+                    Plugin.Log.LogWarning(
+                        $"Relationship character index {character.relationship[i]} is out of bounds. Resetting to 1.");
+                    character.relationship[i] = 1;
+                }
+            }
+            if (character.grudge > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Grudge character index {character.grudge} is out of bounds. Resetting to 1.");
+                character.grudge = 1;
+            }
+        }
+
+        foreach (var fedData in saveData.savedFeds)
+        {
+            if (fedData == null)
+            {
+                continue;
+            }
+            if (fedData.owner > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Fed owner index {fedData.owner} is out of bounds. Resetting to 1.");
+                fedData.owner = 1;
+            }
+            if (fedData.booker > numChars)
+            {
+                Plugin.Log.LogWarning(
+                    $"Fed booker index {fedData.booker} is out of bounds. Resetting to 1.");
+                fedData.booker = 1;
+            }
+            for (int index = 1; index < fedData.roster.Length; index++)
+            {
+                int roster = fedData.roster[index];
+                if (roster > numChars)
+                {
+                    Plugin.Log.LogWarning(
+                        $"Fed roster index {roster} is out of bounds. Removing.");
+                    for (int i = index; i < fedData.roster.Length - 1; i++)
+                    {
+                        fedData.roster[i] = fedData.roster[i + 1];
+                    }
+                    fedData.size--;
+                }
+            }
+            for (int index = 1; index < fedData.champ.GetLength(0); index++)
+            {
+                for (int index2 = 1; index2 < fedData.champ.GetLength(1); index2++)
+                {
+                    int champ = fedData.champ[index, index2];
+                    if (champ > numChars)
+                    {
+                        Plugin.Log.LogWarning(
+                            $"Fed champ index {champ} is out of bounds. Resetting to 1.");
+                        fedData.champ[index, index2] = 1;
+                    }
+                }
+            }
+        }
+        Plugin.Log.LogInfo("Save data validation complete.");
+    }
 }

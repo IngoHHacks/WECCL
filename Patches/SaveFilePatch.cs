@@ -126,6 +126,7 @@ internal class SaveFilePatch
 
         try
         {
+            SaveRemapper.FixBrokenSaveData();
             SaveRemapper.PatchCustomContent(ref UnmappedSaveData.APPDIBENDAH);
             foreach (BetterCharacterDataFile file in ImportedCharacters)
             {

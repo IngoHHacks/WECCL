@@ -129,13 +129,13 @@ internal class PromoPatch
         {
             try
             {
-                string varName = match.Groups[1].Value;
+                string varName = match.Groups[1].Value.ToLower();
                 int varIndex = int.Parse(match.Groups[2].Value);
                 string test = "";
                 string varValue = varName switch
                 {
-                    "name" => UnmappedPromo.BBPPMGDKCBJ[varIndex].name,
-                    "promotion" => UnmappedPromo.ANMBLMKJLFI[varIndex].name,
+                    "name" => MappedPromo.c[varIndex].name,
+                    "promotion" => MappedPromo.fed[varIndex].name,
                     _ => "UNKNOWN"
                 };
 
@@ -154,15 +154,20 @@ internal class PromoPatch
         {
             try
             {
-                string varName = match.Groups[1].Value;
+                string varName = match.Groups[1].Value.ToLower();
                 int varIndex1 = int.Parse(match.Groups[2].Value);
                 int varIndex2 = int.Parse(match.Groups[3].Value);
                 string varValue = varName switch
                 {
-                    "belt" => UnmappedPromo.ANMBLMKJLFI[varIndex1].beltName[varIndex2],
-                    "champ" => Characters.c[UnmappedPromo.ANMBLMKJLFI[varIndex1].champ[varIndex2, 1]]
-                        .name //1 - current champ, then 2 - previous?
-                    ,
+                    "belt" => MappedPromo.fed[varIndex1].beltName[varIndex2],
+                    "champ" => Characters.c[MappedPromo.fed[varIndex1].champ[varIndex2, 1]]
+                        .name, //1 - current champ, then 2 - previous?
+                    "movefront" => MappedAnims.DescribeMove(MappedPromo.c[varIndex1].moveFront[varIndex2]),
+                    "moveback" => MappedAnims.DescribeMove(MappedPromo.c[varIndex1].moveBack[varIndex2]),
+                    "moveground" => MappedAnims.DescribeMove(MappedPromo.c[varIndex1].moveGround[varIndex2]),
+                    "moveattack" => MappedAnims.DescribeMove(MappedPromo.c[varIndex1].moveAttack[varIndex2]),
+                    "movecrush" => MappedAnims.DescribeMove(MappedPromo.c[varIndex1].moveCrush[varIndex2]),
+                    "taunt" => ((MappedTaunt) MappedAnims.taunt[MappedPromo.c[varIndex1].taunt[varIndex2]]).name,
                     _ => "UNKNOWN"
                 };
 

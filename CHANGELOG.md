@@ -2,6 +2,10 @@
 
 ## GV 1.60:
 
+### Release 1.6.1
+- Broken save files will now be attempted to be repaired on launch.
+- Added support for mentioning moves in custom promos.
+
 ### Release 1.6.0
 - UPDATE TO GAME VERSION 1.60
 - Added door logic to custom arenas.
