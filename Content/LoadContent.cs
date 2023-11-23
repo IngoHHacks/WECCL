@@ -95,9 +95,9 @@ public static class LoadContent
         _totalAssets += Plugin.CountFiles(AllModsOverridesDirs, ContentType.All);
 
 
-        VanillaCounts.MusicCount = UnmappedSound.NABPGAFNBMP;
-        VanillaCounts.NoLocations = World.no_locations;
-        VanillaCounts.NoFeds = Characters.no_feds;
+        VanillaCounts.Data.MusicCount = UnmappedSound.NABPGAFNBMP;
+        VanillaCounts.Data.NoLocations = World.no_locations;
+        VanillaCounts.Data.NoFeds = Characters.no_feds;
 
         foreach (DirectoryInfo dir in AllModsLibrariesDirs)
         {

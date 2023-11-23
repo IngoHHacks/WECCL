@@ -248,12 +248,12 @@ public static class CustomContent
         Dictionary<string, string> dict;
         if (index > 0)
         {
-            index -= VanillaCounts.MaterialCounts[3] + 1;
+            index -= VanillaCounts.Data.MaterialCounts[3] + 1;
             dict = CustomCostumes["face_male"].CustomObjects[index].Item3;
         }
         else
         {
-            index = -index - (VanillaCounts.FaceFemaleCount + 1);
+            index = -index - (VanillaCounts.Data.FaceFemaleCount + 1);
             dict = CustomCostumes["face_female"].CustomObjects[index].Item3;
         }
 

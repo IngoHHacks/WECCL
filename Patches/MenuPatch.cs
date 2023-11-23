@@ -22,7 +22,7 @@ internal class MenuPatch
         }
         _lastFed = GMJKGKDFHOH;
         _expectedNextId = 0;
-        if (GMJKGKDFHOH == VanillaCounts.NoFeds + 1)
+        if (GMJKGKDFHOH == VanillaCounts.Data.NoFeds + 1)
         {
             if (_searchString == "")
             {
@@ -138,7 +138,7 @@ internal class MenuPatch
             }
 
             int fedSize = Characters.fedData[_lastFed].size;
-            if (fedSize > 48 || _lastFed == VanillaCounts.NoFeds + 1)
+            if (fedSize > 48 || _lastFed == VanillaCounts.Data.NoFeds + 1)
             {
                 int actualIndex = (((int)DPBNKMPJJOJ + 525) / 210) + ((-(int)NKEMECHAEEJ + 110) / 60 * 6);
                 if (fedSize <= 35)
@@ -159,7 +159,7 @@ internal class MenuPatch
 
                 var y = 110;
                 
-                if (_lastFed == VanillaCounts.NoFeds + 1)
+                if (_lastFed == VanillaCounts.Data.NoFeds + 1)
                 {
                     if (fedSize > 48)
                     {
@@ -193,7 +193,7 @@ internal class MenuPatch
     {
         if (Plugin.EnableWrestlerSearchScreen.Value)
         {
-            if (_lastFed == VanillaCounts.NoFeds + 1)
+            if (_lastFed == VanillaCounts.Data.NoFeds + 1)
             {
                 if (UnmappedMenus.NNMDEFLLNBF == 0)
                 {
@@ -229,7 +229,7 @@ internal class MenuPatch
                         return _searchString.Length == 0;
                     }
 
-                    __instance.gFed.GetComponent<Image>().sprite = UnmappedSprites.HJMMBCFGCKA[VanillaCounts.NoFeds + 1];
+                    __instance.gFed.GetComponent<Image>().sprite = UnmappedSprites.HJMMBCFGCKA[VanillaCounts.Data.NoFeds + 1];
                 }
                 else
                 {
@@ -238,7 +238,7 @@ internal class MenuPatch
                 }
             }
 
-            Characters.no_feds = VanillaCounts.NoFeds + 1;
+            Characters.no_feds = VanillaCounts.Data.NoFeds + 1;
             if (Characters.fedData.Length <= Characters.no_feds)
             {
                 Array.Resize(ref Characters.fedData, Characters.no_feds + 1);
@@ -256,14 +256,14 @@ internal class MenuPatch
     [HarmonyPostfix]
     public static void UnmappedSprites_BBLJCJMDDLO()
     {
-        Characters.no_feds = VanillaCounts.NoFeds;
+        Characters.no_feds = VanillaCounts.Data.NoFeds;
     }
 
     [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.ICGNAJFLAHL))]
     [HarmonyPostfix]
     public static void UnmappedMenus_ICGNAJFLAHL()
     {
-        if (UnmappedMenus.FAKHAFKOBPB == 11 && Characters.fed == VanillaCounts.NoFeds + 1)
+        if (UnmappedMenus.FAKHAFKOBPB == 11 && Characters.fed == VanillaCounts.Data.NoFeds + 1)
         {
             UnmappedMenus.DFLLBNMHHIH();
             UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].ICGNAJFLAHL(2, "\u200BSearch\u200B", 0, 110, 1, 1);
@@ -324,9 +324,9 @@ internal class MenuPatch
         {
             UnmappedPlayer gMIKIMHFABP = NJBJIIIACEP.OAAMGFLINOB[1];
             Character iPNKFGHIDJP = gMIKIMHFABP.EMDMDLNJFKP;
-            if (iPNKFGHIDJP.music > VanillaCounts.MusicCount)
+            if (iPNKFGHIDJP.music > VanillaCounts.Data.MusicCount)
             {
-                int index = iPNKFGHIDJP.music - VanillaCounts.MusicCount - 1;
+                int index = iPNKFGHIDJP.music - VanillaCounts.Data.MusicCount - 1;
                 string name = CustomClips[index].Name;
                 UnmappedMenus.FKANHDIMMBJ[8].FFCNPGPALPD = name;
                 

@@ -176,7 +176,7 @@ public class ArenaPatch
         [HarmonyPatch("NALPMNNGKAE")]
         public static void NALPMNNGKAEPrePatch()
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 World.arenaShape = 0;
             }
@@ -200,7 +200,7 @@ public class ArenaPatch
         public static void ICGNAJFLAHLPatch()
         {
             SetCustomArenaShape();
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 World.PFKOJOFJHGB();
             }
@@ -245,7 +245,7 @@ public class ArenaPatch
         [HarmonyPatch("DIHKHJLKFNC")]
         public static void DIHKHJLKFNCPatch(ref Vector3 __result, int HJANGKEJCJE, int HPJACBFOLCI)
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 if (World.gArena != null)
                 {
@@ -309,7 +309,7 @@ public class ArenaPatch
         [HarmonyPatch("JOLFKJKNBLP")]
         public static void JOLFKJKNBLPPatch(ref int HJANGKEJCJE)
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 GameObject[] freezeObj = Object.FindObjectsOfType<GameObject>();
                 GameObject[] announcerFreezeObj =
@@ -456,7 +456,7 @@ public class ArenaPatch
             //Crowd here
             int num = NAEEIFNFBBO.PMEEFNOLAGF(1, CrowdCount-1);
             int num2 = 27;
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 //Logic so crowd can read from game crowd for custom arenas
                 Transform[] crowdTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
@@ -474,7 +474,7 @@ public class ArenaPatch
                 num2 = 5;
             }
 
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 //Replaces crowd textures while keeping materials, shaders etc
                 Transform parentTransform = World.gArena.transform.Find("arena");
@@ -485,7 +485,7 @@ public class ArenaPatch
             for (int i = 1; i <= num2; i++)
             {
                 int num3 = 1;
-                if (World.location <= VanillaCounts.NoLocations)
+                if (World.location <= VanillaCounts.Data.NoLocations)
                 {
                     if (JNHFFNPHMOC == 0)
                     {
@@ -528,7 +528,7 @@ public class ArenaPatch
                 }
                 if (val != null)
                 {
-                    if (World.location <= VanillaCounts.NoLocations)
+                    if (World.location <= VanillaCounts.Data.NoLocations)
                     {
                         if (World.crowdTexture[i] > 0)
                         {
@@ -548,7 +548,7 @@ public class ArenaPatch
                         }
                     }
                 }
-                if (World.location <= VanillaCounts.NoLocations)
+                if (World.location <= VanillaCounts.Data.NoLocations)
                 {
                     Transform val2 = World.gArena.transform.Find("Seats/Seats" + i.ToString("00"));
                     if (val2 != null)
@@ -573,7 +573,7 @@ public class ArenaPatch
             int num4 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
             int num5 = 35;
 
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 //Logic so signs can read from game signs for custom arenas
                 Transform[] signTransforms = World.gArena.transform.GetComponentsInChildren<Transform>(true);
@@ -595,7 +595,7 @@ public class ArenaPatch
             for (int i = 1; i <= num5; i++)
             {
                 Transform transformSigns = null;
-                if (World.location > VanillaCounts.NoLocations)
+                if (World.location > VanillaCounts.Data.NoLocations)
                 {
                     //Uses this for custom arenas, otherwise original logic
                     transformSigns = World.gArena.transform.Find("arena/Signs/Sign" + i.ToString("00"));
@@ -638,7 +638,7 @@ public class ArenaPatch
                         {
                             num4 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
                         }
-                        if (World.location > VanillaCounts.NoLocations)
+                        if (World.location > VanillaCounts.Data.NoLocations)
                         {
                             //This lets us keep any materials etc on the original object but change the texture.
                             Material originalMaterial = transformSigns.gameObject.GetComponent<Renderer>().sharedMaterial;
@@ -846,7 +846,7 @@ public class ArenaPatch
                 furnitureList = new List<string>();
             }
 
-            if (DHAKKDKJGCE > VanillaCounts.NoLocations)
+            if (DHAKKDKJGCE > VanillaCounts.Data.NoLocations)
             {
                 if (HAPFAOIMGOL.LOHDDEFHOIF == null)
                 {
@@ -1083,7 +1083,7 @@ public class ArenaPatch
         [HarmonyPatch("Update")]
         public static void UpdatePrePatch(Scene_Match_Setup __instance)
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 if (World.location != __instance.oldArena)
                 {
@@ -1137,7 +1137,7 @@ public class ArenaPatch
         [HarmonyPatch("Update")]
         public static void UpdatePostPatch()
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 //Force barriers to 0, can't work out how to disable option since its controlled by arena shape
                 //So just forcing it to always be none does the job well enough
@@ -1154,7 +1154,7 @@ public class ArenaPatch
         [HarmonyPatch("GBLDMIAPNEP")]
         public static void LGBLDMIAPNEPPrePatch(OGAJMOPCPLJ __instance, float MMBJPONJJGM, float FNFJENPGCHM, float GJGFOKOEANG = 0f)
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 //Force set these to 20 / -20 to match original arena so it can trigger (Think its related to size of the door in original as custom arenas seem to have these a values of around 1.5 instead).
                 __instance.EONCNOGEOFC[1] = 20;
@@ -1182,7 +1182,7 @@ public class ArenaPatch
         [HarmonyPatch("LCAJNIOJAPG")]
         public static void LCAJNIOJAPGPrePatch(UnmappedPlayer __instance)
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 GameObject[] pyroObjects = Object.FindObjectsOfType<GameObject>()
                     .Where(obj => obj.name.StartsWith("PyroSpawn")).ToArray();
@@ -1434,7 +1434,7 @@ public class ArenaPatch
         [HarmonyPatch("MDJMMGCBBFM")]
         public static void MDJMMGCBBFM_ShaderPatch(int EJDHFNIJFHI = 0)
         {
-            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0 && World.gCage != null && World.arenaCage == 3)
+            if (World.location > VanillaCounts.Data.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0 && World.gCage != null && World.arenaCage == 3)
             {
                 Transform ReferenceSolidObject = World.gArena.transform.Find("SolidShader");
                 Transform ReferenceTransparentObject = World.gArena.transform.Find("TransparentShader");
@@ -1498,7 +1498,7 @@ public class ArenaPatch
         [HarmonyPatch("DBKOAJKLBIF")]
         public static void DBKOAJKLBIF_ShaderPatch(int EJDHFNIJFHI = 0)
         {
-            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0 && World.no_ropes > 0)
+            if (World.location > VanillaCounts.Data.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0 && World.no_ropes > 0)
             {
                 Transform ReferenceSolidObject = World.gArena.transform.Find("SolidShader");
                 Transform ReferenceTransparentObject = World.gArena.transform.Find("TransparentShader");
@@ -1581,7 +1581,7 @@ public class ArenaPatch
         [HarmonyPatch("LCKBDNEOBFE")]
         public static void LCKBDNEOBFE_ShaderPatch(int PLFGKLGCOMD, string CMECDGMCMLC, Material AFFJPPCGHLN)
         {
-            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            if (World.location > VanillaCounts.Data.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
             {
                 Transform ReferenceSolidObject = World.gArena.transform.Find("SolidShader");
                 Transform ReferenceTransparentObject = World.gArena.transform.Find("TransparentShader");
@@ -1672,7 +1672,7 @@ public class ArenaPatch
         [HarmonyPatch("DIBPGIMGMAB")]
         public static void DIBPGIMGMAB_ShaderPatch(DFOGOCNBECG __instance, int IKBHGAKKJMM, int CFNLGGDIFGH = 99)
         {
-            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            if (World.location > VanillaCounts.Data.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
             {
                 if ((IKBHGAKKJMM == 28 || IKBHGAKKJMM == 31) && __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 0)
                 {
@@ -1722,7 +1722,7 @@ public class ArenaPatch
         [HarmonyPatch("ICGNAJFLAHL")]
         public static void ICGNAJFLAHL_ShaderPatch(GGKBLABCJFN __instance)
         {
-            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            if (World.location > VanillaCounts.Data.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
             {
                 Transform ReferenceObject = World.gArena.transform.Find("SolidShader");
 
@@ -1768,7 +1768,7 @@ public class ArenaPatch
         [HarmonyPatch("ICGNAJFLAHL")]
         public static void ICGNAJFLAHL_ShaderPatch(GDFKEAMIOAG __instance)
         {
-            if (World.location > VanillaCounts.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
+            if (World.location > VanillaCounts.Data.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
             {
                 //Exclude Belts and Glass weapons
                 if (__instance.BPJFLJPKKJK > 0 && __instance.BPJFLJPKKJK != 23 && __instance.BPJFLJPKKJK != 24 && __instance.BPJFLJPKKJK != 25 && __instance.BPJFLJPKKJK != 26 && __instance.BPJFLJPKKJK != 37)

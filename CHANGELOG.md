@@ -2,7 +2,16 @@
 
 ## GV 1.60:
 
-### Release 1.6.1
+### Release 1.6.2
+- Fixed mappings for custom costumes. The system has been reworked to automatically detect future changes to the game's
+  vanilla costume count.
+- Restore default save file will no longer break if custom characters are in the high score list (any custom characters
+  in the high score list will be replaced by the first default character).
+- Note that Ingo will come to your house and steal your socks if you don't properly back up your save file. You have been
+  warned.
+- P.S. Ingo is very nice and would never do such a thing. But still, back up your save file. Or else...
+
+- ### Release 1.6.1
 - Broken save files will now be attempted to be repaired on launch.
 - Added support for mentioning moves in custom promos.
 - Added support for additional crowd and signs in custom arenas.

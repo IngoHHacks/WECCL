@@ -13,6 +13,6 @@ internal class VersionData
             Directory.CreateDirectory(Locations.Debug.FullName);
         }
 
-        File.WriteAllText(Path.Combine(Locations.Debug.FullName, "VanillaCounts.json"), json);
+        File.WriteAllText(Path.Combine(Locations.Debug.FullName, "VanillaCounts.Data.json"), json);
     }
 }

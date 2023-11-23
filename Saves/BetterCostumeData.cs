@@ -33,45 +33,45 @@ public class BetterCostumeData
         BetterCostumeData bcd = JsonConvert.DeserializeObject<BetterCostumeData>(JsonConvert.SerializeObject(costume))!;
         for (int i = 0; i < costume.texture.Length; i++)
         {
-            if (costume.texture[i] > VanillaCounts.MaterialCounts[i])
+            if (costume.texture[i] > VanillaCounts.Data.MaterialCounts[i])
             {
-                int index = costume.texture[i] - VanillaCounts.MaterialCounts[i] - 1;
+                int index = costume.texture[i] - VanillaCounts.Data.MaterialCounts[i] - 1;
                 string material = ContentMappings.ContentMap.MaterialNameMap[i][index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 3 && costume.texture[i] < -VanillaCounts.FaceFemaleCount)
+            else if (i == 3 && costume.texture[i] < -VanillaCounts.Data.FaceFemaleCount)
             {
-                int index = -costume.texture[i] - VanillaCounts.FaceFemaleCount - 1;
+                int index = -costume.texture[i] - VanillaCounts.Data.FaceFemaleCount - 1;
                 string material = ContentMappings.ContentMap.FaceFemaleNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 14 && costume.texture[i] < -VanillaCounts.SpecialFootwearCount)
+            else if (i == 14 && costume.texture[i] < -VanillaCounts.Data.SpecialFootwearCount)
             {
-                int index = -costume.texture[i] - VanillaCounts.SpecialFootwearCount - 1;
+                int index = -costume.texture[i] - VanillaCounts.Data.SpecialFootwearCount - 1;
                 string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 15 && costume.texture[i] < -VanillaCounts.SpecialFootwearCount)
+            else if (i == 15 && costume.texture[i] < -VanillaCounts.Data.SpecialFootwearCount)
             {
-                int index = -costume.texture[i] - VanillaCounts.SpecialFootwearCount - 1;
+                int index = -costume.texture[i] - VanillaCounts.Data.SpecialFootwearCount - 1;
                 string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 17 && costume.texture[i] < -VanillaCounts.TransparentHairMaterialCount)
+            else if (i == 17 && costume.texture[i] < -VanillaCounts.Data.TransparentHairMaterialCount)
             {
-                int index = -costume.texture[i] - VanillaCounts.TransparentHairMaterialCount - 1;
+                int index = -costume.texture[i] - VanillaCounts.Data.TransparentHairMaterialCount - 1;
                 string material = ContentMappings.ContentMap.TransparentHairMaterialNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 24 && costume.texture[i] < -VanillaCounts.KneepadCount)
+            else if (i == 24 && costume.texture[i] < -VanillaCounts.Data.KneepadCount)
             {
-                int index = -costume.texture[i] - VanillaCounts.KneepadCount - 1;
+                int index = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
                 string material = ContentMappings.ContentMap.KneepadNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 25 && costume.texture[i] < -VanillaCounts.KneepadCount)
+            else if (i == 25 && costume.texture[i] < -VanillaCounts.Data.KneepadCount)
             {
-                int index = -costume.texture[i] - VanillaCounts.KneepadCount - 1;
+                int index = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
                 string material = ContentMappings.ContentMap.KneepadNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
@@ -89,9 +89,9 @@ public class BetterCostumeData
                 int index = costume.flesh[i];
                 bcd.fleshC[i] = "Vanilla/" + index;
             }
-            else if (costume.flesh[i] > VanillaCounts.FleshCounts[i])
+            else if (costume.flesh[i] > VanillaCounts.Data.FleshCounts[i])
             {
-                int index = costume.flesh[i] - VanillaCounts.FleshCounts[i] - 1;
+                int index = costume.flesh[i] - VanillaCounts.Data.FleshCounts[i] - 1;
                 if (index >= ContentMappings.ContentMap.FleshNameMap[i].Count || index < 0)
                 {
                     bcd.fleshC[i] = "Vanilla/" + costume.flesh[i];
@@ -102,9 +102,9 @@ public class BetterCostumeData
                     bcd.fleshC[i] = "Custom/" + material;
                 }
             }
-            else if (i == 2 && costume.flesh[i] < -VanillaCounts.BodyFemaleCount)
+            else if (i == 2 && costume.flesh[i] < -VanillaCounts.Data.BodyFemaleCount)
             {
-                int index = -costume.flesh[i] - VanillaCounts.BodyFemaleCount - 1;
+                int index = -costume.flesh[i] - VanillaCounts.Data.BodyFemaleCount - 1;
                 string material = ContentMappings.ContentMap.BodyFemaleNameMap[index];
                 bcd.fleshC[i] = "Custom/" + material;
             }
@@ -117,14 +117,14 @@ public class BetterCostumeData
 
         for (int i = 0; i < costume.shape.Length; i++)
         {
-            if ((costume.shape[i] > 50 && costume.shape[i] % 10 == 0) || VanillaCounts.ShapeCounts[i] == 0)
+            if ((costume.shape[i] > 50 && costume.shape[i] % 10 == 0) || VanillaCounts.Data.ShapeCounts[i] == 0)
             {
                 int index = costume.shape[i];
                 bcd.shapeC[i] = "Vanilla/" + index;
             }
-            else if (costume.shape[i] > VanillaCounts.ShapeCounts[i])
+            else if (costume.shape[i] > VanillaCounts.Data.ShapeCounts[i])
             {
-                int index = costume.shape[i] - VanillaCounts.ShapeCounts[i] - 1;
+                int index = costume.shape[i] - VanillaCounts.Data.ShapeCounts[i] - 1;
                 if (index >= ContentMappings.ContentMap.ShapeNameMap[i].Count || index < 0)
                 {
                     bcd.shapeC[i] = "Vanilla/" + costume.shape[i];
@@ -135,9 +135,9 @@ public class BetterCostumeData
                     bcd.shapeC[i] = "Custom/" + material;
                 }
             }
-            else if (i == 17 && costume.shape[i] < -VanillaCounts.TransparentHairHairstyleCount)
+            else if (i == 17 && costume.shape[i] < -VanillaCounts.Data.TransparentHairHairstyleCount)
             {
-                int index = -costume.shape[i] - VanillaCounts.TransparentHairHairstyleCount - 1;
+                int index = -costume.shape[i] - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
                 string material = ContentMappings.ContentMap.TransparentHairHairstyleNameMap[index];
                 bcd.shapeC[i] = "Custom/" + material;
             }
@@ -162,7 +162,7 @@ public class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                    costume.texture[i] = index + VanillaCounts.MaterialCounts[i] + 1;
+                    costume.texture[i] = index + VanillaCounts.Data.MaterialCounts[i] + 1;
                 }
                 catch
                 {
@@ -176,7 +176,7 @@ public class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                    costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
                 }
                 catch
                 {
@@ -190,7 +190,7 @@ public class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.SpecialFootwearCount - 1;
+                    costume.texture[i] = -index - VanillaCounts.Data.SpecialFootwearCount - 1;
                 }
                 catch
                 {
@@ -204,7 +204,7 @@ public class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.SpecialFootwearCount - 1;
+                    costume.texture[i] = -index - VanillaCounts.Data.SpecialFootwearCount - 1;
                 }
                 catch
                 {
@@ -218,7 +218,7 @@ public class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.TransparentHairMaterialNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.TransparentHairMaterialCount - 1;
+                    costume.texture[i] = -index - VanillaCounts.Data.TransparentHairMaterialCount - 1;
                 }
                 catch
                 {
@@ -232,7 +232,7 @@ public class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                    costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
                 }
                 catch
                 {
@@ -246,7 +246,7 @@ public class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.KneepadCount - 1;
+                    costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
                 }
                 catch
                 {
@@ -269,7 +269,7 @@ public class BetterCostumeData
                 {
                     string material = this.fleshC[i].Substring(7);
                     int index = ContentMappings.ContentMap.FleshNameMap[i].IndexOf(material);
-                    costume.flesh[i] = index + VanillaCounts.FleshCounts[i] + 1;
+                    costume.flesh[i] = index + VanillaCounts.Data.FleshCounts[i] + 1;
                 }
                 catch
                 {
@@ -283,7 +283,7 @@ public class BetterCostumeData
                 {
                     string material = this.fleshC[i].Substring(7);
                     int index = ContentMappings.ContentMap.BodyFemaleNameMap.IndexOf(material);
-                    costume.flesh[i] = -index - VanillaCounts.BodyFemaleCount - 1;
+                    costume.flesh[i] = -index - VanillaCounts.Data.BodyFemaleCount - 1;
                 }
                 catch
                 {
@@ -306,7 +306,7 @@ public class BetterCostumeData
                 {
                     string material = this.shapeC[i].Substring(7);
                     int index = ContentMappings.ContentMap.ShapeNameMap[i].IndexOf(material);
-                    costume.shape[i] = index + VanillaCounts.ShapeCounts[i] + 1;
+                    costume.shape[i] = index + VanillaCounts.Data.ShapeCounts[i] + 1;
                 }
                 catch
                 {
@@ -320,7 +320,7 @@ public class BetterCostumeData
                 {
                     string material = this.shapeC[i].Substring(7);
                     int index = ContentMappings.ContentMap.TransparentHairHairstyleNameMap.IndexOf(material);
-                    costume.shape[i] = -index - VanillaCounts.TransparentHairHairstyleCount - 1;
+                    costume.shape[i] = -index - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
                 }
                 catch
                 {

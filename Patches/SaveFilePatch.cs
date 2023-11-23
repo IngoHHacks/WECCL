@@ -45,6 +45,8 @@ internal class SaveFilePatch
 
             CharacterMappings.CharacterMap.PreviouslyImportedCharacters.Clear();
             CharacterMappings.CharacterMap.PreviouslyImportedCharacterIds.Clear();
+            
+            SaveRemapper.FixBrokenSaveData();
         }
         catch (Exception e)
         {

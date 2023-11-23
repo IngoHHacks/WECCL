@@ -155,9 +155,9 @@ public class BetterCharacterData
                 : allCharacters[character.relationship[i]].name + "@" + character.relationship[i];
         }
 
-        if (character.music > VanillaCounts.MusicCount)
+        if (character.music > VanillaCounts.Data.MusicCount)
         {
-            int index = character.music - VanillaCounts.MusicCount - 1;
+            int index = character.music - VanillaCounts.Data.MusicCount - 1;
             string music = ContentMappings.ContentMap.MusicNameMap[index];
             bcd.musicC = "Custom/" + music;
         }
@@ -214,7 +214,7 @@ public class BetterCharacterData
             {
                 string music = this.musicC.Substring(7);
                 int index = ContentMappings.ContentMap.MusicNameMap.IndexOf(music);
-                character.music = index + VanillaCounts.MusicCount + 1;
+                character.music = index + VanillaCounts.Data.MusicCount + 1;
             }
             catch (Exception e)
             {

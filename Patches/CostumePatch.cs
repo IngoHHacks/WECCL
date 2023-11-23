@@ -9,11 +9,11 @@ public class CostumePatch
     [HarmonyPostfix]
     public static void CostumePostfix(ref Color __result, Costume __instance)
     {
-        if (__instance.texture[3] > VanillaCounts.MaterialCounts[3])
+        if (__instance.texture[3] > VanillaCounts.Data.MaterialCounts[3])
         {
             __result *= GetSkinColor(__instance.texture[3]);
         }
-        else if (__instance.texture[3] < -VanillaCounts.FaceFemaleCount)
+        else if (__instance.texture[3] < -VanillaCounts.Data.FaceFemaleCount)
         {
             __result *= GetSkinColor(__instance.texture[3]);
         }

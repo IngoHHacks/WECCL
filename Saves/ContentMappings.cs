@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using WECCL.Content;
 
 namespace WECCL.Saves;
 
@@ -35,6 +36,8 @@ internal class ContentMappings
     public ContentList KneepadNameMap { get; set; } = new();
 
     public ContentList MusicNameMap { get; set; } = new();
+
+    public VanillaCounts VanillaCounts { get; set; }
     
     public float GameVersion { get; set; } = Plugin.PluginVersion;
 

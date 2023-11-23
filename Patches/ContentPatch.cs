@@ -24,9 +24,9 @@ internal class ContentPatch
     {
         if (PMNNPFOOCOH.StartsWith("Music"))
         {
-            if (NONJIHAJAKC.StartsWith("Theme") && int.Parse(NONJIHAJAKC.Substring(5)) > VanillaCounts.MusicCount)
+            if (NONJIHAJAKC.StartsWith("Theme") && int.Parse(NONJIHAJAKC.Substring(5)) > VanillaCounts.Data.MusicCount)
             {
-                __result = CustomClips[int.Parse(NONJIHAJAKC.Substring(5)) - VanillaCounts.MusicCount - 1].AudioClip;
+                __result = CustomClips[int.Parse(NONJIHAJAKC.Substring(5)) - VanillaCounts.Data.MusicCount - 1].AudioClip;
                 return false;
             }
         }
@@ -67,16 +67,16 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void Textures_PNKNBNBFCFC()
     {
-        VanillaCounts.MaterialCounts = UnmappedTextures.BFEEOEOEFPG.ToList();
-        VanillaCounts.FleshCounts = UnmappedTextures.HJHFIPCDPBD.ToList();
-        VanillaCounts.ShapeCounts = UnmappedTextures.ONGGFJMFJDP.ToList();
-        VanillaCounts.BodyFemaleCount = UnmappedTextures.DAKBNPKLNGC;
-        VanillaCounts.FaceFemaleCount = UnmappedTextures.GFKAKKGLBOI;
-        VanillaCounts.SpecialFootwearCount = UnmappedTextures.ABKAOIHDJPA;
-        VanillaCounts.TransparentHairMaterialCount = UnmappedTextures.MHOGCFLJEFN;
-        VanillaCounts.TransparentHairHairstyleCount = UnmappedTextures.NLHJDAEKLAB;
-        VanillaCounts.KneepadCount = UnmappedTextures.BKMPEAALEEM;
-        VanillaCounts.IsInitialized = true;
+        VanillaCounts.Data.MaterialCounts = UnmappedTextures.BFEEOEOEFPG.ToList();
+        VanillaCounts.Data.FleshCounts = UnmappedTextures.HJHFIPCDPBD.ToList();
+        VanillaCounts.Data.ShapeCounts = UnmappedTextures.ONGGFJMFJDP.ToList();
+        VanillaCounts.Data.BodyFemaleCount = UnmappedTextures.DAKBNPKLNGC;
+        VanillaCounts.Data.FaceFemaleCount = UnmappedTextures.GFKAKKGLBOI;
+        VanillaCounts.Data.SpecialFootwearCount = UnmappedTextures.ABKAOIHDJPA;
+        VanillaCounts.Data.TransparentHairMaterialCount = UnmappedTextures.MHOGCFLJEFN;
+        VanillaCounts.Data.TransparentHairHairstyleCount = UnmappedTextures.NLHJDAEKLAB;
+        VanillaCounts.Data.KneepadCount = UnmappedTextures.BKMPEAALEEM;
+        VanillaCounts.Data.IsInitialized = true;
 
         if (Plugin.Debug.Value)
         {
@@ -242,20 +242,20 @@ internal class ContentPatch
     public static void Player_JMOLAPIFDFE(ref UnmappedPlayer __instance, int IKBHGAKKJMM)
     {
         if ((IKBHGAKKJMM == 4 && __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 50 &&
-             __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] % 10 == 0) || VanillaCounts.ShapeCounts[IKBHGAKKJMM] == 0)
+             __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] % 10 == 0) || VanillaCounts.Data.ShapeCounts[IKBHGAKKJMM] == 0)
         {
             return;
         }
 
         try
         {
-            if (__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.ShapeCounts[IKBHGAKKJMM] ||
+            if (__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.Data.ShapeCounts[IKBHGAKKJMM] ||
                 (IKBHGAKKJMM == 17 &&
-                 -__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.TransparentHairHairstyleCount))
+                 -__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.Data.TransparentHairHairstyleCount))
             {
                 int shape = __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 0
-                    ? __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] - VanillaCounts.ShapeCounts[IKBHGAKKJMM] - 1
-                    : -__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] - VanillaCounts.TransparentHairHairstyleCount - 1;
+                    ? __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] - VanillaCounts.Data.ShapeCounts[IKBHGAKKJMM] - 1
+                    : -__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
                 if (CustomCostumes.Values.Any(x => x.InternalPrefix.Contains("shape" + IKBHGAKKJMM)))
                 {
                     Tuple<string, Object, Dictionary<string, string>> c = CustomCostumes.Values
@@ -334,15 +334,15 @@ internal class ContentPatch
                 if ((UnmappedTextures.IKBHGAKKJMM == 4 && player.OEGJEBDBGJA.shape[UnmappedTextures.IKBHGAKKJMM] > 50 &&
                      player.OEGJEBDBGJA.shape[UnmappedTextures.IKBHGAKKJMM] % 10 == 0) ||
                     player.PCNHIIPBNEK[UnmappedTextures.IKBHGAKKJMM] == null ||
-                    VanillaCounts.ShapeCounts[UnmappedTextures.IKBHGAKKJMM] == 0)
+                    VanillaCounts.Data.ShapeCounts[UnmappedTextures.IKBHGAKKJMM] == 0)
                 {
                     continue;
                 }
 
                 if (player.OEGJEBDBGJA.shape[UnmappedTextures.IKBHGAKKJMM] >
-                    VanillaCounts.ShapeCounts[UnmappedTextures.IKBHGAKKJMM]
+                    VanillaCounts.Data.ShapeCounts[UnmappedTextures.IKBHGAKKJMM]
                     || (UnmappedTextures.IKBHGAKKJMM == 17 && -player.OEGJEBDBGJA.shape[UnmappedTextures.IKBHGAKKJMM] >
-                        VanillaCounts.TransparentHairHairstyleCount))
+                        VanillaCounts.Data.TransparentHairHairstyleCount))
                 {
                     Mesh mesh = player.PCNHIIPBNEK[UnmappedTextures.IKBHGAKKJMM].GetComponent<MeshFilter>().mesh;
                     if (player.PCNHIIPBNEK[UnmappedTextures.IKBHGAKKJMM].GetComponent<MeshRenderer>().materials.Length <
@@ -350,9 +350,9 @@ internal class ContentPatch
                     {
                         int shape = player.OEGJEBDBGJA.shape[UnmappedTextures.IKBHGAKKJMM] > 0
                             ? player.OEGJEBDBGJA.shape[UnmappedTextures.IKBHGAKKJMM] -
-                              VanillaCounts.ShapeCounts[UnmappedTextures.IKBHGAKKJMM] - 1
+                              VanillaCounts.Data.ShapeCounts[UnmappedTextures.IKBHGAKKJMM] - 1
                             : -player.OEGJEBDBGJA.shape[UnmappedTextures.IKBHGAKKJMM] -
-                              VanillaCounts.TransparentHairHairstyleCount - 1;
+                              VanillaCounts.Data.TransparentHairHairstyleCount - 1;
                         Dictionary<string, string> meta = new();
                         if (CustomCostumes.Values.Any(
                                 x => x.InternalPrefix.Contains("shape" + UnmappedTextures.IKBHGAKKJMM)))

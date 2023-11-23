@@ -16,7 +16,7 @@ public class WorldPatch
     {
         try
         {
-            if (World.location > VanillaCounts.NoLocations)
+            if (World.location > VanillaCounts.Data.NoLocations)
             {
                 Debug.Log("Loading location " + World.location);
                 World.waterDefault = 0f;
@@ -27,7 +27,7 @@ public class WorldPatch
                 }
 
                 MappedWorld.GetArenaShape();
-                World.gArena = Object.Instantiate(CustomArenaPrefabs[World.location - VanillaCounts.NoLocations - 1]);
+                World.gArena = Object.Instantiate(CustomArenaPrefabs[World.location - VanillaCounts.Data.NoLocations - 1]);
 
                 if (MappedMenus.screen == 60)
                 {
@@ -87,7 +87,7 @@ public class WorldPatch
     [HarmonyPrefix]
     public static void GameCollision_NALPMNNGKAE()
     {
-        if (World.location > VanillaCounts.NoLocations)
+        if (World.location > VanillaCounts.Data.NoLocations)
         {
             UnmappedBlocks.FACCLLDILBH = 0;
             UnmappedBlocks.CEIEEMCIOMD = 0;
@@ -657,7 +657,7 @@ public class WorldPatch
     [HarmonyPrefix]
     public static bool World_JOLFKJKNBLP(int HJANGKEJCJE)
     {
-        if (World.location > VanillaCounts.NoLocations)
+        if (World.location > VanillaCounts.Data.NoLocations)
         {
             World.ground = 0f;
             World.ceiling = 100f;
@@ -683,8 +683,8 @@ public class WorldPatch
         __result = 1;
         if (World.mapVersion < 2f)
         {
-            if ((HJANGKEJCJE >= 17 && HJANGKEJCJE <= VanillaCounts.NoLocations && HJANGKEJCJE != 21) ||
-                HJANGKEJCJE - VanillaCounts.NoLocations - 1 >= CustomArenaPrefabs.Count)
+            if ((HJANGKEJCJE >= 17 && HJANGKEJCJE <= VanillaCounts.Data.NoLocations && HJANGKEJCJE != 21) ||
+                HJANGKEJCJE - VanillaCounts.Data.NoLocations - 1 >= CustomArenaPrefabs.Count)
             {
                 __result = 0;
             }
@@ -697,7 +697,7 @@ public class WorldPatch
     [HarmonyPostfix]
     public static void World_KJOEBADBOME(ref float __result, float MMBJPONJJGM, float EJOKLBHLEEJ, float FNFJENPGCHM)
     {
-        if (World.location > VanillaCounts.NoLocations)
+        if (World.location > VanillaCounts.Data.NoLocations)
         {
             if (World.ringShape != 0 && MMBJPONJJGM > -40f && MMBJPONJJGM < 40f && FNFJENPGCHM > -40f &&
                 FNFJENPGCHM < 40f)
