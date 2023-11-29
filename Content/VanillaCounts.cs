@@ -6,7 +6,7 @@ public class VanillaCounts
 {
     private static VanillaCounts _instance;
     
-    internal static VanillaCounts Data => _instance ??= new VanillaCounts();
+    [JsonIgnore] public static VanillaCounts Data => _instance ??= new VanillaCounts();
     
     [JsonIgnore] public bool IsInitialized { get; internal set; }
 
