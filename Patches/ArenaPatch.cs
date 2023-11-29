@@ -477,9 +477,13 @@ public class ArenaPatch
             if (World.location > VanillaCounts.Data.NoLocations)
             {
                 //Replaces crowd textures while keeping materials, shaders etc
-                Transform parentTransform = World.gArena.transform.Find("arena");
+                Transform parentTransform = World.gArena.transform.root;
 
-                FindAndProcessCrowdObjects(parentTransform);
+                //Shouldn't ever be null here but adding check anyway
+                if (parentTransform != null)
+                {
+                    FindAndProcessCrowdObjects(parentTransform);
+                }
             }
 
             for (int i = 1; i <= num2; i++)
