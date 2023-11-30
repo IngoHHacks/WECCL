@@ -705,7 +705,7 @@ public class ArenaPatch
                     }
                 }
 
-                if (CrowdCount > 10)
+                if (CrowdCount >= 10)
                 {
                     CrowdCount += 1;
                     //Don't need to do any of this if CrowdCount hasn't changed, otherwise make sure virtual crowd is the last value
