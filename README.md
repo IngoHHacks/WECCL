@@ -24,6 +24,8 @@ It is currently possible to add:
 - Custom costume meshes
 - Custom promos
 - Custom arenas
+- Custom crowd
+- Custom signs
 
 It is currently possible to override:
 
@@ -157,6 +159,11 @@ The following keys are supported:
 Custom arenas work the same as meshes, but require a GameObject as the root object and should be placed in a subfolder named `arena`.  
 Example: `arena/abc`. The extension must be `.assetbundle` or no extension at all (Note that `.mesh` works too, but is deprecated and may be removed in the future).  
 There is functionality in place to automatically assign collision to the arena, but this doesn't work for diagonal walls, i.e. walls that are not aligned with the X or Z axis. It may also not work as expected with some wall shapes.
+
+## Custom Crowd / Signs
+
+As with other custom textures, crowd and signs can now be added by placing them in `./BepInEx/plugins/Assets` then in a folder call `crowd` for custom crowds or `signs` for custom signs. Follow the same sort of sign / layout as the
+original games crowd / signs to fit in well with existing ones. (Signs need to be a 2x4 grid of 8 signs)
 
 ## Custom Promos
 
