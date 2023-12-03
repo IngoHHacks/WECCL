@@ -22,9 +22,9 @@ public class CustomMatch
             if (Register(Name, CustomPresetsNeg, "Preset", out value))
             {
                 Plugin.Log.LogInfo("REGISTERED " + Name + " " + -value);
-                CustomPresetsPos.Add(Name, -value);
+                CustomPresetsNeg.Add(Name, -value);
             }
-            return value;
+            return -value;
         }
     }
     private static bool Register(string Name, Dictionary<string, int> dictionary, string type, out int pos)
@@ -45,7 +45,7 @@ public class CustomMatch
             if (Register(Name, CustomCagesPos, "Cage", out value))
             {
                 Plugin.Log.LogInfo("REGISTERED " + Name + " " + value);
-                CustomPresetsPos.Add(Name, value);
+                CustomCagesPos.Add(Name, value);
             }
             return value;
         }
@@ -54,9 +54,9 @@ public class CustomMatch
             if (Register(Name, CustomCagesNeg, "Cage", out value))
             {
                 Plugin.Log.LogInfo("REGISTERED " + Name + " " + -value);
-                CustomPresetsPos.Add(Name, -value);
+                CustomCagesNeg.Add(Name, -value);
             }
-            return value;
+            return -value;
         }
     }
 }

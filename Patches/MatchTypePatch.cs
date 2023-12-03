@@ -23,6 +23,7 @@ public class MatchTypePatch
                 OldPresetMin = JBPAELFIDOP;
                 JBPAELFIDOP -= CustomMatch.CustomPresetsNeg.Count;
                 LKBOHHGFJFO += CustomMatch.CustomPresetsPos.Count;
+               // Debug.LogWarning("OLD " + CAAJBNHEFJJ);
                 if (CAAJBNHEFJJ >= 10000)
                 {
                     CAAJBNHEFJJ = CAAJBNHEFJJ - 10000 + OldPresetMax;
@@ -31,6 +32,7 @@ public class MatchTypePatch
                 {
                     CAAJBNHEFJJ = CAAJBNHEFJJ + 10000 - OldPresetMin;
                 }
+               // Debug.LogWarning("NEW " + CAAJBNHEFJJ);
             }
         }    
     }
@@ -43,11 +45,13 @@ public class MatchTypePatch
         {
             if (LIPNHOMGGHF.FKANHDIMMBJ[1] == __instance)
             {
+               // Debug.LogWarning("OLD R " + __result);
                 if (__result > OldPresetMax)
                 {
                     __result = 10000 + (__result - OldPresetMax);
                 }
                 if (__result < OldPresetMin) __result = -10000 - (OldPresetMin - __result);
+              //  Debug.LogWarning("NEW R " + __result);
             }
         }
     }
