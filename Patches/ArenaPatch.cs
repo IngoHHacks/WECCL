@@ -1680,7 +1680,12 @@ public class ArenaPatch
             {
                 if ((IKBHGAKKJMM == 28 || IKBHGAKKJMM == 31) && __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 0)
                 {
-                    Transform ReferenceObject = World.gArena.transform.Find("SolidShader");
+                    Transform ReferenceObject = null;
+                    if (World.gArena != null)
+                    {
+                        ReferenceObject = World.gArena.transform.Find("SolidShader");
+                    }
+
 
                     if (ReferenceObject != null)
                     {
