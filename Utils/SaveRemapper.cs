@@ -491,7 +491,7 @@ public class SaveRemapper
     public static void FixBrokenSaveData()
     {
         Plugin.Log.LogInfo("Validating save data...");
-        var saveData = UnmappedSaveData.APPDIBENDAH;
+        var saveData = GLPGLJAJJOP.APPDIBENDAH;
         var numChars = saveData.savedChars.Length;
         if (saveData.wrestler > numChars)
         {

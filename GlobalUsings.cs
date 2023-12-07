@@ -1,6 +1,6 @@
 // Global using directives
 
-global using UnmappedSaveData = GLPGLJAJJOP;
+global using UnmappedSaveSystem = GLPGLJAJJOP;
 global using UnmappedGlobals = NAEEIFNFBBO;
 global using UnmappedTextures = PFKAPGFJKHH;
 global using UnmappedMenu = AKFIIKOMPLL;

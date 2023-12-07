@@ -76,6 +76,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> Debug { get; set; }
     internal static ConfigEntry<bool> DebugRender { get; set; }
     internal static ConfigEntry<string> DataSharingLevel { get; set; }
+    internal static ConfigEntry<string> SaveFileName { get; set; }
 
     public static float CharactersVersion => Characters.latestVersion;
 
@@ -170,7 +171,8 @@ public class Plugin : BaseUnityPlugin
                 new ConfigDescription(
                     "The level of data to share with the developer of this plugin. This data will be used to improve the plugin. If you don't want to share any data, set this to None. All data is anonymous.",
                     new AcceptableValueList<string>("None", "Basic", "Full")));
-            
+            SaveFileName = this.Config.Bind("General", "SaveFileName", "ModdedSave",
+                "The name of the save file to save to. Set to 'Save' to use the vanilla save file (not recommended). If no modded save file exists, the vanilla save file contents will be copied to a new modded save file. Note that changing this would require manually renaming the save file if you want to continue using it.");
             
             string egg = Secrets.GetEasterEgg();
             if (egg != null)
@@ -197,11 +199,19 @@ public class Plugin : BaseUnityPlugin
         {
             return;
         }
-        string save = Application.persistentDataPath + "/Save.bytes";
+        string save = Locations.SaveFile.FullName;
         if (!File.Exists(save))
         {
-            UnmappedSaveData.NJMFCPGCKNL(); // Restore default
-            UnmappedSaveData.OIIAHNGBNIF(); // Save
+            string vanillaSave = Locations.SaveFileVanilla.FullName;
+            if (File.Exists(vanillaSave))
+            {
+                File.Copy(vanillaSave, save);
+            }
+            else
+            {
+                GLPGLJAJJOP.NJMFCPGCKNL(); // Restore default
+                GLPGLJAJJOP.OIIAHNGBNIF(); // Save
+            }
         }
         try
         {
@@ -1090,14 +1100,14 @@ public class Plugin : BaseUnityPlugin
             return;
         }
 
-        string save = Application.persistentDataPath + "/Save.bytes";
+        string save = Locations.SaveFile.FullName;
         if (!File.Exists(save))
         {
             return;
         }
 
         string backup = Path.Combine(Application.persistentDataPath, "backups",
-            DateTime.Now.ToString("Save-yyyy-MM-dd_HH-mm-ss") + ".bytes");
+            DateTime.Now.ToString($"Save-yyyy-MM-dd_HH-mm-ss") + ".bytes");
         string bd = Path.GetDirectoryName(backup);
         if (!Directory.Exists(bd))
         {

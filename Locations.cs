@@ -9,11 +9,16 @@ public static class Locations
     public static DirectoryInfo Import { get; } = new(Path.Combine(Plugin.PluginPath, "Import"));
     public static DirectoryInfo Export { get; } = new(Path.Combine(Plugin.PluginPath, "Export"));
     public static DirectoryInfo Libraries { get; } = new(Path.Combine(Plugin.PluginPath, "Libraries"));
+    public static DirectoryInfo DeletedCharacters { get; } = new(Path.Combine(Plugin.PluginPath, "Purgatory"));
     public static DirectoryInfo Cache { get; } = new(Path.Combine(Plugin.PersistentDataPath, ".cache"));
     public static DirectoryInfo Debug { get; } = new(Path.Combine(Plugin.PluginPath, "Debug"));
 
     public static DirectoryInfo WECCL { get; } = new(Path.Combine(Plugin.PluginPath, "WECCL"));
     public static DirectoryInfo Meta { get; } = new(Path.Combine(Plugin.PersistentDataPath, "Meta.meta"));
+    
+    public static FileInfo SaveFileVanilla { get; } = new(Path.Combine(Application.persistentDataPath, "Save.bytes"));
+    
+    public static FileInfo SaveFile { get; } = new(Path.Combine(Application.persistentDataPath, Plugin.SaveFileName.Value + ".bytes"));
 
     public static DirectoryInfo ContentMappings { get; } =
         new(Path.Combine(Plugin.PersistentDataPath, "ContentMappings.mappings"));

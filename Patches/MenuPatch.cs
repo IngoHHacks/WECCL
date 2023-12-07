@@ -1,6 +1,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WECCL.Content;
+using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
 
@@ -52,7 +53,7 @@ internal class MenuPatch
         }
         return true;
     }
-    
+
     // Damerau Levenshtein distance algorithm from https://programm.top/en/c-sharp/algorithm/damerau-levenshtein-distance/
     private static int Minimum(int a, int b) => a < b ? a : b;
     private static int Minimum(int a, int b, int c) => (a = a < b ? a : b) < c ? a : c;
@@ -195,6 +196,7 @@ internal class MenuPatch
         {
             if (_lastFed == VanillaCounts.Data.NoFeds + 1)
             {
+                HandleKeybinds();
                 if (UnmappedMenus.NNMDEFLLNBF == 0)
                 {
                     if (Input.inputString != "" && Input.inputString != "\b")
@@ -251,6 +253,31 @@ internal class MenuPatch
         }
         return true;
     }
+    
+    private static void HandleKeybinds()
+    {
+        // Delete
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Delete))
+        {
+            if (Characters.foc > 0 && MappedMenus.foc > 0)
+            {
+                MappedSound.Play(MappedSound.death[3]);
+                Plugin.Log.LogInfo("Deleting wrestler " + Characters.c[Characters.foc].name);
+                CharacterUtils.DeleteCharacter(Characters.foc);
+                MappedSaveSystem.request = 1;
+                MappedMenus.Load();
+            }
+        }
+        // New
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.N))
+        {
+            MappedSound.Play(MappedSound.tanoy);
+            Plugin.Log.LogInfo("Creating new wrestler");
+            CharacterUtils.CreateRandomCharacter();
+            MappedSaveSystem.request = 1;
+            MappedMenus.Load();
+        }
+    }
 
     [HarmonyPatch(typeof(UnmappedSprites), nameof(UnmappedSprites.BBLJCJMDDLO))]
     [HarmonyPostfix]
@@ -258,26 +285,68 @@ internal class MenuPatch
     {
         Characters.no_feds = VanillaCounts.Data.NoFeds;
     }
+    
+    private static List<GameObject> _tempObjects = new();
 
     [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.ICGNAJFLAHL))]
     [HarmonyPostfix]
     public static void UnmappedMenus_ICGNAJFLAHL()
     {
-        if (UnmappedMenus.FAKHAFKOBPB == 11 && Characters.fed == VanillaCounts.Data.NoFeds + 1)
+        if (MappedMenus.screen == 11 && Characters.fed == VanillaCounts.Data.NoFeds + 1)
         {
-            UnmappedMenus.DFLLBNMHHIH();
-            UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].ICGNAJFLAHL(2, "\u200BSearch\u200B", 0, 110, 1, 1);
-            UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].FFCNPGPALPD = _searchString;
-            UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].PLFGKLGCOMD = 999999999;
+            MappedMenus.Add();
+            ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).Load(2, "\u200BSearch\u200B", 0, 110, 1, 1);
+            ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).value = _searchString;
+            ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).id = 999999999;
+            
+            GameObject obj = Object.Instantiate(MappedSprites.gMenu[1]);
+            _tempObjects.Add(obj);
+            obj.transform.position = new Vector3(350f, 110f, 0f);
+            obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            RectTransform rt = obj.transform.Find("Title").transform as RectTransform;
+            rt.sizeDelta *= 5;
+            obj.transform.SetParent(MappedMenus.gDisplay.transform, false);
+            Object.Destroy(obj.transform.Find("Background").gameObject);
+            Object.Destroy(obj.transform.Find("Border").gameObject);
+            Object.Destroy(obj.transform.Find("Sheen").gameObject);
+            Object.Destroy(obj.transform.Find("Corners").gameObject);
+            obj.transform.Find("Title").gameObject.GetComponent<Text>().text =
+                "Press [Ctrl+DEL] to delete the selected wrestler.";
+            
+            obj = Object.Instantiate(MappedSprites.gMenu[1]);
+            _tempObjects.Add(obj);
+            obj.transform.position = new Vector3(-350f, 110f, 0f);
+            obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            rt = obj.transform.Find("Title").transform as RectTransform;
+            rt.sizeDelta *= 5;
+            obj.transform.SetParent(MappedMenus.gDisplay.transform, false);
+            Object.Destroy(obj.transform.Find("Background").gameObject);
+            Object.Destroy(obj.transform.Find("Border").gameObject);
+            Object.Destroy(obj.transform.Find("Sheen").gameObject);
+            Object.Destroy(obj.transform.Find("Corners").gameObject);
+            obj.transform.Find("Title").gameObject.GetComponent<Text>().text = 
+                "Press [Ctrl+N] to create a new wrestler.";
+            
             if (_searchUpdate)
             {
-                UnmappedMenus.NNMDEFLLNBF = 0;
+                MappedMenus.foc = 0;
                 _searchUpdate = false;
             }
         }
         else
         {
             _searchString = "";
+            if (_tempObjects.Count > 0)
+            {
+                foreach (GameObject obj in _tempObjects)
+                {
+                    if (obj != null)
+                    {
+                        Object.Destroy(obj);
+                    }
+                }
+                _tempObjects.Clear();
+            }
         }
     }
 
@@ -297,7 +366,7 @@ internal class MenuPatch
     [HarmonyPostfix]
     public static void UnmappedMenu_BBICLKGGIGB(UnmappedMenu __instance)
     {
-        if (__instance.NKEDCLBOOMJ.Equals("\u200BSearch\u200B") && UnmappedMenus.NNMDEFLLNBF == 0)
+        if (__instance.NKEDCLBOOMJ != null && __instance.NKEDCLBOOMJ.Equals("\u200BSearch\u200B") && UnmappedMenus.NNMDEFLLNBF == 0)
         {
             UnmappedSprites.BBLJCJMDDLO(__instance.MGHGFEHHEBA, UnmappedMenus.DEGLGENADOK.r, UnmappedMenus.DEGLGENADOK.g, UnmappedMenus.DEGLGENADOK.b);
             UnmappedSprites.BBLJCJMDDLO(__instance.KELNLAINAFB, UnmappedMenus.PLIABNOBFDO.r, UnmappedMenus.PLIABNOBFDO.g, UnmappedMenus.PLIABNOBFDO.b);

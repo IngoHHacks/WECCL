@@ -12,7 +12,7 @@ public class ScreenPatch
     private static int _dd = 10;
     private static int foc;
     private static int dir;
-    private static UnmappedMenu _menu;
+    private static MappedMenu _menu;
 
     [HarmonyPatch(typeof(Scene_Titles), "Start")]
     [HarmonyPostfix]
@@ -24,20 +24,20 @@ public class ScreenPatch
         _dd = 10;
         if (MetaFile.Data.FirstLaunch)
         {
-            UnmappedMenus.EHLDKHKMHNG();
-            UnmappedMenus.FAKHAFKOBPB = 1002;
-            UnmappedMenus.CHLJMEPFJOK = 0;
-            UnmappedMenus.ODOAPLMOJPD = 0;
-            UnmappedMenus.ICGNAJFLAHL();
+            MappedMenus.RemoveExisting();
+            MappedMenus.screen = 1002;
+            MappedMenus.tab = 0;
+            MappedMenus.page = 0;
+            MappedMenus.Load();
             __instance.gLicense.SetActive(false);
-            UnmappedMenus.GIBJMFJBELJ.SetActive(false);
+            MappedMenus.gBackArrow.SetActive(false);
             Object.Destroy(GameObject.Find("Logo"));
-            GameObject obj = Object.Instantiate(UnmappedSprites.IMPJPDIEKDF[1]);
+            GameObject obj = Object.Instantiate(MappedSprites.gMenu[1]);
             obj.transform.position = new Vector3(0f, 50f, 0f);
             obj.transform.localScale = new Vector3(1f, 1f, 1f);
             RectTransform rt = obj.transform.Find("Title").transform as RectTransform;
             rt.sizeDelta *= 5;
-            obj.transform.SetParent(UnmappedMenus.JPABICKOAEO.transform, false);
+            obj.transform.SetParent(MappedMenus.gDisplay.transform, false);
             Object.Destroy(obj.transform.Find("Background").gameObject);
             Object.Destroy(obj.transform.Find("Border").gameObject);
             Object.Destroy(obj.transform.Find("Sheen").gameObject);
@@ -47,13 +47,13 @@ public class ScreenPatch
         }
         else if (!_initialized && HasConflictingOverrides && !MetaFile.Data.HidePriorityScreenNextTime)
         {
-            UnmappedMenus.EHLDKHKMHNG();
-            UnmappedMenus.FAKHAFKOBPB = 1001;
-            UnmappedMenus.CHLJMEPFJOK = 0;
-            UnmappedMenus.ODOAPLMOJPD = 0;
-            UnmappedMenus.ICGNAJFLAHL();
+            MappedMenus.RemoveExisting();
+            MappedMenus.screen = 1001;
+            MappedMenus.tab = 0;
+            MappedMenus.page = 0;
+            MappedMenus.Load();
             __instance.gLicense.SetActive(false);
-            UnmappedMenus.GIBJMFJBELJ.SetActive(false);
+            MappedMenus.gBackArrow.SetActive(false);
             Object.Destroy(GameObject.Find("Logo"));
 
             GameObject obj = Object.Instantiate(UnmappedSprites.IMPJPDIEKDF[1]);
@@ -61,7 +61,7 @@ public class ScreenPatch
             obj.transform.localScale = new Vector3(1f, 1f, 1f);
             RectTransform rt = obj.transform.Find("Title").transform as RectTransform;
             rt.sizeDelta *= 2;
-            obj.transform.SetParent(UnmappedMenus.JPABICKOAEO.transform, false);
+            obj.transform.SetParent(MappedMenus.gDisplay.transform, false);
             Object.Destroy(obj.transform.Find("Background").gameObject);
             Object.Destroy(obj.transform.Find("Border").gameObject);
             Object.Destroy(obj.transform.Find("Sheen").gameObject);
@@ -80,78 +80,78 @@ public class ScreenPatch
     {
         try
         {
-            if (UnmappedMenus.FAKHAFKOBPB == 1001)
+            if (MappedMenus.screen == 1001)
             {
-                UnmappedControls.NCOEPCFFBJA();
-                UnmappedMenus.PIELJFKJFKF();
+                MappedControls.GetInput();
+                MappedMenus.FindClicks();
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    foc = UnmappedMenus.NNMDEFLLNBF;
+                    foc = MappedMenus.foc;
                 }
                 else if (Input.GetMouseButtonUp(0))
                 {
                     foc = 0;
-                    UnmappedMenus.NNMDEFLLNBF = 0;
+                    MappedMenus.foc = 0;
                     _dd = 10;
                     dir = 0;
                     if (_menu != null)
                     {
-                        UnmappedSprites.BBLJCJMDDLO(_menu.MGHGFEHHEBA, 0.8f, 0.8f, 0.8f);
+                        MappedSprites.ChangeColour(_menu.gBackground, 0.8f, 0.8f, 0.8f);
                     }
                 }
 
-                if (UnmappedMenus.NNMDEFLLNBF >= Prefixes.Count + 1)
+                if (MappedMenus.foc >= Prefixes.Count + 1)
                 {
-                    if (UnmappedMenus.NNMDEFLLNBF == Prefixes.Count + 2)
+                    if (MappedMenus.foc == Prefixes.Count + 2)
                     {
                         MetaFile.Data.HidePriorityScreenNextTime = true;
                     }
 
-                    UnmappedSound.DNNPEAOCDOG(UnmappedSound.PAJJMPLBDPL, 0f, 0.5f);
+                    MappedSound.Play(MappedSound.proceed, 0f, 0.5f);
                     List<string> prefixes = new();
                     for (int i = 1; i < Prefixes.Count + 1; i++)
                     {
-                        string text = UnmappedMenus.FKANHDIMMBJ[i].JGHBIPNIHBK.transform.Find("Value").gameObject
+                        string text = MappedMenus.menu[i].JGHBIPNIHBK.transform.Find("Value").gameObject
                             .GetComponent<Text>().text;
                         prefixes.Add(text);
                     }
 
                     Prefixes = prefixes;
                     SavePrefixes();
-                    UnmappedSound.OGCBMJIIKPP.Stop();
-                    UnmappedSound.OOFPHCHKOBE[0] = UnmappedGlobals.JFHPHDKKECG("Music", "Theme00") as AudioClip;
-                    UnmappedSound.OGCBMJIIKPP.clip = UnmappedSound.OOFPHCHKOBE[0];
-                    UnmappedSound.OGCBMJIIKPP.time = 0f;
-                    UnmappedSound.OGCBMJIIKPP.Play();
-                    UnmappedMenus.PMIIOCMHEAE(1);
+                    MappedSound.musicChannel.Stop();
+                    MappedSound.musicFile[0] = MappedGlobals.LoadAsset("Music", "Theme00") as AudioClip;
+                    MappedSound.musicChannel.clip = MappedSound.musicFile[0];
+                    MappedSound.musicChannel.time = 0f;
+                    MappedSound.musicChannel.Play();
+                    MappedMenus.ChangeScreen(1);
                 }
                 else if (foc > 0 && _delay <= 0)
                 {
-                    UnmappedMenu menu = UnmappedMenus.FKANHDIMMBJ[foc];
+                    MappedMenu menu = MappedMenus.menu[foc];
                     if (dir == 0)
                     {
-                        dir = menu.JPMOFJPKINC >= 0 ? 1 : -1;
+                        dir = menu.alpha >= 0 ? 1 : -1;
                     }
 
                     if (dir < 0)
                     {
                         if (foc > 1)
                         {
-                            UnmappedMenu menu2 = UnmappedMenus.FKANHDIMMBJ[foc - 1];
-                            Text text1 = menu.JGHBIPNIHBK.transform.Find("Value").gameObject.GetComponent<Text>();
-                            Text text2 = menu2.JGHBIPNIHBK.transform.Find("Value").gameObject.GetComponent<Text>();
-                            menu2.NKEDCLBOOMJ = text1.text;
-                            menu.NKEDCLBOOMJ = text2.text;
+                            MappedMenu menu2 = MappedMenus.menu[foc - 1];
+                            Text text1 = menu.box.transform.Find("Value").gameObject.GetComponent<Text>();
+                            Text text2 = menu2.box.transform.Find("Value").gameObject.GetComponent<Text>();
+                            menu2.title = text1.text;
+                            menu.title = text2.text;
                             (text1.text, text2.text) = (text2.text, text1.text);
                             if (_menu != null)
                             {
-                                UnmappedSprites.BBLJCJMDDLO(_menu.MGHGFEHHEBA, 0.8f, 0.8f, 0.8f);
+                                MappedSprites.ChangeColour(_menu.gBackground, 0.8f, 0.8f, 0.8f);
                             }
 
                             _menu = menu2;
-                            UnmappedSprites.BBLJCJMDDLO(_menu.MGHGFEHHEBA, 0.3f, 0.9f, 0.3f);
-                            UnmappedMenus.NNMDEFLLNBF--;
+                            MappedSprites.ChangeColour(_menu.gBackground, 0.3f, 0.9f, 0.3f);
+                            MappedMenus.foc--;
                             _delay = _dd;
                             if (_dd > 1)
                             {
@@ -165,18 +165,18 @@ public class ScreenPatch
                     {
                         if (foc < Prefixes.Count)
                         {
-                            UnmappedMenu menu2 = UnmappedMenus.FKANHDIMMBJ[foc + 1];
-                            Text text1 = menu.JGHBIPNIHBK.transform.Find("Value").gameObject.GetComponent<Text>();
-                            Text text2 = menu2.JGHBIPNIHBK.transform.Find("Value").gameObject.GetComponent<Text>();
+                            MappedMenu menu2 = MappedMenus.menu[foc + 1];
+                            Text text1 = menu.box.transform.Find("Value").gameObject.GetComponent<Text>();
+                            Text text2 = menu2.box.transform.Find("Value").gameObject.GetComponent<Text>();
                             (text1.text, text2.text) = (text2.text, text1.text);
                             if (_menu != null)
                             {
-                                UnmappedSprites.BBLJCJMDDLO(_menu.MGHGFEHHEBA, 0.8f, 0.8f, 0.8f);
+                                MappedSprites.ChangeColour(_menu.gBackground, 0.8f, 0.8f, 0.8f);
                             }
 
                             _menu = menu2;
-                            UnmappedSprites.BBLJCJMDDLO(_menu.MGHGFEHHEBA, 0.9f, 0.3f, 0.3f);
-                            UnmappedMenus.NNMDEFLLNBF++;
+                            MappedSprites.ChangeColour(_menu.gBackground, 0.9f, 0.3f, 0.3f);
+                            MappedMenus.foc++;
                             _delay = _dd;
                             if (_dd > 1)
                             {
@@ -188,39 +188,39 @@ public class ScreenPatch
                     }
                 }
 
-                UnmappedMenus.PGKOMOIMNJN = UnmappedMenus.NNMDEFLLNBF;
+                MappedMenus.oldFoc = MappedMenus.foc;
 
                 _delay--;
 
                 return false;
             }
 
-            if (UnmappedMenus.FAKHAFKOBPB == 1002)
+            if (MappedMenus.screen == 1002)
             {
-                UnmappedControls.NCOEPCFFBJA();
-                UnmappedMenus.PIELJFKJFKF();
-                UnmappedMenus.BBICLKGGIGB();
+                MappedControls.GetInput();
+                MappedMenus.FindClicks();
+                MappedMenus.UpdateDisplay();
 
-                for (int num = 1; num <= UnmappedMenus.HOAOLPGEBKJ; num++)
+                for (int num = 1; num <= MappedMenus.no_menus; num++)
                 {
-                    if (UnmappedMenus.FKANHDIMMBJ[num].JPMOFJPKINC != 0f && UnmappedMenus.PIEMLEPEDFN == 0 &&
-                        UnmappedMenus.CMOMBJMMOBK > 10f && UnmappedControls.LMADDGDMBGB == 0f &&
-                        UnmappedMenus.FKANHDIMMBJ[num].LJJINGNDEJN() == 0)
+                    if (((MappedMenu) MappedMenus.menu[num]).alpha != 0f && MappedMenus.commit == 0 &&
+                        MappedMenus.gotim > 10f && MappedControls.keytim == 0f &&
+                        ((MappedMenu) MappedMenus.menu[num]).BlockAccess() == 0)
                     {
-                        if (UnmappedMenus.NNMDEFLLNBF > 0)
+                        if (MappedMenus.foc > 0)
                         {
-                            UnmappedMenus.PIEMLEPEDFN = 1;
-                            UnmappedMenus.NNMDEFLLNBF = -1;
+                            MappedMenus.commit = 1;
+                            MappedMenus.foc = -1;
                         }
                     }
                 }
 
-                if (UnmappedMenus.PIEMLEPEDFN >= 5 && UnmappedMenus.NNMDEFLLNBF == -1)
+                if (MappedMenus.commit >= 5 && MappedMenus.foc == -1)
                 {
-                    UnmappedSound.DNNPEAOCDOG(UnmappedSound.PAJJMPLBDPL, 0f, 0.5f);
+                    MappedSound.Play(MappedSound.proceed, 0f, 0.5f);
                     MetaFile.Data.FirstLaunch = false;
                     MetaFile.Data.Save();
-                    UnmappedMenus.PMIIOCMHEAE(1);
+                    MappedMenus.ChangeScreen(1);
                 }
 
                 return false;
@@ -238,29 +238,29 @@ public class ScreenPatch
     [HarmonyPrefix]
     public static bool Menus_ICGNAJFLAHL(int IPCCBDAFNMC)
     {
-        if (UnmappedMenus.FAKHAFKOBPB > 1000)
+        if (MappedMenus.screen > 1000)
         {
-            UnmappedMenus.EHLDKHKMHNG();
-            UnmappedMenus.NNMDEFLLNBF = 0;
-            UnmappedMenus.HOAOLPGEBKJ = IPCCBDAFNMC;
-            UnmappedMenus.FKANHDIMMBJ = new UnmappedMenu[UnmappedMenus.HOAOLPGEBKJ + 1];
-            for (UnmappedMenus.KJELLNJFNGO = 1;
-                 UnmappedMenus.KJELLNJFNGO <= UnmappedMenus.HOAOLPGEBKJ;
-                 UnmappedMenus.KJELLNJFNGO++)
+            MappedMenus.RemoveExisting();
+            MappedMenus.foc = 0;
+            MappedMenus.no_menus = IPCCBDAFNMC;
+            MappedMenus.menu = new UnmappedMenu[MappedMenus.no_menus + 1];
+            for (MappedMenus.cyc = 1;
+                 MappedMenus.cyc <= MappedMenus.no_menus;
+                 MappedMenus.cyc++)
             {
-                UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.KJELLNJFNGO] = new UnmappedMenu();
-                UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.KJELLNJFNGO].PLFGKLGCOMD = UnmappedMenus.KJELLNJFNGO;
+                MappedMenus.menu[MappedMenus.cyc] = new UnmappedMenu();
+                ((MappedMenu) MappedMenus.menu[MappedMenus.cyc]).id = MappedMenus.cyc;
             }
 
-            UnmappedMenus.BDCAECFNCFK = 0f;
-            UnmappedMenus.MEIGJEIKBBN = 0f;
-            UnmappedMenus.BHNAPHLDMMI = 0f;
-            UnmappedMenus.BNMINLJJJKE = 0f;
+            MappedMenus.scrollX = 0f;
+            MappedMenus.scrollSpeedX = 0f;
+            MappedMenus.scrollY = 0f;
+            MappedMenus.scrollSpeedY = 0f;
             float num = 0f;
             float num2 = 0f;
             float num3 = 80f;
             float num4 = 1.6f;
-            if (UnmappedMenus.FAKHAFKOBPB == 1001)
+            if (MappedMenus.screen == 1001)
             {
                 int rows;
                 int columns;
@@ -272,46 +272,45 @@ public class ScreenPatch
                 int index = 0;
                 foreach (string prefix in Prefixes)
                 {
-                    UnmappedMenus.DFLLBNMHHIH();
+                    MappedMenus.Add();
                     float x = startX + (index % columns * 210 * scale);
                     float y = startY - (index / columns * 50 * scale);
-                    UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].ICGNAJFLAHL(6,
+                    ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).Load(6,
                         "#" + (index + 1) +
                         (index == 0 ? " (highest)" : index == Prefixes.Count - 1 ? " (lowest)" : ""), x, y, scale,
                         scale);
-                    UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].JGHBIPNIHBK.transform.Find("Value").gameObject
+                    ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).box.transform.Find("Value").gameObject
                         .GetComponent<Text>().text = prefix;
-                    UnmappedSprites.BBLJCJMDDLO(UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].MGHGFEHHEBA, 0.8f, 0.8f,
+                    MappedSprites.ChangeColour(((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).gBackground, 0.8f, 0.8f,
                         0.8f);
                     index++;
                 }
 
-                UnmappedMenus.DFLLBNMHHIH();
-                UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].ICGNAJFLAHL(1, "Proceed", -150f, -280, 1.25f, 1.25f);
-                UnmappedMenus.DFLLBNMHHIH();
-                UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ]
-                    .ICGNAJFLAHL(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
+                MappedMenus.Add();
+                ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Proceed", -150f, -280, 1.25f, 1.25f);
+                MappedMenus.Add();
+                ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Proceed & Hide", 150f, -280, 1.25f, 1.25f);
             }
-            else if (UnmappedMenus.FAKHAFKOBPB == 1002)
+            else if (MappedMenus.screen == 1002)
             {
-                UnmappedMenus.DFLLBNMHHIH();
-                UnmappedMenus.FKANHDIMMBJ[UnmappedMenus.HOAOLPGEBKJ].ICGNAJFLAHL(1, "Proceed", 0f, -280, 1.25f, 1.25f);
+                MappedMenus.Add();
+                ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Proceed", 0f, -280, 1.25f, 1.25f);
             }
 
-            UnmappedMenus.DADOHOENFJJ();
-            if (UnmappedMenus.JAKMHECDDBI() > 0 && UnmappedMenus.HOAOLPGEBKJ > 0 && foc == 0)
+            MappedMenus.MeasureOptions();
+            if (MappedMenus.Control() > 0 && MappedMenus.no_menus > 0 && foc == 0)
             {
                 foc = 1;
             }
 
-            UnmappedMenus.PGKOMOIMNJN = foc;
-            UnmappedMenus.PIEMLEPEDFN = 0;
-            UnmappedKeyboard.GAHGPNAADHF = 0;
-            UnmappedMenus.OMNBAENKANN = 0;
-            UnmappedMenus.ANCKPGPLICF = 0;
-            UnmappedMenus.GPGJCPOJCEP = 0;
-            UnmappedMenus.CMOMBJMMOBK = 0f;
-            UnmappedControls.LMADDGDMBGB = 10f;
+            MappedMenus.oldFoc = foc;
+            MappedMenus.commit = 0;
+            MappedKeyboard.entryFoc = 0;
+            MappedMenus.moveFoc = 0;
+            MappedMenus.tapStart = 0;
+            MappedMenus.tapEnd = 0;
+            MappedMenus.gotim = 0f;
+            MappedControls.keytim = 10f;
             return false;
         }
 

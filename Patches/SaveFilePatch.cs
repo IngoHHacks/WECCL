@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
 using WECCL.Content;
@@ -15,8 +17,8 @@ internal class SaveFilePatch
      * This patch resets the character and federation counts.
      * It also resets the star (wrestler) and booker to 1 if they are greater than the new character count.
      */
-    [HarmonyPatch(typeof(UnmappedSaveData), nameof(UnmappedSaveData.NJMFCPGCKNL))]
-    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
+    [HarmonyPrefix]
     public static void SaveFile_NJMFCPGCKNL()
     {
         if (SceneManager.GetActiveScene().name == "Loading")
@@ -40,17 +42,63 @@ internal class SaveFilePatch
 
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref UnmappedSaveData.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref UnmappedSaveData.APPDIBENDAH.savedChars, Characters.no_chars + 1);
-
-            CharacterMappings.CharacterMap.PreviouslyImportedCharacters.Clear();
-            CharacterMappings.CharacterMap.PreviouslyImportedCharacterIds.Clear();
-            
-            SaveRemapper.FixBrokenSaveData();
+            Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedChars, Characters.no_chars + 1);
         }
         catch (Exception e)
         {
             Plugin.Log.LogError(e);
+        }
+    }
+    
+    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
+    [HarmonyPostfix]
+    public static void SaveFile_Post()
+    {
+        if (SceneManager.GetActiveScene().name == "Loading")
+        {
+            return;
+        }
+        try
+        {
+            SaveRemapper.FixBrokenSaveData();
+            
+            CharacterMappings.CharacterMap.PreviouslyImportedCharacters.Clear();
+            CharacterMappings.CharacterMap.PreviouslyImportedCharacterIds.Clear();
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError(e);
+        }
+    }
+    
+    // Transpiler for BONMDGJIBFP to change the save file name to 'ModdedSave.bytes' (or whatever the user has set)
+    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.BONMDGJIBFP))]
+    [HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> SaveData_BONMDGJIBFP_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        foreach (CodeInstruction instruction in instructions)
+        {
+            if (instruction.opcode == OpCodes.Ldstr && instruction.operand is string str && str == "Save")
+            {
+                instruction.operand = Plugin.SaveFileName.Value;
+            }
+            yield return instruction;
+        }
+    }
+    
+    // Transpiler for OIIAHNGBNIF to change the save file name to 'ModdedSave.bytes' (or whatever the user has set)
+    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.OIIAHNGBNIF))]
+    [HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> SaveData_OIIAHNGBNIF_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        foreach (CodeInstruction instruction in instructions)
+        {
+            if (instruction.opcode == OpCodes.Ldstr && instruction.operand is string str && str == "Save")
+            {
+                instruction.operand = Plugin.SaveFileName.Value;
+            }
+            yield return instruction;
         }
     }
 
@@ -58,16 +106,24 @@ internal class SaveFilePatch
      * SaveData.BONMDGJIBFP is called when the game loads the save file.
      * This prefix patch is used to update character counts and arrays to accommodate the custom content.
      */
-    [HarmonyPatch(typeof(UnmappedSaveData), nameof(UnmappedSaveData.BONMDGJIBFP))]
+    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.BONMDGJIBFP))]
     [HarmonyPrefix]
     public static void SaveData_BONMDGJIBFP_PRE(int FIHDANPPMGC)
     {
         try
         {
-            string save = Application.persistentDataPath + "/Save.bytes";
+            string save = Locations.SaveFile.FullName;
             if (!File.Exists(save))
             {
-                return;
+                string vanillaSave = Locations.SaveFileVanilla.FullName;
+                if (File.Exists(vanillaSave))
+                {
+                    File.Copy(vanillaSave, save);
+                }
+                else
+                {
+                    return;
+                }
             }
 
             FileStream fileStream = new(save, FileMode.Open);
@@ -85,7 +141,7 @@ internal class SaveFilePatch
             Characters.fedLimit = Math.Max(Plugin.BaseFedLimit.Value, fedCharCount.Max() + 1);
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
-            Array.Resize(ref UnmappedSaveData.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
+            Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
 
             fileStream.Close();
         }
@@ -98,27 +154,35 @@ internal class SaveFilePatch
     /*
      * This postfix patch is used to remap any custom content that has moved, and also add the imported characters.
      */
-    [HarmonyPatch(typeof(UnmappedSaveData), nameof(UnmappedSaveData.BONMDGJIBFP))]
+    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.BONMDGJIBFP))]
     [HarmonyPostfix]
     public static void SaveData_BONMDGJIBFP_POST(int FIHDANPPMGC)
     {
-        string save = Application.persistentDataPath + "/Save.bytes";
+        string save = Locations.SaveFile.FullName;
         if (!File.Exists(save))
         {
-            return;
+            string vanillaSave = Locations.SaveFileVanilla.FullName;
+            if (File.Exists(vanillaSave))
+            {
+                File.Copy(vanillaSave, save);
+            }
+            else
+            {
+                return;
+            }
         }
 
-        if (fedCharCount != null && UnmappedSaveData.APPDIBENDAH.savedFeds != null)
+        if (fedCharCount != null && GLPGLJAJJOP.APPDIBENDAH.savedFeds != null)
         {
             for (int i = 1; i <= Characters.no_feds; i++)
             {
                 int count = Plugin.BaseFedLimit.Value <= 48 ? fedCharCount[i] + 1 : Plugin.BaseFedLimit.Value + 1;
-                if (UnmappedSaveData.APPDIBENDAH.savedFeds[i] != null)
+                if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[i] != null)
                 {
-                    UnmappedSaveData.APPDIBENDAH.savedFeds[i].size = fedCharCount[i];
-                    if (count > UnmappedSaveData.APPDIBENDAH.savedFeds[i].roster.Length)
+                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].size = fedCharCount[i];
+                    if (count > GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster.Length)
                     {
-                        Array.Resize(ref UnmappedSaveData.APPDIBENDAH.savedFeds[i].roster, count);
+                        Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster, count);
                     }
                 }
 
@@ -129,7 +193,7 @@ internal class SaveFilePatch
         try
         {
             SaveRemapper.FixBrokenSaveData();
-            SaveRemapper.PatchCustomContent(ref UnmappedSaveData.APPDIBENDAH);
+            SaveRemapper.PatchCustomContent(ref GLPGLJAJJOP.APPDIBENDAH);
             foreach (BetterCharacterDataFile file in ImportedCharacters)
             {
                 string nameWithGuid = file._guid;
@@ -163,7 +227,7 @@ internal class SaveFilePatch
                     Character importedCharacter = null;
                     if (!overrideMode.Contains("merge"))
                     {
-                        importedCharacter = file.CharacterData.ToRegularCharacter(UnmappedSaveData.APPDIBENDAH.savedChars);
+                        importedCharacter = file.CharacterData.ToRegularCharacter(GLPGLJAJJOP.APPDIBENDAH.savedChars);
                     }
                     switch (overrideMode)
                     {
@@ -176,7 +240,7 @@ internal class SaveFilePatch
                                 string find = file.FindName ?? importedCharacter.name;
                                 try
                                 {
-                                    id = UnmappedSaveData.APPDIBENDAH.savedChars
+                                    id = GLPGLJAJJOP.APPDIBENDAH.savedChars
                                         .Single(c => c != null && c.name != null && c.name == find).id;
                                 }
                                 catch (Exception e)
@@ -192,28 +256,28 @@ internal class SaveFilePatch
                                 break;
                             }
 
-                            Character oldCharacter = UnmappedSaveData.APPDIBENDAH.savedChars[id];
+                            Character oldCharacter = GLPGLJAJJOP.APPDIBENDAH.savedChars[id];
                             string name = importedCharacter.name;
                             string oldCharacterName = oldCharacter.name;
-                            UnmappedSaveData.APPDIBENDAH.savedChars[id] = importedCharacter;
+                            GLPGLJAJJOP.APPDIBENDAH.savedChars[id] = importedCharacter;
                             if (importedCharacter.fed != oldCharacter.fed)
                             {
-                                if (UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 1 ==
-                                    UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length)
+                                if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 1 ==
+                                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length)
                                 {
-                                    Array.Resize(ref UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].roster,
-                                        UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 2);
-                                    if (UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length >
+                                    Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster,
+                                        GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 2);
+                                    if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length >
                                         Characters.fedLimit)
                                     {
                                         Characters.fedLimit++;
                                     }
                                 }
 
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size++;
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed]
-                                    .roster[UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size] = id;
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[oldCharacter.fed].BIDMDHABIGJ(id);
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size++;
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed]
+                                    .roster[GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size] = id;
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[oldCharacter.fed].BIDMDHABIGJ(id);
                             }
 
                             Plugin.Log.LogInfo(
@@ -223,40 +287,40 @@ internal class SaveFilePatch
                             Plugin.Log.LogInfo($"Appending character {importedCharacter.name ?? "null"} to next available id.");
                             int id2 = Characters.no_chars + 1;
                             importedCharacter.id = id2;
-                            if (UnmappedSaveData.APPDIBENDAH.savedChars.Length <= id2)
+                            if (GLPGLJAJJOP.APPDIBENDAH.savedChars.Length <= id2)
                             {
-                                Array.Resize(ref UnmappedSaveData.APPDIBENDAH.savedChars, id2 + 1);
-                                Array.Resize(ref UnmappedSaveData.APPDIBENDAH.charUnlock, id2 + 1);
+                                Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedChars, id2 + 1);
+                                Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, id2 + 1);
                                 Array.Resize(ref Characters.c, id2 + 1);
                                 Array.Resize(ref Progress.charUnlock, id2 + 1);
-                                UnmappedSaveData.APPDIBENDAH.charUnlock[id2] = 1;
+                                GLPGLJAJJOP.APPDIBENDAH.charUnlock[id2] = 1;
                                 Progress.charUnlock[id2] = 1;
                             }
                             else
                             {
                                 Plugin.Log.LogWarning(
-                                    $"The array of characters is larger than the number of characters. This should not happen. The character {UnmappedSaveData.APPDIBENDAH.savedChars[id2].name} will be overwritten.");
+                                    $"The array of characters is larger than the number of characters. This should not happen. The character {GLPGLJAJJOP.APPDIBENDAH.savedChars[id2].name} will be overwritten.");
                             }
 
-                            UnmappedSaveData.APPDIBENDAH.savedChars[id2] = importedCharacter;
+                            GLPGLJAJJOP.APPDIBENDAH.savedChars[id2] = importedCharacter;
                             if (importedCharacter.fed != 0)
                             {
-                                if (UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 1 ==
-                                    UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length)
+                                if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 1 ==
+                                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length)
                                 {
                                     Array.Resize(
-                                        ref UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].roster,
-                                        UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 2);
-                                    if (UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length >
+                                        ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster,
+                                        GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 2);
+                                    if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length >
                                         Characters.fedLimit)
                                     {
                                         Characters.fedLimit++;
                                     }
                                 }
 
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size++;
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed]
-                                    .roster[UnmappedSaveData.APPDIBENDAH.savedFeds[importedCharacter.fed].size] = id2;
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size++;
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed]
+                                    .roster[GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size] = id2;
                             }
 
                             Characters.no_chars++;
@@ -273,7 +337,7 @@ internal class SaveFilePatch
                                     throw new Exception($"No name found for file {nameWithGuid}");
                                 try
                                 {
-                                    id3 = UnmappedSaveData.APPDIBENDAH.savedChars
+                                    id3 = GLPGLJAJJOP.APPDIBENDAH.savedChars
                                         .Single(c => c != null && c.name != null && c.name == find).id;
                                 }
                                 catch (Exception e)
@@ -289,30 +353,30 @@ internal class SaveFilePatch
                                 break;
                             }
 
-                            Character oldCharacter2 = UnmappedSaveData.APPDIBENDAH.savedChars[id3];
+                            Character oldCharacter2 = GLPGLJAJJOP.APPDIBENDAH.savedChars[id3];
                             file.CharacterData.MergeIntoCharacter(oldCharacter2);
 
-                            UnmappedSaveData.APPDIBENDAH.savedChars[id3] = oldCharacter2;
+                            GLPGLJAJJOP.APPDIBENDAH.savedChars[id3] = oldCharacter2;
                             if (file.CharacterData.fed != null && file.CharacterData.fed.Value != oldCharacter2.fed)
                             {
-                                if (UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size + 1 ==
-                                    UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].roster.Length)
+                                if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size + 1 ==
+                                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].roster.Length)
                                 {
                                     Array.Resize(
-                                        ref UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].roster,
-                                        UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size + 2);
-                                    if (UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].roster.Length >
+                                        ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].roster,
+                                        GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size + 2);
+                                    if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].roster.Length >
                                         Characters.fedLimit)
                                     {
                                         Characters.fedLimit++;
                                     }
                                 }
 
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size++;
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value]
-                                        .roster[UnmappedSaveData.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size] =
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size++;
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value]
+                                        .roster[GLPGLJAJJOP.APPDIBENDAH.savedFeds[file.CharacterData.fed.Value].size] =
                                     id3;
-                                UnmappedSaveData.APPDIBENDAH.savedFeds[oldCharacter2.fed].BIDMDHABIGJ(id3);
+                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[oldCharacter2.fed].BIDMDHABIGJ(id3);
                             }
 
                             Plugin.Log.LogInfo(
@@ -332,7 +396,7 @@ internal class SaveFilePatch
                 }
             }
 
-            UnmappedSaveData.APPDIBENDAH.CDLIDDFKFEL(FIHDANPPMGC);
+            GLPGLJAJJOP.APPDIBENDAH.CDLIDDFKFEL(FIHDANPPMGC);
         }
         catch (Exception e)
         {
@@ -371,13 +435,27 @@ internal class SaveFilePatch
      * SaveData.OIIAHNGBNIF is called when the player saves the game.
      * This patch saves the current custom content map and exports all characters.
      */
-    [HarmonyPatch(typeof(UnmappedSaveData), nameof(UnmappedSaveData.OIIAHNGBNIF))]
+    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.OIIAHNGBNIF))]
     [HarmonyPostfix]
     public static void SaveData_OIIAHNGBNIF(int FIHDANPPMGC)
     {
         SaveCurrentMap();
         CharacterMappings.CharacterMap.Save();
         MetaFile.Data.Save();
+
+        if (NonSavedData.DeletedCharacters.Count > 0)
+        {
+            Plugin.Log.LogInfo($"Saving {NonSavedData.DeletedCharacters.Count} characters to purgatory.");
+            foreach (Character character in NonSavedData.DeletedCharacters)
+            {
+                BetterCharacterData moddedCharacter = BetterCharacterData.FromRegularCharacter(character, Characters.c);
+                BetterCharacterDataFile file = new() { characterData = moddedCharacter, overrideMode = "append" };
+                string json = JsonConvert.SerializeObject(file, Formatting.Indented);
+                string path = Path.Combine(Locations.DeletedCharacters.FullName, $"{character.id}_{Escape(character.name)}.character");
+                File.WriteAllText(path, json);
+            }
+        }
+        
         if (Plugin.AutoExportCharacters.Value)
         {
             ModdedCharacterManager.SaveAllCharacters();
@@ -411,5 +489,25 @@ internal class SaveFilePatch
     internal static ContentMappings LoadPreviousMap()
     {
         return ContentMappings.Load();
+    }
+    
+    [HarmonyPatch(typeof(SaveData), nameof(SaveData.PLCEMOKLLCP))]
+    [HarmonyPrefix]
+    public static void SaveData_PLCEMOKLLCP(SaveData __instance, int NAOMGHCFPKK = 1)
+    {
+        if (__instance.charUnlock.Length < Characters.no_chars + 1)
+        {
+            Array.Resize(ref __instance.charUnlock, Characters.no_chars + 1);
+        }
+    }
+    
+    [HarmonyPatch(typeof(SaveData), nameof(SaveData.PEDMCEBEOCE))]
+    [HarmonyPrefix]
+    public static void SaveData_PEDMCEBEOCE(SaveData __instance, int IPBOLLAFINB = 1)
+    {
+        if (Progress.charUnlock.Length < __instance.savedChars.Length)
+        {
+            Array.Resize(ref Progress.charUnlock, __instance.savedChars.Length);
+        }
     }
 }
