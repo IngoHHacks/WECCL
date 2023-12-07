@@ -264,6 +264,15 @@ internal class MenuPatch
                 MappedSound.Play(MappedSound.death[3]);
                 Plugin.Log.LogInfo("Deleting wrestler " + Characters.c[Characters.foc].name);
                 CharacterUtils.DeleteCharacter(Characters.foc);
+                Characters.foc--;
+                MappedMenus.foc--;
+                for (int m = 1; m <= MappedPlayers.no_plays; m++)
+                {
+                    if (Characters.profileChar[m] > 0)
+                    {
+                        Characters.profileChar[m] = 0;
+                    }
+                }
                 MappedSaveSystem.request = 1;
                 MappedMenus.Load();
             }
