@@ -452,6 +452,10 @@ internal class SaveFilePatch
                 BetterCharacterDataFile file = new() { characterData = moddedCharacter, overrideMode = "append" };
                 string json = JsonConvert.SerializeObject(file, Formatting.Indented);
                 string path = Path.Combine(Locations.DeletedCharacters.FullName, $"{character.id}_{Escape(character.name)}.character");
+                if (!Directory.Exists(Locations.DeletedCharacters.FullName))
+                {
+                    Directory.CreateDirectory(Locations.DeletedCharacters.FullName);
+                }
                 File.WriteAllText(path, json);
             }
         }
