@@ -477,9 +477,13 @@ public class ArenaPatch
             if (World.location > VanillaCounts.Data.NoLocations)
             {
                 //Replaces crowd textures while keeping materials, shaders etc
-                Transform parentTransform = World.gArena.transform.Find("arena");
+                Transform parentTransform = World.gArena.transform.root;
 
-                FindAndProcessCrowdObjects(parentTransform);
+                //Shouldn't ever be null here but adding check anyway
+                if (parentTransform != null)
+                {
+                    FindAndProcessCrowdObjects(parentTransform);
+                }
             }
 
             for (int i = 1; i <= num2; i++)
@@ -701,7 +705,7 @@ public class ArenaPatch
                     }
                 }
 
-                if (CrowdCount > 10)
+                if (CrowdCount >= 10)
                 {
                     CrowdCount += 1;
                     //Don't need to do any of this if CrowdCount hasn't changed, otherwise make sure virtual crowd is the last value
@@ -1676,7 +1680,12 @@ public class ArenaPatch
             {
                 if ((IKBHGAKKJMM == 28 || IKBHGAKKJMM == 31) && __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 0)
                 {
-                    Transform ReferenceObject = World.gArena.transform.Find("SolidShader");
+                    Transform ReferenceObject = null;
+                    if (World.gArena != null)
+                    {
+                        ReferenceObject = World.gArena.transform.Find("SolidShader");
+                    }
+
 
                     if (ReferenceObject != null)
                     {
