@@ -5,7 +5,6 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 public class MatchTypePatch
 {
-    private static float OldPresetMax;
     private static float OldPresetMin;
     private static float OldCageMax;
     private static float OldCageMin;
@@ -19,20 +18,12 @@ public class MatchTypePatch
         {
             if (LIPNHOMGGHF.FKANHDIMMBJ[1] == __instance)
             {
-                OldPresetMax = LKBOHHGFJFO;
                 OldPresetMin = JBPAELFIDOP;
                 JBPAELFIDOP -= CustomMatch.CustomPresetsNeg.Count;
-                LKBOHHGFJFO += CustomMatch.CustomPresetsPos.Count;
-               // Debug.LogWarning("OLD " + CAAJBNHEFJJ);
-                if (CAAJBNHEFJJ >= 10000)
-                {
-                    CAAJBNHEFJJ = CAAJBNHEFJJ - 10000 + OldPresetMax;
-                }
                 if (CAAJBNHEFJJ <= -10000)
                 {
                     CAAJBNHEFJJ = CAAJBNHEFJJ + 10000 - OldPresetMin;
                 }
-               // Debug.LogWarning("NEW " + CAAJBNHEFJJ);
             }
         }    
     }
@@ -45,13 +36,7 @@ public class MatchTypePatch
         {
             if (LIPNHOMGGHF.FKANHDIMMBJ[1] == __instance)
             {
-               // Debug.LogWarning("OLD R " + __result);
-                if (__result > OldPresetMax)
-                {
-                    __result = 10000 + (__result - OldPresetMax);
-                }
                 if (__result < OldPresetMin) __result = -10000 - (OldPresetMin - __result);
-              //  Debug.LogWarning("NEW R " + __result);
             }
         }
     }
@@ -64,18 +49,7 @@ public class MatchTypePatch
         {
             if (LIPNHOMGGHF.FKANHDIMMBJ[9] == __instance)
             {
-                OldCageMax = LKBOHHGFJFO;
-                OldCageMin = JBPAELFIDOP;
-                JBPAELFIDOP -= CustomMatch.CustomCagesNeg.Count;
-                LKBOHHGFJFO += CustomMatch.CustomCagesPos.Count;
-                if (CAAJBNHEFJJ >= 10000)
-                {
-                    CAAJBNHEFJJ = CAAJBNHEFJJ - 10000 + OldCageMax;
-                }
-                if (CAAJBNHEFJJ <= -10000)
-                {
-                    CAAJBNHEFJJ = CAAJBNHEFJJ + 10000 - OldCageMin;
-                }
+                ChangeHardcodedPrefix(ref OldCageMin, ref JBPAELFIDOP, CustomMatch.CustomCagesNeg.Count, ref OldCageMax, ref LKBOHHGFJFO, CustomMatch.CustomCagesPos.Count, ref CAAJBNHEFJJ);
             }
         }
     }
@@ -88,12 +62,31 @@ public class MatchTypePatch
         {
             if (LIPNHOMGGHF.FKANHDIMMBJ[9] == __instance)
             {
-                if (__result > OldCageMax)
-                {
-                    __result = 10000 + (__result - OldCageMax);
-                }
-                if (__result < OldCageMin) __result = -10000 - (OldCageMin - __result);
+                ChangeHardcodedPostfix(ref __result, OldCageMin, OldCageMax);
             }
         }
+    }
+    private static void ChangeHardcodedPrefix(ref float OldMin, ref float GameMin, int NegativesCount, ref float OldMax, ref float GameMax, int PositivesCount, ref float CurrentValue)
+    {
+        OldMax = GameMax;
+        OldMin = GameMin;
+        GameMin -= NegativesCount;
+        GameMax += PositivesCount;
+        if (CurrentValue >= 10000)
+        {
+            CurrentValue = CurrentValue - 10000 + OldMax;
+        }
+        if (CurrentValue <= -10000)
+        {
+            CurrentValue = CurrentValue + 10000 - OldMin;
+        }
+    }
+    private static void ChangeHardcodedPostfix(ref float __result, float OldMin, float OldMax)
+    {
+        if (__result > OldMax)
+        {
+            __result = 10000 + (__result - OldMax);
+        }
+        if (__result < OldMin) __result = -10000 - (OldMin - __result);
     }
 }
