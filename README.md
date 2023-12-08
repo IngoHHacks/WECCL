@@ -307,9 +307,10 @@ forwardspeedmultiplier: 1.5
 
 ## Custom Match Types
 
-Code modders can now add multiple custom match types in a non conflicting way. To do this, request WECCL to provide you a required element ID in your plugin `Start()` method. Then, WECCL will add your element to the game and it will be selectable in menus. Currently supported:  
-`WECCL.Content.CustomMatch.RegisterCustomPreset(string Name, bool PositiveValue)` will return you a match preset ID. Adding match preset to the positive end will also make them appear in career matches.  
-`WECCL.Content.CustomMatch.RegisterCustomCage(string Name, bool PositiveValue)` will return you a cage ID.  
+Code modders can now add multiple custom match types in a non conflicting way. To do this, request WECCL to provide you a required element ID in your plugin `Start()` method. Then, WECCL will add your element to the game and it will be selectable in menus. Currently supported:
+- `WECCL.Content.CustomMatch.RegisterCustomPreset(string Name, bool PositiveValue)` will return you a match preset ID. Adding match preset to the positive end will also make them appear in career matches.
+- `WECCL.Content.CustomMatch.RegisterCustomCage(string Name, bool PositiveValue)` will return you a cage ID.
+
 If you are working on something that is currently not on this list, you can request us add support for that.
 
 ## Aliases
