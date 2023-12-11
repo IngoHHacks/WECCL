@@ -176,7 +176,7 @@ internal class SaveFilePatch
         {
             for (int i = 1; i <= Characters.no_feds; i++)
             {
-                int count = Plugin.BaseFedLimit.Value <= 48 ? fedCharCount[i] + 1 : Plugin.BaseFedLimit.Value + 1;
+                int count = Math.Max(fedCharCount[i] + 1, Plugin.BaseFedLimit.Value + 1);
                 if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[i] != null)
                 {
                     GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].size = fedCharCount[i];

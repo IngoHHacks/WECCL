@@ -454,6 +454,51 @@ public class SaveRemapper
         Plugin.Log.LogInfo("Validating save data...");
         var saveData = GLPGLJAJJOP.APPDIBENDAH;
         var numChars = saveData.savedChars.Length;
+
+        for (int index = saveData.savedChars.Length - 1; index >= 1; index--)
+        {
+            if (saveData.savedChars[index] == null)
+            {
+                Plugin.Log.LogError($"Character index {index} is null!");
+            }
+            else if (saveData.savedChars[index].id != index)
+            {
+                Plugin.Log.LogWarning(
+                    $"Character index {index} does not match ID {saveData.savedChars[index].id}. Fixing.");
+                saveData.savedChars[index].id = index;
+            }
+        }
+        
+        List<int> usedIds = new();
+        for (int index = 1; index < saveData.savedFeds.Length; index++)
+        {
+            if (saveData.savedFeds[index] == null)
+            {
+                Plugin.Log.LogError($"Fed index {index} is null!");
+            }
+            for (int i = 1; i <= saveData.savedFeds[index].size; i++)
+            {
+                int id = saveData.savedFeds[index].roster[i];
+                if (usedIds.Contains(id))
+                {
+                    Plugin.Log.LogError($"Character index {id} is used multiple times!");
+                }
+                else
+                {
+                    usedIds.Add(id);
+                }
+            }
+        }
+        for (int index = 1; index < saveData.savedChars.Length; index++)
+        {
+            if (!usedIds.Contains(index))
+            {
+                Plugin.Log.LogWarning($"Character index {index} is not used in any roster. Adding to free agents.");
+                saveData.savedFeds[9].size++;
+                saveData.savedFeds[9].roster[saveData.savedFeds[9].size] = index;
+            }
+        }
+        
         if (saveData.wrestler > numChars)
         {
             Plugin.Log.LogWarning(
