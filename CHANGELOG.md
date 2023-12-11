@@ -1,6 +1,6 @@
 # Changelog
 
-## GV 1.60:
+## GV 1.60+:
 
 ### Release 1.7.0
 - Added support for adding and removing characters from the search screen.
