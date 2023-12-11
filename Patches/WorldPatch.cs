@@ -7,8 +7,7 @@ namespace WECCL.Patches;
 public class WorldPatch
 {
     private static int _tempLocation = -999;
-    private static bool checkedArenaRotation;
-    private static readonly LimitedDictionary<string, float> _raycastCache = new(1000);
+    private static readonly LimitedDictionary<string, float> RaycastCache = new(1000);
 
     [HarmonyPatch(typeof(World), nameof(World.ICGNAJFLAHL))]
     [HarmonyPrefix]
@@ -49,7 +48,7 @@ public class WorldPatch
                 }
 
                 MappedWorld.waterLevel = World.waterDefault + World.waterOffset;
-                MappedWorld.CJDEKIFNCPI();
+                MappedWorld.LoadWater();
                 if (UnmappedMenus.FAKHAFKOBPB == 60)
                 {
                     return false;
@@ -707,7 +706,7 @@ public class WorldPatch
 
             Vector3 coords = new Vector3(MMBJPONJJGM, EJOKLBHLEEJ, FNFJENPGCHM).Round(2);
             string cstr = coords.ToString();
-            if (_raycastCache.TryGetValue(cstr, out float cached))
+            if (RaycastCache.TryGetValue(cstr, out float cached))
             {
                 __result = cached;
                 return;
@@ -724,9 +723,9 @@ public class WorldPatch
                 __result = World.ground;
             }
 
-            if (!_raycastCache.ContainsKey(cstr))
+            if (!RaycastCache.ContainsKey(cstr))
             {
-                _raycastCache.Add(cstr, __result);
+                RaycastCache.Add(cstr, __result);
             }
         }
     }

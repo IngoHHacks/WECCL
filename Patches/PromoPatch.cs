@@ -104,6 +104,8 @@ internal class PromoPatch
             UnmappedPromo.KJPJODMIPGO = UnmappedPromo.ODOAPLMOJPD;
         }
     }
+    
+#pragma warning disable Harmony003
     private static void ExecutePromoLine(string line1, string line2, int from, int to, float demeanor, int taunt, bool useNames)
     {
         line1 = ReplaceVars(line1);
@@ -131,14 +133,12 @@ internal class PromoPatch
             {
                 string varName = match.Groups[1].Value.ToLower();
                 int varIndex = int.Parse(match.Groups[2].Value);
-                string test = "";
                 string varValue = varName switch
                 {
                     "name" => MappedPromo.c[varIndex].name,
                     "promotion" => MappedPromo.fed[varIndex].name,
                     _ => "UNKNOWN"
                 };
-
                 line = line.Replace(match.Value, varValue + match.Groups[3].Value);
             }
             catch (Exception e)
@@ -192,7 +192,8 @@ internal class PromoPatch
 
         return line;
     }
-
+#pragma warning restore Harmony003
+    
     public static void PatchPromoInfo()
     {
         if (CustomContent.PromoData.Count == 0)

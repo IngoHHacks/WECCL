@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Emit;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WECCL.Content;
@@ -56,7 +58,9 @@ internal class MenuPatch
 
     // Damerau Levenshtein distance algorithm from https://programm.top/en/c-sharp/algorithm/damerau-levenshtein-distance/
     private static int Minimum(int a, int b) => a < b ? a : b;
+#pragma warning disable Harmony003
     private static int Minimum(int a, int b, int c) => (a = a < b ? a : b) < c ? a : c;
+#pragma warning restore Harmony003
     private static int DamerauLevenshteinDistance(string firstText, string secondText)
     {
         var n = firstText.Length + 1;
@@ -137,7 +141,7 @@ internal class MenuPatch
             {
                 return;
             }
-
+            
             int fedSize = Characters.fedData[_lastFed].size;
             if (fedSize > 48 || _lastFed == VanillaCounts.Data.NoFeds + 1)
             {
@@ -185,6 +189,13 @@ internal class MenuPatch
         }
     }
     
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.EHLDKHKMHNG))]
+    [HarmonyPrefix]
+    public static void UnmappedMenus_EHLDKHKMHNG()
+    {
+        PrevScale = 1.0f;
+    }
+    
     private static string _searchString = "";
     private static bool _searchUpdate = false;
 
@@ -196,8 +207,13 @@ internal class MenuPatch
         {
             if (_lastFed == VanillaCounts.Data.NoFeds + 1)
             {
+                MappedMenus.no_options = MappedMenus.no_menus - 1;
+                if (MappedMenus.foc == MappedMenus.no_menus)
+                {
+                    MappedMenus.foc = 0;
+                }
                 HandleKeybinds();
-                if (UnmappedMenus.NNMDEFLLNBF == 0)
+                if (MappedMenus.foc == 0)
                 {
                     if (Input.inputString != "" && Input.inputString != "\b")
                     {
@@ -419,6 +435,33 @@ internal class MenuPatch
             }
             UnmappedMenus.BBICLKGGIGB();
             
+        }
+    }
+    
+    // Patch to browse large rosters without skipping rows/columns
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.JCHEJAJJCMJ))]
+    [HarmonyTranspiler]
+    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+    public static IEnumerable<CodeInstruction> UnmappedMenus_JCHEJAJJCMJ_Transpiler(
+        IEnumerable<CodeInstruction> instructions)
+    {
+        foreach (CodeInstruction instruction in instructions)
+        {
+            if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == 100f)
+            {
+                yield return new CodeInstruction(OpCodes.Call,
+                    AccessTools.Method(typeof(MenuUtils), nameof(Scale), new Type[] { typeof(float) }));
+                yield return new CodeInstruction(OpCodes.Ldc_R4, 100f);
+                continue;
+            }
+            if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == 50f)
+            {
+                yield return new CodeInstruction(OpCodes.Call,
+                    AccessTools.Method(typeof(MenuUtils), nameof(Scale), new Type[] { typeof(float) }));
+                yield return new CodeInstruction(OpCodes.Ldc_R4, 50f);
+                continue;
+            }
+            yield return instruction;
         }
     }
 }

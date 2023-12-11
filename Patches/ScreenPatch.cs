@@ -80,11 +80,14 @@ public class ScreenPatch
     {
         try
         {
-            if (MappedMenus.screen == 1001)
+            if (MappedMenus.screen > 1000)
             {
                 MappedControls.GetInput();
                 MappedMenus.FindClicks();
-
+            }
+            if (MappedMenus.screen == 1001)
+            {
+                MappedMenus.UpdateDisplay();
                 if (Input.GetMouseButtonDown(0))
                 {
                     foc = MappedMenus.foc;
@@ -187,9 +190,7 @@ public class ScreenPatch
                         }
                     }
                 }
-
                 MappedMenus.oldFoc = MappedMenus.foc;
-
                 _delay--;
 
                 return false;
@@ -197,10 +198,8 @@ public class ScreenPatch
 
             if (MappedMenus.screen == 1002)
             {
-                MappedControls.GetInput();
-                MappedMenus.FindClicks();
                 MappedMenus.UpdateDisplay();
-
+                
                 for (int num = 1; num <= MappedMenus.no_menus; num++)
                 {
                     if (((MappedMenu) MappedMenus.menu[num]).alpha != 0f && MappedMenus.commit == 0 &&
@@ -256,10 +255,6 @@ public class ScreenPatch
             MappedMenus.scrollSpeedX = 0f;
             MappedMenus.scrollY = 0f;
             MappedMenus.scrollSpeedY = 0f;
-            float num = 0f;
-            float num2 = 0f;
-            float num3 = 80f;
-            float num4 = 1.6f;
             if (MappedMenus.screen == 1001)
             {
                 int rows;

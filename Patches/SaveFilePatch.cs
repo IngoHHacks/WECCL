@@ -243,7 +243,7 @@ internal class SaveFilePatch
                                     id = GLPGLJAJJOP.APPDIBENDAH.savedChars
                                         .Single(c => c != null && c.name != null && c.name == find).id;
                                 }
-                                catch (Exception e)
+                                catch (Exception)
                                 {
                                     // ignored
                                 }
@@ -340,7 +340,7 @@ internal class SaveFilePatch
                                     id3 = GLPGLJAJJOP.APPDIBENDAH.savedChars
                                         .Single(c => c != null && c.name != null && c.name == find).id;
                                 }
-                                catch (Exception e)
+                                catch (Exception)
                                 {
                                     // ignored
                                 }
@@ -415,7 +415,7 @@ internal class SaveFilePatch
         }
     }
 
-
+#pragma warning disable Harmony003
     private static bool CheckIfPreviouslyImported(string nameWithGuid)
     {
         if (nameWithGuid.EndsWith(".json"))
@@ -429,7 +429,7 @@ internal class SaveFilePatch
         
         return CharacterMappings.CharacterMap.PreviouslyImportedCharacters.Contains(nameWithGuid);
     }
-
+#pragma warning restore Harmony003
 
     /*
      * SaveData.OIIAHNGBNIF is called when the player saves the game.

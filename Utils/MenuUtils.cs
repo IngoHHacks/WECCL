@@ -4,6 +4,8 @@ namespace WECCL.Utils;
 
 public static class MenuUtils
 {
+    internal static float PrevScale = 1.0f;
+    
     public static void FindBestFit(int size, int minX, int minY, int maxX, int maxY, out int rows, out int columns,
         out float scale, out int startX,
         out int startY)
@@ -15,6 +17,7 @@ public static class MenuUtils
             scale = tuple.Item3;
             startX = tuple.Item4;
             startY = tuple.Item5;
+            PrevScale = scale;
             return;
         }
 
@@ -49,10 +52,16 @@ public static class MenuUtils
                     $"Found best fit for {size} items: {rows} rows, {columns} columns, {scale} scale, {startX} startX, {startY} startY");
                 MenuPatch._optimalLayouts.Add(size,
                     new Tuple<int, int, float, int, int>(rows, columns, scale, startX, startY));
+                PrevScale = curScale;
                 return;
             }
 
             curScale /= 1.05f;
         }
+    }
+    
+    public static float Scale(float size)
+    {
+        return size * PrevScale;
     }
 }

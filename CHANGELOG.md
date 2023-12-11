@@ -7,6 +7,8 @@
 - Deleted characters are exported to the `Purgatory` folder after saving.
 - Separated the modded save file from the vanilla save file (can be changed in the config).
 - FindAndProcessCrowdObjects now work on any custom arena.
+- Fixed some issues with using controllers in th character search screen.
+- Stack traces are now enabled through Unity instead of a patch.
 
 ### Release 1.6.2
 - Fixed mappings for custom costumes. The system has been reworked to automatically detect future changes to the game's

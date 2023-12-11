@@ -186,8 +186,6 @@ public class ArenaPatch
     [HarmonyPatch(typeof(World))]
     public static class WorldPatch
     {
-        internal static int _tempLocation;
-
         [HarmonyPostfix]
         [HarmonyPatch("KELMLPGMAPC")]
         public static void KELMLPGMAPCPatch()

@@ -101,6 +101,7 @@ public class Plugin : BaseUnityPlugin
             // End of keep on top
             
             if (PreRelease)
+#pragma warning disable CS0162 // Unreachable code detected
             {
                 if (PreReleaseReasons.Length == 0)
                 {
@@ -131,6 +132,7 @@ public class Plugin : BaseUnityPlugin
                     }
                 }
             }
+#pragma warning restore CS0162 // Unreachable code detected
 
             if (CharactersVersion != PluginCharacterVersion)
             {
@@ -419,6 +421,7 @@ public class Plugin : BaseUnityPlugin
         GC.Collect();
     }
 
+#pragma warning disable Harmony003
     private static bool TryLoadAudioFromCache(string name, out AudioClip clip, out long time, out string chksum)
     {
         name = name.Replace("/", "_");
@@ -454,7 +457,8 @@ public class Plugin : BaseUnityPlugin
         clip.SetData(floatArray, 0);
         return true;
     }
-
+#pragma warning restore Harmony003
+    
     internal static IEnumerator LoadCostumes(DirectoryInfo dir)
     {
         int costumeCount = 0;

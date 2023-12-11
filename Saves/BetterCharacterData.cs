@@ -70,7 +70,7 @@ public class BetterCharacterData
 
     public float? muscleMass;
 
-    public string? musicC;
+    public string musicC;
 
     public float? musicSpeed;
 
@@ -201,7 +201,7 @@ public class BetterCharacterData
             {
                 character.relationship[i] = allCharacters.Single(c => c != null && c.name != null && c.name == name).id;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 character.relationship[i] = int.Parse(split[1]);
                 Plugin.Log.LogWarning("Failed to find character with name " + name + ", using id instead.");
@@ -216,7 +216,7 @@ public class BetterCharacterData
                 int index = ContentMappings.ContentMap.MusicNameMap.IndexOf(music);
                 character.music = index + VanillaCounts.Data.MusicCount + 1;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Plugin.Log.LogWarning("Failed to find music from name " + this.musicC + ", setting to 0.");
                 character.music = 0;
