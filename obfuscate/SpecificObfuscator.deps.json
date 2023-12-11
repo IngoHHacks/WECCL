@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "SpecificObfuscator/1.0.0": {
+        "dependencies": {
+          "dnlib": "4.2.0"
+        },
+        "runtime": {
+          "SpecificObfuscator.dll": {}
+        }
+      },
+      "dnlib/4.2.0": {
+        "runtime": {
+          "lib/net6.0/dnlib.dll": {
+            "assemblyVersion": "4.2.0.0",
+            "fileVersion": "4.2.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SpecificObfuscator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "dnlib/4.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HcoTWCKfnPRujJ6r5UqWBJtq14q+HKbxNwwgi9id/fXX6Q0NEYJsOaDFd9XZxo/gf7JcCjnrtf02CIdGCEoJGA==",
+      "path": "dnlib/4.2.0",
+      "hashPath": "dnlib.4.2.0.nupkg.sha512"
+    }
+  }
+}
