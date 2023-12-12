@@ -130,12 +130,13 @@ public class Plugin : BaseUnityPlugin
                     new AcceptableValueList<string>("None", "Basic", "Full")));
             SaveFileName = this.Config.Bind("General", "SaveFileName", "ModdedSave",
                 "The name of the save file to save to. Set to 'Save' to use the vanilla save file (not recommended). If no modded save file exists, the vanilla save file contents will be copied to a new modded save file. Note that changing this would require manually renaming the save file if you want to continue using it.");
-            
+#if ANIMATION_TEST
             if (!Directory.Exists(Locations.WECCL.FullName))
             {
                 throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
             }
             Locations.LoadWECCL();
+#endif
             // End of keep on top
             
             if (PreRelease)
@@ -724,6 +725,7 @@ public class Plugin : BaseUnityPlugin
             }
             else if (file.Directory?.Name == "animation")
             {
+#if ANIMATION_TEST
                 try {
                     string metaPath = file.FullName.Contains(".") ? Path.GetFileNameWithoutExtension(file.FullName) + ".meta" : file.FullName + ".meta";
                     if (!File.Exists(metaPath))
@@ -748,6 +750,7 @@ public class Plugin : BaseUnityPlugin
                 {
                     Log.LogError(e);
                 }
+#endif
             }
             else
             {
