@@ -496,6 +496,8 @@ public class SaveRemapper
                 Plugin.Log.LogWarning($"Character index {index} is not used in any roster. Adding to free agents.");
                 saveData.savedFeds[9].size++;
                 saveData.savedFeds[9].roster[saveData.savedFeds[9].size] = index;
+                saveData.savedChars[index].fed = 9;
+                ((MappedCharacter)saveData.savedChars[index]).RenewContract();
             }
         }
         
