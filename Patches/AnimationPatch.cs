@@ -1,3 +1,5 @@
+#if ANIMATION_TEST
+
 using WECCL.Content;
 
 namespace WECCL.Patches;
@@ -121,3 +123,5 @@ internal class AnimationPatch
         MappedMenus.screenTim = 0;
     }
 }
+
+#endif
