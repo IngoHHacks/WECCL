@@ -1,5 +1,3 @@
-#if ANIMATION_TEST
-
 using WECCL.Content;
 
 namespace WECCL.Patches;
@@ -35,7 +33,7 @@ internal class AnimationPatch
         MappedPlayer p = __instance;
         if (p.anim >= 1000000)
         {
-            var anim = p.MPMGGCCFCOP;
+            var anim = p.animator;
             var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
             if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim == null) return true;
             p.fileA = 0;
@@ -120,7 +118,6 @@ internal class AnimationPatch
             overrideController[clip.name] = clip;
         }
         p.animator.runtimeAnimatorController = overrideController;
+        MappedMenus.screenTim = 0;
     }
 }
-
-#endif

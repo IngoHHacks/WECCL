@@ -93,11 +93,49 @@ public class Plugin : BaseUnityPlugin
             {
                 Directory.CreateDirectory(PersistentDataPath);
             }
-            // if (!Directory.Exists(Locations.WECCL.FullName))
-            // {
-            //     throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
-            // }
-            // Locations.LoadWECCL();
+            
+            AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
+                "Automatically export characters to /Export when the game is saved.");
+            EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
+                "Enable custom content overrides from /Overrides.");
+            EnableCustomContent = this.Config.Bind("General", "EnableCustomContent", true,
+                "Enable custom content loading from /Assets.");
+            UseFullQualityTextures = this.Config.Bind("General", "UseFullQualityTextures", false,
+                "(EXPERIMENTAL) Allow WECCL to use the full resolution textures without scaling them down (the game will still change the aspect ratio to fit the texture).");
+            AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
+                "Allow importing characters from /Import");
+            DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", false,
+                "Delete imported characters from /Import after importing them (and saving the game).");
+            EnableWrestlerSearchScreen = this.Config.Bind("General", "EnableWrestlerSearchScreen", true,
+                "Enable the wrestler search screen in the roster menu.");
+            EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
+                "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
+            GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
+                new ConfigDescription(
+                    "The log level for Unity log messages sent by the game itself. If you don't know what this is, leave it at Warning.",
+                    new AcceptableValueList<string>("Error", "Warning", "Info")));
+            BaseFedLimit = this.Config.Bind("General", "BaseFedLimit", 48,
+                "The base limit for the number of characters that can be fed's roster. This actual limit may be increased if characters are imported (Experimental).");
+            MaxBackups = this.Config.Bind("General", "MaxBackups", 100,
+                "The maximum number of backups to keep. Set to 0 to disable backups. Set to -1 to keep all backups.");
+            CacheEnabled = this.Config.Bind("General", "CacheEnabled", true,
+                "Enable caching of custom content. This will speed up loading times with the downside of more disk space usage. The cache is stored in the .cache folder, which is hidden by default. Disabling this will automatically delete the cache on startup.");
+            Debug = this.Config.Bind("General", "Debug", false,
+                "Enable debug mode. This will create debugging files in the /Debug folder.");
+            DebugRender = this.Config.Bind("General", "DebugRender", false,
+                "Enable debug rendering. This will render debug information on the screen, such as collision boxes.");
+            DataSharingLevel = this.Config.Bind("General", "DataSharingLevel", "Full",
+                new ConfigDescription(
+                    "The level of data to share with the developer of this plugin. This data will be used to improve the plugin. If you don't want to share any data, set this to None. All data is anonymous.",
+                    new AcceptableValueList<string>("None", "Basic", "Full")));
+            SaveFileName = this.Config.Bind("General", "SaveFileName", "ModdedSave",
+                "The name of the save file to save to. Set to 'Save' to use the vanilla save file (not recommended). If no modded save file exists, the vanilla save file contents will be copied to a new modded save file. Note that changing this would require manually renaming the save file if you want to continue using it.");
+            
+            if (!Directory.Exists(Locations.WECCL.FullName))
+            {
+                throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
+            }
+            Locations.LoadWECCL();
             // End of keep on top
             
             if (PreRelease)
@@ -139,43 +177,6 @@ public class Plugin : BaseUnityPlugin
                 throw new Exception($"Unsupported game version: {CharactersVersion}");
             }
 
-            AutoExportCharacters = this.Config.Bind("General", "AutoExportCharacters", true,
-                "Automatically export characters to /Export when the game is saved.");
-            EnableOverrides = this.Config.Bind("General", "EnableOverrides", true,
-                "Enable custom content overrides from /Overrides.");
-            EnableCustomContent = this.Config.Bind("General", "EnableCustomContent", true,
-                "Enable custom content loading from /Assets.");
-            UseFullQualityTextures = this.Config.Bind("General", "UseFullQualityTextures", false,
-                "(EXPERIMENTAL) Allow WECCL to use the full resolution textures without scaling them down (the game will still change the aspect ratio to fit the texture).");
-            AllowImportingCharacters = this.Config.Bind("General", "AllowImportingCharacters", true,
-                "Allow importing characters from /Import");
-            DeleteImportedCharacters = this.Config.Bind("General", "DeleteImportedCharacters", false,
-                "Delete imported characters from /Import after importing them (and saving the game).");
-            EnableWrestlerSearchScreen = this.Config.Bind("General", "EnableWrestlerSearchScreen", true,
-                "Enable the wrestler search screen in the roster menu.");
-            EnableGameUnityLog = this.Config.Bind("General", "EnableGameUnityLog", true,
-                "Enable Unity log messages sent by the game itself. If you don't know what this is, leave it enabled.");
-            GameUnityLogLevel = this.Config.Bind("General", "GameUnityLogLevel", "Warning",
-                new ConfigDescription(
-                    "The log level for Unity log messages sent by the game itself. If you don't know what this is, leave it at Warning.",
-                    new AcceptableValueList<string>("Error", "Warning", "Info")));
-            BaseFedLimit = this.Config.Bind("General", "BaseFedLimit", 48,
-                "The base limit for the number of characters that can be fed's roster. This actual limit may be increased if characters are imported (Experimental).");
-            MaxBackups = this.Config.Bind("General", "MaxBackups", 100,
-                "The maximum number of backups to keep. Set to 0 to disable backups. Set to -1 to keep all backups.");
-            CacheEnabled = this.Config.Bind("General", "CacheEnabled", true,
-                "Enable caching of custom content. This will speed up loading times with the downside of more disk space usage. The cache is stored in the .cache folder, which is hidden by default. Disabling this will automatically delete the cache on startup.");
-            Debug = this.Config.Bind("General", "Debug", false,
-                "Enable debug mode. This will create debugging files in the /Debug folder.");
-            DebugRender = this.Config.Bind("General", "DebugRender", false,
-                "Enable debug rendering. This will render debug information on the screen, such as collision boxes.");
-            DataSharingLevel = this.Config.Bind("General", "DataSharingLevel", "Full",
-                new ConfigDescription(
-                    "The level of data to share with the developer of this plugin. This data will be used to improve the plugin. If you don't want to share any data, set this to None. All data is anonymous.",
-                    new AcceptableValueList<string>("None", "Basic", "Full")));
-            SaveFileName = this.Config.Bind("General", "SaveFileName", "ModdedSave",
-                "The name of the save file to save to. Set to 'Save' to use the vanilla save file (not recommended). If no modded save file exists, the vanilla save file contents will be copied to a new modded save file. Note that changing this would require manually renaming the save file if you want to continue using it.");
-            
             string egg = Secrets.GetEasterEgg();
             if (egg != null)
             {
