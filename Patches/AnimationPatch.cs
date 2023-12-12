@@ -47,9 +47,9 @@ internal class AnimationPatch
                 MappedAnims.length[100] = CustomAnimationClips[p.anim - 1000000].Item1.length * CustomAnimationClips[p.anim - 1000000].Item1.frameRate;
                 MappedAnims.timing[100] = 1f / MappedAnims.length[100];
             }
-            var opponent = NJBJIIIACEP.OAAMGFLINOB[p.foc];
-            if (opponent?.MPMGGCCFCOP?.runtimeAnimatorController == null) return true;
-            var oppController = (AnimatorOverrideController) opponent.MPMGGCCFCOP.runtimeAnimatorController;
+            var opponent = (MappedPlayer) MappedPlayers.p[p.foc];
+            if (opponent?.animator.runtimeAnimatorController == null) return true;
+            var oppController = (AnimatorOverrideController) opponent.animator.runtimeAnimatorController;
             if (oppController.name != "CustomAnimationReceive" + p.anim)
             {
                 oppController.name = "CustomAnimationReceive" + p.anim;
@@ -57,8 +57,7 @@ internal class AnimationPatch
                 MappedAnims.length[101] = CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.length * CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.frameRate;
                 MappedAnims.timing[101] = 1f / MappedAnims.length[101];
             }
-            //Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
-            Animations.PerformTestAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
             Animations.PerformPostGrappleCode(p);
             return false;
         }
