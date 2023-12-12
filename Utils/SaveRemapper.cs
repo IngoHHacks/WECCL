@@ -470,7 +470,7 @@ public class SaveRemapper
         }
         
         List<int> usedIds = new();
-        for (int index = 1; index < saveData.savedFeds.Length; index++)
+        for (int index = 0; index < saveData.savedFeds.Length; index++)
         {
             if (saveData.savedFeds[index] == null)
             {
