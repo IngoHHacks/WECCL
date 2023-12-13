@@ -13,13 +13,13 @@ internal class SaveFilePatch
     private static int[] fedCharCount;
 
     /*
-     * SaveData.NJMFCPGCKNL is called when the game restores the default data
+     * SaveSystem.NJMFCPGCKNL is called when the game restores the default data
      * This patch resets the character and federation counts.
      * It also resets the star (wrestler) and booker to 1 if they are greater than the new character count.
      */
     [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
     [HarmonyPrefix]
-    public static void SaveFile_NJMFCPGCKNL()
+    public static void SaveSystem_NJMFCPGCKNL()
     {
         if (SceneManager.GetActiveScene().name == "Loading")
         {
@@ -51,9 +51,22 @@ internal class SaveFilePatch
         }
     }
     
+    /*
+     * SaveData.CDLIDDFKFEL is the inner function called by SaveFile.NJMFCPGCKNL.
+     */
+    [HarmonyPatch(typeof(SaveData), nameof(SaveData.CDLIDDFKFEL))]
+    [HarmonyPrefix]
+    public static void SaveData_CDLIDDFKFEL(SaveData __instance, int FIHDANPPMGC)
+    {
+        if (GLPGLJAJJOP.APPDIBENDAH.savedChars != null)
+        {
+            SaveRemapper.FixBrokenSaveData();
+        }
+    }
+    
     [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
     [HarmonyPostfix]
-    public static void SaveFile_Post()
+    public static void SaveSystem_Post()
     {
         if (SceneManager.GetActiveScene().name == "Loading")
         {
@@ -174,7 +187,7 @@ internal class SaveFilePatch
 
         if (fedCharCount != null && GLPGLJAJJOP.APPDIBENDAH.savedFeds != null)
         {
-            for (int i = 1; i <= Characters.no_feds; i++)
+            for (int i = 0; i <= Characters.no_feds; i++)
             {
                 int count = Math.Max(fedCharCount[i] + 1, Plugin.BaseFedLimit.Value + 1);
                 if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[i] != null)
