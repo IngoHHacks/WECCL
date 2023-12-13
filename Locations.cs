@@ -13,7 +13,7 @@ public static class Locations
     public static DirectoryInfo Cache { get; } = new(Path.Combine(Plugin.PersistentDataPath, ".cache"));
     public static DirectoryInfo Debug { get; } = new(Path.Combine(Plugin.PluginPath, "Debug"));
 
-    public static DirectoryInfo WECCL { get; } = new(Path.Combine(Plugin.PluginPath, "WECCL"));
+    public static DirectoryInfo Data { get; } = new(Path.Combine(Plugin.PluginPath, "Data"));
     public static DirectoryInfo Meta { get; } = new(Path.Combine(Plugin.PersistentDataPath, "Meta.meta"));
     
     public static FileInfo SaveFileVanilla { get; } = new(Path.Combine(Application.persistentDataPath, "Save.bytes"));
@@ -50,10 +50,10 @@ public static class Locations
         LegacyLocations.MoveLegacyLocations();
     }
 
-    public static void LoadWECCL()
+    public static void LoadData()
     {
-        var animationController = AssetBundle.LoadFromFile(Path.Combine(WECCL.FullName, "animationcontroller")).LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault();
-        if (animationController == null) throw new Exception("Failed to load WECCL animation controller");
+        var animationController = AssetBundle.LoadFromFile(Path.Combine(Data.FullName, "animationcontroller")).LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault();
+        if (animationController == null) throw new Exception("Failed to load data. Please make sure you copied the 'Data' folder alongside the plugin if installed manually.");
         AO.AnimationController = animationController;
     }
 }
