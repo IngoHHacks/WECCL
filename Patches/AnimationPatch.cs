@@ -40,12 +40,14 @@ internal class AnimationPatch
             var anim = p.animator;
             var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
             if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim == null) return true;
-            p.releaseAnim = 407;
-            p.pV.releaseAnim = 988;
             p.fileA = 0;
             p.frameA = 0f;
             p.fileB = 0;
             p.frameB = 0f;
+            if (p.sellTim > 0f)
+            {
+                p.sellTim = 0f;
+            }
             if (controller.name != "CustomAnimation" + p.anim)
             {
                 controller.name = "CustomAnimation" + p.anim;

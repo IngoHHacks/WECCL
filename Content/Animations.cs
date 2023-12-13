@@ -127,6 +127,18 @@ public static class Animations
                     player.pV.spirit -= pain / 15f;
                     return false;
                 
+                case "dealstun":
+                    player.pV.blind = float.Parse(args[0]);
+                    return false;
+                
+                case "setreleaseanim":
+                    player.releaseAnim = int.Parse(args[0]);
+                    return false;
+                
+                case "setoppreleaseanim":
+                    player.pV.releaseAnim = int.Parse(args[0]);
+                    return false;
+                
                 case "stepsound":
                     StepSound(player, float.Parse(args[0]));
                     return false;
