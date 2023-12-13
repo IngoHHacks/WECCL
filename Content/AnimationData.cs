@@ -21,52 +21,68 @@ public class AnimationData
     public string Name;
     public MoveType[] Types = Array.Empty<MoveType>();
     public float ForwardSpeedMultiplier = 4f;
+    public bool IsGrapple => ReceiveAnim != null;
 
     public static AnimationData ParseString(string animationData)
     {
         var data = new AnimationData();
         var lines = animationData.Split('\n');
+        int i = 0;
         foreach (var line in lines)
         {
-            if (string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith("#") || line.Trim().StartsWith("//")) continue;
-            if (line.Contains(":"))
+            i++;
+            try
             {
-                var split2 = line.Split(new[]{ ':' }, 2);
-                bool valid = false;
-                switch (split2[0].ToLower())
+                if (string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith("#") ||
+                    line.Trim().StartsWith("//")) continue;
+                if (line.Contains(":"))
                 {
-                    case "name":
-                        data.Name = split2[1].Trim();
-                        valid = true;
-                        break;
-                    case "types":
-                        data.Types = split2[1].Trim().Split(' ').Select(x => (MoveType) Enum.Parse(typeof(MoveType), x, true)).ToArray();
-                        valid = true;
-                        break;
-                    case "forwardspeedmultiplier":
-                        data.ForwardSpeedMultiplier = float.Parse(split2[1].Trim());
-                        valid = true;
-                        break;
+                    var split2 = line.Split(new[] { ':' }, 2);
+                    bool valid = false;
+                    switch (split2[0].ToLower())
+                    {
+                        case "name":
+                            data.Name = split2[1].Trim();
+                            valid = true;
+                            break;
+                        case "types":
+                            data.Types = split2[1].Trim().Split(' ')
+                                .Select(x => (MoveType)Enum.Parse(typeof(MoveType), x, true)).ToArray();
+                            valid = true;
+                            break;
+                        case "forwardspeedmultiplier":
+                            data.ForwardSpeedMultiplier = float.Parse(split2[1].Trim());
+                            valid = true;
+                            break;
+                    }
+
+                    if (valid) continue;
                 }
-                if (valid) continue;
+
+                var command = new AnimationCommand();
+                var indent = 0;
+                while (line[indent] == ' ') indent++;
+                command.Indent = indent;
+                var split = line.Trim().Split(' ');
+                command.StartFrame = split[0].Contains("-") ? int.Parse(split[0].Split('-')[0]) : int.Parse(split[0]);
+                if (split[0].EndsWith("-"))
+                {
+                    command.EndFrame = int.MaxValue;
+                }
+                else
+                {
+                    command.EndFrame = split[0].Contains("-") ? int.Parse(split[0].Split('-')[1]) : int.Parse(split[0]);
+                }
+
+                command.Command = split[1];
+                command.Args = split.Length > 2 ? split.Skip(2).ToArray() : Array.Empty<string>();
+                data.AnimationCommands.Add(command);
             }
-            var command = new AnimationCommand();
-            var indent = 0;
-            while (line[indent] == ' ') indent++;
-            command.Indent = indent;
-            var split = line.Trim().Split(' ');
-            command.StartFrame = split[0].Contains("-") ? int.Parse(split[0].Split('-')[0]) : int.Parse(split[0]);
-            if (split[0].EndsWith("-"))
+            catch (Exception e)
             {
-                command.EndFrame = int.MaxValue;
+                Plugin.Log.LogError($"Failed to parse line {i} of animation data {data.Name}: {e}");
+                Plugin.Log.LogError($"Line: {line}");
             }
-            else
-            {
-                command.EndFrame = split[0].Contains("-") ? int.Parse(split[0].Split('-')[1]) : int.Parse(split[0]);
-            }
-            command.Command = split[1];
-            command.Args = split.Length > 2 ? split.Skip(2).ToArray() : Array.Empty<string>();
-            data.AnimationCommands.Add(command);
         }
         
         foreach (var type in data.Types)
@@ -103,7 +119,7 @@ public class AnimationData
         return ParseString(File.ReadAllText(path));
     }
 
-    public void Play(UnmappedPlayer player, float frame)
+    public void Play(UnmappedPlayer player, float frame, bool grapple)
     {
         int indent = 0;
         foreach (var command in AnimationCommands)
@@ -113,7 +129,7 @@ public class AnimationData
                 indent = command.Indent;
                 if (frame >= command.StartFrame && frame <= command.EndFrame)
                 {
-                    var result = ExecuteCommand(player, command.Command, command.Args, frame, command.StartFrame, command.EndFrame);
+                    var result = ExecuteCommand(player, command.Command, command.Args, frame, command.StartFrame, command.EndFrame, grapple);
                     if (result)
                     {
                         indent++;
@@ -123,14 +139,14 @@ public class AnimationData
         }
     }
 
-    public bool ExecuteCommand(MappedPlayer player, string command, string[] args, float currentFrame, int startFrame, int endFrame)
+    public bool ExecuteCommand(MappedPlayer player, string command, string[] args, float currentFrame, int startFrame, int endFrame, bool grapple)
     {
-        return Animations.ExecuteCommand(player, command, args, currentFrame, startFrame, endFrame);
+        return Animations.ExecuteCommand(player, command, args, currentFrame, startFrame, endFrame, grapple);
     }
 
-    public static void DoCustomAnimation(int anim, MappedPlayer player, float frame)
+    public static void DoCustomAnimation(int anim, MappedPlayer player, float frame, bool grapple)
     {
-        CustomAnimationClips[anim].Item2.Play(player, (int)frame);
+        CustomAnimationClips[anim].Item2.Play(player, (int)frame, grapple);
     }
 
     public enum MoveType

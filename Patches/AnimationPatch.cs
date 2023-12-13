@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Reflection.Emit;
 using WECCL.Content;
 
 namespace WECCL.Patches;
@@ -17,6 +19,7 @@ internal class AnimationPatch
             if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim != null) return;
             if (controller.name != "CustomAnimation" + p.anim)
             {
+                LogInfo($"Setting up animation for {p.charData.name}");
                 controller.name = "CustomAnimation" + p.anim;
                 controller["Custom00"] = CustomAnimationClips[p.anim - 1000000].Item1;
                 MappedAnims.length[100] = CustomAnimationClips[p.anim - 1000000].Item1.length * CustomAnimationClips[p.anim - 1000000].Item1.frameRate;
@@ -36,6 +39,8 @@ internal class AnimationPatch
             var anim = p.animator;
             var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
             if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim == null) return true;
+            p.releaseAnim = 407;
+            p.pV.releaseAnim = 988;
             p.fileA = 0;
             p.frameA = 0f;
             p.fileB = 0;
@@ -47,7 +52,7 @@ internal class AnimationPatch
                 MappedAnims.length[100] = CustomAnimationClips[p.anim - 1000000].Item1.length * CustomAnimationClips[p.anim - 1000000].Item1.frameRate;
                 MappedAnims.timing[100] = 1f / MappedAnims.length[100];
             }
-            var opponent = (MappedPlayer) MappedPlayers.p[p.foc];
+            var opponent = p.pV;
             if (opponent?.animator.runtimeAnimatorController == null) return true;
             var oppController = (AnimatorOverrideController) opponent.animator.runtimeAnimatorController;
             if (oppController.name != "CustomAnimationReceive" + p.anim)
@@ -57,7 +62,7 @@ internal class AnimationPatch
                 MappedAnims.length[101] = CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.length * CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.frameRate;
                 MappedAnims.timing[101] = 1f / MappedAnims.length[101];
             }
-            Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier, true);
             Animations.PerformPostGrappleCode(p);
             return false;
         }
@@ -118,5 +123,76 @@ internal class AnimationPatch
         }
         p.animator.runtimeAnimatorController = overrideController;
         MappedMenus.screenTim = 0;
+    }
+    
+    [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
+    [HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> Scene_Editor_Update_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        int flag = 0;
+        int flag2 = 0;
+        foreach (var instruction in instructions)
+        {
+            if (instruction.opcode == OpCodes.Ldloc_S)
+            {
+                var operand = instruction.operand;
+                PropertyInfo property = operand.GetType().GetProperty("LocalIndex");
+                if (property != null && (int)property.GetValue(operand) == 27)
+                {
+                    if (++flag == 2)
+                    {
+                        yield return instruction;
+                        yield return new CodeInstruction(OpCodes.Call,
+                            AccessTools.Method(typeof(Animations), nameof(Animations.IsGrappleMove), new[] {typeof(int)}));
+                    }
+                }
+            }
+            if (instruction.opcode == OpCodes.Ldsfld && (FieldInfo)instruction.operand == AccessTools.Field(typeof(NJBJIIIACEP), nameof(NJBJIIIACEP.OAAMGFLINOB)))
+            {
+                if (flag2 < 4)
+                {
+                    flag2++;
+                }
+            }
+
+            if (flag is 2 or 3)
+            {
+                if (instruction.opcode == OpCodes.Ldloc_0)
+                {
+                    flag = 4;
+                    yield return instruction;
+                }
+                else if (instruction.opcode == OpCodes.Bge_S || instruction.opcode == OpCodes.Bge)
+                {
+                    yield return new CodeInstruction(OpCodes.Brfalse, instruction.operand);
+                }
+            } else if (flag2 is 4 or 5) {
+                if (flag2 == 4)
+                {
+                    if (instruction.opcode == OpCodes.Ldc_I4_0)
+                    {
+                        flag2 = 5;
+                        yield return new CodeInstruction(OpCodes.Call,
+                            AccessTools.Method(typeof(Animations), nameof(Animations.IsRegularMove), new[] {typeof(int)}));
+                    }
+                    else
+                    {
+                        yield return instruction;
+                    }
+                }
+                else
+                {
+                    if (instruction.opcode == OpCodes.Bge_S || instruction.opcode == OpCodes.Bge)
+                    {
+                        yield return new CodeInstruction(OpCodes.Brfalse, instruction.operand);
+                        flag2 = 6;
+                    }
+                }
+            }
+            else
+            {
+                yield return instruction;
+            }
+        }
     }
 }
