@@ -57,13 +57,16 @@
     <ItemGroup>
         <Content Include="*.md;*.txt;*.json;*.png" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="Build">
-        <Delete Files="$(OutputPath)\$(AssemblyName).deps.json" />
+    
+    <Target Name="PostBuildRelease" BeforeTargets="PostBuild" Condition="'$(Configuration)' == 'Release'">
         <!-- Obfuscate the API -->
         <Exec Command="&quot;$(MSBuildProjectDirectory)\obfuscate\weobf.exe&quot; &quot;$(OutputPath)\$(AssemblyName).dll&quot;" ContinueOnError="false" />
         <Delete Files="$(OutputPath)\$(AssemblyName).dll" />
         <Move SourceFiles="$(MSBuildProjectDirectory)\$(AssemblyName)_obfuscated.dll" DestinationFiles="$(OutputPath)\$(AssemblyName).dll" />
+    </Target>
+    
+    <Target Name="PostBuild" AfterTargets="Build">
+        <Delete Files="$(OutputPath)\$(AssemblyName).deps.json" />
         <!-- Comment the lines below if you don't want to automatically copy the plugin to BepInEx -->
         <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(BepInExPath)" />
         <Move SourceFiles="$(OutputPath)\$(AssemblyName).pdb" DestinationFolder="$(BepInExPath)" />

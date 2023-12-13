@@ -733,13 +733,15 @@ public class Plugin : BaseUnityPlugin
                         Log.LogError($"No meta file found for {file.FullName}");
                         continue;
                     }
-                    var anim = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<AnimationClip>().First();
+                    var ab = AssetBundle.LoadFromFile(file.FullName);
+                    var anim = ab.LoadAllAssets<AnimationClip>().FirstOrDefault() ?? ab.LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault().animationClips.FirstOrDefault();
                     anim.name = fileName;
-                    var ad = AnimationData.ParseFile(metaPath);;
+                    var ad = AnimationData.ParseFile(metaPath);
                     string receivePath = file.FullName.Contains(".") ? Path.GetFileNameWithoutExtension(file.FullName) + ".receive" : file.FullName + ".receive";
                     if (File.Exists(receivePath))
                     {
-                        var anim2 = AssetBundle.LoadFromFile(receivePath).LoadAllAssets<AnimationClip>().First();
+                        var ab2 = AssetBundle.LoadFromFile(receivePath);
+                        var anim2 = ab2.LoadAllAssets<AnimationClip>().FirstOrDefault() ?? ab2.LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault().animationClips.FirstOrDefault();
                         anim2.name = fileName;
                         ad.ReceiveAnim = anim2;
                     }
