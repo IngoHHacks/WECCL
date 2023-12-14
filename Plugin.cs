@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using UnityEngine.Networking;
 using WECCL.Content;
+using WECCL.Animation;
 using WECCL.Saves;
 using PromoData = WECCL.Content.PromoData;
 
@@ -135,6 +136,7 @@ public class Plugin : BaseUnityPlugin
                 throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
             }
             Locations.LoadData();
+            AnimationActions.Initialize();
             // End of keep on top
             
             if (PreRelease)
@@ -733,7 +735,7 @@ public class Plugin : BaseUnityPlugin
                     var ab = AssetBundle.LoadFromFile(file.FullName);
                     var anim = ab.LoadAllAssets<AnimationClip>().FirstOrDefault() ?? ab.LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault().animationClips.FirstOrDefault();
                     anim.name = fileName;
-                    var ad = AnimationData.ParseFile(metaPath);
+                    var ad = AnimationParser.ReadFile(metaPath);
                     string receivePath = file.FullName.Contains(".") ? Path.GetFileNameWithoutExtension(file.FullName) + ".receive" : file.FullName + ".receive";
                     if (File.Exists(receivePath))
                     {
@@ -742,7 +744,8 @@ public class Plugin : BaseUnityPlugin
                         anim2.name = fileName;
                         ad.ReceiveAnim = anim2;
                     }
-                    CustomAnimationClips.Add(new(anim, ad));
+                    ad.Anim = anim;
+                    AnimationData.AddAnimation(ad);
                     assetBundleCount++;
                 }
                 catch (Exception e)

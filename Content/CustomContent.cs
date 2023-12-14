@@ -1,3 +1,4 @@
+using WECCL.Animation;
 using WECCL.Saves;
 using static WECCL.Utils.NumberFormatUtils;
 
@@ -50,7 +51,7 @@ public static class CustomContent
     internal static readonly Dictionary<string, Dictionary<string,Mesh>> ResourceOverridesMeshes = new();
     
     internal static readonly List<GameObject>  CustomArenaPrefabs = new();
-    internal static readonly List<Tuple<AnimationClip, AnimationData>> CustomAnimationClips = new();
+    internal static readonly List<AnimationData> CustomAnimations = new();
     internal static readonly List<PromoData> PromoData = new();
 
     public static bool HasConflictingOverrides;

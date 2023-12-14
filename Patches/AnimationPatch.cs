@@ -17,16 +17,16 @@ internal class AnimationPatch
         {
             var anim = p.animator;
             var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
-            if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim != null) return;
+            if (CustomAnimations[p.anim - 1000000].ReceiveAnim != null) return;
             if (controller.name != "CustomAnimation" + p.anim)
             {
                 LogInfo($"Setting up animation for {p.charData.name}");
                 controller.name = "CustomAnimation" + p.anim;
-                controller["Custom00"] = CustomAnimationClips[p.anim - 1000000].Item1;
-                MappedAnims.length[100] = CustomAnimationClips[p.anim - 1000000].Item1.length * CustomAnimationClips[p.anim - 1000000].Item1.frameRate;
+                controller["Custom00"] = CustomAnimations[p.anim - 1000000].Anim;
+                MappedAnims.length[100] = CustomAnimations[p.anim - 1000000].Anim.length * CustomAnimations[p.anim - 1000000].Anim.frameRate;
                 MappedAnims.timing[100] = 1f / MappedAnims.length[100];
             }
-            Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier);
+            Animations.DoCustomAnimation(p, p.anim, CustomAnimations[p.anim - 1000000].ForwardSpeedMultiplier);
         }
     }
     
@@ -39,7 +39,7 @@ internal class AnimationPatch
         {
             var anim = p.animator;
             var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
-            if (CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim == null) return true;
+            if (CustomAnimations[p.anim - 1000000].ReceiveAnim == null) return true;
             p.fileA = 0;
             p.frameA = 0f;
             p.fileB = 0;
@@ -51,8 +51,8 @@ internal class AnimationPatch
             if (controller.name != "CustomAnimation" + p.anim)
             {
                 controller.name = "CustomAnimation" + p.anim;
-                controller["Custom00"] = CustomAnimationClips[p.anim - 1000000].Item1;
-                MappedAnims.length[100] = CustomAnimationClips[p.anim - 1000000].Item1.length * CustomAnimationClips[p.anim - 1000000].Item1.frameRate;
+                controller["Custom00"] = CustomAnimations[p.anim - 1000000].Anim;
+                MappedAnims.length[100] = CustomAnimations[p.anim - 1000000].Anim.length * CustomAnimations[p.anim - 1000000].Anim.frameRate;
                 MappedAnims.timing[100] = 1f / MappedAnims.length[100];
             }
             var opponent = p.pV;
@@ -61,11 +61,11 @@ internal class AnimationPatch
             if (oppController.name != "CustomAnimationReceive" + p.anim)
             {
                 oppController.name = "CustomAnimationReceive" + p.anim;
-                oppController["Custom01"] = CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim;
-                MappedAnims.length[101] = CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.length * CustomAnimationClips[p.anim - 1000000].Item2.ReceiveAnim.frameRate;
+                oppController["Custom01"] = CustomAnimations[p.anim - 1000000].ReceiveAnim;
+                MappedAnims.length[101] = CustomAnimations[p.anim - 1000000].ReceiveAnim.length * CustomAnimations[p.anim - 1000000].ReceiveAnim.frameRate;
                 MappedAnims.timing[101] = 1f / MappedAnims.length[101];
             }
-            Animations.DoCustomAnimation(p, p.anim, CustomAnimationClips[p.anim - 1000000].Item2.ForwardSpeedMultiplier, true);
+            Animations.DoCustomAnimation(p, p.anim, CustomAnimations[p.anim - 1000000].ForwardSpeedMultiplier);
             Animations.PerformPostGrappleCode(p);
             return false;
         }
@@ -99,7 +99,7 @@ internal class AnimationPatch
     {
         if (NOLKIINBMHA >= 1000000)
         {
-            __result = CustomAnimationClips[NOLKIINBMHA - 1000000].Item2.Name ?? "CustomAnimation" + (NOLKIINBMHA - 1000000).ToString("00");
+            __result = CustomAnimations[NOLKIINBMHA - 1000000].Name ?? "CustomAnimation" + (NOLKIINBMHA - 1000000).ToString("00");
             return false;
         }
         return true;

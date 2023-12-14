@@ -1,15 +1,16 @@
+using WECCL.Animation;
 using Random = UnityEngine.Random;
 
 namespace WECCL.Content;
 
 public static class Animations
 {
-    public static void DoCustomAnimation(UnmappedPlayer player, int animationId, float fwdSpeedMultiplier = 4f, bool grapple = false)
+    public static void DoCustomAnimation(UnmappedPlayer player, int animationId, float fwdSpeedMultiplier = 4f)
     {
         var playerM = (MappedPlayer) player;
         if (animationId < 1000000) return;
         var anim = animationId - 1000000;
-        AnimationData.DoCustomAnimation(anim, playerM, playerM.animTim, grapple);
+        AnimationData.DoCustomAnimation(anim, playerM, playerM.animTim);
         if (playerM.animTim >= 101f || playerM.runUp > 0f && playerM.grappling == 0)
         {
             playerM.AttackTravel(playerM.a, playerM.runUp * fwdSpeedMultiplier);
@@ -351,7 +352,7 @@ public static class Animations
         }
         if (id >= 1000000)
         {
-            return CustomAnimationClips[id - 1000000].Item2.IsGrapple;
+            return CustomAnimations[id - 1000000].IsGrapple;
         }
         return false;
     }

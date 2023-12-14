@@ -476,6 +476,12 @@ public class SaveRemapper
             {
                 Plugin.Log.LogError($"Fed index {index} is null!");
             }
+            if (saveData.savedFeds[index].size > saveData.savedFeds[index].roster.Length - 1)
+            {
+                Plugin.Log.LogWarning(
+                    $"Fed index {index} has roster size {saveData.savedFeds[index].size} but only {saveData.savedFeds[index].roster.Length - 1} characters. Fixing.");
+                saveData.savedFeds[index].size = saveData.savedFeds[index].roster.Length - 1;
+            }
             for (int i = 1; i <= saveData.savedFeds[index].size; i++)
             {
                 int id = saveData.savedFeds[index].roster[i];
