@@ -40,6 +40,12 @@ Then, you have to assign the asset bundle name to each asset you want to include
 Finally, you can build the asset bundle(s) by selecting `Assets/Build AssetBundles` in the menu bar.  
 The asset bundles will be placed in the `Assets/AssetBundles` folder.
 
+## Templates
+
+You can use the following templates to create asset bundles:  
+[Animation Template](https://ingoh.net/weccl/files/AnimationTemplate.unitypackage)  
+[Hat Model Template](https://ingoh.net/weccl/files/egg.dae)  
+
 <seealso style="cards">
 <category name="Unity" ref="unity">
 <a href="https://docs.unity3d.com/2020.3/Documentation/Manual/AssetBundlesIntro.html">Unity Manual: Asset Bundles</a>
