@@ -1,3 +1,11 @@
+# 🔊 Crowd Audio
+
+<show-structure for="chapter" depth="2"/>
+
+<link-summary>
+List of crowd audio IDs.
+</link-summary>
+
 0: Train  
 1: Oh  
 2: Cheer  

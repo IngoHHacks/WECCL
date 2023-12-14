@@ -61,6 +61,7 @@ public static class AnimationActions
             new AnimationArgument<Limb?>("limb", AnimationParser.ParseLimb),
             new AnimationArgument<float?>("angle", AnimationParser.ParseFloat, "0"),
             new AnimationArgument<float?>("particle", AnimationParser.ParseFloat, "0"));
+        
         Actions["moveattack"] = new AnimationAction("MoveAttack", (p, args) =>
         {
             int contact = AnimationParser.ParseInt(args["contact"]).Value.Value;

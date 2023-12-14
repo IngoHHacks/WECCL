@@ -1,4 +1,12 @@
-﻿0: [None]  
+# 🙌 Taunts
+
+<show-structure for="chapter" depth="2"/>
+
+<link-summary>
+List of taunt IDs.
+</link-summary>
+
+0: [None]  
 1: Wave  
 2: Fist Palm  
 3: Bring It  

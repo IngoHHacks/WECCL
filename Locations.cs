@@ -12,7 +12,6 @@ public static class Locations
     public static DirectoryInfo DeletedCharacters { get; } = new(Path.Combine(Plugin.PluginPath, "Purgatory"));
     public static DirectoryInfo Cache { get; } = new(Path.Combine(Plugin.PersistentDataPath, ".cache"));
     public static DirectoryInfo Debug { get; } = new(Path.Combine(Plugin.PluginPath, "Debug"));
-
     public static DirectoryInfo Data { get; } = new(Path.Combine(Plugin.PluginPath, "Data"));
     public static DirectoryInfo Meta { get; } = new(Path.Combine(Plugin.PersistentDataPath, "Meta.meta"));
     
