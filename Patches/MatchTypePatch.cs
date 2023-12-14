@@ -1,5 +1,6 @@
 ﻿using UnityEngine.SceneManagement;
-using WECCL.Content;
+using WECCL.API;
+
 namespace WECCL.Patches;
 
 [HarmonyPatch]

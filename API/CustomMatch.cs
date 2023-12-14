@@ -1,4 +1,4 @@
-﻿namespace WECCL.Content;
+﻿namespace WECCL.API;
 public class CustomMatch
 {
     internal static Dictionary<string, int> CustomPresetsPos = new();
