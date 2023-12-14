@@ -3,6 +3,7 @@
 ## GV 1.60+:
 
 ### Release 1.7.0
+- Added support for custom strike and grapple moves.
 - Added support for adding and removing characters from the search screen.
 - Deleted characters are exported to the `Purgatory` folder after saving.
 - Separated the modded save file from the vanilla save file (can be changed in the config).
