@@ -133,7 +133,7 @@ public class Plugin : BaseUnityPlugin
                 "The name of the save file to save to. Set to 'Save' to use the vanilla save file (not recommended). If no modded save file exists, the vanilla save file contents will be copied to a new modded save file. Note that changing this would require manually renaming the save file if you want to continue using it.");
             if (!Directory.Exists(Locations.Data.FullName))
             {
-                throw new DirectoryNotFoundException("WECCL directory not found. Please make sure you copied the WECCL folder to the same directory as the WECCL DLL.");
+                throw new DirectoryNotFoundException("Data directory not found. Please make sure you copied the Data folder to the same directory as the WECCL DLL.");
             }
             Locations.LoadData();
             AnimationActions.Initialize();
