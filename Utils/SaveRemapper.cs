@@ -447,6 +447,223 @@ public class SaveRemapper
             Plugin.Log.LogError("Failed to remap custom content!");
             Plugin.Log.LogError(e);
         }
+        
+        var oldAnims = savedMap.AnimationNameMap;
+        var newAnims = newMap.AnimationNameMap;
+        for (int i = 0; i < oldAnims.Count; i++)
+        {
+            if (i < newAnims.Count && oldAnims[i] == newAnims[i])
+            {
+                continue;
+            }
+            int index = newAnims.IndexOf(oldAnims[i]);
+            if (index == -1)
+            {
+                Plugin.Log.LogWarning($"Animation {oldAnims[i]} not found in new map. Resetting to default.");
+            }
+            else
+            {
+                Plugin.Log.LogInfo($"Animation {oldAnims[i]} remapped to {newAnims[index]}.");
+            }
+            
+            for (int j = 1; j < saveData.savedChars.Length; j++)
+            {
+                if (saveData.savedChars[j] == null)
+                {
+                    continue;
+                }
+                for (int k = 0; k < saveData.savedChars[j].moveAttack.Length; k++)
+                {
+                    if (saveData.savedChars[j].moveAttack[k] == i + 1000000)
+                    {
+                        saveData.savedChars[j].moveAttack[k] = index == -1 ? DefaultMove('a', k) : index + 1000000;
+                    }
+                }
+                for (int k = 0; k < saveData.savedChars[j].moveCrush.Length; k++)
+                {
+                    if (saveData.savedChars[j].moveCrush[k] == i + 1000000)
+                    {
+                        saveData.savedChars[j].moveCrush[k] = index == -1 ? DefaultMove('c', k) : index + 1000000;
+                    }
+                }
+                for (int k = 0; k < saveData.savedChars[j].moveFront.Length; k++)
+                {
+                    if (saveData.savedChars[j].moveFront[k] == i + 1000000)
+                    {
+                        saveData.savedChars[j].moveFront[k] = index == -1 ? DefaultMove('f', k) : index + 1000000;
+                    }
+                }
+                for (int k = 0; k < saveData.savedChars[j].moveBack.Length; k++)
+                {
+                    if (saveData.savedChars[j].moveBack[k] == i + 1000000)
+                    {
+                        saveData.savedChars[j].moveBack[k] = index == -1 ? DefaultMove('b', k) : index + 1000000;
+                    }
+                }
+                for (int k = 0; k < saveData.savedChars[j].moveGround.Length; k++)
+                {
+                    if (saveData.savedChars[j].moveGround[k] == i + 1000000)
+                    {
+                        saveData.savedChars[j].moveGround[k] = index == -1 ? DefaultMove('g', k) : index + 1000000;
+                    }
+                }
+                for (int k = 0; k < saveData.savedChars[j].taunt.Length; k++)
+                {
+                    if (saveData.savedChars[j].taunt[k] == i + 1000000)
+                    {
+                        saveData.savedChars[j].taunt[k] = index == -1 ? DefaultMove('t', k) : index + 1000000;
+                    }
+                }
+            }
+        }
+    }
+    
+    private static int DefaultMove(char type, int index)
+    {
+        switch (type)
+        {
+            case 'a':
+                switch (index)
+                {
+                    case 0:
+                        return 0;
+                    case 1:
+                        return 1002;
+                    case 2:
+                        return 1061;
+                    case 3:
+                        return 1124;
+                    case 4:
+                        return 1111;
+                    case 5:
+                        return 1306;
+                    case 6:
+                        return 1304;
+                    case 7:
+                        return 1302;
+                    case 8:
+                        return 1350;
+                }
+                break;
+            case 'c':
+                switch (index)
+                {
+                    case 0:
+                        return 0;
+                    case 1:
+                        return 1205;
+                    case 2:
+                        return 1201;
+                    case 3:
+                        return 1211;
+                    case 4:
+                        return 1211;
+                    case 5:
+                        return 1350;
+                    case 6:
+                        return 1353;
+                    case 7:
+                        return 1350;
+                    case 8:
+                        return 1350;
+                }
+                break;
+            case 'f':
+                switch (index)
+                {
+                    case 0:
+                        return 291;
+                    case 1:
+                        return 278;
+                    case 2:
+                        return 603;
+                    case 3:
+                        return 272;
+                    case 4:
+                        return 257;
+                    case 5:
+                        return 281;
+                    case 6:
+                        return 235;
+                    case 7:
+                        return 253;
+                    case 8:
+                        return 298;
+                    case 9:
+                        return 280;
+                    case 10:
+                        return 299;
+                    case 11:
+                        return 604;
+                    case 12:
+                        return 219;
+                    case 13:
+                        return 299;
+                    case 14:
+                        return 280;
+                    case 15:
+                        return 280;
+                    case 16:
+                        return 512;
+                }
+                break;
+            case 'b':
+                switch (index)
+                {
+                    case 0:
+                        return 328;
+                    case 1:
+                        return 325;
+                    case 2:
+                        return 320;
+                    case 3:
+                        return 313;
+                    case 4:
+                        return 311;
+                    case 5:
+                        return 337;
+                    case 6:
+                        return 327;
+                    case 7:
+                        return 334;
+                    case 8:
+                        return 334;
+                }
+                break;
+            case 'g':
+                switch (index)
+                {
+                    case 0:
+                        return 0;
+                    case 1:
+                        return 412;
+                    case 2:
+                        return 417;
+                    case 3:
+                        return 413;
+                    case 4:
+                        return 471;
+                    case 5:
+                        return 464;
+                    case 6:
+                        return 456;
+                }
+                break;
+            case 't':
+                switch (index)
+                {
+                    case 0:
+                        return 15;
+                    case 1:
+                        return 5;
+                    case 2:
+                        return 94;
+                    case 3:
+                        return 15;
+                }
+                break;
+        }
+        return 0;
     }
 
     public static void FixBrokenSaveData()

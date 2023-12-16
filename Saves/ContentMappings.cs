@@ -36,6 +36,8 @@ internal class ContentMappings
     public ContentList KneepadNameMap { get; set; } = new();
 
     public ContentList MusicNameMap { get; set; } = new();
+    
+    public ContentList AnimationNameMap { get; set; } = new();
 
     public VanillaCounts VanillaCounts { get; set; }
     

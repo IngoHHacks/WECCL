@@ -56,7 +56,7 @@ public static class AnimationParser
     
     public static readonly Func<string, (int? Value, bool Result)> ParseAnimationId = value =>
     {
-        if (value == "*") return (100, true);
+        if (value == "*") return (43, true);
         return ParseInt(value);
     };
     

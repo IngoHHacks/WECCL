@@ -13,20 +13,27 @@ internal class AnimationPatch
     public static void Player_BCHJKLDMDFB(UnmappedPlayer __instance)
     {
         MappedPlayer p = __instance;
+        var anim = p.animator;
+        var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
         if (p.anim >= 1000000)
         {
-            var anim = p.animator;
-            var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
             if (CustomAnimations[p.anim - 1000000].ReceiveAnim != null) return;
-            if (controller.name != "CustomAnimation" + p.anim)
+            var ovr2 = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+            ((AnimatorOverrideController) anim.runtimeAnimatorController).GetOverrides(ovr2);
+            if (!ovr2.Exists(x => x.Value != null) || controller["Assist11"].name != CustomAnimations[p.anim - 1000000].Anim.name)
             {
-                LogInfo($"Setting up animation for {p.charData.name}");
-                controller.name = "CustomAnimation" + p.anim;
-                controller["Custom00"] = CustomAnimations[p.anim - 1000000].Anim;
-                MappedAnims.length[100] = CustomAnimations[p.anim - 1000000].Anim.length * CustomAnimations[p.anim - 1000000].Anim.frameRate;
-                MappedAnims.timing[100] = 1f / MappedAnims.length[100];
+                controller["Assist11"] = CustomAnimations[p.anim - 1000000].Anim;
             }
             Animations.DoCustomAnimation(p, p.anim, CustomAnimations[p.anim - 1000000].ForwardSpeedMultiplier);
+        }
+        else
+        {
+            List<KeyValuePair<AnimationClip, AnimationClip>> ovr = new();
+            ((AnimatorOverrideController) anim.runtimeAnimatorController).GetOverrides(ovr);
+            if (p.grappler == 0 && ovr.Exists(x => x.Value != null))
+            {
+                controller["Assist11"] = null;
+            }
         }
     }
     
@@ -35,10 +42,11 @@ internal class AnimationPatch
     public static bool Player_JPNLADBMDNK(ref UnmappedPlayer __instance)
     {
         MappedPlayer p = __instance;
+        var anim = p.animator;
+        var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
         if (p.anim >= 1000000)
         {
-            var anim = p.animator;
-            var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
+
             if (CustomAnimations[p.anim - 1000000].ReceiveAnim == null) return true;
             p.fileA = 0;
             p.frameA = 0f;
@@ -48,49 +56,33 @@ internal class AnimationPatch
             {
                 p.sellTim = 0f;
             }
-            if (controller.name != "CustomAnimation" + p.anim)
+            var ovr1 = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+            controller.GetOverrides(ovr1);
+            if (!ovr1.Exists(x => x.Value != null) || controller["Assist11"].name != CustomAnimations[p.anim - 1000000].Anim.name)
             {
-                controller.name = "CustomAnimation" + p.anim;
-                controller["Custom00"] = CustomAnimations[p.anim - 1000000].Anim;
-                MappedAnims.length[100] = CustomAnimations[p.anim - 1000000].Anim.length * CustomAnimations[p.anim - 1000000].Anim.frameRate;
-                MappedAnims.timing[100] = 1f / MappedAnims.length[100];
+                controller["Assist11"] = CustomAnimations[p.anim - 1000000].Anim;
             }
             var opponent = p.pV;
             if (opponent?.animator.runtimeAnimatorController == null) return true;
             var oppController = (AnimatorOverrideController) opponent.animator.runtimeAnimatorController;
-            if (oppController.name != "CustomAnimationReceive" + p.anim)
+            List<KeyValuePair<AnimationClip, AnimationClip>> ovr2 = new();
+            oppController.GetOverrides(ovr2);
+            if (!ovr2.Exists(x => x.Value != null) || oppController["Assist11"].name != CustomAnimations[p.anim - 1000000].ReceiveAnim.name)
             {
-                oppController.name = "CustomAnimationReceive" + p.anim;
-                oppController["Custom01"] = CustomAnimations[p.anim - 1000000].ReceiveAnim;
-                MappedAnims.length[101] = CustomAnimations[p.anim - 1000000].ReceiveAnim.length * CustomAnimations[p.anim - 1000000].ReceiveAnim.frameRate;
-                MappedAnims.timing[101] = 1f / MappedAnims.length[101];
+                oppController["Assist11"] = CustomAnimations[p.anim - 1000000].ReceiveAnim;
             }
+
             Animations.DoCustomAnimation(p, p.anim, CustomAnimations[p.anim - 1000000].ForwardSpeedMultiplier);
             Animations.PerformPostGrappleCode(p);
             return false;
         }
-
-        return true;
-    }
-
-    [HarmonyPatch(typeof(UnmappedAnims), nameof(UnmappedAnims.NNEMALOMALN))]
-    [HarmonyPrefix]
-    public static bool Anims_NNEMALOMALN(ref string __result, int PFDGHMKKHOF)
-    {
-        if (PFDGHMKKHOF >= 100)
+        List<KeyValuePair<AnimationClip, AnimationClip>> ovr = new();
+        ((AnimatorOverrideController) p.animator.runtimeAnimatorController).GetOverrides(ovr);
+        if (p.grappler == 0 && ovr.Exists(x => x.Value != null))
         {
-            __result = "Custom" + (PFDGHMKKHOF - 100).ToString("00");
-            return false;
+            controller["Assist11"] = null;
         }
         return true;
-    }
-    
-    [HarmonyPatch(typeof(UnmappedAnims), nameof(UnmappedAnims.EAPGGFCLELG))]
-    [HarmonyPostfix]
-    public static void Anims_EAPGGFCLELG()
-    {
-        Array.Resize(ref UnmappedAnims.NIMHPNKOPAE, 200);
-        Array.Resize(ref UnmappedAnims.BKCAJIALAPC, 200);
     }
     
     [HarmonyPatch(typeof(UnmappedAnims), nameof(UnmappedAnims.DDIJBPJLEBF))]
@@ -99,7 +91,7 @@ internal class AnimationPatch
     {
         if (NOLKIINBMHA >= 1000000)
         {
-            __result = CustomAnimations[NOLKIINBMHA - 1000000].Name ?? "CustomAnimation" + (NOLKIINBMHA - 1000000).ToString("00");
+            __result = CustomAnimations[NOLKIINBMHA - 1000000].Name ?? "Custom Animation" + (NOLKIINBMHA - 1000000).ToString("00");
             return false;
         }
         return true;
@@ -118,14 +110,19 @@ internal class AnimationPatch
     public static void Player_DDKAGOBJGBC(ref UnmappedPlayer __instance)
     {
         MappedPlayer p = __instance;
-        var orig = p.animator.runtimeAnimatorController;
-        var overrideController = new AnimatorOverrideController(AO.AnimationController);
-        foreach (var clip in orig.animationClips)
-        {
-            overrideController[clip.name] = clip;
-        }
+        var overrideController = new AnimatorOverrideController(p.animator.runtimeAnimatorController);
         p.animator.runtimeAnimatorController = overrideController;
         MappedMenus.screenTim = 0;
+    }
+    
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.FEACEIIIAHK))]
+    [HarmonyPrefix]
+    public static void Player_FEACEIIIAHK(ref UnmappedPlayer __instance)
+    {
+        MappedPlayer p = __instance;
+        var assist11 = ((AnimatorOverrideController)p.animator.runtimeAnimatorController)["Assist11"];
+        MappedAnims.length[43] = Mathf.RoundToInt(assist11.length * assist11.frameRate);
+        MappedAnims.timing[43] = 1f / MappedAnims.length[43];
     }
     
     [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]

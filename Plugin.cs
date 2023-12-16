@@ -746,6 +746,14 @@ public class Plugin : BaseUnityPlugin
                     }
                     ad.Anim = anim;
                     AnimationData.AddAnimation(ad);
+                    
+                    var modGuid = FindPluginName(file.DirectoryName);
+                    if (modGuid != null && modGuid != "plugins")
+                    {
+                        fileName = $"{modGuid}/{fileName}";
+                    }
+                    ContentMappings.ContentMap.AnimationNameMap.Add(fileName);
+                    
                     assetBundleCount++;
                 }
                 catch (Exception e)
