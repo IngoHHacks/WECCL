@@ -107,6 +107,7 @@ public static class AnimationParser
     
     public static readonly Func<string, (bool? Value, bool Result)> ParseBool = value =>
     {
+        value = value.ToLower();
         if (value == "true" || value == "1" || value == "t" || value == "y" || value == "yes" || value == "on") return (true, true);
         if (value == "false" || value == "0" || value == "f" || value == "n" || value == "no" || value == "off") return (false, true);
         return (null, false);
