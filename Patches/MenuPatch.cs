@@ -274,6 +274,16 @@ internal class MenuPatch
         return true;
     }
     
+    [HarmonyPatch(typeof(Scene_Roster_Editor), nameof(Scene_Roster_Editor.Start))]
+    [HarmonyPrefix]
+    public static void Scene_Roster_Editor_Start(Scene_Roster_Editor __instance)
+    {
+        // Make sure the search screen gets disabled when the roster editor is opened
+        if (MappedCharacters.fed == VanillaCounts.Data.NoFeds + 1) {
+            MappedCharacters.fed = VanillaCounts.Data.NoFeds;
+        }
+    }
+    
     private static void HandleKeybinds()
     {
         // Delete

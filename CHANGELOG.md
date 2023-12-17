@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.7.1
+- Fixed a bug where moving to the roster editor from the character search screen would cause the game to softlock.
+
 ### Release 1.7.0
 - Added support for custom strike and grapple moves.
 - Added support for adding and removing characters from the search screen.

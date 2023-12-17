@@ -2,7 +2,7 @@
   "namespace": "IngoH",
   "name": "WECCL",
   "description": "Loads custom content for Wrestling Empire",
-  "version_number": "1.7.0",
+  "version_number": "1.7.1",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2100"
   ],
