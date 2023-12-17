@@ -162,6 +162,17 @@ public class CharacterUtils
                     character.relationship[i]--;
                 }
             }
+            for (int i = 1; i < character.costume.Length; i++)
+            {
+                if (character.costume[i] == null)
+                {
+                    continue;
+                }
+                if (character.costume[i].charID > id)
+                {
+                    character.costume[i].charID--;
+                }
+            }
             if (character.grudge == id)
             {
                 character.grudge = 1;

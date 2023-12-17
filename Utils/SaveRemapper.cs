@@ -674,15 +674,21 @@ public class SaveRemapper
 
         for (int index = saveData.savedChars.Length - 1; index >= 1; index--)
         {
-            if (saveData.savedChars[index] == null)
-            {
-                Plugin.Log.LogError($"Character index {index} is null!");
-            }
-            else if (saveData.savedChars[index].id != index)
+            if (saveData.savedChars[index].id != index)
             {
                 Plugin.Log.LogWarning(
                     $"Character index {index} does not match ID {saveData.savedChars[index].id}. Fixing.");
                 saveData.savedChars[index].id = index;
+            }
+
+            for (int index2 = 1; index < saveData.savedChars[index].costume.Length; index2++)
+            {
+                if (saveData.savedChars[index].costume[index2].charID > 0 && saveData.savedChars[index].costume[index2].charID != saveData.savedChars[index].id)
+                {
+                    Plugin.Log.LogWarning(
+                        $"Costume index {index2} of character {index} does not match character ID {saveData.savedChars[index].costume[index2].charID}. Fixing.");
+                    saveData.savedChars[index].costume[index2].charID = saveData.savedChars[index].id;
+                }
             }
         }
         
@@ -718,6 +724,10 @@ public class SaveRemapper
             {
                 Plugin.Log.LogWarning($"Character index {index} is not used in any roster. Adding to free agents.");
                 saveData.savedFeds[9].size++;
+                if (saveData.savedFeds[9].roster.Length <= saveData.savedFeds[9].size)
+                {
+                    Array.Resize(ref saveData.savedFeds[9].roster, saveData.savedFeds[9].size + 1);
+                }
                 saveData.savedFeds[9].roster[saveData.savedFeds[9].size] = index;
                 saveData.savedChars[index].fed = 9;
                 ((MappedCharacter)saveData.savedChars[index]).RenewContract();
