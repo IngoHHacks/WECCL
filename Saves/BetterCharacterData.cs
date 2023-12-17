@@ -182,6 +182,7 @@ public class BetterCharacterData
                 character.costume[i] = null;
                 continue;
             }
+            this.costumeC[i].charID = character.id;
 
             character.costume[i] = this.costumeC[i].ToRegularCostume();
         }
