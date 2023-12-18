@@ -200,18 +200,26 @@ internal class PromoPatch
         {
             return;
         }
-
-        UnmappedPromo.LOKLOANCDPO++;
-        Array.Resize(ref UnmappedPromo.ALPFKHEBGII, UnmappedPromo.LOKLOANCDPO + 1);
-        ResizeArray(ref UnmappedPromo.KIDIEPFFPOO, UnmappedPromo.LOKLOANCDPO + 1,
-            Math.Max(40, CustomContent.PromoData.Count));
-        Array.Resize(ref UnmappedPromo.FNMHOMDBCJE, UnmappedPromo.LOKLOANCDPO + 1);
-        UnmappedPromo.FNMHOMDBCJE[UnmappedPromo.LOKLOANCDPO] = CustomContent.PromoData.Count;
-        UnmappedPromo.ALPFKHEBGII[UnmappedPromo.LOKLOANCDPO] = "Custom";
-        UnmappedPromo.KIDIEPFFPOO[UnmappedPromo.LOKLOANCDPO, 0] = 0;
-        for (int i = 0; i < CustomContent.PromoData.Count; i++)
+        
+        foreach (PromoData promo in CustomContent.PromoData)
         {
-            UnmappedPromo.KIDIEPFFPOO[UnmappedPromo.LOKLOANCDPO, i + 1] = 1000000 + i;
+            var cl = UnmappedPromo.KIDIEPFFPOO.GetLength(1);
+            if (!MappedPromo.libraryName.Contains(promo.Category))
+            {
+                MappedPromo.no_categories++;
+                Array.Resize(ref UnmappedPromo.ALPFKHEBGII, MappedPromo.no_categories + 1);
+                Array.Resize(ref UnmappedPromo.FNMHOMDBCJE, MappedPromo.no_categories + 1);
+                ResizeArray(ref UnmappedPromo.KIDIEPFFPOO, MappedPromo.no_categories + 1, cl);
+                MappedPromo.libraryName[MappedPromo.no_categories] = promo.Category;
+                MappedPromo.library[MappedPromo.no_categories, 0] = 0;
+            }
+            int cat = Array.IndexOf(MappedPromo.libraryName, promo.Category);
+            MappedPromo.librarySize[cat]++;
+            if (cl <= MappedPromo.librarySize[cat])
+            {
+                ResizeArray(ref UnmappedPromo.KIDIEPFFPOO, MappedPromo.no_categories + 1, 2 * cl);
+            }
+            MappedPromo.library[cat, MappedPromo.librarySize[cat]] = promo._id;
         }
     }
 
@@ -418,6 +426,45 @@ internal class PromoPatch
 
                         CustomContent.PromoData[next].NameToID.Add(person.EMDMDLNJFKP.name, i);
                     }
+                }
+            }
+        }
+    }
+    
+    [HarmonyPatch(typeof(Progress), nameof(Progress.EEANPLJLLMA))]
+    [HarmonyPrefix]
+    public static void Progress_EEANPLJLLMA()
+    {
+        if (CustomContent.PromoData.Count == 0 || Progress.promo[Progress.date] != 0)
+        {
+            return;
+        }
+
+        PromoData.AssignPromo(true);
+    }
+    
+    [HarmonyPatch(typeof(Progress), nameof(Progress.EEANPLJLLMA))]
+    [HarmonyPostfix]
+    public static void Progress_EEANPLJLLMA_Post()
+    {
+        if (CustomContent.PromoData.Count == 0 || Progress.promo[Progress.date] != 0)
+        {
+            return;
+        }
+
+        if (PromoData.AssignPromo())
+        {
+            MappedMatch.promo = 0;
+            if (Progress.promo[Progress.date] != 0)
+            {
+                MappedMatch.promo = Mathf.Abs(Progress.promo[Progress.date]);
+                MappedPromo.variable = Progress.promoVariable[Progress.date];
+                MappedPromo.star = Characters.star;
+                MappedPromo.opponent = Progress.opponent[Progress.date];
+                if (Progress.promo[Progress.date] < 0)
+                {
+                    MappedPromo.star = Progress.opponent[Progress.date];
+                    MappedPromo.opponent = Characters.star;
                 }
             }
         }

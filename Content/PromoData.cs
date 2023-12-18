@@ -2,13 +2,33 @@ namespace WECCL.Content;
 
 public class PromoData
 {
+    public enum CareerModeProbability
+    {
+        Disabled,
+        Absolute,
+        GroupedRelative,
+        Relative
+    }
+    
     public List<PromoLine> PromoLines { get; set; } = new();
 
     public string Title { get; set; } = "Title";
     public string Description { get; set; } = "Description";
+    
+    public string Category { get; set; } = "Custom";
+
+    internal int _id = -1;
 
     public int[] Characters { get; set; } = new int[3];
     public bool UseCharacterNames { get; set; } = false;
+    
+    public CareerModeProbability CareerModeProbabilitySetting { get; set; } = CareerModeProbability.Disabled;
+    
+    public string GroupName { get; set; } = "";
+    
+    public float CareerModeProbabilityValue { get; set; } = 0f;
+    public bool Force { get; set; } = false;
+    
     public Dictionary<string, int> NameToID { get; set; } = new Dictionary<string, int>();
     public HashSet<int> SurpriseEntrants { get; set; } = new HashSet<int>();
     public HashSet<int> SurpirseExtras { get; set; } = new HashSet<int>();
@@ -65,14 +85,14 @@ public class PromoData
                     continue;
                 }
 
-                if (line.ToLower().StartsWith("use_names:"))
+                if (line.ToLower().Replace("-", "_").StartsWith("use_names:"))
                 {
                     bool.TryParse(line.Substring(10).Trim(), out bool useNames);
                     promoData.UseCharacterNames = useNames;
                     continue;
                 }
 
-                if (line.ToLower().StartsWith("surprise_entrants:"))
+                if (line.ToLower().Replace("-", "_").StartsWith("surprise_entrants:"))
                 {
                     if (!promoData.UseCharacterNames)
                     {
@@ -85,11 +105,50 @@ public class PromoData
                     continue;
                 }
 
-                if(line.ToLower().StartsWith("next_promo:"))
+                if(line.ToLower().Replace("-", "_").StartsWith("next_promo:"))
                 {
                     promoData.NextPromo = line.Substring(11).Trim();
                     continue;
                 }
+                
+                if (line.ToLower().Replace("-", "_").StartsWith("career_probability:"))
+                {
+                    string meta = line.Substring(19).Trim();
+                    string arg = "";
+                    if (meta.Contains(" "))
+                    {
+                        arg = meta.Substring(meta.IndexOf(' ')).Trim().Replace(",", "");
+                        meta = meta.Substring(0, meta.IndexOf(' '));
+                    }
+
+                    if (meta.EndsWith("!"))
+                    {
+                        promoData.Force = true;
+                        meta = meta.Substring(0, meta.Length - 1);
+                    }
+                    if (Enum.TryParse(meta, true, out CareerModeProbability careerModeProbability))
+                    {
+                        promoData.CareerModeProbabilitySetting = careerModeProbability;
+                        if (careerModeProbability is CareerModeProbability.Absolute or CareerModeProbability.Relative)
+                        {
+                            promoData.CareerModeProbabilityValue = float.Parse(arg);
+                        }
+                        else if (careerModeProbability is CareerModeProbability.GroupedRelative)
+                        {
+                            string arg2 = arg.Substring(arg.IndexOf(' ')).Trim();
+                            float weight = float.Parse(arg.Substring(0, arg.IndexOf(' ')));
+                            promoData.CareerModeProbabilityValue = weight;
+                            promoData.GroupName = arg2;
+                        }
+                    }
+                }
+                
+                if (line.ToLower().StartsWith("category:"))
+                {
+                    promoData.Category = line.Substring(9).Trim();
+                    continue;
+                }
+                
                 c = 0;
                 PromoLine promoLine = new PromoLine();
                 bool stringMode = false;
@@ -300,5 +359,96 @@ public class PromoData
             expected = 2;
             return this.Args.Count == 2;
         }
+    }
+
+    private class PromoGroup
+    {
+        internal List<PromoData> PromoDatas { get; set; } = new();
+        internal float Weight { get; set; } = 0f;
+        internal float CumulativeWeight { get; set; } = 0f;
+        internal string GroupName { get; set; } = "";
+    }
+    
+    private class PromoGroups
+    {
+        internal Dictionary<string, PromoGroup> PromoGroupMap { get; set; } = new();
+        
+        internal PromoGroup AbsoluteGroup { get; set; } = new();
+        internal PromoGroup RelativeGroup { get; set; } = new();
+        
+        internal void Add(PromoData promoData)
+        {
+            switch (promoData.CareerModeProbabilitySetting)
+            {
+                case CareerModeProbability.Disabled:
+                    return;
+                case CareerModeProbability.Absolute:
+                    AbsoluteGroup.PromoDatas.Add(promoData);
+                    break;
+                case CareerModeProbability.Relative:
+                    RelativeGroup.PromoDatas.Add(promoData);
+                    RelativeGroup.Weight = Math.Max(RelativeGroup.Weight, promoData.CareerModeProbabilityValue);
+                    RelativeGroup.CumulativeWeight += promoData.CareerModeProbabilityValue;
+                    break;
+                case CareerModeProbability.GroupedRelative:
+                    if (!PromoGroupMap.TryGetValue(promoData.GroupName, out PromoGroup group))
+                    {
+                        group = new PromoGroup();
+                        group.GroupName = promoData.GroupName;
+                        PromoGroupMap.Add(promoData.GroupName, group);
+                    }
+                    group.PromoDatas.Add(promoData);
+                    group.Weight = Math.Max(group.Weight, promoData.CareerModeProbabilityValue);
+                    group.CumulativeWeight += promoData.CareerModeProbabilityValue;
+                    break;
+            }
+        }
+    }
+
+    public static bool AssignPromo(bool pre = false)
+    {
+        PromoGroups groups = new();
+        // Relative all get added to a single group with weight being the max of all
+        foreach (PromoData promoData in CustomContent.PromoData.Where(x => x.Force == pre))
+        {
+            groups.Add(promoData);
+        }
+        
+        var absolute = groups.AbsoluteGroup.PromoDatas.OrderBy(x => Guid.NewGuid()).ToList();
+        foreach (PromoData promoData in absolute)
+        {
+            if (promoData.CareerModeProbabilityValue > UnityEngine.Random.Range(0f, 1f))
+            {
+                Progress.promo[Progress.date] = promoData._id;
+                return true;
+            }
+        }
+        do {
+            groups.PromoGroupMap.Add($"RelativeGroup{Guid.NewGuid()}", groups.RelativeGroup);
+        } while (false);
+        float random = UnityEngine.Random.Range(0f, groups.PromoGroupMap.Values.Sum(x => x.CumulativeWeight));
+        float cumulative = 0f;
+        var maxWeight = groups.PromoGroupMap.Values.Max(x => x.Weight);
+        if (maxWeight <= UnityEngine.Random.Range(0f, 1f))
+        {
+            return false;
+        }
+        foreach (PromoGroup group in groups.PromoGroupMap.Values)
+        {
+            cumulative += group.CumulativeWeight;
+            if (random <= cumulative)
+            {
+                var promos = group.PromoDatas.OrderBy(x => Guid.NewGuid()).ToList();
+                foreach (PromoData promoData in promos)
+                {
+                    if (promoData.CareerModeProbabilityValue > UnityEngine.Random.Range(0f, 1f))
+                    {
+                        Progress.promo[Progress.date] = promoData._id;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
