@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.7.4
+- Generated characters from the character search screen now work correctly.
+
 ### Release 1.7.3
 - Promos can now be assigned to categories, including vanilla categories.
 - Promos can now be set to play during wrestler career mode.

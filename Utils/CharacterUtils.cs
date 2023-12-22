@@ -256,7 +256,7 @@ public class CharacterUtils
         Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedChars, Characters.no_chars + 1);
         Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
         Progress.charUnlock[Characters.no_chars] = 1;
-        Characters.c[Characters.no_chars] = new Character();
+        Characters.c[Characters.no_chars] = MappedCharacters.CopyClass(Characters.c[1]);
         ((MappedCharacter) Characters.c[Characters.no_chars]).Generate(Characters.no_chars);
         ((MappedCharacter)Characters.c[Characters.no_chars]).fed = -1;
         if (Characters.fedData[9].size + 1 == Characters.fedData[9].roster.Length)
@@ -268,5 +268,6 @@ public class CharacterUtils
             }
         }
         ((MappedCharacter) Characters.c[Characters.no_chars]).Trade(9);
+        ((MappedCharacter)Characters.c[Characters.no_chars]).teamName = "";
     }
 }
