@@ -975,4 +975,13 @@ internal class MenuPatch
         }
         return s;
     }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.MOKABGFFGLC))]
+    [HarmonyPostfix]
+    public static void LIPNHOMGGHF_MOKABGFFGLC()
+    {
+         var text = GameObject.Find("Version").GetComponent<Text>(); 
+         text.text = "WECCL " + Plugin.PluginVerLong + "\t\t Game " + text.text;
+         text.horizontalOverflow = HorizontalWrapMode.Overflow;
+    }
 }

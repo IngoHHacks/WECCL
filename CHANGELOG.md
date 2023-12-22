@@ -4,6 +4,7 @@
 
 ### Release 1.7.4
 - Generated characters from the character search screen now work correctly.
+- The main menu now shows the WECCL version.
 
 ### Release 1.7.3
 - Promos can now be assigned to categories, including vanilla categories.
