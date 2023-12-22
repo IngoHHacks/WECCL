@@ -4,11 +4,8 @@ namespace WECCL;
 
 public static class Locations
 {
-    public static DirectoryInfo Assets { get; } = new(Path.Combine(Plugin.PluginPath, "Assets"));
-    public static DirectoryInfo Overrides { get; } = new(Path.Combine(Plugin.PluginPath, "Overrides"));
-    public static DirectoryInfo Import { get; } = new(Path.Combine(Plugin.PluginPath, "Import"));
+    public static DirectoryInfo Root { get; } = new(Paths.PluginPath); // Not Plugin.PluginPath!
     public static DirectoryInfo Export { get; } = new(Path.Combine(Plugin.PluginPath, "Export"));
-    public static DirectoryInfo Libraries { get; } = new(Path.Combine(Plugin.PluginPath, "Libraries"));
     public static DirectoryInfo DeletedCharacters { get; } = new(Path.Combine(Plugin.PluginPath, "Purgatory"));
     public static DirectoryInfo Cache { get; } = new(Path.Combine(Plugin.PersistentDataPath, ".cache"));
     public static DirectoryInfo Debug { get; } = new(Path.Combine(Plugin.PluginPath, "Debug"));
@@ -26,10 +23,6 @@ public static class Locations
 
     internal static void CreateDirectories()
     {
-        Assets.Create();
-        Overrides.Create();
-        Import.Create();
-        Export.Create();
         if (Plugin.CacheEnabled.Value && !Cache.Exists)
         {
             Cache.Create();

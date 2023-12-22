@@ -42,7 +42,7 @@ internal class ContentMappings
     public VanillaCounts VanillaCounts { get; set; }
     
     public float GameVersion { get; set; } = Plugin.PluginVersion;
-
+    
     public void Save()
     {
         string path = Locations.ContentMappings.FullName;

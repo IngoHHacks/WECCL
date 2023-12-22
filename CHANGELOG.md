@@ -2,6 +2,12 @@
 
 ## GV 1.60+:
 
+### Release 1.7.5
+- Fixed an issue with custom themes not being stored in the save file correctly.
+- Custom themes are now sorted alphabetically in the editor.
+- Fixed aliases not working.
+- `Assets`, `Overrides`, and `Import` folders no longer get created in the WECCL folder since this is redundant.
+
 ### Release 1.7.4
 - Generated characters from the character search screen now work correctly.
 - The main menu now shows the WECCL version.

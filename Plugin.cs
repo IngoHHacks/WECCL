@@ -15,7 +15,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.7.4";
+    public const string PluginVer = "1.7.5";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
@@ -362,8 +362,15 @@ public class Plugin : BaseUnityPlugin
 
                 clip.name = fileName;
                 string shortFileName = Path.GetFileNameWithoutExtension(file.Name);
-
-                CustomClips.Add(new NamedAudioClip(shortFileName, clip));
+                
+                var at = CustomClips.FindIndex(s => string.Compare(s.Name, shortFileName, StringComparison.Ordinal) > 0);
+                if (at == -1)
+                {
+                    at = CustomClips.Count;
+                }
+                CustomClips.Insert(at, new NamedAudioClip(shortFileName, clip));
+                ContentMappings.ContentMap.MusicNameMap.Insert(at, fileName);
+                LogInfo($"Loaded custom audio clip {shortFileName} at index {at} from {file.FullName}");
                 clipsCount++;
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
@@ -397,8 +404,6 @@ public class Plugin : BaseUnityPlugin
             UnmappedSound.NABPGAFNBMP = VanillaCounts.Data.MusicCount + CustomClips.Count;
             UnmappedSound.OOFPHCHKOBE = new AudioClip[UnmappedSound.NABPGAFNBMP + 1];
         }
-
-        ContentMappings.ContentMap.MusicNameMap.AddRange(CustomClips.Select(c => c.AudioClip.name));
     }
 
     private static void CacheAudioClip(AudioClip clip, long ticks, string chksum)
