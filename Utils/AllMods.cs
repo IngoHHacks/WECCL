@@ -12,7 +12,7 @@ public class AllMods
     
     public void LoadMods()
     {
-        foreach (var plugin in BepInEx.Bootstrap.Chainloader.PluginInfos.Values)
+        foreach (var plugin in BepInEx.Bootstrap.Chainloader.PluginInfos.Values.OrderBy(x => x.Metadata.Name))
         {
             Mods.Add(plugin);
         }

@@ -2,6 +2,12 @@
 
 ## GV 1.60+:
 
+### Release 1.7.6
+- Some tweaks to the save file repairer.
+- Mod options are now sorted alphabetically.
+- The mod options menu now remembers the last selected tab.
+- Fixed some issues with mod option menu.
+
 ### Release 1.7.5
 - Fixed an issue with custom themes not being stored in the save file correctly.
 - Custom themes are now sorted alphabetically in the editor.

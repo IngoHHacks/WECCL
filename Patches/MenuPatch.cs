@@ -544,13 +544,21 @@ internal class MenuPatch
         }
     }
 
-    public static int modSettingSelected = -1;
+    public static int modSettingSelected = 0;
+    public static bool mReset = true;
     public static int editing = -1;
     public static bool commit = false;
     public static string currentString = "";
     public static string prevString = "";
     public static bool getInput = false;
     public static GameObject info;
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.OPPFJDEMLAP))]
+    [HarmonyPostfix]
+    public static void LIPNHOMGGHF_OPPFJDEMLAP()
+    {
+        mReset = true;
+    }
     
     [HarmonyPatch(typeof(Scene_Options), nameof(Scene_Options.Update))]
     [HarmonyPostfix]
@@ -565,8 +573,9 @@ internal class MenuPatch
             if (diff > 1) diff = -1;
             if (diff < -1) diff = 1;
             var config = AllMods.Instance.Mods[modSettingSelected].Instance.Config;
-            if (diff != 0)
+            if (diff != 0 || mReset)
             {
+                mReset = false;
                 while (config == null || config.Keys.Count == 0)
                 {
                     modSettingSelected += diff;
@@ -934,7 +943,7 @@ internal class MenuPatch
         }
         else
         {
-            modSettingSelected = -1;
+            mReset = true;
             if (info != null)
             {
                 Object.Destroy(info);

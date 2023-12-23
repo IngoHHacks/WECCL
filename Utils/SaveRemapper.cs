@@ -710,7 +710,7 @@ public class SaveRemapper
                 int id = saveData.savedFeds[index].roster[i];
                 if (usedIds.Contains(id))
                 {
-                    Plugin.Log.LogError($"Character index {id} is used multiple times!");
+                    Plugin.Log.LogWarning($"Character index {id} ({saveData.savedChars[id].name}) is used multiple times.");
                 }
                 else
                 {
@@ -720,7 +720,7 @@ public class SaveRemapper
         }
         for (int index = 1; index < saveData.savedChars.Length; index++)
         {
-            if (!usedIds.Contains(index))
+            if (!usedIds.Contains(index) && saveData.savedChars[index].fed != -1)
             {
                 Plugin.Log.LogWarning($"Character index {index} is not used in any roster. Adding to free agents.");
                 saveData.savedFeds[9].size++;
