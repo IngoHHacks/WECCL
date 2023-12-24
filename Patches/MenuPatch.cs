@@ -626,11 +626,17 @@ internal class MenuPatch
             int diff = modSettingSelected - oldModSettingSelected;
             if (diff > 1) diff = -1;
             if (diff < -1) diff = 1;
-            var config = AllMods.Instance.Mods[modSettingSelected].Instance.Config;
-            if (diff != 0 || mReset)
+            if (mReset)
             {
+                modSettingSelected = 0;
+                diff = 1;
                 mReset = false;
-                while (config == null || config.Keys.Count == 0)
+            }
+            var config = AllMods.Instance.Mods[modSettingSelected].Instance.Config;
+            if (diff != 0)
+            {
+                int infiniteLoopPreventer = 0;
+                while ((config == null || config.Keys.Count == 0) && infiniteLoopPreventer++ < AllMods.Instance.NumMods)
                 {
                     modSettingSelected += diff;
                     if (modSettingSelected < 0)
