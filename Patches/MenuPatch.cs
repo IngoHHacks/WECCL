@@ -21,6 +21,10 @@ internal class MenuPatch
 
     private static int _expectedNextId = -1;
 
+    /*
+     * Patch:
+     * - Enables search screen in the character select menu.
+     */
     [HarmonyPatch(typeof(Characters), nameof(Characters.MKFNIFJNLEK))]
     [HarmonyPrefix]
     public static bool Characters_MKFNIFJNLEK(int DLMLPINGCBA, int GMJKGKDFHOH, int ADKBAGHAIGH)
@@ -130,11 +134,10 @@ internal class MenuPatch
         }
         return min;
     }
-
-
+    
     /*
-     * Menu.ICGNAJFLAHL is called when the player opens the editor (including the fed editor)
-     * This patch is used to resize the character editor to fit the roster size if it is larger than 48 (vanilla max)
+     * Patch:
+     * - Resizes the character editor to fit the roster size if it is larger than 48 (vanilla max)
      */
     [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.ICGNAJFLAHL))]
     [HarmonyPrefix]
@@ -195,9 +198,13 @@ internal class MenuPatch
         }
     }
     
+    /*
+     * Patch:
+     * - Resets the scale when the menus are removed.
+     */
     [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.EHLDKHKMHNG))]
     [HarmonyPrefix]
-    public static void UnmappedMenus_EHLDKHKMHNG()
+    public static void Menus_EHLDKHKMHNG()
     {
         PrevScale = 1.0f;
     }
@@ -205,6 +212,10 @@ internal class MenuPatch
     private static string _searchString = "";
     private static bool _searchUpdate = false;
 
+    /*
+     * Patch:
+     * - Enables search screen in the character select menu.
+     */
     [HarmonyPatch(typeof(Scene_Select_Char), nameof(Scene_Select_Char.Update))]
     [HarmonyPrefix]
     public static bool Scene_Select_Char_Update(Scene_Select_Char __instance)
@@ -276,11 +287,14 @@ internal class MenuPatch
         return true;
     }
     
+    /*
+     * Patch:
+     * - Makes sure the search screen gets disabled when the roster editor is opened.
+     */
     [HarmonyPatch(typeof(Scene_Roster_Editor), nameof(Scene_Roster_Editor.Start))]
     [HarmonyPrefix]
     public static void Scene_Roster_Editor_Start(Scene_Roster_Editor __instance)
     {
-        // Make sure the search screen gets disabled when the roster editor is opened
         if (MappedCharacters.fed == VanillaCounts.Data.NoFeds + 1) {
             MappedCharacters.fed = VanillaCounts.Data.NoFeds;
         }
@@ -320,18 +334,26 @@ internal class MenuPatch
         }
     }
 
+    /*
+     * Patch:
+     * - Reverts fed size when the roster editor is closed.
+     */
     [HarmonyPatch(typeof(UnmappedSprites), nameof(UnmappedSprites.BBLJCJMDDLO))]
     [HarmonyPostfix]
-    public static void UnmappedSprites_BBLJCJMDDLO()
+    public static void Sprites_BBLJCJMDDLO()
     {
         Characters.no_feds = VanillaCounts.Data.NoFeds;
     }
     
     private static List<GameObject> _tempObjects = new();
 
+    /*
+     * Patch:
+     * - Loads menus for the search screen.
+     */
     [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.ICGNAJFLAHL))]
     [HarmonyPostfix]
-    public static void UnmappedMenus_ICGNAJFLAHL()
+    public static void Menus_ICGNAJFLAHL()
     {
         if (MappedMenus.screen == 11 && Characters.fed == VanillaCounts.Data.NoFeds + 1)
         {
@@ -400,9 +422,13 @@ internal class MenuPatch
         }
     }
 
+    /*
+     * Patch:
+     * - Makes 'Search' unselectable in the character search screen.
+     */
     [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.GBLDMIAPNEP))]
     [HarmonyPrefix]
-    public static bool UnmappedMenu_GBLDMIAPNEP(ref int __result, UnmappedMenu __instance, float MMBJPONJJGM, float EJOKLBHLEEJ, float GJGFOKOEANG)
+    public static bool Menu_GBLDMIAPNEP(ref int __result, UnmappedMenu __instance, float MMBJPONJJGM, float EJOKLBHLEEJ, float GJGFOKOEANG)
     {
         if (__instance.NKEDCLBOOMJ.Equals("\u200BSearch\u200B"))
         {
@@ -412,9 +438,13 @@ internal class MenuPatch
         return true;
     }
     
+    /*
+     * Patch:
+     * - Tick loop for the search screen, inside menus.
+     */
     [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.BBICLKGGIGB))]
     [HarmonyPostfix]
-    public static void UnmappedMenu_BBICLKGGIGB(UnmappedMenu __instance)
+    public static void Menu_BBICLKGGIGB(UnmappedMenu __instance)
     {
         if (__instance.NKEDCLBOOMJ != null && __instance.NKEDCLBOOMJ.Equals("\u200BSearch\u200B") && UnmappedMenus.NNMDEFLLNBF == 0)
         {
@@ -435,6 +465,11 @@ internal class MenuPatch
         }
     }
     
+    /*
+     * Patch:
+     * - Tick loop for the editor.
+     * - Renames theme names to custom theme names or prefixes them with 'Vanilla' if they are vanilla.
+     */
     [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
     [HarmonyPostfix]
     public static void Scene_Editor_Update()
@@ -462,11 +497,14 @@ internal class MenuPatch
         }
     }
     
-    // Patch to browse large rosters without skipping rows/columns
+    /*
+     * Patch:
+     * - Allows browsing large rosters without skipping rows/columns by reducing controller movement range.
+     */
     [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.JCHEJAJJCMJ))]
     [HarmonyTranspiler]
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
-    public static IEnumerable<CodeInstruction> UnmappedMenus_JCHEJAJJCMJ_Transpiler(
+    public static IEnumerable<CodeInstruction> Menus_JCHEJAJJCMJ(
         IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
@@ -489,15 +527,18 @@ internal class MenuPatch
         }
     }
 
+    /*
+     * Patch:
+     * - Adds another tab to the options menu.
+     */
     [HarmonyPatch(typeof(Scene_Options), nameof(Scene_Options.Start))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> Scene_Options_Start_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Scene_Options_Start(IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
         {
             if (instruction.opcode == OpCodes.Call && (MethodInfo)instruction.operand == AccessTools.Method(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.LKCDENJNCHL)))
             {
-                // +1 to the number of tabs
                 yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                 yield return new CodeInstruction(OpCodes.Add);
             }
@@ -505,6 +546,10 @@ internal class MenuPatch
         }
     }
 
+    /*
+     * Patch:
+     * - Applies the new tab to the options menu as 'Mods'.
+     */
     [HarmonyPatch(typeof(Scene_Options), nameof(Scene_Options.Start))]
     [HarmonyPrefix]
     public static void Scene_Options_Start(Scene_Options __instance)
@@ -554,13 +599,21 @@ internal class MenuPatch
     public static bool getInput = false;
     public static GameObject info;
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.OPPFJDEMLAP))]
+    /*
+     * Patch:
+     * - Resets mod tab when tab is changed.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.OPPFJDEMLAP))]
     [HarmonyPostfix]
-    public static void LIPNHOMGGHF_OPPFJDEMLAP()
+    public static void Menus_OPPFJDEMLAP()
     {
         mReset = true;
     }
     
+    /*
+     * Patch:
+     * - Tick loop for the mod tab.
+     */
     [HarmonyPatch(typeof(Scene_Options), nameof(Scene_Options.Update))]
     [HarmonyPostfix]
     public static void Scene_Options_Update(Scene_Options __instance)
@@ -986,9 +1039,13 @@ internal class MenuPatch
         return s;
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.MOKABGFFGLC))]
+    /*
+     * Patch:
+     * - Shows WECCL version next to the game version in the main menu.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.MOKABGFFGLC))]
     [HarmonyPostfix]
-    public static void LIPNHOMGGHF_MOKABGFFGLC()
+    public static void Menus_MOKABGFFGLC()
     {
          var text = GameObject.Find("Version").GetComponent<Text>(); 
          text.text = "WECCL " + Plugin.PluginVerLong + "\t\t Game " + text.text;
@@ -997,9 +1054,13 @@ internal class MenuPatch
 
     private static int rcFoc = 0;
 
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.PIELJFKJFKF))]
+    /*
+     * Patch:
+     * - Allows right clicking on the character search screen.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.PIELJFKJFKF))]
     [HarmonyPostfix]
-    public static void LIPNHOMGGHF_PIELJFKJFKF()
+    public static void Menus_PIELJFKJFKF()
     {
         rcFoc = 0;
         MappedController controller = MappedControls.pad[MappedControls.host];
@@ -1027,6 +1088,10 @@ internal class MenuPatch
         }
     }
     
+    /*
+     * Patch:
+     * - Shows list when 'Music' is right clicked in the editor.
+     */
     [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
     [HarmonyPostfix]
     public static void Scene_Editor_Update(Scene_Editor __instance)
@@ -1039,9 +1104,15 @@ internal class MenuPatch
         }
     }
     
+    /*
+     * Patch:
+     * - Disables vanilla code for tab 1 if page is not 0.
+     * - Disables music resetting on page -1.
+     * (Lists use page -1)
+     */
     [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> Scene_Editor_Update_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Scene_Editor_Update(IEnumerable<CodeInstruction> instructions)
     {
         CodeInstruction prev = null;
         CodeInstruction prev2 = null;
@@ -1077,9 +1148,14 @@ internal class MenuPatch
         }
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.ICGNAJFLAHL))]
+    /*
+     * Patch:
+     * - Disables vanilla code for tab 1 if page is not 0.
+     * (Lists use page -1)
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.ICGNAJFLAHL))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> LIPNHOMGGHF_ICGNAJFLAHL_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Menus_ICGNAJFLAHL(IEnumerable<CodeInstruction> instructions)
     {
         CodeInstruction prev = null;
         CodeInstruction prev2 = null;
@@ -1114,9 +1190,13 @@ internal class MenuPatch
         }
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.BCGNJIGEDBM))]
+    /*
+     * Patch:
+     * - Creates list ids for music selection list.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.BCGNJIGEDBM))]
     [HarmonyPrefix]
-    public static void LIPNHOMGGHF_BCGNJIGEDBM()
+    public static void Menus_BCGNJIGEDBM()
     {
         MappedMenus.listReturnPage = MappedMenus.page;
         //MappedMenus.listReturnFoc = MappedMenus.foc;
@@ -1126,9 +1206,13 @@ internal class MenuPatch
         }
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.LFEHAGOEBNK))]
+    /*
+     * Patch:
+     * - Sets list item name for music selection list.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.LFEHAGOEBNK))]
     [HarmonyPrefix]
-    public static bool LIPNHOMGGHF_LFEHAGOEBNK(ref string __result, int KJELLNJFNGO)
+    public static bool Menus_LFEHAGOEBNK(ref string __result, int KJELLNJFNGO)
     {
         var cyc = KJELLNJFNGO;
         if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
@@ -1154,9 +1238,13 @@ internal class MenuPatch
         return true;
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.CFOIMDIGPDC))]
+    /*
+     * Patch:
+     * - Sets initial selection for music selection list.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.CFOIMDIGPDC))]
     [HarmonyPrefix]
-    public static bool LIPNHOMGGHF_CFOIMDIGPDC(ref int __result, int GOOKPABIPBC)
+    public static bool Menus_CFOIMDIGPDC(ref int __result, int GOOKPABIPBC)
     {
         var charID = GOOKPABIPBC;
         if (charID <= 0)
@@ -1179,9 +1267,13 @@ internal class MenuPatch
         return true;
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.EEIPIFGEDNP))]
+    /*
+     * Patch:
+     * - Applies selection to character from music selection list.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.EEIPIFGEDNP))]
     [HarmonyPrefix]
-    public static bool LIPNHOMGGHF_EEIPIFGEDNP(int GOOKPABIPBC)
+    public static bool Menus_EEIPIFGEDNP(int GOOKPABIPBC)
     {
         var charID = GOOKPABIPBC;
         if (charID <= 0)
@@ -1196,9 +1288,13 @@ internal class MenuPatch
         return true;
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.OGOMMBJBBDB))]
+    /*
+     * Patch:
+     * - Enables scrolling in selection lists.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.OGOMMBJBBDB))]
     [HarmonyPostfix]
-    public static void LIPNHOMGGHF_OGOMMBJBBDB()
+    public static void Menus_OGOMMBJBBDB_Pre()
     {
         var d = Input.mouseScrollDelta;
         if (d.y != 0)
@@ -1208,9 +1304,13 @@ internal class MenuPatch
         }
     }
     
-    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.OGOMMBJBBDB))]
+    /*
+     * Patch:
+     * - Plays selected music in music selection list.
+     */
+    [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.OGOMMBJBBDB))]
     [HarmonyPostfix]
-    public static void LIPNHOMGGHF_OGOMMBJBBDB_Post()
+    public static void Menus_OGOMMBJBBDB_Post()
     {
         if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
         {

@@ -8,6 +8,13 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class AnimationPatch
 {
+    
+    /**
+     * Patch:
+     * - Overrides the animation controller for custom animations if the animation is set to a custom STRIKE animation.
+     * - Resets the animation controller if the animation is set to a regular animation.
+     * - Runs the custom animation script if the animation is set to a custom STRIKE animation.
+     */
     [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.BCHJKLDMDFB))]
     [HarmonyPrefix]
     public static void Player_BCHJKLDMDFB(UnmappedPlayer __instance)
@@ -37,6 +44,13 @@ internal class AnimationPatch
         }
     }
     
+    /**
+     * Patch:
+     * - Overrides the animation controller for custom animations if the animation is set to a custom GRAPPLE animation.
+     * - Resets the animation controller if the animation is set to a regular animation.
+     * - Runs the custom animation script if the animation is set to a custom GRAPPLE animation.
+     * - Runs the post-grapple code if the animation is set to a custom GRAPPLE animation.
+     */
     [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.JPNLADBMDNK))]
     [HarmonyPrefix]
     public static bool Player_JPNLADBMDNK(ref UnmappedPlayer __instance)
@@ -85,6 +99,10 @@ internal class AnimationPatch
         return true;
     }
     
+    /**
+     * Patch:
+     * - Sets the name of the animation if the animation is set to a custom animation.
+     */
     [HarmonyPatch(typeof(UnmappedAnims), nameof(UnmappedAnims.DDIJBPJLEBF))]
     [HarmonyPrefix]
     public static bool Anims_DDIJBPJLEBF(ref string __result, int NOLKIINBMHA)
@@ -97,6 +115,10 @@ internal class AnimationPatch
         return true;
     }
     
+    /**
+     * Patch:
+     * - Skips AdaptAttack if the animation is set to a custom animation.
+     */
     [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.OFJBOCGFCBC))]
     [HarmonyPrefix]
     public static bool Player_OFJBOCGFCBC(ref UnmappedPlayer __instance)
@@ -105,6 +127,10 @@ internal class AnimationPatch
         return p.anim < 1000000;
     }
     
+    /**
+     * Patch:
+     * - Assigns the override controller to the player when the model is loaded.
+     */
     [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.DDKAGOBJGBC))]
     [HarmonyPostfix]
     public static void Player_DDKAGOBJGBC(ref UnmappedPlayer __instance)
@@ -115,6 +141,10 @@ internal class AnimationPatch
         MappedMenus.screenTim = 0;
     }
     
+    /*
+     * Patch:
+     * - Changes the animation length and timing for custom animations.
+     */
     [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.FEACEIIIAHK))]
     [HarmonyPrefix]
     public static void Player_FEACEIIIAHK(ref UnmappedPlayer __instance)
@@ -125,9 +155,14 @@ internal class AnimationPatch
         MappedAnims.timing[43] = 1f / MappedAnims.length[43];
     }
     
+    /*
+     * Patch:
+     * - First part lets custom grapple animations play in the editor.
+     * - Second part sets all custom moves as executable in the editor.
+     */
     [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> Scene_Editor_Update_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Scene_Editor_Update(IEnumerable<CodeInstruction> instructions)
     {
         int flag = 0;
         int flag2 = 0;

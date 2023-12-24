@@ -13,13 +13,13 @@ internal class SaveFilePatch
     private static int[] fedCharCount;
 
     /*
-     * SaveSystem.NJMFCPGCKNL is called when the game restores the default data
-     * This patch resets the character and federation counts.
-     * It also resets the star (wrestler) and booker to 1 if they are greater than the new character count.
+     * Patch
+     * - Resets the character and federation counts when default data is loaded.
+     * - Resets the star (wrestler) and booker to 1 if they are greater than the new character count when default data is loaded.
      */
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.NJMFCPGCKNL))]
     [HarmonyPrefix]
-    public static void SaveSystem_NJMFCPGCKNL()
+    public static void SaveSystem_NJMFCPGCKNL_Pre()
     {
         if (SceneManager.GetActiveScene().name == "Loading")
         {
@@ -52,7 +52,8 @@ internal class SaveFilePatch
     }
     
     /*
-     * SaveData.CDLIDDFKFEL is the inner function called by SaveFile.NJMFCPGCKNL.
+     * Patch:
+     * - Fixes corrupted save data before rosters are loaded.
      */
     [HarmonyPatch(typeof(SaveData), nameof(SaveData.CDLIDDFKFEL))]
     [HarmonyPrefix]
@@ -64,9 +65,14 @@ internal class SaveFilePatch
         }
     }
     
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
+    /*
+     * Patch:
+     * - Clears the previously imported characters list after default data is loaded.
+     * - Fixes corrupted save data after default data is loaded.
+     */
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.NJMFCPGCKNL))]
     [HarmonyPostfix]
-    public static void SaveSystem_Post()
+    public static void SaveSystem_NJMFCPGCKNL_Post()
     {
         if (SceneManager.GetActiveScene().name == "Loading")
         {
@@ -85,10 +91,13 @@ internal class SaveFilePatch
         }
     }
     
-    // Transpiler for BONMDGJIBFP to change the save file name to 'ModdedSave.bytes' (or whatever the user has set)
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.BONMDGJIBFP))]
+    /*
+     * Patch:
+     * - Changes the save file name to 'ModdedSave.bytes' (or whatever the user has set) during user load.
+     */
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.BONMDGJIBFP))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> SaveData_BONMDGJIBFP_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> SaveSystem_BONMDGJIBFP(IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
         {
@@ -100,10 +109,13 @@ internal class SaveFilePatch
         }
     }
     
-    // Transpiler for OIIAHNGBNIF to change the save file name to 'ModdedSave.bytes' (or whatever the user has set)
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.OIIAHNGBNIF))]
+    /*
+     * Patch:
+     * - Changes the save file name to 'ModdedSave.bytes' (or whatever the user has set) during user save.
+     */
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.OIIAHNGBNIF))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> SaveData_OIIAHNGBNIF_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> SaveSystem_OIIAHNGBNIF_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
         {
@@ -418,6 +430,11 @@ internal class SaveFilePatch
         }
     }
 
+    /*
+     * Patch:
+     * - Increases the character limit if the user has set it to be higher than the default during roster reset.
+     * - Also increases the character limit if there are more characters than the limit.
+     */
     [HarmonyPatch(typeof(Roster), nameof(Roster.PIMGMPBCODM))]
     [HarmonyPostfix]
     public static void Roster_PIMGMPBCODM(Roster __instance)
@@ -445,12 +462,11 @@ internal class SaveFilePatch
 #pragma warning restore Harmony003
 
     /*
-     * SaveData.OIIAHNGBNIF is called when the player saves the game.
-     * This patch saves the current custom content map and exports all characters.
+     * - Saves the current custom content map and exports all characters during user save.
      */
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.OIIAHNGBNIF))]
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.OIIAHNGBNIF))]
     [HarmonyPostfix]
-    public static void SaveData_OIIAHNGBNIF(int FIHDANPPMGC)
+    public static void SaveSystem_OIIAHNGBNIF_Post(int FIHDANPPMGC)
     {
         SaveCurrentMap();
         CharacterMappings.CharacterMap.Save();
@@ -508,6 +524,10 @@ internal class SaveFilePatch
         return ContentMappings.Load();
     }
     
+    /*
+     * Patch:
+     * - Increases the character limit if the user has set it to be higher than the default during user progress save.
+     */
     [HarmonyPatch(typeof(SaveData), nameof(SaveData.PLCEMOKLLCP))]
     [HarmonyPrefix]
     public static void SaveData_PLCEMOKLLCP(SaveData __instance, int NAOMGHCFPKK = 1)
@@ -518,6 +538,10 @@ internal class SaveFilePatch
         }
     }
     
+    /*
+     * Patch:
+     * - Increases the character limit if the user has set it to be higher than the default during user progress load.
+     */
     [HarmonyPatch(typeof(SaveData), nameof(SaveData.PEDMCEBEOCE))]
     [HarmonyPrefix]
     public static void SaveData_PEDMCEBEOCE(SaveData __instance, int IPBOLLAFINB = 1)

@@ -14,7 +14,12 @@ public class ScreenPatch
     private static int dir;
     private static MappedMenu _menu;
 
-    [HarmonyPatch(typeof(Scene_Titles), "Start")]
+    /*
+     * Patch:
+     * - Adds a screen to warn the user about potential issues with using mods.
+     * - Adds a screen to set the priority of override mods.
+     */
+    [HarmonyPatch(typeof(Scene_Titles), nameof(Scene_Titles.Start))]
     [HarmonyPostfix]
     public static void SceneTitles_Start(Scene_Titles __instance)
     {
@@ -74,7 +79,11 @@ public class ScreenPatch
         }
     }
 
-    [HarmonyPatch(typeof(Scene_Titles), "Update")]
+    /*
+     * Patch:
+     * - Tick loop for the extra screens in Titles.
+     */
+    [HarmonyPatch(typeof(Scene_Titles), nameof(Scene_Titles.Update))]
     [HarmonyPrefix]
     public static bool SceneTitles_Update()
     {
@@ -233,6 +242,10 @@ public class ScreenPatch
         return true;
     }
 
+    /*
+     * Patch:
+     * - Loads the menus for the extra screens in Titles.
+     */
     [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.ICGNAJFLAHL))]
     [HarmonyPrefix]
     public static bool Menus_ICGNAJFLAHL(int IPCCBDAFNMC)

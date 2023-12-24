@@ -8,7 +8,11 @@ public class WorldPatch
 {
     private static int _tempLocation = -999;
     private static readonly LimitedDictionary<string, float> RaycastCache = new(1000);
-
+    
+    /*
+     * Patch:
+     * - Loads custom arenas if the player is in a custom location.
+     */
     [HarmonyPatch(typeof(World), nameof(World.ICGNAJFLAHL))]
     [HarmonyPrefix]
     public static bool World_ICGNAJFLAHL(int EJDHFNIJFHI)
@@ -82,9 +86,13 @@ public class WorldPatch
         return true;
     }
 
+    /*
+     * Patch:
+     * - Clears the 'blocks' (collision boxes) when loading a custom arena.
+     */
     [HarmonyPatch(typeof(UnmappedBlocks), nameof(UnmappedBlocks.NALPMNNGKAE))]
     [HarmonyPrefix]
-    public static void GameCollision_NALPMNNGKAE()
+    public static void Blocks_NALPMNNGKAE_Pre()
     {
         if (World.location > VanillaCounts.Data.NoLocations)
         {
@@ -107,9 +115,14 @@ public class WorldPatch
         }
     }
 
+    /*
+     * Patch:
+     * - Creates the 'blocks' (collision boxes) when loading a custom arena.
+     * - Renders the debug collision boxes if the user has enabled them in the config.
+     */
     [HarmonyPatch(typeof(UnmappedBlocks), nameof(UnmappedBlocks.NALPMNNGKAE))]
     [HarmonyPostfix]
-    public static void GameCollision_NALPMNNGKAE_Postfix()
+    public static void Blocks_NALPMNNGKAE_Post()
     {
         if (_tempLocation != -999)
         {
@@ -652,6 +665,10 @@ public class WorldPatch
         lineRenderer.loop = true;
     }
 
+    /*
+     * Patch:
+     * - Disables default boundaries for custom arenas
+     */
     [HarmonyPatch(typeof(World), nameof(World.JOLFKJKNBLP))]
     [HarmonyPrefix]
     public static bool World_JOLFKJKNBLP(int HJANGKEJCJE)
@@ -674,7 +691,10 @@ public class WorldPatch
         return true;
     }
 
-
+    /*
+     * Patch:
+     * - Sets custom arenas as 'available' for the game to load.
+     */
     [HarmonyPatch(typeof(World), nameof(World.COMEDPJDBKM))]
     [HarmonyPrefix]
     public static bool World_COMEDPJDBKM(ref int __result, int HJANGKEJCJE)
@@ -692,6 +712,10 @@ public class WorldPatch
         return false;
     }
 
+    /*
+     * Patch:
+     * - Determines the floor height for custom arenas.
+     */
     [HarmonyPatch(typeof(World), nameof(World.KJOEBADBOME))]
     [HarmonyPostfix]
     public static void World_KJOEBADBOME(ref float __result, float MMBJPONJJGM, float EJOKLBHLEEJ, float FNFJENPGCHM)

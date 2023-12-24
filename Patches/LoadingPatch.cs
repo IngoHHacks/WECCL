@@ -13,6 +13,10 @@ public class LoadingPatch
     private static Text _text;
     private static Text _text2;
 
+    /*
+     * Patch:
+     * - Adds a loading bar for modded content.
+     */
     [HarmonyPatch(typeof(Scene_Loading), nameof(Scene_Loading.Update))]
     [HarmonyPrefix]
     public static bool Scene_Loading_Update(Scene_Loading __instance)

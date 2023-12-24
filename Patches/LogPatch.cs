@@ -6,7 +6,8 @@ namespace WECCL.Patches;
 public class LogPatch
 {
     /*
-     * This patch is used to enable the game's unity logger if the user has enabled it in the config.
+     * Patch:
+     * Enables the game's unity logger if the user has enabled it in the config.
      */
     [HarmonyPatch(typeof(UnmappedGlobals), nameof(UnmappedGlobals.HPBKLENFKBN))]
     [HarmonyPostfix]

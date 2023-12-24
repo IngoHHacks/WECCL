@@ -10,9 +10,13 @@ public class MatchTypePatch
     private static float OldCageMax;
     private static float OldCageMin;
    
+    /*
+     * Patch:
+     * - Adds custom match types from the selection menu.
+     */
     [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.ODONMLDCHHF))]
     [HarmonyPrefix]
-    private static void CustomPresetPrefix(UnmappedMenu __instance, float __result, ref float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
+    private static void Menu_ODONMLDCHHF_Pre1(UnmappedMenu __instance, float __result, ref float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
     {
         if (SceneManager.GetActiveScene().name != "Match_Setup") return;
         if (LIPNHOMGGHF.CHLJMEPFJOK == 2)
@@ -28,9 +32,14 @@ public class MatchTypePatch
             }
         }    
     }
+    
+    /*
+     * Patch:
+     * - Second patch for custom match types from the selection menu.
+     */
     [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.ODONMLDCHHF))]
     [HarmonyPostfix]
-    private static void CustomPresetPostfix(UnmappedMenu __instance, ref float __result, float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
+    private static void Menu_ODONMLDCHHF_Post1(UnmappedMenu __instance, ref float __result, float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
     {
         if (SceneManager.GetActiveScene().name != "Match_Setup") return;
         if (LIPNHOMGGHF.CHLJMEPFJOK == 2)
@@ -41,9 +50,14 @@ public class MatchTypePatch
             }
         }
     }
+    
+    /*
+     * Patch:
+     * - Adds custom cages to the selection menu.
+     */
     [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.ODONMLDCHHF))]
     [HarmonyPrefix]
-    private static void CustomCagePrefix(UnmappedMenu __instance, float __result, ref float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
+    private static void Menu_ODONMLDCHHF_Pre2(UnmappedMenu __instance, float __result, ref float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
     {
         if (SceneManager.GetActiveScene().name != "Match_Setup") return;
         if (LIPNHOMGGHF.CHLJMEPFJOK == 1 && LIPNHOMGGHF.ODOAPLMOJPD == 1)
@@ -54,9 +68,14 @@ public class MatchTypePatch
             }
         }
     }
+    
+    /*
+     * Patch:
+     * - Second patch for custom cages to the selection menu.
+     */
     [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.ODONMLDCHHF))]
     [HarmonyPostfix]
-    private static void CustomCagePostfix(UnmappedMenu __instance, ref float __result, float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
+    private static void Menu_ODONMLDCHHF_Post2(UnmappedMenu __instance, ref float __result, float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
     {
         if (SceneManager.GetActiveScene().name != "Match_Setup") return;
         if (LIPNHOMGGHF.CHLJMEPFJOK == 1 && LIPNHOMGGHF.ODOAPLMOJPD == 1)
