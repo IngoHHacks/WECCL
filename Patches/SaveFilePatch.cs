@@ -128,7 +128,7 @@ internal class SaveFilePatch
             string save = Locations.SaveFile.FullName;
             if (!File.Exists(save))
             {
-                string vanillaSave = Locations.SaveFileVanilla.FullName;
+                string  vanillaSave = Locations.SaveFileVanilla.FullName;
                 if (File.Exists(vanillaSave))
                 {
                     File.Copy(vanillaSave, save);

@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.7.7
+- You can now right click the music menu in the editor to show a list to select from.
+- Editor lists (moves, music) can now be scrolled with the mouse wheel.
+
 ### Release 1.7.6
 - Some tweaks to the save file repairer.
 - Mod options are now sorted alphabetically.

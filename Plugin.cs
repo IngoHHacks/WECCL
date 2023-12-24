@@ -15,7 +15,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.7.6";
+    public const string PluginVer = "1.7.7";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
@@ -370,7 +370,6 @@ public class Plugin : BaseUnityPlugin
                 }
                 CustomClips.Insert(at, new NamedAudioClip(shortFileName, clip));
                 ContentMappings.ContentMap.MusicNameMap.Insert(at, fileName);
-                LogInfo($"Loaded custom audio clip {shortFileName} at index {at} from {file.FullName}");
                 clipsCount++;
                 cur++;
                 if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)

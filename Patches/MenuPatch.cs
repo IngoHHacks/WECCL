@@ -5,8 +5,10 @@ using System.Reflection.Emit;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using WECCL.Animation;
 using WECCL.Content;
+using Image = UnityEngine.UI.Image;
 using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
@@ -437,7 +439,7 @@ internal class MenuPatch
     [HarmonyPostfix]
     public static void Scene_Editor_Update()
     {
-        if (UnmappedMenus.CHLJMEPFJOK == 1)
+        if (MappedMenus.tab == 1 && MappedMenus.page == 0)
         {
             UnmappedPlayer gMIKIMHFABP = NJBJIIIACEP.OAAMGFLINOB[1];
             Character iPNKFGHIDJP = gMIKIMHFABP.EMDMDLNJFKP;
@@ -446,7 +448,6 @@ internal class MenuPatch
                 int index = iPNKFGHIDJP.music - VanillaCounts.Data.MusicCount - 1;
                 string name = CustomClips[index].Name;
                 UnmappedMenus.FKANHDIMMBJ[8].FFCNPGPALPD = name;
-                
             }
             else if (iPNKFGHIDJP.music == 0)
             {
@@ -992,5 +993,237 @@ internal class MenuPatch
          var text = GameObject.Find("Version").GetComponent<Text>(); 
          text.text = "WECCL " + Plugin.PluginVerLong + "\t\t Game " + text.text;
          text.horizontalOverflow = HorizontalWrapMode.Overflow;
+    }
+
+    private static int rcFoc = 0;
+
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.PIELJFKJFKF))]
+    [HarmonyPostfix]
+    public static void LIPNHOMGGHF_PIELJFKJFKF()
+    {
+        rcFoc = 0;
+        MappedController controller = MappedControls.pad[MappedControls.host];
+        for (MappedMenus.cyc = 1; MappedMenus.cyc <= MappedMenus.no_menus; MappedMenus.cyc++)
+        {
+            if (Input.GetMouseButton((int)MouseButton.RightMouse))
+            {
+                MappedMenu menu = MappedMenus.menu[MappedMenus.cyc];
+                var clickX = Input.mousePosition.x;
+                var clickY = Input.mousePosition.y;
+                if (menu.Inside(clickX, clickY, 10f) <= 0 || MappedKeyboard.preventInput != 0)
+                {
+                    continue;
+                }
+                rcFoc = menu.id;
+                MappedMenus.foc = rcFoc;
+            }
+            else if (MappedMenus.Control() > 0 && controller.type > 1 && MappedMenus.cyc == MappedMenus.foc)
+            {
+                if (controller.button[1] > 0)
+                {
+                    rcFoc = MappedMenus.foc;
+                }
+            }
+        }
+    }
+    
+    [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
+    [HarmonyPostfix]
+    public static void Scene_Editor_Update(Scene_Editor __instance)
+    {
+        if (rcFoc > 0 && MappedMenus.page == 0 && MappedMenus.foc == 8 && MappedMenus.tab == 1)
+        {
+            MappedSound.Play(MappedSound.proceed, 1f);
+            MappedMenus.tabOldFoc[MappedMenus.tab] = MappedMenus.foc;
+            MappedMenus.CreateAlphabet();
+        }
+    }
+    
+    [HarmonyPatch(typeof(Scene_Editor), nameof(Scene_Editor.Update))]
+    [HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> Scene_Editor_Update_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        CodeInstruction prev = null;
+        CodeInstruction prev2 = null;
+        foreach (CodeInstruction instruction in instructions)
+        {
+            yield return instruction;
+            if (prev2 != null) {
+                if (prev2.opcode == OpCodes.Ldsfld && (FieldInfo)prev2.operand ==
+                    AccessTools.Field(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.CHLJMEPFJOK)))
+                {
+                    if (prev.opcode == OpCodes.Ldc_I4_1)
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldsfld,
+                            AccessTools.Field(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.ODOAPLMOJPD)));
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                        yield return new CodeInstruction(instruction);
+                    }
+                } else if (prev2.opcode == OpCodes.Ldsfld && (FieldInfo)prev2.operand ==
+                    AccessTools.Field(typeof(CHLPMKEGJBJ), nameof(CHLPMKEGJBJ.CNNKEACKKCD)))
+                {
+                    if (prev.opcode == OpCodes.Ldsfld && (FieldInfo)prev.operand ==
+                        AccessTools.Field(typeof(CHLPMKEGJBJ), nameof(CHLPMKEGJBJ.GEDDILDLILI)))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldsfld,
+                            AccessTools.Field(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.ODOAPLMOJPD)));
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_M1);
+                        yield return new CodeInstruction(instruction);
+                    }
+                }
+            } 
+            prev2 = prev;
+            prev = instruction;
+        }
+    }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.ICGNAJFLAHL))]
+    [HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> LIPNHOMGGHF_ICGNAJFLAHL_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        CodeInstruction prev = null;
+        CodeInstruction prev2 = null;
+        int screen = 0;
+        foreach (CodeInstruction instruction in instructions)
+        {
+            yield return instruction;
+            if (prev != null && prev.opcode == OpCodes.Ldsfld && (FieldInfo)prev.operand ==
+                AccessTools.Field(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.FAKHAFKOBPB)))
+            {
+                if (instruction.opcode == OpCodes.Ldc_I4_S)
+                {
+                    screen = (sbyte)instruction.operand;
+                }
+            }
+            else if (screen == 60)
+            {
+                if (prev2 != null && prev2.opcode == OpCodes.Ldsfld && (FieldInfo)prev2.operand ==
+                    AccessTools.Field(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.CHLJMEPFJOK)))
+                {
+                    if (prev.opcode == OpCodes.Ldc_I4_1)
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldsfld,
+                            AccessTools.Field(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.ODOAPLMOJPD)));
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                        yield return new CodeInstruction(instruction);
+                    }
+                }
+            }
+            prev2 = prev;
+            prev = instruction;
+        }
+    }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.BCGNJIGEDBM))]
+    [HarmonyPrefix]
+    public static void LIPNHOMGGHF_BCGNJIGEDBM()
+    {
+        MappedMenus.listReturnPage = MappedMenus.page;
+        //MappedMenus.listReturnFoc = MappedMenus.foc;
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        {
+            MappedMenus.listSource = Enumerable.Range(0, MappedSound.no_themes).ToArray();
+        }
+    }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.LFEHAGOEBNK))]
+    [HarmonyPrefix]
+    public static bool LIPNHOMGGHF_LFEHAGOEBNK(ref string __result, int KJELLNJFNGO)
+    {
+        var cyc = KJELLNJFNGO;
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        {
+            if (cyc > VanillaCounts.Data.MusicCount)
+            {
+                int index = cyc - VanillaCounts.Data.MusicCount - 1;
+                string name = CustomClips[index].Name;
+                __result = name;
+                return false;
+            }
+            if (cyc == 0)
+            {
+                __result = "None";
+                return false;
+            }
+            if (CustomClips.Count > 0)
+            {
+                __result = "Vanilla " + cyc;
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.CFOIMDIGPDC))]
+    [HarmonyPrefix]
+    public static bool LIPNHOMGGHF_CFOIMDIGPDC(ref int __result, int GOOKPABIPBC)
+    {
+        var charID = GOOKPABIPBC;
+        if (charID <= 0)
+        {
+            return true;
+        }
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        {
+            MappedCharacter character = MappedCharacters.c[charID];
+            for (int i = 0; i <= MappedMenus.listSize; i++)
+            {
+                var id = MappedMenus.listID[i];
+                if (id == character.music)
+                {
+                    __result = i;
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.EEIPIFGEDNP))]
+    [HarmonyPrefix]
+    public static bool LIPNHOMGGHF_EEIPIFGEDNP(int GOOKPABIPBC)
+    {
+        var charID = GOOKPABIPBC;
+        if (charID <= 0)
+        {
+            return true;
+        }
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        {
+            MappedCharacter character = MappedCharacters.c[charID];
+            character.music = MappedMenus.listID[MappedMenus.listFoc];
+        }
+        return true;
+    }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.OGOMMBJBBDB))]
+    [HarmonyPostfix]
+    public static void LIPNHOMGGHF_OGOMMBJBBDB()
+    {
+        var d = Input.mouseScrollDelta;
+        if (d.y != 0)
+        {
+            MappedMenus.scrollSpeedY -= 20f * d.y / MappedGlobals.resY;
+            MappedMenus.scrollDelay = 200f;
+        }
+    }
+    
+    [HarmonyPatch(typeof(LIPNHOMGGHF), nameof(LIPNHOMGGHF.OGOMMBJBBDB))]
+    [HarmonyPostfix]
+    public static void LIPNHOMGGHF_OGOMMBJBBDB_Post()
+    {
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        {
+            var music = MappedMenus.listID[MappedMenus.listFoc];
+            if (MappedSound.musicPlaying != music)
+            {
+                if (MappedSound.musicPlaying == MappedSound.musicMain)
+                {
+                    Debug.Log("Interrupting main theme at " + MappedSound.musicChannel.time);
+                    MappedSound.musicRestore = MappedSound.musicChannel.time;
+                }
+                MappedSound.PlayMusic(music, Characters.c[Characters.edit].musicSpeed, (MappedSound.musicVol + MappedSound.soundVol) / 2f);
+            }
+        }
     }
 }
