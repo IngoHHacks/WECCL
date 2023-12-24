@@ -10,7 +10,7 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class SaveFilePatch
 {
-    private static int[] fedCharCount;
+    private static int[] _fedCharCount;
 
     /*
      * Patch
@@ -115,7 +115,7 @@ internal class SaveFilePatch
      */
     [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.OIIAHNGBNIF))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> SaveSystem_OIIAHNGBNIF_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> SaveSystem_OIIAHNGBNIF_Trans(IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
         {
@@ -154,16 +154,16 @@ internal class SaveFilePatch
             FileStream fileStream = new(save, FileMode.Open);
             SaveData data = new BinaryFormatter().Deserialize(fileStream) as SaveData;
             Characters.no_chars = data!.savedChars.Length - 1;
-            fedCharCount = new int[Characters.no_feds + 1];
+            _fedCharCount = new int[Characters.no_feds + 1];
             foreach (Character c in data.savedChars)
             {
                 if (c != null)
                 {
-                    fedCharCount[c.fed]++;
+                    _fedCharCount[c.fed]++;
                 }
             }
 
-            Characters.fedLimit = Math.Max(Plugin.BaseFedLimit.Value, fedCharCount.Max() + 1);
+            Characters.fedLimit = Math.Max(Plugin.BaseFedLimit.Value, _fedCharCount.Max() + 1);
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
@@ -197,14 +197,14 @@ internal class SaveFilePatch
             }
         }
 
-        if (fedCharCount != null && GLPGLJAJJOP.APPDIBENDAH.savedFeds != null)
+        if (_fedCharCount != null && GLPGLJAJJOP.APPDIBENDAH.savedFeds != null)
         {
             for (int i = 0; i <= Characters.no_feds; i++)
             {
-                int count = Math.Max(fedCharCount[i] + 1, Plugin.BaseFedLimit.Value + 1);
+                int count = Math.Max(_fedCharCount[i] + 1, Plugin.BaseFedLimit.Value + 1);
                 if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[i] != null)
                 {
-                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].size = fedCharCount[i];
+                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].size = _fedCharCount[i];
                     if (count > GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster.Length)
                     {
                         Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster, count);

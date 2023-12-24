@@ -328,7 +328,7 @@ public class Plugin : BaseUnityPlugin
                     fileName = $"{modGuid}/{fileName}";
                 }
 
-                LoadContent._lastItemLoaded = fileName;
+                LoadContent.LastItemLoaded = fileName;
             }
             catch (Exception e)
             {
@@ -384,7 +384,7 @@ public class Plugin : BaseUnityPlugin
             }
 
             GC.Collect();
-            LoadContent._loadedAssets++;
+            LoadContent.LoadedAssets++;
             if (DateTime.Now.Ticks > _nextProgressUpdate)
             {
                 _nextProgressUpdate = DateTime.Now.Ticks + 666666;
@@ -507,7 +507,7 @@ public class Plugin : BaseUnityPlugin
                                 fileName = $"{modGuid}/{fileName}";
                             }
 
-                            LoadContent._lastItemLoaded = fileName;
+                            LoadContent.LastItemLoaded = fileName;
                         }
                     }
                     catch (Exception e)
@@ -566,7 +566,7 @@ public class Plugin : BaseUnityPlugin
             }
 
             GC.Collect();
-            LoadContent._loadedAssets++;
+            LoadContent.LoadedAssets++;
             if (DateTime.Now.Ticks > _nextProgressUpdate)
             {
                 _nextProgressUpdate = DateTime.Now.Ticks + 666666;
@@ -600,7 +600,7 @@ public class Plugin : BaseUnityPlugin
             try
             {
                 Assembly.LoadFrom(file.FullName);
-                LoadContent._lastItemLoaded = fileName;
+                LoadContent.LastItemLoaded = fileName;
             }
             catch (Exception e)
             {
@@ -647,7 +647,7 @@ public class Plugin : BaseUnityPlugin
                     fileName = $"{modGuid}/{fileName}";
                 }
 
-                LoadContent._lastItemLoaded = fileName;
+                LoadContent.LastItemLoaded = fileName;
             }
             catch (Exception e)
             {
@@ -684,7 +684,7 @@ public class Plugin : BaseUnityPlugin
             }
 
             GC.Collect();
-            LoadContent._loadedAssets++;
+            LoadContent.LoadedAssets++;
             if (DateTime.Now.Ticks > _nextProgressUpdate)
             {
                 _nextProgressUpdate = DateTime.Now.Ticks + 666666;
@@ -793,7 +793,7 @@ public class Plugin : BaseUnityPlugin
                                     fileName = $"{modGuid}/{fileName}";
                                 }
 
-                                LoadContent._lastItemLoaded = fileName;
+                                LoadContent.LastItemLoaded = fileName;
                             }
                         }
                         catch (Exception e)
@@ -894,7 +894,7 @@ public class Plugin : BaseUnityPlugin
                         fileName = $"{modGuid}/{fileName}";
                     }
 
-                    LoadContent._lastItemLoaded = fileName;
+                    LoadContent.LastItemLoaded = fileName;
                     AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, tex);
                 }
                 catch (Exception e)
@@ -904,7 +904,7 @@ public class Plugin : BaseUnityPlugin
 
                 overrideCount++;
                 GC.Collect();
-                LoadContent._loadedAssets++;
+                LoadContent.LoadedAssets++;
                 if (DateTime.Now.Ticks > _nextProgressUpdate)
                 {
                     _nextProgressUpdate = DateTime.Now.Ticks + 666666;
@@ -923,7 +923,7 @@ public class Plugin : BaseUnityPlugin
                         fileName = $"{modGuid}/{fileName}";
                     }
 
-                    LoadContent._lastItemLoaded = fileName;
+                    LoadContent.LastItemLoaded = fileName;
                 }
                 catch (Exception e)
                 {
@@ -974,7 +974,7 @@ public class Plugin : BaseUnityPlugin
                 }
 
                 GC.Collect();
-                LoadContent._loadedAssets++;
+                LoadContent.LoadedAssets++;
                 if (DateTime.Now.Ticks > _nextProgressUpdate)
                 {
                     _nextProgressUpdate = DateTime.Now.Ticks + 666666;

@@ -46,7 +46,7 @@ public class LoadingPatch
             _text2.rectTransform.sizeDelta = new Vector2(10000f, 100f);
         }
 
-        if (_modsLoaded)
+        if (ModsLoaded)
         {
             if (!_uncolor)
             {
@@ -62,14 +62,14 @@ public class LoadingPatch
         }
 
         __instance.gLoader.SetActive(true);
-        _progressGradual = UnmappedGlobals.IFDOICDHAFC(_progressGradual, _progress, 0.2f, 0.01f);
+        ProgressGradual = UnmappedGlobals.IFDOICDHAFC(ProgressGradual, _progress, 0.2f, 0.01f);
         __instance.gLoadMeter.transform.localScale =
-            new Vector3(_progressGradual, 1f, 1f);
+            new Vector3(ProgressGradual, 1f, 1f);
         __instance.gLoadMeter.GetComponent<Image>().color =
             new Color(0f, 0.9f, 0f, 1f);
-        _text.text = $"Modded content: {_loadedAssets}/{_totalAssets} - {_progress * 100f:0.0}%";
+        _text.text = $"Modded content: {LoadedAssets}/{TotalAssets} - {_progress * 100f:0.0}%";
         _text.color = new Color(0f, 0.9f, 0f, 1f);
-        _text2.text = _lastItemLoaded;
+        _text2.text = LastItemLoaded;
         _text2.color = new Color(0f, 0.5f, 0f, 1f);
         return false;
     }

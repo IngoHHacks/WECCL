@@ -10,8 +10,8 @@ public class ScreenPatch
     private static bool _initialized;
     private static int _delay;
     private static int _dd = 10;
-    private static int foc;
-    private static int dir;
+    private static int _foc;
+    private static int _dir;
     private static MappedMenu _menu;
 
     /*
@@ -23,8 +23,8 @@ public class ScreenPatch
     [HarmonyPostfix]
     public static void SceneTitles_Start(Scene_Titles __instance)
     {
-        foc = 0;
-        dir = 0;
+        _foc = 0;
+        _dir = 0;
         _delay = 0;
         _dd = 10;
         if (MetaFile.Data.FirstLaunch)
@@ -99,14 +99,14 @@ public class ScreenPatch
                 MappedMenus.UpdateDisplay();
                 if (Input.GetMouseButtonDown(0))
                 {
-                    foc = MappedMenus.foc;
+                    _foc = MappedMenus.foc;
                 }
                 else if (Input.GetMouseButtonUp(0))
                 {
-                    foc = 0;
+                    _foc = 0;
                     MappedMenus.foc = 0;
                     _dd = 10;
-                    dir = 0;
+                    _dir = 0;
                     if (_menu != null)
                     {
                         MappedSprites.ChangeColour(_menu.gBackground, 0.8f, 0.8f, 0.8f);
@@ -138,19 +138,19 @@ public class ScreenPatch
                     MappedSound.musicChannel.Play();
                     MappedMenus.ChangeScreen(1);
                 }
-                else if (foc > 0 && _delay <= 0)
+                else if (_foc > 0 && _delay <= 0)
                 {
-                    MappedMenu menu = MappedMenus.menu[foc];
-                    if (dir == 0)
+                    MappedMenu menu = MappedMenus.menu[_foc];
+                    if (_dir == 0)
                     {
-                        dir = menu.alpha >= 0 ? 1 : -1;
+                        _dir = menu.alpha >= 0 ? 1 : -1;
                     }
 
-                    if (dir < 0)
+                    if (_dir < 0)
                     {
-                        if (foc > 1)
+                        if (_foc > 1)
                         {
-                            MappedMenu menu2 = MappedMenus.menu[foc - 1];
+                            MappedMenu menu2 = MappedMenus.menu[_foc - 1];
                             Text text1 = menu.box.transform.Find("Value").gameObject.GetComponent<Text>();
                             Text text2 = menu2.box.transform.Find("Value").gameObject.GetComponent<Text>();
                             menu2.title = text1.text;
@@ -170,14 +170,14 @@ public class ScreenPatch
                                 _dd -= 1;
                             }
 
-                            foc--;
+                            _foc--;
                         }
                     }
-                    else if (dir > 0)
+                    else if (_dir > 0)
                     {
-                        if (foc < Prefixes.Count)
+                        if (_foc < Prefixes.Count)
                         {
-                            MappedMenu menu2 = MappedMenus.menu[foc + 1];
+                            MappedMenu menu2 = MappedMenus.menu[_foc + 1];
                             Text text1 = menu.box.transform.Find("Value").gameObject.GetComponent<Text>();
                             Text text2 = menu2.box.transform.Find("Value").gameObject.GetComponent<Text>();
                             (text1.text, text2.text) = (text2.text, text1.text);
@@ -195,7 +195,7 @@ public class ScreenPatch
                                 _dd -= 1;
                             }
 
-                            foc++;
+                            _foc++;
                         }
                     }
                 }
@@ -306,12 +306,12 @@ public class ScreenPatch
             }
 
             MappedMenus.MeasureOptions();
-            if (MappedMenus.Control() > 0 && MappedMenus.no_menus > 0 && foc == 0)
+            if (MappedMenus.Control() > 0 && MappedMenus.no_menus > 0 && _foc == 0)
             {
-                foc = 1;
+                _foc = 1;
             }
 
-            MappedMenus.oldFoc = foc;
+            MappedMenus.oldFoc = _foc;
             MappedMenus.commit = 0;
             MappedKeyboard.entryFoc = 0;
             MappedMenus.moveFoc = 0;

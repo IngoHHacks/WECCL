@@ -17,15 +17,15 @@ internal static class LoadContent
         All = Costume | Audio | Mesh | Promo
     }
 
-    internal static bool _modsLoaded;
-    internal static float _progressGradual = 0f;
+    internal static bool ModsLoaded;
+    internal static float ProgressGradual = 0f;
 
-    internal static string _lastItemLoaded = "";
+    internal static string LastItemLoaded = "";
 
-    internal static int _totalAssets;
-    internal static int _loadedAssets = 0;
+    internal static int TotalAssets;
+    internal static int LoadedAssets = 0;
 
-    internal static float _progress => _totalAssets == 0 ? 1f : (float)_loadedAssets / _totalAssets;
+    internal static float _progress => TotalAssets == 0 ? 1f : (float)LoadedAssets / TotalAssets;
 
     internal static IEnumerator Load()
     {
@@ -72,8 +72,8 @@ internal static class LoadContent
             Plugin.Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
         }
 
-        _totalAssets += Plugin.CountFiles(AllModsAssetsDirs, ContentType.All);
-        _totalAssets += Plugin.CountFiles(AllModsOverridesDirs, ContentType.All);
+        TotalAssets += Plugin.CountFiles(AllModsAssetsDirs, ContentType.All);
+        TotalAssets += Plugin.CountFiles(AllModsOverridesDirs, ContentType.All);
 
 
         VanillaCounts.Data.MusicCount = UnmappedSound.NABPGAFNBMP;
@@ -334,6 +334,6 @@ internal static class LoadContent
 
         LoadPrefixes();
 
-        _modsLoaded = true;
+        ModsLoaded = true;
     }
 }
