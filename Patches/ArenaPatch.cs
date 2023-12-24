@@ -16,7 +16,6 @@ internal class ArenaPatch
     public static Dictionary<string, int> weaponMappings;
     public static List<string> weaponList;
     public static float yOverride;
-    public static int NoOriginalLocationsValue;
     public static bool freezeAnnouncers;
     public static int SignCount = 6;
     public static int CrowdCount = 12;

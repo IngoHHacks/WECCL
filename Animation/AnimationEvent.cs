@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public abstract class AnimationEvent
+internal abstract class AnimationEvent
 {
     public int StartFrame;
     public int EndFrame;

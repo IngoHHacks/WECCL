@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public interface IAnimationArgument
+internal interface IAnimationArgument
 {
     public string Name { get; set; }
     
@@ -16,7 +16,7 @@ public interface IAnimationArgument
     
 }
 
-public class AnimationArgument<T> : IAnimationArgument
+internal class AnimationArgument<T> : IAnimationArgument
 {
     public string Name { get; set; }
     

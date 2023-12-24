@@ -4,7 +4,7 @@ using WECCL.Saves;
 
 namespace WECCL.Content;
 
-public static class LoadContent
+internal static class LoadContent
 {
     [Flags]
     public enum ContentType

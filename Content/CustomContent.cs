@@ -4,7 +4,7 @@ using static WECCL.Utils.NumberFormatUtils;
 
 namespace WECCL.Content;
 
-public static class CustomContent
+internal static class CustomContent
 {
     internal static readonly List<NamedAudioClip> CustomClips = new();
 

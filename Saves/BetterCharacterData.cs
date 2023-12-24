@@ -1,10 +1,12 @@
 using Newtonsoft.Json;
 using System.Reflection;
 using WECCL.Content;
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace WECCL.Saves;
 
-public class BetterCharacterData
+internal class BetterCharacterData
 {
     public int? absent;
 

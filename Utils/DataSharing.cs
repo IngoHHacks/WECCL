@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace WECCL.Utils;
 
-public static class DataSharing
+internal static class DataSharing
 {
     private const string URL = "https://ingoh.net/weccl/data.php";
 

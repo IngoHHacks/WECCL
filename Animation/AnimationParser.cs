@@ -3,7 +3,7 @@ using Random = UnityEngine.Random;
 
 namespace WECCL.Animation;
 
-public static class AnimationParser
+internal static class AnimationParser
 {
     private static int _numAnimations = 0;
     

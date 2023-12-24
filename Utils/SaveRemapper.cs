@@ -5,7 +5,7 @@ using WECCL.Updates;
 
 namespace WECCL.Utils;
 
-public class SaveRemapper
+internal class SaveRemapper
 {
     internal static void PatchCustomContent(ref SaveData saveData)
     {

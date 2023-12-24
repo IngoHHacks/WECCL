@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace WECCL.Saves;
 
-public class CharacterMappings
+internal class CharacterMappings
 {
     private static CharacterMappings _instance;
     

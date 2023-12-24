@@ -3,7 +3,7 @@ using Random = UnityEngine.Random;
 
 namespace WECCL.Content;
 
-public static class Secrets
+internal static class Secrets
 {
     // Easter eggs
     // Feel free to add your own easter eggs here!

@@ -1,6 +1,6 @@
 namespace WECCL.Content;
 
-public class PromoData
+internal class PromoData
 {
     public enum CareerModeProbability
     {

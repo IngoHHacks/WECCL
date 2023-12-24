@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public class ArgumentMap
+internal class ArgumentMap
 {
     public Dictionary<string, string> Arguments { get; set; } = new();
     

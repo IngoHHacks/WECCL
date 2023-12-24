@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public class TimedAction : AnimationEvent
+internal class TimedAction : AnimationEvent
 {
     public AnimationAction Action;
     public ArgumentMap Arguments;

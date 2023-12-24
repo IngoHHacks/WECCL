@@ -6,11 +6,13 @@ public static class MenuUtils
 {
     internal static float PrevScale = 1.0f;
     
+    internal static readonly Dictionary<int, Tuple<int, int, float, int, int>> _optimalLayouts = new();
+    
     public static void FindBestFit(int size, int minX, int minY, int maxX, int maxY, out int rows, out int columns,
         out float scale, out int startX,
         out int startY)
     {
-        if (MenuPatch._optimalLayouts.TryGetValue(size, out Tuple<int, int, float, int, int> tuple))
+        if (_optimalLayouts.TryGetValue(size, out Tuple<int, int, float, int, int> tuple))
         {
             rows = tuple.Item1;
             columns = tuple.Item2;
@@ -50,7 +52,7 @@ public static class MenuUtils
                 startY = maxY - ((scaledTotalHeight - curTotalHeight) / 2);
                 Plugin.Log.LogDebug(
                     $"Found best fit for {size} items: {rows} rows, {columns} columns, {scale} scale, {startX} startX, {startY} startY");
-                MenuPatch._optimalLayouts.Add(size,
+                _optimalLayouts.Add(size,
                     new Tuple<int, int, float, int, int>(rows, columns, scale, startX, startY));
                 PrevScale = curScale;
                 return;

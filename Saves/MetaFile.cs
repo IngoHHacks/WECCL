@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace WECCL.Saves;
 
-public class MetaFile
+internal class MetaFile
 {
     private static MetaFile _instance;
 

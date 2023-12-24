@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Saves;
 
-public class NonSavedData
+internal class NonSavedData
 {
     public static List<Character> DeletedCharacters { get; set; } = new();
 }

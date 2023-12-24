@@ -1,6 +1,6 @@
 namespace WECCL.Saves;
 
-public class BetterSaveData
+internal class BetterSaveData
 {
     public static BetterSaveData Instance { get; set; } = new();
 

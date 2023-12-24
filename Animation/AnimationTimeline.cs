@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public class AnimationTimeline
+internal class AnimationTimeline
 {
     public List<AnimationEvent> Timeline { get; set; } = new();
     

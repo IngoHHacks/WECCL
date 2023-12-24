@@ -3,7 +3,7 @@ using WECCL.Saves;
 
 namespace WECCL.Content;
 
-public class ModdedCharacterManager
+internal class ModdedCharacterManager
 {
     public static void SaveAllCharacters()
     {

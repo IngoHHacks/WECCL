@@ -15,7 +15,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.7.7";
+    public const string PluginVer = "1.7.8";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
@@ -1160,7 +1160,7 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    public static int CountFiles(List<DirectoryInfo> dirs, LoadContent.ContentType type)
+    internal static int CountFiles(List<DirectoryInfo> dirs, LoadContent.ContentType type)
     {
         int count = 0;
         foreach (DirectoryInfo dir in dirs)

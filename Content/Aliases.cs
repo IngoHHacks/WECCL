@@ -1,6 +1,6 @@
 namespace WECCL.Content;
 
-public class Aliases
+internal class Aliases
 {
     public static Dictionary<string, string> AliasMap = new();
 
