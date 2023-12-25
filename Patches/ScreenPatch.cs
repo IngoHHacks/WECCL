@@ -236,7 +236,7 @@ public class ScreenPatch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
+            LogError(e);
         }
 
         return true;

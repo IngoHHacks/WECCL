@@ -2,6 +2,12 @@
 
 ## GV 1.60+:
 
+### Release 1.7.9
+- Added WECCL events to the mod API.
+- Currently, the only events are CharacterEvents when a character is added or removed.
+- Renamed Wrestling Empire Custom Content Loader to WECCL in logs.
+- Log messages now show the source of the log message.
+
 ### Release 1.7.8
 - Fixed an infinite loop in the mod config menu.
 

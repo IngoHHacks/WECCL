@@ -64,12 +64,12 @@ internal static class LoadContent
 
         if (AllModsAssetsDirs.Count > 0)
         {
-            Plugin.Log.LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
+            LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
         }
 
         if (AllModsOverridesDirs.Count > 0)
         {
-            Plugin.Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
+            LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
         }
 
         TotalAssets += Plugin.CountFiles(AllModsAssetsDirs, ContentType.All);
@@ -320,14 +320,14 @@ internal static class LoadContent
 
         if (Plugin.AllModsImportDirs.Count > 0)
         {
-            Plugin.Log.LogInfo($"Found {Plugin.AllModsImportDirs.Count} mod(s) with Import directories.");
+            LogInfo($"Found {Plugin.AllModsImportDirs.Count} mod(s) with Import directories.");
         }
 
         if (Plugin.AllowImportingCharacters.Value)
         {
             foreach (DirectoryInfo modImportDir in Plugin.AllModsImportDirs)
             {
-                Plugin.Log.LogDebug($"Importing characters from {modImportDir.Name}...");
+                LogDebug($"Importing characters from {modImportDir.Name}...");
                 Plugin.ImportCharacters(modImportDir);
             }
         }

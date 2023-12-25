@@ -207,7 +207,7 @@ internal class BetterCharacterData
             catch (Exception)
             {
                 character.relationship[i] = int.Parse(split[1]);
-                Plugin.Log.LogWarning("Failed to find character with name " + name + ", using id instead.");
+                LogWarning("Failed to find character with name " + name + ", using id instead.");
             }
         }
 
@@ -221,7 +221,7 @@ internal class BetterCharacterData
             }
             catch (Exception)
             {
-                Plugin.Log.LogWarning("Failed to find music from name " + this.musicC + ", setting to 0.");
+                LogWarning("Failed to find music from name " + this.musicC + ", setting to 0.");
                 character.music = 0;
             }
         }

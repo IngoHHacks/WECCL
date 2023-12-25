@@ -21,12 +21,12 @@ public class CustomMatch
         {
             if (CustomPresetsPos.TryGetValue(Name, out value))
             {
-                Plugin.Log.LogWarning(Name + " is already registered as preset " + value);
+                LogWarning(Name + " is already registered as preset " + value);
             }
             else
             {
                 value = ++MappedMatch.no_presets;
-                Plugin.Log.LogInfo("REGISTERED " + Name + " as preset " + value);
+                LogInfo("REGISTERED " + Name + " as preset " + value);
                 CustomPresetsPos.Add(Name, value);
             }
             return value;
@@ -35,7 +35,7 @@ public class CustomMatch
         {
             if (RegisterHardcodedElement(Name, CustomPresetsNeg, "Preset", out value))
             {
-                Plugin.Log.LogInfo("REGISTERED " + Name + " as preset " + -value);
+                LogInfo("REGISTERED " + Name + " as preset " + -value);
                 CustomPresetsNeg.Add(Name, -value);
             }
             return -value;
@@ -45,7 +45,7 @@ public class CustomMatch
     {
         if (dictionary.TryGetValue(Name, out pos))
         {
-            Plugin.Log.LogWarning(Name + " is already registered as " + type + " " + pos);
+            LogWarning(Name + " is already registered as " + type + " " + pos);
             return false;
         }
         pos = 10001 + dictionary.Count;
@@ -66,7 +66,7 @@ public class CustomMatch
         {
             if (RegisterHardcodedElement(Name, CustomCagesPos, "Cage", out value))
             {
-                Plugin.Log.LogInfo("REGISTERED " + Name + " as cage " + value);
+                LogInfo("REGISTERED " + Name + " as cage " + value);
                 CustomCagesPos.Add(Name, value);
             }
             return value;
@@ -75,7 +75,7 @@ public class CustomMatch
         {
             if (RegisterHardcodedElement(Name, CustomCagesNeg, "Cage", out value))
             {
-                Plugin.Log.LogInfo("REGISTERED " + Name + " as cage " + -value);
+                LogInfo("REGISTERED " + Name + " as cage " + -value);
                 CustomCagesNeg.Add(Name, -value);
             }
             return -value;

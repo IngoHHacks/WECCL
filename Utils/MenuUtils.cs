@@ -50,7 +50,7 @@ public static class MenuUtils
                 startX = minX + ((scaledTotalWidth - curTotalWidth) / 2);
                 int curTotalHeight = curRows * curHeight;
                 startY = maxY - ((scaledTotalHeight - curTotalHeight) / 2);
-                Plugin.Log.LogDebug(
+                LogDebug(
                     $"Found best fit for {size} items: {rows} rows, {columns} columns, {scale} scale, {startX} startX, {startY} startY");
                 _optimalLayouts.Add(size,
                     new Tuple<int, int, float, int, int>(rows, columns, scale, startX, startY));

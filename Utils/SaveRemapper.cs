@@ -14,7 +14,7 @@ internal class SaveRemapper
 
         if (!VanillaCounts.Data.IsInitialized)
         {
-            Plugin.Log.LogError("Vanilla counts not initialized. Skipping custom content patch.");
+            LogError("Vanilla counts not initialized. Skipping custom content patch.");
             return;
         }
 
@@ -25,7 +25,7 @@ internal class SaveRemapper
 
         if (oldVersion != newVersion)
         {
-            Plugin.Log.LogInfo($"Game version changed from {oldVersion} to {newVersion}. Updating custom content map.");
+            LogInfo($"Game version changed from {oldVersion} to {newVersion}. Updating custom content map.");
 
             if (ContentMappings.ContentMap.VanillaCounts == null)
             {
@@ -128,7 +128,7 @@ internal class SaveRemapper
                             int oldIndex = costume.texture[i] - VanillaCounts.Data.MaterialCounts[i] - 1;
                             if (oldIndex >= savedMap.MaterialNameMap[i].Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.Data.MaterialCounts[i];
                                 continue;
@@ -139,7 +139,7 @@ internal class SaveRemapper
                             int internalIndex = newIndex + VanillaCounts.Data.MaterialCounts[i] + 1;
                             if (costume.texture[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom material {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for material {i} of character {character.name} ({character.id}).");
                                 costume.texture[i] = internalIndex;
                             }
@@ -150,7 +150,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.texture[i] - VanillaCounts.Data.FaceFemaleCount - 1;
                             if (oldIndex >= savedMap.FaceFemaleNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.Data.MaterialCounts[i];
                                 continue;
@@ -161,7 +161,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.FaceFemaleCount - 1;
                             if (costume.texture[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom material {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for material {i} of character {character.name} ({character.id}).");
                                 costume.texture[i] = internalIndex;
                             }
@@ -172,7 +172,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.texture[i] - VanillaCounts.Data.SpecialFootwearCount - 1;
                             if (oldIndex >= savedMap.SpecialFootwearNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.Data.MaterialCounts[i];
                                 continue;
@@ -183,7 +183,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.SpecialFootwearCount - 1;
                             if (costume.texture[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom material {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for material {i} of character {character.name} ({character.id}).");
                                 costume.texture[i] = internalIndex;
                             }
@@ -194,7 +194,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.texture[i] - VanillaCounts.Data.SpecialFootwearCount - 1;
                             if (oldIndex >= savedMap.SpecialFootwearNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.Data.MaterialCounts[i];
                                 continue;
@@ -205,7 +205,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.SpecialFootwearCount - 1;
                             if (costume.texture[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom material {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for material {i} of character {character.name} ({character.id}).");
                                 costume.texture[i] = internalIndex;
                             }
@@ -216,7 +216,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.texture[i] - VanillaCounts.Data.TransparentHairMaterialCount - 1;
                             if (oldIndex >= savedMap.TransparentHairMaterialNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.Data.MaterialCounts[i];
                                 continue;
@@ -227,7 +227,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.TransparentHairMaterialCount - 1;
                             if (costume.texture[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom material {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for material {i} of character {character.name} ({character.id}).");
                                 costume.texture[i] = internalIndex;
                             }
@@ -238,7 +238,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
                             if (oldIndex >= savedMap.KneepadNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.Data.MaterialCounts[i];
                                 continue;
@@ -249,7 +249,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.KneepadCount - 1;
                             if (costume.texture[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom material {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for material {i} of character {character.name} ({character.id}).");
                                 costume.texture[i] = internalIndex;
                             }
@@ -260,7 +260,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
                             if (oldIndex >= savedMap.KneepadNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom material {i} index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.texture[i] = VanillaCounts.Data.MaterialCounts[i];
                                 continue;
@@ -271,7 +271,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.KneepadCount - 1;
                             if (costume.texture[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom material {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for material {i} of character {character.name} ({character.id}).");
                                 costume.texture[i] = internalIndex;
                             }
@@ -304,7 +304,7 @@ internal class SaveRemapper
                             int oldIndex = costume.flesh[i] - VanillaCounts.Data.FleshCounts[i] - 1;
                             if (oldIndex >= savedMap.FleshNameMap[i].Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom flesh index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.flesh[i] = VanillaCounts.Data.FleshCounts[i];
                                 continue;
@@ -315,7 +315,7 @@ internal class SaveRemapper
                             int internalIndex = newIndex + VanillaCounts.Data.FleshCounts[i] + 1;
                             if (costume.flesh[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom flesh {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for flesh {i} of character {character.name} ({character.id}).");
                                 costume.flesh[i] = internalIndex;
                             }
@@ -326,7 +326,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.flesh[i] - VanillaCounts.Data.BodyFemaleCount - 1;
                             if (oldIndex >= savedMap.BodyFemaleNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom flesh index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.flesh[i] = VanillaCounts.Data.FleshCounts[i];
                                 continue;
@@ -337,7 +337,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.BodyFemaleCount - 1;
                             if (costume.flesh[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom flesh {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for flesh {i} of character {character.name} ({character.id}).");
                                 costume.flesh[i] = internalIndex;
                             }
@@ -371,7 +371,7 @@ internal class SaveRemapper
                             int oldIndex = costume.shape[i] - VanillaCounts.Data.ShapeCounts[i] - 1;
                             if (oldIndex >= savedMap.ShapeNameMap[i].Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom shape index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.shape[i] = VanillaCounts.Data.ShapeCounts[i];
                                 continue;
@@ -382,7 +382,7 @@ internal class SaveRemapper
                             int internalIndex = newIndex + VanillaCounts.Data.ShapeCounts[i] + 1;
                             if (costume.shape[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom shape {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for shape {i} of character {character.name} ({character.id}).");
                                 costume.shape[i] = internalIndex;
                             }
@@ -393,7 +393,7 @@ internal class SaveRemapper
                             int oldIndex = -costume.shape[i] - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
                             if (oldIndex >= savedMap.TransparentHairHairstyleNameMap.Count)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Custom shape index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                                 costume.shape[i] = VanillaCounts.Data.ShapeCounts[i];
                                 continue;
@@ -404,7 +404,7 @@ internal class SaveRemapper
                             int internalIndex = -newIndex - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
                             if (costume.shape[i] != internalIndex)
                             {
-                                Plugin.Log.LogInfo(
+                                LogInfo(
                                     $"Custom shape {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for shape {i} of character {character.name} ({character.id}).");
                                 costume.shape[i] = internalIndex;
                             }
@@ -423,7 +423,7 @@ internal class SaveRemapper
                     int oldIndex = character.music - VanillaCounts.Data.MusicCount - 1;
                     if (oldIndex >= savedMap.MusicNameMap.Count)
                     {
-                        Plugin.Log.LogWarning(
+                        LogWarning(
                             $"Custom music index {oldIndex} is out of bounds for character {character.name} ({character.id}). Resetting.");
                         character.music = VanillaCounts.Data.MusicCount;
                     }
@@ -434,7 +434,7 @@ internal class SaveRemapper
                         int internalIndex = newIndex + VanillaCounts.Data.MusicCount + 1;
                         if (character.music != internalIndex)
                         {
-                            Plugin.Log.LogInfo(
+                            LogInfo(
                                 $"Custom music {oldName} at index {oldIndex} was remapped to index {newIndex} (internal index {internalIndex}) for character {character.name} ({character.id}).");
                             character.music = internalIndex;
                         }
@@ -444,8 +444,8 @@ internal class SaveRemapper
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError("Failed to remap custom content!");
-            Plugin.Log.LogError(e);
+            LogError("Failed to remap custom content!");
+            LogError(e);
         }
         
         var oldAnims = savedMap.AnimationNameMap;
@@ -459,11 +459,11 @@ internal class SaveRemapper
             int index = newAnims.IndexOf(oldAnims[i]);
             if (index == -1)
             {
-                Plugin.Log.LogWarning($"Animation {oldAnims[i]} not found in new map. Resetting to default.");
+                LogWarning($"Animation {oldAnims[i]} not found in new map. Resetting to default.");
             }
             else
             {
-                Plugin.Log.LogInfo($"Animation {oldAnims[i]} remapped to {newAnims[index]}.");
+                LogInfo($"Animation {oldAnims[i]} remapped to {newAnims[index]}.");
             }
             
             for (int j = 1; j < saveData.savedChars.Length; j++)
@@ -668,7 +668,7 @@ internal class SaveRemapper
 
     public static void FixBrokenSaveData()
     {
-        Plugin.Log.LogInfo("Validating save data...");
+        LogInfo("Validating save data...");
         var saveData = GLPGLJAJJOP.APPDIBENDAH;
         var numChars = saveData.savedChars.Length;
 
@@ -676,7 +676,7 @@ internal class SaveRemapper
         {
             if (saveData.savedChars[index].id != index)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Character index {index} does not match ID {saveData.savedChars[index].id}. Fixing.");
                 saveData.savedChars[index].id = index;
             }
@@ -685,7 +685,7 @@ internal class SaveRemapper
             {
                 if (saveData.savedChars[index].costume[index2].charID > 0 && saveData.savedChars[index].costume[index2].charID != saveData.savedChars[index].id)
                 {
-                    Plugin.Log.LogWarning(
+                    LogWarning(
                         $"Costume index {index2} of character {index} does not match character ID {saveData.savedChars[index].costume[index2].charID}. Fixing.");
                     saveData.savedChars[index].costume[index2].charID = saveData.savedChars[index].id;
                 }
@@ -697,11 +697,11 @@ internal class SaveRemapper
         {
             if (saveData.savedFeds[index] == null)
             {
-                Plugin.Log.LogError($"Fed index {index} is null!");
+                LogError($"Fed index {index} is null!");
             }
             if (saveData.savedFeds[index].size > saveData.savedFeds[index].roster.Length - 1)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Fed index {index} has roster size {saveData.savedFeds[index].size} but only {saveData.savedFeds[index].roster.Length - 1} characters. Fixing.");
                 saveData.savedFeds[index].size = saveData.savedFeds[index].roster.Length - 1;
             }
@@ -710,7 +710,7 @@ internal class SaveRemapper
                 int id = saveData.savedFeds[index].roster[i];
                 if (usedIds.Contains(id))
                 {
-                    Plugin.Log.LogWarning($"Character index {id} ({saveData.savedChars[id].name}) is used multiple times.");
+                    LogWarning($"Character index {id} ({saveData.savedChars[id].name}) is used multiple times.");
                 }
                 else
                 {
@@ -722,7 +722,7 @@ internal class SaveRemapper
         {
             if (!usedIds.Contains(index) && saveData.savedChars[index].fed != -1)
             {
-                Plugin.Log.LogWarning($"Character index {index} is not used in any roster. Adding to free agents.");
+                LogWarning($"Character index {index} is not used in any roster. Adding to free agents.");
                 saveData.savedFeds[9].size++;
                 if (saveData.savedFeds[9].roster.Length <= saveData.savedFeds[9].size)
                 {
@@ -736,43 +736,43 @@ internal class SaveRemapper
         
         if (saveData.wrestler > numChars)
         {
-            Plugin.Log.LogWarning(
+            LogWarning(
                 $"Wrestler index {saveData.wrestler} is out of bounds. Resetting to 1.");
             saveData.wrestler = 1;
         }
         if (saveData.booker > numChars)
         {
-            Plugin.Log.LogWarning(
+            LogWarning(
                 $"Booker index {saveData.booker} is out of bounds. Resetting to 1.");
             saveData.booker = 1;
         }
         if (saveData.missionClient > numChars)
         {
-            Plugin.Log.LogWarning(
+            LogWarning(
                 $"Mission client index {saveData.missionClient} is out of bounds. Resetting to 1.");
             saveData.missionClient = 1;
         }
         if (saveData.missionTarget > numChars)
         {
-            Plugin.Log.LogWarning(
+            LogWarning(
                 $"Mission target index {saveData.missionTarget} is out of bounds. Resetting to 1.");
             saveData.missionTarget = 1;
         }
         if (saveData.bookingMissionClient > numChars)
         {
-            Plugin.Log.LogWarning(
+            LogWarning(
                 $"Booking mission client index {saveData.bookingMissionClient} is out of bounds. Resetting to 1.");
             saveData.bookingMissionClient = 1;
         }
         if (saveData.bookingMissionTarget > numChars)
         {
-            Plugin.Log.LogWarning(
+            LogWarning(
                 $"Booking mission target index {saveData.bookingMissionTarget} is out of bounds. Resetting to 1.");
             saveData.bookingMissionTarget = 1;
         }
         if (saveData.charUnlock.Length != numChars)
         {
-            Plugin.Log.LogWarning(
+            LogWarning(
                 $"Character unlock array length {saveData.charUnlock.Length} does not match number of characters {numChars}. Fixing.");
             int oldLength = saveData.charUnlock.Length;
             Array.Resize(ref saveData.charUnlock, numChars);
@@ -789,7 +789,7 @@ internal class SaveRemapper
             int opponent = saveData.opponent[index];
             if (opponent > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Opponent index {opponent} is out of bounds. Resetting to 1.");
                 saveData.opponent[index] = 1;
             }
@@ -799,7 +799,7 @@ internal class SaveRemapper
             int opponent = saveData.bookingOpponent[index];
             if (opponent > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Booking opponent index {opponent} is out of bounds. Resetting to 1.");
                 saveData.bookingOpponent[index] = 1;
             }
@@ -818,19 +818,19 @@ internal class SaveRemapper
                 }
                 if (segment.leftChar > numChars)
                 {
-                    Plugin.Log.LogWarning(
+                    LogWarning(
                         $"Left character index {segment.leftChar} is out of bounds. Resetting to 1.");
                     segment.leftChar = 1;
                 }
                 if (segment.rightChar > numChars)
                 {
-                    Plugin.Log.LogWarning(
+                    LogWarning(
                         $"Right character index {segment.rightChar} is out of bounds. Resetting to 1.");
                     segment.rightChar = 1;
                 }
                 if (segment.winner > numChars)
                 {
-                    Plugin.Log.LogWarning(
+                    LogWarning(
                         $"Winner index {segment.winner} is out of bounds. Resetting to 1.");
                     segment.winner = 1;
                 }
@@ -841,7 +841,7 @@ internal class SaveRemapper
             int hiChar = saveData.hiChar[index];
             if (hiChar > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Hi character index {hiChar} is out of bounds. Resetting to 1.");
                 saveData.hiChar[index] = 1;
             }
@@ -854,7 +854,7 @@ internal class SaveRemapper
             }
             if (stockFurniture.owner > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Furniture owner index {stockFurniture.owner} is out of bounds. Resetting to 1.");
                 stockFurniture.owner = 1;
             }
@@ -867,7 +867,7 @@ internal class SaveRemapper
             }
             if (stockWeapon.owner > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Weapon owner index {stockWeapon.owner} is out of bounds. Resetting to 1.");
                 stockWeapon.owner = 1;
             }
@@ -882,14 +882,14 @@ internal class SaveRemapper
             {
                 if (character.relationship[i] > numChars)
                 {
-                    Plugin.Log.LogWarning(
+                    LogWarning(
                         $"Relationship character index {character.relationship[i]} is out of bounds. Resetting to 1.");
                     character.relationship[i] = 1;
                 }
             }
             if (character.grudge > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Grudge character index {character.grudge} is out of bounds. Resetting to 1.");
                 character.grudge = 1;
             }
@@ -903,13 +903,13 @@ internal class SaveRemapper
             }
             if (fedData.owner > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Fed owner index {fedData.owner} is out of bounds. Resetting to 1.");
                 fedData.owner = 1;
             }
             if (fedData.booker > numChars)
             {
-                Plugin.Log.LogWarning(
+                LogWarning(
                     $"Fed booker index {fedData.booker} is out of bounds. Resetting to 1.");
                 fedData.booker = 1;
             }
@@ -918,7 +918,7 @@ internal class SaveRemapper
                 int roster = fedData.roster[index];
                 if (roster > numChars)
                 {
-                    Plugin.Log.LogWarning(
+                    LogWarning(
                         $"Fed roster index {roster} is out of bounds. Removing.");
                     for (int i = index; i < fedData.roster.Length - 1; i++)
                     {
@@ -934,13 +934,13 @@ internal class SaveRemapper
                     int champ = fedData.champ[index, index2];
                     if (champ > numChars)
                     {
-                        Plugin.Log.LogWarning(
+                        LogWarning(
                             $"Fed champ index {champ} is out of bounds. Resetting to 1.");
                         fedData.champ[index, index2] = 1;
                     }
                 }
             }
         }
-        Plugin.Log.LogInfo("Save data validation complete.");
+        LogInfo("Save data validation complete.");
     }
 }

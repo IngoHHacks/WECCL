@@ -76,7 +76,7 @@ internal static class CustomContent
         }
         else
         {
-            Plugin.Log.LogWarning($"Duplicate texture override for {name}!");
+            LogWarning($"Duplicate texture override for {name}!");
         }
 
         if (!Prefixes.Contains(prefix))
@@ -100,7 +100,7 @@ internal static class CustomContent
         }
         else
         {
-            Plugin.Log.LogWarning($"Duplicate audio override for {name}!");
+            LogWarning($"Duplicate audio override for {name}!");
         }
 
         if (!Prefixes.Contains(prefix))
@@ -124,7 +124,7 @@ internal static class CustomContent
         }
         else
         {
-            Plugin.Log.LogWarning($"Duplicate mesh override for {name}!");
+            LogWarning($"Duplicate mesh override for {name}!");
         }
 
         if (!Prefixes.Contains(prefix))

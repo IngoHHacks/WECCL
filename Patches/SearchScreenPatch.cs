@@ -187,7 +187,7 @@ internal class SearchScreenPatch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
+            LogError(e);
         }
     }
     
@@ -301,7 +301,7 @@ internal class SearchScreenPatch
             if (Characters.foc > 0 && MappedMenus.foc > 0)
             {
                 MappedSound.Play(MappedSound.death[3]);
-                Plugin.Log.LogInfo("Deleting wrestler " + Characters.c[Characters.foc].name);
+                LogInfo("Deleting wrestler " + Characters.c[Characters.foc].name);
                 CharacterUtils.DeleteCharacter(Characters.foc);
                 Characters.foc--;
                 MappedMenus.foc--;
@@ -320,7 +320,7 @@ internal class SearchScreenPatch
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.N))
         {
             MappedSound.Play(MappedSound.tanoy);
-            Plugin.Log.LogInfo("Creating new wrestler");
+            LogInfo("Creating new wrestler");
             CharacterUtils.CreateRandomCharacter();
             MappedSaveSystem.request = 1;
             MappedMenus.Load();

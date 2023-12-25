@@ -14,12 +14,13 @@ namespace WECCL;
 public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
-    public const string PluginName = "Wrestling Empire Custom Content Loader";
-    public const string PluginVer = "1.7.8";
+    public const string PluginName = "WECCL";
+    public const string PluginVer = "1.7.9";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
     public const float PluginVersion = 1.61f;
+    public static readonly float GameVersion = MappedGlobals.optVersion;
 
     public const bool PreRelease = false;
     public static string[] PreReleaseReasons = { "Testing" };
@@ -146,7 +147,7 @@ public class Plugin : BaseUnityPlugin
             {
                 if (PreReleaseReasons.Length == 0)
                 {
-                    Log.LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
+                    LogWarning("This is a pre-release version. It may contain bugs and/or unfinished features.");
                 }
                 else
                 {
@@ -155,18 +156,18 @@ public class Plugin : BaseUnityPlugin
                         switch (reason)
                         {
                             case "GameUpdate":
-                                Log.LogWarning("Due to a recent game update, some features may not work as intended.");
+                                LogWarning("Due to a recent game update, some features may not work as intended.");
                                 break;
                             case "Experimental":
-                                Log.LogWarning(
+                                LogWarning(
                                     "This version contains experimental features that may not work as intended.");
                                 break;
                             case "Testing":
-                                Log.LogWarning(
+                                LogWarning(
                                     "This is an early release of a future version that may not be ready for release yet.");
                                 break;
                             default:
-                                Log.LogWarning("This version may not work as intended for the following reason: " +
+                                LogWarning("This version may not work as intended for the following reason: " +
                                                reason);
                                 break;
                         }
@@ -179,11 +180,23 @@ public class Plugin : BaseUnityPlugin
             {
                 throw new Exception($"Unsupported game version: {CharactersVersion}");
             }
+            
+            if (GameVersion != PluginVersion)
+            {
+                if (GameVersion > PluginVersion)
+                {
+                    LogWarning($"Your game version ({GameVersion}) is newer than the plugin version ({PluginVersion}). Keep in mind that this plugin may not work as intended on this version. Check the Steam Workshop page for updates.");
+                }
+                else
+                {
+                    LogWarning($"Your game version ({GameVersion}) is older than the plugin version ({PluginVersion}). Keep in mind that this plugin may not work as intended on this version. Check for updates in the game's properties on Steam.");
+                }
+            }
 
             string egg = Secrets.GetEasterEgg();
             if (egg != null)
             {
-                Log.LogInfo(egg);
+                Log./* Keep Log here */LogInfo(egg);
             }
 
             CreateBackups();
@@ -195,7 +208,7 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception e)
         {
-            Log.LogError(e);
+            LogError(e);
         }
     }
 
@@ -225,11 +238,11 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception e)
         {
-            Log.LogError(
+            LogError(
                 "Failed to patch with Harmony. This is likely caused by the game version being incompatible with the plugin version. The current plugin version is v" +
                 PluginVersion);
 
-            Log.LogError(e);
+            LogError(e);
             Harmony.UnpatchSelf();
         }
 
@@ -299,7 +312,7 @@ public class Plugin : BaseUnityPlugin
         }
         catch (Exception e)
         {
-            Log.LogError(e);
+            LogError(e);
         }
     }
 
@@ -332,7 +345,7 @@ public class Plugin : BaseUnityPlugin
             }
             catch (Exception e)
             {
-                Log.LogError(e);
+                LogError(e);
             }
 
             if (DateTime.Now.Ticks > _nextProgressUpdate)
@@ -380,7 +393,7 @@ public class Plugin : BaseUnityPlugin
             }
             catch (Exception e)
             {
-                Log.LogError(e);
+                LogError(e);
             }
 
             GC.Collect();
@@ -394,7 +407,7 @@ public class Plugin : BaseUnityPlugin
 
         if (clipsCount != 0)
         {
-            Log.LogInfo($"Loaded {clipsCount} custom audio clips from {dir.FullName}");
+            LogInfo($"Loaded {clipsCount} custom audio clips from {dir.FullName}");
         }
 
         if (CustomClips.Count != 0)
@@ -494,7 +507,7 @@ public class Plugin : BaseUnityPlugin
                     {
                         if (costumeData.Type != typeof(Texture2D) || costumeData.InternalPrefix == "custom")
                         {
-                            Log.LogError($"Custom {costumeData.FilePrefix} costumes are currently not supported.");
+                            LogError($"Custom {costumeData.FilePrefix} costumes are currently not supported.");
                         }
                         else
                         {
@@ -512,7 +525,7 @@ public class Plugin : BaseUnityPlugin
                     }
                     catch (Exception e)
                     {
-                        Log.LogError(e);
+                        LogError(e);
                     }
 
                     if (DateTime.Now.Ticks > _nextProgressUpdate)
@@ -553,7 +566,7 @@ public class Plugin : BaseUnityPlugin
                     }
                     catch (Exception e)
                     {
-                        Log.LogError(e);
+                        LogError(e);
                     }
                 }
             }
@@ -577,7 +590,7 @@ public class Plugin : BaseUnityPlugin
 
         if (costumeCount != 0)
         {
-            Log.LogInfo($"Loaded {costumeCount} custom costumes from {dir.FullName}");
+            LogInfo($"Loaded {costumeCount} custom costumes from {dir.FullName}");
         }
     }
 
@@ -604,7 +617,7 @@ public class Plugin : BaseUnityPlugin
             }
             catch (Exception e)
             {
-                Log.LogError(e);
+                LogError(e);
             }
 
             if (DateTime.Now.Ticks - lastProgressUpdate > 10000000)
@@ -651,7 +664,7 @@ public class Plugin : BaseUnityPlugin
             }
             catch (Exception e)
             {
-                Log.LogError(e);
+                LogError(e);
             }
 
             if (DateTime.Now.Ticks > _nextProgressUpdate)
@@ -680,7 +693,7 @@ public class Plugin : BaseUnityPlugin
             }
             catch (Exception e)
             {
-                Log.LogError(e);
+                LogError(e);
             }
 
             GC.Collect();
@@ -694,7 +707,7 @@ public class Plugin : BaseUnityPlugin
 
         if (promoCount != 0)
         {
-            Log.LogInfo($"Loaded {promoCount} custom promos from {dir.FullName}");
+            LogInfo($"Loaded {promoCount} custom promos from {dir.FullName}");
         }
     }
 
@@ -727,7 +740,7 @@ public class Plugin : BaseUnityPlugin
                 }
                 catch (Exception e)
                 {
-                    Log.LogError(e);
+                    LogError(e);
                 }
             }
             else if (file.Directory?.Name == "animation")
@@ -736,7 +749,7 @@ public class Plugin : BaseUnityPlugin
                     string metaPath = file.FullName.Contains(".") ? Path.GetFileNameWithoutExtension(file.FullName) + ".meta" : file.FullName + ".meta";
                     if (!File.Exists(metaPath))
                     {
-                        Log.LogError($"No meta file found for {file.FullName}");
+                        LogError($"No meta file found for {file.FullName}");
                         continue;
                     }
                     var ab = AssetBundle.LoadFromFile(file.FullName);
@@ -765,7 +778,7 @@ public class Plugin : BaseUnityPlugin
                 }
                 catch (Exception e)
                 {
-                    Log.LogError(e);
+                    LogError(e);
                 }
             }
             else
@@ -780,7 +793,7 @@ public class Plugin : BaseUnityPlugin
                         {
                             if (costumeData.Type != typeof(Mesh))
                             {
-                                Log.LogError($"{costumeData.FilePrefix} is not a mesh.");
+                                LogError($"{costumeData.FilePrefix} is not a mesh.");
                             }
                             else
                             {
@@ -798,7 +811,7 @@ public class Plugin : BaseUnityPlugin
                         }
                         catch (Exception e)
                         {
-                            Log.LogError(e);
+                            LogError(e);
                         }
 
                         yield return null;
@@ -836,7 +849,7 @@ public class Plugin : BaseUnityPlugin
                         catch (Exception e)
                         {
 
-                            Log.LogError(e);
+                            LogError(e);
                         }
 
                         break;
@@ -854,7 +867,7 @@ public class Plugin : BaseUnityPlugin
 
         if (assetBundleCount != 0)
         {
-            Log.LogInfo($"Loaded {assetBundleCount} custom AssetBundles from {dir.FullName}");
+            LogInfo($"Loaded {assetBundleCount} custom AssetBundles from {dir.FullName}");
         }
     }
 
@@ -899,7 +912,7 @@ public class Plugin : BaseUnityPlugin
                 }
                 catch (Exception e)
                 {
-                    Log.LogError(e);
+                    LogError(e);
                 }
 
                 overrideCount++;
@@ -927,7 +940,7 @@ public class Plugin : BaseUnityPlugin
                 }
                 catch (Exception e)
                 {
-                    Log.LogError(e);
+                    LogError(e);
                 }
 
                 if (DateTime.Now.Ticks > _nextProgressUpdate)
@@ -963,7 +976,7 @@ public class Plugin : BaseUnityPlugin
                 }
                 catch (Exception e)
                 {
-                    Log.LogError(e);
+                    LogError(e);
                 }
 
                 cur++;
@@ -985,7 +998,7 @@ public class Plugin : BaseUnityPlugin
 
         if (overrideCount != 0)
         {
-            Log.LogInfo($"Loaded {overrideCount} resource overrides from {dir.FullName}");
+            LogInfo($"Loaded {overrideCount} resource overrides from {dir.FullName}");
         }
     }
 
@@ -1049,7 +1062,7 @@ public class Plugin : BaseUnityPlugin
             int count = files.Length;
             long lastProgressUpdate = DateTime.Now.Ticks;
             int cur = 0;
-            Log.LogDebug($"Importing {count} character(s) from {dir.FullName}");
+            LogDebug($"Importing {count} character(s) from {dir.FullName}");
             foreach (FileInfo file in files)
             {
                 try
@@ -1058,7 +1071,7 @@ public class Plugin : BaseUnityPlugin
                     BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
                     if (character == null)
                     {
-                        Log.LogError($"Failed to import character from {file.FullName}.");
+                        LogError($"Failed to import character from {file.FullName}.");
                         continue;
                     }
 
@@ -1079,22 +1092,22 @@ public class Plugin : BaseUnityPlugin
                         lastProgressUpdate = DateTime.Now.Ticks;
                         UpdateConsoleLogLoadingBar($"Importing characters from {dir.FullName}", cur, count);
                     }
-                    Log.LogDebug($"Imported character {character.CharacterData?.name} from {file.FullName}");
+                    LogDebug($"Imported character {character.CharacterData?.name} from {file.FullName}");
                 }
                 catch (Exception e)
                 {
-                    Log.LogError(e);
+                    LogError(e);
                 }
             }
 
             if (ImportedCharacters.Count > 0)
             {
-                Log.LogInfo($"Imported {ImportedCharacters.Count} character(s) from {dir.FullName}");
+                LogInfo($"Imported {ImportedCharacters.Count} character(s) from {dir.FullName}");
             }
         }
         catch (Exception e)
         {
-            Log.LogError(e);
+            LogError(e);
         }
     }
 
@@ -1114,7 +1127,7 @@ public class Plugin : BaseUnityPlugin
         }
 
         bar += "]";
-        Log.LogInfo($"{message}: {bar} {current}/{total}");
+        LogInfo($"{message}: {bar} {current}/{total}");
     }
 
     internal static void CreateBackups()

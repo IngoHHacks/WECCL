@@ -149,7 +149,7 @@ internal class PromoPatch
             catch (Exception e)
             {
                 line = line.Replace(match.Value, "INVALID");
-                Plugin.Log.LogError(e);
+                LogError(e);
             }
         }
 
@@ -181,7 +181,7 @@ internal class PromoPatch
             catch (Exception e)
             {
                 line = line.Replace(match.Value, "INVALID");
-                Plugin.Log.LogError(e);
+                LogError(e);
             }
         }
 

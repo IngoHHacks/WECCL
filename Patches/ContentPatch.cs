@@ -137,7 +137,7 @@ internal class ContentPatch
             }
             else
             {
-                Plugin.Log.LogWarning("Asset " + name + " is not a texture or sprite, cannot override");
+                LogWarning("Asset " + name + " is not a texture or sprite, cannot override");
             }
         }
 
@@ -149,7 +149,7 @@ internal class ContentPatch
             }
             else
             {
-                Plugin.Log.LogWarning("Asset " + name + " is not an audio clip, cannot override");
+                LogWarning("Asset " + name + " is not an audio clip, cannot override");
             }
         }
     }
@@ -310,8 +310,8 @@ internal class ContentPatch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
-            Plugin.Log.LogError("Limb: " + limb + " (" + __instance.OEGJEBDBGJA.shape[limb] + ")");
+            LogError(e);
+            LogError("Limb: " + limb + " (" + __instance.OEGJEBDBGJA.shape[limb] + ")");
         }
     }
 
@@ -410,8 +410,8 @@ internal class ContentPatch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
-            Plugin.Log.LogError("Limb: " + MappedTextures.limb + " (" +
+            LogError(e);
+            LogError("Limb: " + MappedTextures.limb + " (" +
                                 player.costume.shape[MappedTextures.limb] + ")");
         }
     }

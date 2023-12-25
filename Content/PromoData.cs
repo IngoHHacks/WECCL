@@ -230,7 +230,7 @@ internal class PromoData
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError($"Error parsing promo data: {e}");
+            LogError($"Error parsing promo data: {e}");
             return null;
         }
     }

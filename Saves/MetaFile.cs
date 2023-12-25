@@ -22,7 +22,7 @@ internal class MetaFile
         string path = Locations.Meta.FullName;
         string json = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(path, json);
-        Plugin.Log.LogDebug($"Saved meta file to {path}.");
+        LogDebug($"Saved meta file to {path}.");
     }
 
     public static MetaFile Load()
@@ -42,7 +42,7 @@ internal class MetaFile
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError($"Unable to load meta file: {e}");
+            LogError($"Unable to load meta file: {e}");
             return new MetaFile();
         }
     }

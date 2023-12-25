@@ -80,7 +80,7 @@ public class WorldPatch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError("Error loading location " + World.location + ": " + e);
+            LogError("Error loading location " + World.location + ": " + e);
         }
 
         return true;
@@ -494,7 +494,7 @@ public class WorldPatch
                 }
                 catch (Exception e)
                 {
-                    Plugin.Log.LogWarning(e);
+                    LogWarning(e);
                 }
             }
 
@@ -513,7 +513,7 @@ public class WorldPatch
                 }
                 catch (Exception e)
                 {
-                    Plugin.Log.LogWarning(e);
+                    LogWarning(e);
                 }
             }
 
@@ -533,7 +533,7 @@ public class WorldPatch
                 }
                 catch (Exception e)
                 {
-                    Plugin.Log.LogWarning(e);
+                    LogWarning(e);
                 }
             }
         }

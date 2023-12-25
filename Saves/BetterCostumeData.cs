@@ -168,7 +168,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
                     costume.texture[i] = 0;
                 }
             }
@@ -182,7 +182,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
                     costume.texture[i] = 0;
                 }
             }
@@ -196,7 +196,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
                     costume.texture[i] = 0;
                 }
             }
@@ -210,7 +210,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
                     costume.texture[i] = 0;
                 }
             }
@@ -224,7 +224,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
                     costume.texture[i] = 0;
                 }
             }
@@ -238,7 +238,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
                     costume.texture[i] = 0;
                 }
             }
@@ -252,7 +252,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
                     costume.texture[i] = 0;
                 }
             }
@@ -275,7 +275,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
+                    LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
                     costume.flesh[i] = 0;
                 }
             }
@@ -289,7 +289,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
+                    LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
                     costume.flesh[i] = 0;
                 }
             }
@@ -312,7 +312,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
+                    LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
                     costume.shape[i] = 0;
                 }
             }
@@ -326,7 +326,7 @@ internal class BetterCostumeData
                 }
                 catch
                 {
-                    Plugin.Log.LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
+                    LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
                     costume.shape[i] = 0;
                 }
             }

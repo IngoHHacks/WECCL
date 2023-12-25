@@ -25,7 +25,7 @@ internal class CharacterMappings
         string path = Locations.CharacterMappings.FullName;
         string json = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(path, json);
-        Plugin.Log.LogDebug($"Saved custom content map to {path}.");
+        LogDebug($"Saved custom content map to {path}.");
     }
 
     public static CharacterMappings Load()
@@ -57,7 +57,7 @@ internal class CharacterMappings
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError($"Unable to load custom character map: {e}");
+            LogError($"Unable to load custom character map: {e}");
             return new CharacterMappings();
         }
     }
