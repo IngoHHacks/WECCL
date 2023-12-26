@@ -7,6 +7,10 @@
 - Currently, the only events are CharacterEvents when a character is added or removed.
 - Renamed Wrestling Empire Custom Content Loader to WECCL in logs.
 - Log messages now show the source of the log message.
+- The loading bar now has different colors per content type.
+- Fixed the prefix priority screen.
+- The prefix priority screen and warning screen now support controllers properly.
+- Added a warning screen whenever an exception occurs.
 
 ### Release 1.7.8
 - Fixed an infinite loop in the mod config menu.
