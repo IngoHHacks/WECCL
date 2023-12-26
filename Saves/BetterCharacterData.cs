@@ -28,6 +28,8 @@ internal class BetterCharacterData
 
     public BetterCostumeData[] costumeC;
 
+    public int? cuffed;
+
     public int? dead;
 
     public int?[] experience = new int?[11];
@@ -88,6 +90,8 @@ internal class BetterCharacterData
 
     public float?[] oldStat = new float?[7];
 
+    public int? player;
+    
     public int? platform;
 
     public int? possessive;
@@ -118,8 +122,11 @@ internal class BetterCharacterData
 
     public int?[] taunt = new int?[4];
 
+    public int? team;
+
+    public int? teamName;
+
     public int? toilet;
-    public string VERSION = "1.0.0";
 
     public float? voice;
 
@@ -132,6 +139,8 @@ internal class BetterCharacterData
     public float? y;
 
     public float? z;
+    
+    public string VERSION = "1.0.1";
 
     public static BetterCharacterData FromRegularCharacter(Character character, Character[] allCharacters)
     {
