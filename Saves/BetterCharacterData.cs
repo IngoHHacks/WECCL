@@ -124,7 +124,7 @@ internal class BetterCharacterData
 
     public int? team;
 
-    public int? teamName;
+    public string teamName;
 
     public int? toilet;
 

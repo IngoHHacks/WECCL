@@ -18,7 +18,9 @@ internal static class LoadContent
         Audio = 2,
         Mesh = 4,
         Promo = 8,
-        All = Costume | Audio | Mesh | Promo
+        CharacterImports = 16,
+        AllAssets = Costume | Audio | Mesh | Promo,
+        All = AllAssets | CharacterImports
     }
 
     internal static bool ModsLoaded;
@@ -31,13 +33,15 @@ internal static class LoadContent
     internal enum LoadPhase
     {
         None,
+        Counting,
         Libraries,
         Promos,
         Audio,
         Costumes,
         Asset_Bundles,
         Overrides,
-        Characters
+        Characters,
+        Finalizing
     }
     
     internal static LoadPhase LoadingPhase = LoadPhase.None;
@@ -49,6 +53,8 @@ internal static class LoadContent
     internal static IEnumerator Load()
     {
         Aliases.Load();
+        
+        LoadingPhase = LoadPhase.Counting;
 
         List<DirectoryInfo> AllModsAssetsDirs = new();
         List<DirectoryInfo> AllModsOverridesDirs = new();
@@ -92,8 +98,9 @@ internal static class LoadContent
             LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
         }
 
-        TotalAssets += CountFiles(AllModsAssetsDirs, ContentType.All);
-        TotalAssets += CountFiles(AllModsOverridesDirs, ContentType.All);
+        TotalAssets += CountFiles(AllModsAssetsDirs, ContentType.AllAssets);
+        TotalAssets += CountFiles(AllModsOverridesDirs, ContentType.AllAssets);
+        TotalAssets += CountFiles(AllModsImportDirs, ContentType.CharacterImports);
 
 
         VanillaCounts.Data.MusicCount = UnmappedSound.NABPGAFNBMP;
@@ -367,7 +374,7 @@ internal static class LoadContent
                 yield return ImportCharacters(modImportDir);
             }
         }
-        LoadingPhase = LoadPhase.None;
+        LoadingPhase = LoadPhase.Finalizing;
 
         LoadPrefixes();
 
@@ -1111,6 +1118,11 @@ internal static class LoadContent
             if ((type & ContentType.Promo) != 0)
             {
                 extensions.AddRange(PromoExtensions);
+            }
+
+            if ((type & ContentType.CharacterImports) != 0)
+            {
+                extensions.Add(".character");
             }
 
             count += dir

@@ -90,20 +90,22 @@ public class LoadingPatch
         switch (LoadingPhase)
         {
             case LoadPhase.None:
+            case LoadPhase.Counting:
+            case LoadPhase.Finalizing:
                 return new Color(1f, 1f, 1f, 1f);
-            case LoadPhase.Asset_Bundles:
-                return new Color(0.9f, 0.9f, 0f, 1f);
-            case LoadPhase.Audio:
-                return new Color(0.9f, 0.5f, 0f, 1f);
-            case LoadPhase.Characters:
-                return new Color(0.9f, 0f, 0f, 1f);
-            case LoadPhase.Costumes:
-                return new Color(0.5f, 0f, 0.9f, 1f);
             case LoadPhase.Libraries:
+                return new Color(0.9f, 0f, 0f, 1f);
+            case LoadPhase.Promos:
+                return new Color(0.9f, 0.5f, 0f, 1f);
+            case LoadPhase.Audio:
+                return new Color(0.9f, 0.9f, 0f, 1f);
+            case LoadPhase.Costumes:
+                return new Color(0f, 0.9f, 0f, 1f);
+            case LoadPhase.Asset_Bundles:
                 return new Color(0f, 0.5f, 0.9f, 1f);
             case LoadPhase.Overrides:
-                return new Color(0f, 0.9f, 0f, 1f);
-            case LoadPhase.Promos:
+                return new Color(0.5f, 0f, 0.9f, 1f);
+            case LoadPhase.Characters:
                 return new Color(0.9f, 0f, 0.9f, 1f);
             default:
                 return new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -115,23 +117,25 @@ public class LoadingPatch
         switch (LoadingPhase)
         {
             case LoadPhase.None:
+            case LoadPhase.Counting:
+            case LoadPhase.Finalizing:
                 return new Color(0.5f, 0.5f, 0.5f, 1f);
-            case LoadPhase.Asset_Bundles:
-                return new Color(0.5f, 0.5f, 0f, 1f);
-            case LoadPhase.Audio:
-                return new Color(0.5f, 0.25f, 0f, 1f);
-            case LoadPhase.Characters:
-                return new Color(0.5f, 0f, 0f, 1f);
-            case LoadPhase.Costumes:
-                return new Color(0.25f, 0f, 0.5f, 1f);
             case LoadPhase.Libraries:
+                return new Color(0.5f, 0f, 0f, 1f);
+            case LoadPhase.Promos:
+                return new Color(0.5f, 0.25f, 0f, 1f);
+            case LoadPhase.Audio:
+                return new Color(0.5f, 0.5f, 0f, 1f);
+            case LoadPhase.Costumes:
+                return new Color(0f, 0.5f, 0f, 1f);
+            case LoadPhase.Asset_Bundles:
                 return new Color(0f, 0.25f, 0.5f, 1f);
             case LoadPhase.Overrides:
-                return new Color(0f, 0.5f, 0f, 1f);
-            case LoadPhase.Promos:
+                return new Color(0.25f, 0f, 0.5f, 1f);
+            case LoadPhase.Characters:
                 return new Color(0.5f, 0f, 0.5f, 1f);
             default:
-                return new Color(0.25f, 0.25f, 0.25f, 1f);
+                return new Color(0.5f, 0.5f, 0.5f, 1f);
         }
     }
 }
