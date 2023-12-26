@@ -193,6 +193,78 @@ internal class ModTabPatch
                 }
             }
             
+            if (editing != MappedMenus.foc || commit)
+                {
+                    if (editing != -1)
+                    {
+
+                        var type = config[config.Keys.ToList()[editing - 2]].SettingType;
+                        if (type == typeof(bool))
+                        {
+                            var r = AnimationParser.ParseBool(currentString);
+                            if (r.Result)
+                            {
+                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
+                                ((MappedMenu)MappedMenus.menu[editing]).value =
+                                    (bool) config[config.Keys.ToList()[editing - 2]].BoxedValue ? "On" : "Off";
+                            }
+                            else
+                            {
+                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
+                            }
+                        }
+                        else if (type == typeof(int))
+                        {
+                            var r = AnimationParser.ParseInt(currentString);
+                            if (r.Result)
+                            {
+                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
+                                ((MappedMenu)MappedMenus.menu[editing]).value =
+                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
+                            }
+                            else
+                            {
+                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
+                            }
+                        }
+                        else if (type == typeof(float))
+                        {
+                            var r = AnimationParser.ParseFloat(currentString);
+                            if (r.Result)
+                            {
+                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
+                                ((MappedMenu)MappedMenus.menu[editing]).value =
+                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
+                            }
+                            else
+                            {
+                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
+                            }
+                        }
+                        else if (type == typeof(string))
+                        {
+                            config[config.Keys.ToList()[editing - 2]].BoxedValue = currentString;
+                            ((MappedMenu)MappedMenus.menu[editing]).value =
+                                config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
+                        }
+                        else if (type.IsEnum)
+                        {
+                            try
+                            {
+                                config[config.Keys.ToList()[editing - 2]].BoxedValue = Enum.Parse(type, currentString, true);
+                                ((MappedMenu)MappedMenus.menu[editing]).value =
+                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
+                            }
+                            catch (Exception)
+                            {
+                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
+                            }
+                        }
+                        editing = -1;
+                    }
+                    commit = false;
+                }
+            
             for (int i = 2; i <= MappedMenus.no_menus; i++)
             {
                 if (MappedMenus.foc == i)
@@ -409,78 +481,6 @@ internal class ModTabPatch
                 else
                 {
                     MappedSprites.ChangeColour(((MappedMenu)MappedMenus.menu[i]).gBackground, 0.8f, 0.8f, 0.8f);
-                }
-
-                if (editing != MappedMenus.foc || commit)
-                {
-                    if (editing != -1)
-                    {
-
-                        var type = config[config.Keys.ToList()[editing - 2]].SettingType;
-                        if (type == typeof(bool))
-                        {
-                            var r = AnimationParser.ParseBool(currentString);
-                            if (r.Result)
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    (bool) config[config.Keys.ToList()[editing - 2]].BoxedValue ? "On" : "Off";
-                            }
-                            else
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
-                        }
-                        else if (type == typeof(int))
-                        {
-                            var r = AnimationParser.ParseInt(currentString);
-                            if (r.Result)
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
-                            }
-                            else
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
-                        }
-                        else if (type == typeof(float))
-                        {
-                            var r = AnimationParser.ParseFloat(currentString);
-                            if (r.Result)
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
-                            }
-                            else
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
-                        }
-                        else if (type == typeof(string))
-                        {
-                            config[config.Keys.ToList()[editing - 2]].BoxedValue = currentString;
-                            ((MappedMenu)MappedMenus.menu[editing]).value =
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
-                        }
-                        else if (type.IsEnum)
-                        {
-                            try
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = Enum.Parse(type, currentString, true);
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
-                            }
-                            catch (Exception)
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
-                        }
-                        editing = -1;
-                    }
-                    commit = false;
                 }
             }
         }

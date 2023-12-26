@@ -3,7 +3,7 @@
 ## GV 1.60+:
 
 ### Release 1.7.9
-- Added WECCL events to the mod API.
+- Added WECCL events to the mod API for other mods to listen to.
 - Currently, the only events are CharacterEvents when a character is added or removed.
 - Renamed Wrestling Empire Custom Content Loader to WECCL in logs.
 - Log messages now show the source of the log message.
@@ -11,6 +11,13 @@
 - Fixed the prefix priority screen.
 - The prefix priority screen and warning screen now support controllers properly.
 - Added a warning screen whenever an exception occurs.
+- Fixed a bug where the contents of the first menu in the config editor would be copied to the previously selected menu.
+- Question of today: How do you pronounce WECCL?
+- A) Weckle
+- B) Weasel
+- C) W E C C L
+- D) Maybelline
+- Answer: I don't care. I'm just happy you're using my mod. <3
 
 ### Release 1.7.8
 - Fixed an infinite loop in the mod config menu.
