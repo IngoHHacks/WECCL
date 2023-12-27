@@ -2,6 +2,11 @@
 
 ## GV 1.60+:
 
+### Release 1.7.10
+- Fixed character importing issues.
+- Added support for custom buttons in the mod config menu.
+- Added a "reset imported characters" button to the mod config menu to clear the imported characters list.
+
 ### Release 1.7.9
 - Added WECCL events to the mod API for other mods to listen to.
 - Currently, the only events are CharacterEvents when a character is added or removed.

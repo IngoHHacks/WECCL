@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine.UI;
 using WECCL.Animation;
+using WECCL.API;
 using Object = UnityEngine.Object;
 
 namespace WECCL.Patches;
@@ -115,11 +116,13 @@ internal class ModTabPatch
                 diff = 1;
                 mReset = false;
             }
-            var config = AllMods.Instance.Mods[modSettingSelected].Instance.Config;
+
+            var m = AllMods.Instance.Mods[modSettingSelected];
+            var config = m.Instance.Config;
             if (diff != 0)
             {
                 int infiniteLoopPreventer = 0;
-                while ((config == null || config.Keys.Count == 0) && infiniteLoopPreventer++ < AllMods.Instance.NumMods)
+                while (!Buttons.CustomButtons.ContainsKey(m.Metadata.Name) && (config == null || config.Keys.Count == 0) && infiniteLoopPreventer++ < AllMods.Instance.NumMods)
                 {
                     modSettingSelected += diff;
                     if (modSettingSelected < 0)
@@ -155,7 +158,8 @@ internal class ModTabPatch
                 float scale;
                 int startX;
                 int startY;
-                FindBestFit(config.Keys.Count, minX, minY, maxX, maxY, out int rows, out columns, out scale, out startX, out startY);
+                var btnCount = Buttons.CustomButtons.TryGetValue(m.Metadata.Name, out List<Buttons.Button> customButton) ? customButton.Count : 0;
+                FindBestFit(config.Keys.Count + btnCount, minX, minY, maxX, maxY, out int rows, out columns, out scale, out startX, out startY);
                 int nMaxX = (int)(startX + ((columns-1) * 210f * scale));
                 var sz = nMaxX - startX;
                 startX = (int)(-sz / 2f);
@@ -176,6 +180,17 @@ internal class ModTabPatch
                         ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).value = v.ToString();
                     }
                 }
+                if (Buttons.CustomButtons.ContainsKey(m.Metadata.Name) && Buttons.CustomButtons[m.Metadata.Name].Count > 0)
+                {
+                    foreach (var button in Buttons.CustomButtons[m.Metadata.Name])
+                    {
+                        float x = startX + ((MappedMenus.no_menus - 1) % (float) columns * 210f * scale);
+                        // ReSharper disable once PossibleLossOfFraction
+                        float y = startY - ((MappedMenus.no_menus - 1) / columns * 60f * scale);
+                        MappedMenus.Add();
+                        ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, button.Text, x, y, scale, scale);
+                    }
+                }
                 
                 if (info == null)
                 {
@@ -194,81 +209,97 @@ internal class ModTabPatch
             }
             
             if (editing != MappedMenus.foc || commit)
+            {
+                if (editing != -1)
                 {
-                    if (editing != -1)
+                    var type = config[config.Keys.ToList()[editing - 2]].SettingType;
+                    if (type == typeof(bool))
                     {
-
-                        var type = config[config.Keys.ToList()[editing - 2]].SettingType;
-                        if (type == typeof(bool))
+                        var r = AnimationParser.ParseBool(currentString);
+                        if (r.Result)
                         {
-                            var r = AnimationParser.ParseBool(currentString);
-                            if (r.Result)
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    (bool) config[config.Keys.ToList()[editing - 2]].BoxedValue ? "On" : "Off";
-                            }
-                            else
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
+                            config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
+                            ((MappedMenu)MappedMenus.menu[editing]).value =
+                                (bool) config[config.Keys.ToList()[editing - 2]].BoxedValue ? "On" : "Off";
                         }
-                        else if (type == typeof(int))
+                        else
                         {
-                            var r = AnimationParser.ParseInt(currentString);
-                            if (r.Result)
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
-                            }
-                            else
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
+                            ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
                         }
-                        else if (type == typeof(float))
+                    }
+                    else if (type == typeof(int))
+                    {
+                        var r = AnimationParser.ParseInt(currentString);
+                        if (r.Result)
                         {
-                            var r = AnimationParser.ParseFloat(currentString);
-                            if (r.Result)
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
-                            }
-                            else
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
-                        }
-                        else if (type == typeof(string))
-                        {
-                            config[config.Keys.ToList()[editing - 2]].BoxedValue = currentString;
+                            config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
                             ((MappedMenu)MappedMenus.menu[editing]).value =
                                 config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
                         }
-                        else if (type.IsEnum)
+                        else
                         {
-                            try
-                            {
-                                config[config.Keys.ToList()[editing - 2]].BoxedValue = Enum.Parse(type, currentString, true);
-                                ((MappedMenu)MappedMenus.menu[editing]).value =
-                                    config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
-                            }
-                            catch (Exception)
-                            {
-                                ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
-                            }
+                            ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
                         }
-                        editing = -1;
                     }
-                    commit = false;
+                    else if (type == typeof(float))
+                    {
+                        var r = AnimationParser.ParseFloat(currentString);
+                        if (r.Result)
+                        {
+                            config[config.Keys.ToList()[editing - 2]].BoxedValue = r.Value;
+                            ((MappedMenu)MappedMenus.menu[editing]).value =
+                                config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
+                        }
+                        else
+                        {
+                            ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
+                        }
+                    }
+                    else if (type == typeof(string))
+                    {
+                        config[config.Keys.ToList()[editing - 2]].BoxedValue = currentString;
+                        ((MappedMenu)MappedMenus.menu[editing]).value =
+                            config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
+                    }
+                    else if (type.IsEnum)
+                    {
+                        try
+                        {
+                            config[config.Keys.ToList()[editing - 2]].BoxedValue = Enum.Parse(type, currentString, true);
+                            ((MappedMenu)MappedMenus.menu[editing]).value =
+                                config[config.Keys.ToList()[editing - 2]].BoxedValue.ToString();
+                        }
+                        catch (Exception)
+                        {
+                            ((MappedMenu)MappedMenus.menu[editing]).value = prevString;
+                        }
+                    }
+                    editing = -1;
                 }
+                commit = false;
+            }
+
+            info.transform.Find("Title").gameObject.GetComponent<Text>().text = "";
             
             for (int i = 2; i <= MappedMenus.no_menus; i++)
             {
+                if (((MappedMenu)MappedMenus.menu[i]).type == 1)
+                {
+                    Buttons.Button b = Buttons.CustomButtons[m.Metadata.Name][i - 2 - config.Keys.Count];
+                    ((MappedMenu)MappedMenus.menu[i]).title = b.Text;
+                    b.Update();
+                }
                 if (MappedMenus.foc == i)
                 {
+                    if (((MappedMenu)MappedMenus.menu[i]).type == 1)
+                    {
+                        Buttons.Button b = Buttons.CustomButtons[m.Metadata.Name][i - 2 - config.Keys.Count];
+                        if (((MappedMenu)MappedMenus.menu[i]).clicked != 0 && b.Active)
+                        {
+                            b.Invoke();
+                        }
+                        continue;
+                    }
                     if (info != null)
                     {
                         var def = config[config.Keys.ToList()[i - 2]].DefaultValue == null
@@ -466,7 +497,12 @@ internal class ModTabPatch
                         }
                     }
                 }
-                if (editing == i)
+                else if (((MappedMenu)MappedMenus.menu[i]).type == 1)
+                {
+                    Buttons.Button b = Buttons.CustomButtons[m.Metadata.Name][i - 2 - config.Keys.Count];
+                    b.Reset();
+                }
+                if (editing == i && ((MappedMenu)MappedMenus.menu[i]).type == 2)
                 {
                     var c = config[config.Keys.ToList()[i - 2]];
                     if (TypeUtils.IsValid(c.SettingType, currentString) && IsAllowed(c, currentString))

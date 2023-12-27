@@ -1,5 +1,7 @@
 using WECCL.Content;
 using WECCL.Animation;
+using WECCL.API;
+using WECCL.Saves;
 
 namespace WECCL;
 
@@ -9,7 +11,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.7.9";
+    public const string PluginVer = "1.7.10";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
@@ -168,6 +170,20 @@ public class Plugin : BaseUnityPlugin
             Locations.CreateDirectories();
 
             StartCoroutine(LoadContent.Load());
+            
+            this.RegisterCustomButton("Reset Imported Characters", () =>
+            {
+                int numRemoved = CharacterMappings.CharacterMap.PreviouslyImportedCharacters.Count;
+                CharacterMappings.CharacterMap.PreviouslyImportedCharacters.Clear();
+                CharacterMappings.CharacterMap.PreviouslyImportedCharacterIds.Clear();
+                CharacterMappings.CharacterMap.Save();
+                MappedSound.Play(MappedSound.flush);
+                if (numRemoved == 0)
+                {
+                    return "No reset needed";
+                }
+                return $"Reset {numRemoved} imported character{(numRemoved == 1 ? "" : "s")}";
+            }, true);
         }
         catch (Exception e)
         {

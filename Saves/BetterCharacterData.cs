@@ -184,7 +184,8 @@ internal class BetterCharacterData
 
     public Character ToRegularCharacter(Character[] allCharacters)
     {
-        Character character = JsonConvert.DeserializeObject<Character>(JsonConvert.SerializeObject(this))!;
+        Character character = JsonConvert.DeserializeObject<Character>(JsonConvert.SerializeObject(this),
+            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore })!;
         character.costume = new Costume[this.costumeC.Length];
         for (int i = 0; i < this.costumeC.Length; i++)
         {
