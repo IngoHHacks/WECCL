@@ -300,6 +300,10 @@ public class CharacterUtils
                 if (Characters.fedData[9].roster.Length > Characters.fedLimit)
                 {
                     Characters.fedLimit++;
+                    for (int i = 0; i <= Characters.no_feds; i++)
+                    {
+                        Array.Resize(ref Characters.fedData[i].roster, Characters.fedLimit + 1);
+                    }
                 }
             }
 

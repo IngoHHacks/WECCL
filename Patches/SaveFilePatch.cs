@@ -168,6 +168,10 @@ internal class SaveFilePatch
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
+            for (int i = 0; i <= Characters.no_feds; i++)
+            {
+                Array.Resize(ref Characters.fedData[i].roster, Characters.fedLimit + 1);
+            }
 
             fileStream.Close();
         }
@@ -195,24 +199,6 @@ internal class SaveFilePatch
             else
             {
                 return;
-            }
-        }
-
-        if (_fedCharCount != null && GLPGLJAJJOP.APPDIBENDAH.savedFeds != null)
-        {
-            for (int i = 0; i <= Characters.no_feds; i++)
-            {
-                int count = Math.Max(_fedCharCount[i] + 1, Plugin.BaseFedLimit.Value + 1);
-                if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[i] != null)
-                {
-                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].size = _fedCharCount[i];
-                    if (count > GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster.Length)
-                    {
-                        Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster, count);
-                    }
-                }
-
-                Array.Resize(ref Characters.fedData[i].roster, count);
             }
         }
 
@@ -434,6 +420,13 @@ internal class SaveFilePatch
                     LogError($"Error while importing character {nameWithGuid}.");
                     LogError(e);
                 }
+            }
+            
+            for (int i = 0; i <= Characters.no_feds; i++)
+            {
+                
+                Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster, Characters.fedLimit + 1);
+                Array.Resize(ref Characters.fedData[i].roster, Characters.fedLimit + 1);
             }
 
             GLPGLJAJJOP.APPDIBENDAH.CDLIDDFKFEL(FIHDANPPMGC);

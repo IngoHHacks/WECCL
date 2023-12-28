@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.7.12
+- Fixed fed limits not being applied correctly.
+
 ### Release 1.7.11
 - Fixed an error when deleting a character from the character search screen.
 - Incorrect costume indexes will now only be fixed if out of bounds; mismatching indexes will not be fixed, as they are
