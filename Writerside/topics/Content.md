@@ -6,6 +6,9 @@
 How to add custom content to the game.
 </link-summary>
 
+This page describes how to add custom content to the game.
+For changing existing content, see [Overrides](Overrides.md).
+
 ## Adding Content
 You can add content by inserting files into <include from="snippets.md" element-id="apath"/>.
 

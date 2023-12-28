@@ -18,10 +18,10 @@ Main page for WECCL documentation.
 - [Moves](Moves.md)
 
 #### Overriding Content
-- Music (themes)
-- Costume textures
-- Sound effects
-- World textures (some textures are not supported)
+- [Music (themes)](Overrides.md#music)
+- [Costume textures](Overrides.md#costumes)
+- [Sound effects](Overrides.md#audio)
+- [World textures](Overrides.md#textures) (some textures are not supported)
 
 ### Additional Features
 - Automatic remapping of custom content

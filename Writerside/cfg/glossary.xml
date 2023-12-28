@@ -2,7 +2,7 @@
 <!DOCTYPE terms SYSTEM "https://resources.jetbrains.com/writerside/1.0/glossary.dtd">
 <terms>
     <term name="pathinfo">
-        Root path. See 'Paths'.
+        '.' means root path. See 'Paths'.
     </term>
     <term name="prefixed">
         WECCL detects prefixed files by either their name or their path. For example, the 'body_material' prefix can be applied to file 'abc.png' by either renaming it to 'body_material_abc.png' or moving it to 'body_material\abc.png'.
