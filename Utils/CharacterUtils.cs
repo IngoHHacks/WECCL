@@ -17,7 +17,9 @@ public class CharacterUtils
         {
             throw new IndexOutOfRangeException($"Character ID {id} is out of range!");
         }
-        CharacterEvents.InvokeBeforeCharacterRemoved(id, Characters.c[id]);
+
+        var delC = Characters.c[id];
+        CharacterEvents.InvokeBeforeCharacterRemoved(id, delC);
         try
         {
             SaveAsBackup(id);
@@ -268,7 +270,7 @@ public class CharacterUtils
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedChars, Characters.no_chars + 1);
             Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
-            CharacterEvents.InvokeAfterCharacterRemoved(id, Characters.c[id]);
+            CharacterEvents.InvokeAfterCharacterRemoved(id, delC);
         }
         catch (Exception e)
         {

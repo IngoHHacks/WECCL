@@ -683,11 +683,11 @@ internal class SaveRemapper
 
             for (int index2 = 1; index2 < saveData.savedChars[index].costume.Length; index2++)
             {
-                if (saveData.savedChars[index].costume[index2].charID > 0 && saveData.savedChars[index].costume[index2].charID != saveData.savedChars[index].id)
+                if (saveData.savedChars[index].costume[index2].charID > numChars)
                 {
                     LogWarning(
-                        $"Costume index {index2} of character {index} does not match character ID {saveData.savedChars[index].costume[index2].charID}. Fixing.");
-                    saveData.savedChars[index].costume[index2].charID = saveData.savedChars[index].id;
+                        $"Costume index {index2} of character index {index} has character ID {saveData.savedChars[index].costume[index2].charID} out of bounds. Resetting to id.");
+                    saveData.savedChars[index].costume[index2].charID = index;
                 }
             }
         }
