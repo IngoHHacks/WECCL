@@ -57,7 +57,7 @@ public static class Buttons
     
     internal static Dictionary<string, List<Button>> CustomButtons = new();
     
-    public static void RegisterCustomButton(this Plugin plugin, string text, Func<string> action, bool extraConfirmation = false)
+    public static void RegisterCustomButton(this BaseUnityPlugin plugin, string text, Func<string> action, bool extraConfirmation = false)
     {
         var modName = plugin.Info.Metadata.Name;
         if (!CustomButtons.TryGetValue(modName, out var buttons))

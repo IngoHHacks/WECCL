@@ -134,7 +134,8 @@ internal class ModTabPatch
                         modSettingSelected = 0;
                     }
 
-                    config = AllMods.Instance.Mods[modSettingSelected].Instance.Config;
+                    m = AllMods.Instance.Mods[modSettingSelected];
+                    config = m.Instance.Config;
                 }
 
                 if (MappedMenus.no_menus > 1)

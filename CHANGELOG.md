@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.7.13
+- Fix for custom buttons.
+
 ### Release 1.7.12
 - Fixed fed limits not being applied correctly.
 
