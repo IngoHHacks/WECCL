@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.7.14
+- Fixed an IndexOutOfRangeException when exporting characters.
+
 ### Release 1.7.13
 - Fix for custom buttons.
 

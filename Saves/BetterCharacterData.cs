@@ -155,7 +155,7 @@ internal class BetterCharacterData
         bcd.relationshipC = new string[character.relationship.Length];
         for (int i = 0; i < character.relationship.Length; i++)
         {
-            if (character.relationship[i] > allCharacters.Length)
+            if (character.relationship[i] >= allCharacters.Length)
             {
                 bcd.relationshipC[i] = "0";
                 continue;
