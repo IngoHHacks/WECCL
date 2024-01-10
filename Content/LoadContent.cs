@@ -1,10 +1,14 @@
+using Newtonsoft.Json;
 using System.Collections;
+using System.Reflection;
+using UnityEngine.Networking;
+using WECCL.Animation;
 using WECCL.Patches;
 using WECCL.Saves;
 
 namespace WECCL.Content;
 
-public static class LoadContent
+internal static class LoadContent
 {
     [Flags]
     public enum ContentType
@@ -14,30 +18,52 @@ public static class LoadContent
         Audio = 2,
         Mesh = 4,
         Promo = 8,
-        All = Costume | Audio | Mesh | Promo
+        CharacterImports = 16,
+        AllAssets = Costume | Audio | Mesh | Promo,
+        All = AllAssets | CharacterImports
     }
 
-    internal static bool _modsLoaded;
-    internal static float _progressGradual = 0f;
+    internal static bool ModsLoaded;
+    internal static float ProgressGradual = 0f;
+    
+    internal static int TotalAssets;
+    internal static int LoadedAssets = 0;
+    internal static string LastAsset = "";
 
-    internal static string _lastItemLoaded = "";
+    internal enum LoadPhase
+    {
+        None,
+        Counting,
+        Libraries,
+        Promos,
+        Audio,
+        Costumes,
+        Asset_Bundles,
+        Overrides,
+        Characters,
+        Finalizing
+    }
+    
+    internal static LoadPhase LoadingPhase = LoadPhase.None;
+    
+    internal static long LastProgressUpdate = DateTime.Now.Ticks;
 
-    internal static int _totalAssets;
-    internal static int _loadedAssets = 0;
-
-    internal static float _progress => _totalAssets == 0 ? 1f : (float)_loadedAssets / _totalAssets;
+    internal static float _progress => TotalAssets == 0 ? 1f : (float)LoadedAssets / TotalAssets;
 
     internal static IEnumerator Load()
     {
         Aliases.Load();
+        
+        LoadingPhase = LoadPhase.Counting;
 
         List<DirectoryInfo> AllModsAssetsDirs = new();
         List<DirectoryInfo> AllModsOverridesDirs = new();
         List<DirectoryInfo> AllModsLibrariesDirs = new();
+        List<DirectoryInfo> AllModsImportDirs = new();
 
         foreach (string modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
         {
-            Plugin.FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref Plugin.AllModsImportDirs,
+            FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs,
                 ref AllModsLibrariesDirs);
         }
 
@@ -53,65 +79,61 @@ public static class LoadContent
 
         if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Import")))
         {
-            Plugin.AllModsImportDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Import")));
+            AllModsImportDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Import")));
         }
 
         if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Libraries")))
         {
             AllModsLibrariesDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Libraries")));
         }
-
-        if (!AllModsAssetsDirs.Exists(x => x.FullName == Locations.Assets.FullName))
-        {
-            AllModsAssetsDirs.Add(Locations.Assets);
-        }
-
-        if (!AllModsOverridesDirs.Exists(x => x.FullName == Locations.Overrides.FullName))
-        {
-            AllModsOverridesDirs.Add(Locations.Overrides);
-        }
-
-        if (!Plugin.AllModsImportDirs.Exists(x => x.FullName == Locations.Import.FullName))
-        {
-            Plugin.AllModsImportDirs.Add(Locations.Import);
-        }
-
-        if (!AllModsLibrariesDirs.Exists(x => x.FullName == Locations.Libraries.FullName))
-        {
-            AllModsLibrariesDirs.Add(Locations.Libraries);
-        }
+       
 
         if (AllModsAssetsDirs.Count > 0)
         {
-            Plugin.Log.LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
+            LogInfo($"Found {AllModsAssetsDirs.Count} mod(s) with Assets directories.");
         }
 
         if (AllModsOverridesDirs.Count > 0)
         {
-            Plugin.Log.LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
+            LogInfo($"Found {AllModsOverridesDirs.Count} mod(s) with Overrides directories.");
         }
 
-        _totalAssets += Plugin.CountFiles(AllModsAssetsDirs, ContentType.All);
-        _totalAssets += Plugin.CountFiles(AllModsOverridesDirs, ContentType.All);
+        TotalAssets += CountFiles(AllModsAssetsDirs, ContentType.AllAssets);
+        TotalAssets += CountFiles(AllModsOverridesDirs, ContentType.AllAssets);
+        TotalAssets += CountFiles(AllModsImportDirs, ContentType.CharacterImports);
 
 
         VanillaCounts.Data.MusicCount = UnmappedSound.NABPGAFNBMP;
         VanillaCounts.Data.NoLocations = World.no_locations;
         VanillaCounts.Data.NoFeds = Characters.no_feds;
-
+        
+        LoadingPhase = LoadPhase.Libraries;
         foreach (DirectoryInfo dir in AllModsLibrariesDirs)
         {
-            yield return Plugin.LoadLibraries(dir);
+            yield return LoadLibraries(dir);
         }
 
         if (Plugin.EnableCustomContent.Value)
         {
+            LoadingPhase = LoadPhase.Promos;
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
             {
-                yield return Plugin.LoadPromos(modAssetsDir);
-                yield return Plugin.LoadAudioClips(modAssetsDir);
-                yield return Plugin.LoadCostumes(modAssetsDir);
-                yield return Plugin.LoadAssetBundles(modAssetsDir);
+                yield return LoadPromos(modAssetsDir);
+            }
+            LoadingPhase = LoadPhase.Audio;
+            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
+            {
+                yield return LoadAudioClips(modAssetsDir);
+            }
+            LoadingPhase = LoadPhase.Costumes;
+            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
+            {
+                yield return LoadCostumes(modAssetsDir);
+            }
+            LoadingPhase = LoadPhase.Asset_Bundles;
+            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
+            {
+                yield return LoadAssetBundles(modAssetsDir);
             }
         }
 
@@ -119,9 +141,10 @@ public static class LoadContent
 
         if (Plugin.EnableOverrides.Value)
         {
+            LoadingPhase = LoadPhase.Overrides;
             foreach (DirectoryInfo modOverridesDir in AllModsOverridesDirs)
             {
-                yield return Plugin.LoadOverrides(modOverridesDir);
+                yield return LoadOverrides(modOverridesDir);
             }
         }
 
@@ -337,22 +360,789 @@ public static class LoadContent
             .AddRange(CustomCostumes["arms_wristband"].CustomObjects.Select(c => c.Item1));
 
 
-        if (Plugin.AllModsImportDirs.Count > 0)
+        if (AllModsImportDirs.Count > 0)
         {
-            Plugin.Log.LogInfo($"Found {Plugin.AllModsImportDirs.Count} mod(s) with Import directories.");
+            LogInfo($"Found {AllModsImportDirs.Count} mod(s) with Import directories.");
         }
 
         if (Plugin.AllowImportingCharacters.Value)
         {
-            foreach (DirectoryInfo modImportDir in Plugin.AllModsImportDirs)
+            LoadingPhase = LoadPhase.Characters;
+            foreach (DirectoryInfo modImportDir in AllModsImportDirs)
             {
-                Plugin.Log.LogDebug($"Importing characters from {modImportDir.Name}...");
-                Plugin.ImportCharacters(modImportDir);
+                LogDebug($"Importing characters from {modImportDir.Name}...");
+                yield return ImportCharacters(modImportDir);
             }
         }
+        LoadingPhase = LoadPhase.Finalizing;
 
         LoadPrefixes();
 
-        _modsLoaded = true;
+        ModsLoaded = true;
+    }
+
+    private static long _nextProgressUpdate = DateTime.Now.Ticks;
+
+    private static readonly List<string> ImageExtensions = new()
+    {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".bmp",
+        ".tga",
+        ".gif"
+    };
+
+    private static readonly List<string> AudioExtensions = new()
+    {
+        ".ogg",
+        ".wav",
+        ".mp3",
+        ".aif",
+        ".aiff",
+        ".mod",
+        ".xm",
+        ".it",
+        ".s3m"
+    };
+
+    private static readonly List<string> AssetBundleExtensions = new() { ".mesh", ".assetbundle", ".bundle", "" };
+    private static readonly List<string> PromoExtensions = new() { ".promo" };
+
+    internal static void FindContent(string modPath, ref List<DirectoryInfo> AllModsAssetsDirs,
+        ref List<DirectoryInfo> AllModsOverridesDirs, ref List<DirectoryInfo> AllModsImportDirs,
+        ref List<DirectoryInfo> AllModsLibrariesDirs)
+
+    {
+        try
+        {
+            if (modPath == null)
+            {
+                return;
+            }
+
+            bool shouldCheckSubDirs = true;
+            DirectoryInfo modAssetsDir = new(Path.Combine(modPath, "Assets"));
+            if (modAssetsDir.Exists)
+            {
+                AllModsAssetsDirs.Add(modAssetsDir);
+                shouldCheckSubDirs = false;
+            }
+
+            DirectoryInfo modOverridesDir = new(Path.Combine(modPath, "Overrides"));
+            if (modOverridesDir.Exists)
+            {
+                AllModsOverridesDirs.Add(modOverridesDir);
+                shouldCheckSubDirs = false;
+            }
+
+            DirectoryInfo modImportDir = new(Path.Combine(modPath, "Import"));
+            if (modImportDir.Exists)
+            {
+                AllModsImportDirs.Add(modImportDir);
+                shouldCheckSubDirs = false;
+            }
+
+            DirectoryInfo modLibrariesDir = new(Path.Combine(modPath, "Libraries"));
+            if (modLibrariesDir.Exists)
+            {
+                AllModsLibrariesDirs.Add(modLibrariesDir);
+                shouldCheckSubDirs = false;
+            }
+
+            if (shouldCheckSubDirs)
+            {
+                foreach (string subDir in Directory.GetDirectories(modPath))
+                {
+                    FindContent(subDir, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs,
+                        ref AllModsLibrariesDirs);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+        }
+    }
+
+    internal static IEnumerator LoadAudioClips(DirectoryInfo dir)
+    {
+        // Load custom audio clips
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => AudioExtensions.Contains(f.Extension.ToLower())).ToArray();
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            try
+            {
+                string modGuid = FindPluginName(file.DirectoryName);
+                if (modGuid != null && modGuid != "plugins")
+                {
+                    fileName = $"{modGuid}/{fileName}";
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e);
+            }
+
+            try
+            {
+                if (!Plugin.CacheEnabled.Value ||
+                    !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
+                    file.LastWriteTimeUtc.Ticks != time ||
+                    Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
+                {
+                    UnityWebRequest wr = new(file.FullName);
+                    wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
+                    wr.SendWebRequest();
+                    while (!wr.isDone) { }
+
+                    clip = DownloadHandlerAudioClip.GetContent(wr);
+                    wr.Dispose();
+                    clip.name = fileName;
+                    string chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
+                    CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks, chksum2);
+                }
+
+                clip.name = fileName;
+                string shortFileName = Path.GetFileNameWithoutExtension(file.Name);
+                
+                var at = CustomClips.FindIndex(s => string.Compare(s.Name, shortFileName, StringComparison.Ordinal) > 0);
+                if (at == -1)
+                {
+                    at = CustomClips.Count;
+                }
+                CustomClips.Insert(at, new NamedAudioClip(shortFileName, clip));
+                ContentMappings.ContentMap.MusicNameMap.Insert(at, fileName);
+                LoadedAssets++;
+                LastAsset = fileName;
+            }
+            catch (Exception e)
+            {
+                LogError(e);
+            }
+            yield return Tick();
+
+            GC.Collect();
+        }
+
+        if (CustomClips.Count != 0)
+        {
+            // Update the number of audio clips in the game
+            UnmappedSound.NABPGAFNBMP = VanillaCounts.Data.MusicCount + CustomClips.Count;
+            UnmappedSound.OOFPHCHKOBE = new AudioClip[UnmappedSound.NABPGAFNBMP + 1];
+        }
+    }
+
+    private static void CacheAudioClip(AudioClip clip, long ticks, string chksum)
+    {
+        // Don't cache clips that are too big
+        if (clip.samples * clip.channels * 4 > 2000000000)
+        {
+            return;
+        }
+
+        float[] floatArray = new float[clip.samples * clip.channels];
+        clip.GetData(floatArray, 0);
+        byte[] byteArray = new byte[floatArray.Length * 4];
+        Buffer.BlockCopy(floatArray, 0, byteArray, 0, byteArray.Length);
+        string fileName = clip.name.Replace("/", "_") + ".audioclip";
+        File.WriteAllBytes(Path.Combine(Locations.Cache.FullName, fileName), byteArray);
+        string meta = "channels: " + clip.channels + "\n" +
+                      "frequency: " + clip.frequency + "\n" +
+                      "length: " + clip.length + "\n" +
+                      "samples: " + clip.samples + "\n" +
+                      "time: " + ticks + "\n" +
+                      "chksum: " + chksum;
+        File.WriteAllText(Path.Combine(Locations.Cache.FullName, clip.name.Replace("/", "_") + ".meta"), meta);
+        GC.Collect();
+    }
+
+    private static bool TryLoadAudioFromCache(string name, out AudioClip clip, out long time, out string chksum)
+    {
+        name = name.Replace("/", "_");
+        string fileName = name + ".audioclip";
+        string path = Path.Combine(Locations.Cache.FullName, fileName);
+        if (!File.Exists(path))
+        {
+            clip = null;
+            time = 0;
+            chksum = null;
+            return false;
+        }
+
+        byte[] bytes = File.ReadAllBytes(path);
+        float[] floatArray = new float[bytes.Length / 4];
+        Buffer.BlockCopy(bytes, 0, floatArray, 0, bytes.Length);
+        if (!File.Exists(Path.Combine(Locations.Cache.FullName, name + ".meta")))
+        {
+            clip = null;
+            time = 0;
+            chksum = null;
+            return false;
+        }
+
+        string meta = File.ReadAllText(Path.Combine(Locations.Cache.FullName, name + ".meta"));
+        string[] lines = meta.Split('\n');
+        int channels = int.Parse(lines[0].Split(' ')[1]);
+        int frequency = int.Parse(lines[1].Split(' ')[1]);
+        int samples = int.Parse(lines[3].Split(' ')[1]);
+        time = long.Parse(lines[4].Split(' ')[1]);
+        chksum = lines.Length > 5 ? lines[5].Split(' ')[1] : "";
+        clip = AudioClip.Create(name, samples, channels, frequency, false);
+        clip.SetData(floatArray, 0);
+        return true;
+    }
+
+    internal static IEnumerator LoadCostumes(DirectoryInfo dir)
+    {
+        // Load custom costumes
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => ImageExtensions.Contains(f.Extension.ToLower())).ToArray();
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
+            {
+                if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
+                {
+                    CostumeData costumeData = pair.Value;
+                    Texture2D tex = new(2, 2);
+                    try
+                    {
+                        if (costumeData.Type != typeof(Texture2D) || costumeData.InternalPrefix == "custom")
+                        {
+                            LogError($"Custom {costumeData.FilePrefix} costumes are currently not supported.");
+                        }
+                        else
+                        {
+                            byte[] bytes = File.ReadAllBytes(file.FullName);
+                            tex.LoadImage(bytes);
+                            tex.name = fileName;
+                            string modGuid = FindPluginName(file.DirectoryName);
+                            if (modGuid != null && modGuid != "plugins")
+                            {
+                                fileName = $"{modGuid}/{fileName}";
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        LogError(e);
+                    }
+
+                    try
+                    {
+                        string meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
+                        if (File.Exists(Path.Combine(file.DirectoryName, meta)))
+                        {
+                            List<string> metaLines =
+                                File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
+                            Dictionary<string, string> metaDict = new();
+                            foreach (string line in metaLines)
+                            {
+                                string[] split = line.Split(new[] { ':' }, 2);
+                                if (split.Length == 2)
+                                {
+                                    metaDict.Add(split[0].Trim(), split[1].Trim());
+                                }
+                                else if (split.Length == 1)
+                                {
+                                    metaDict.Add(split[0].Trim(), "");
+                                }
+                            }
+
+                            costumeData.AddCustomObject(fileName, tex, metaDict);
+                            LoadedAssets++;
+                            LastAsset = fileName;
+
+                        }
+                        else
+                        {
+                            costumeData.AddCustomObject(fileName, tex, new Dictionary<string, string>());
+                            LoadedAssets++;
+                            LastAsset = fileName;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        LogError(e);
+                    }
+                    yield return Tick();
+                }
+            }
+
+            GC.Collect();
+        }
+    }
+
+    internal static IEnumerator LoadLibraries(DirectoryInfo dir)
+    {
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => f.Extension.ToLower() == ".dll").ToArray();
+
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            try
+            {
+                Assembly.LoadFrom(file.FullName);
+                LoadedAssets++;
+                LastAsset = fileName;
+            }
+            catch (Exception e)
+            {
+                LogError(e);
+            }
+            yield return Tick();
+        }
+    }
+
+    internal static IEnumerator LoadPromos(DirectoryInfo dir)
+    {
+        // Load custom promos
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => PromoExtensions.Contains(f.Extension.ToLower())).ToArray();
+        foreach (FileInfo file in files)
+        {
+            try
+            {
+                PromoData promo = PromoData.CreatePromo(file.FullName);
+                if (promo == null)
+                {
+                    continue;
+                }
+
+                promo._id = 1000000 + CustomContent.PromoData.Count;
+                CustomContent.PromoData.Add(promo);
+                LoadedAssets++;
+                LastAsset = promo.Title ?? file.Name;
+            }
+            catch (Exception e)
+            {
+                LogError(e);
+            }
+            yield return Tick();
+
+            GC.Collect();
+        }
+    }
+
+    internal static IEnumerator LoadAssetBundles(DirectoryInfo dir)
+    {
+        // Load custom AssetBundles
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+            .Where(f => AssetBundleExtensions.Contains(f.Extension.ToLower())).ToArray();
+
+        foreach (FileInfo file in files)
+        {
+            string fileName = file.Name;
+            if (file.Directory?.Name == "arena")
+            {
+                GameObject arena;
+                try
+                {
+                    arena = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<GameObject>().First();
+                    arena.name = fileName;
+                    CustomArenaPrefabs.Add(arena);
+                    World.no_locations++;
+                    LoadedAssets++;
+                    LastAsset = fileName;
+                }
+                catch (Exception e)
+                {
+                    LogError(e);
+                }
+                yield return Tick();
+            }
+            else if (file.Directory?.Name == "animation")
+            {
+                try
+                {
+                    string metaPath = file.FullName.Contains(".")
+                        ? Path.GetFileNameWithoutExtension(file.FullName) + ".meta"
+                        : file.FullName + ".meta";
+                    if (!File.Exists(metaPath))
+                    {
+                        LogError($"No meta file found for {file.FullName}");
+                        continue;
+                    }
+
+                    var ab = AssetBundle.LoadFromFile(file.FullName);
+                    var anim = ab.LoadAllAssets<AnimationClip>().FirstOrDefault() ?? ab
+                        .LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault().animationClips.FirstOrDefault();
+                    anim.name = fileName;
+                    var ad = AnimationParser.ReadFile(metaPath);
+                    string receivePath = file.FullName.Contains(".")
+                        ? Path.GetFileNameWithoutExtension(file.FullName) + ".receive"
+                        : file.FullName + ".receive";
+                    if (File.Exists(receivePath))
+                    {
+                        var ab2 = AssetBundle.LoadFromFile(receivePath);
+                        var anim2 = ab2.LoadAllAssets<AnimationClip>().FirstOrDefault() ?? ab2
+                            .LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault().animationClips
+                            .FirstOrDefault();
+                        anim2.name = fileName;
+                        ad.ReceiveAnim = anim2;
+                    }
+
+                    var modGuid = FindPluginName(file.DirectoryName);
+                    if (modGuid != null && modGuid != "plugins")
+                    {
+                        fileName = $"{modGuid}/{fileName}";
+                    }
+
+                    ad.Anim = anim;
+                    AnimationData.AddAnimation(ad);
+                    ContentMappings.ContentMap.AnimationNameMap.Add(fileName);
+                    LoadedAssets++;
+                    LastAsset = fileName;
+                }
+                catch (Exception e)
+                {
+                    LogError(e);
+                }
+                yield return Tick();
+            }
+            else
+            {
+                foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
+                {
+                    if (fileName.StartsWith(pair.Key) || file.Directory?.Name == pair.Key)
+                    {
+                        CostumeData costumeData = pair.Value;
+                        Mesh mesh = null;
+                        try
+                        {
+                            if (costumeData.Type != typeof(Mesh))
+                            {
+                                LogError($"{costumeData.FilePrefix} is not a mesh.");
+                            }
+                            else
+                            {
+                                mesh = AssetBundle.LoadFromFile(file.FullName).LoadAllAssets<Mesh>().First();
+                                mesh.name = fileName;
+
+                                var modGuid = FindPluginName(file.DirectoryName);
+                                if (modGuid != null && modGuid != "plugins")
+                                {
+                                    fileName = $"{modGuid}/{fileName}";
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e);
+                        }
+
+                        try
+                        {
+                            var meta = Path.GetFileNameWithoutExtension(file.Name) + ".meta";
+                            if (File.Exists(Path.Combine(file.DirectoryName, meta)))
+                            {
+
+                                List<string> metaLines =
+                                    File.ReadAllLines(Path.Combine(file.DirectoryName, meta)).ToList();
+                                Dictionary<string, string> metaDict = new();
+                                foreach (string line in metaLines)
+                                {
+                                    string[] split = line.Split(new[] { ':' }, 2);
+                                    if (split.Length == 2)
+                                    {
+                                        metaDict.Add(split[0].Trim(), split[1].Trim());
+                                    }
+                                    else if (split.Length == 1)
+                                    {
+                                        metaDict.Add(split[0].Trim(), "");
+                                    }
+                                }
+
+                                costumeData.AddCustomObject(fileName, mesh, metaDict);
+                                LoadedAssets++;
+                                LastAsset = fileName;
+                                
+                            }
+                            else
+                            {
+                                costumeData.AddCustomObject(fileName, mesh, new Dictionary<string, string>());
+                                LoadedAssets++;
+                                LastAsset = fileName;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e);
+                        }
+                        yield return Tick();
+                    }
+                }
+            }
+        }
+    }
+
+    internal static IEnumerator LoadOverrides(DirectoryInfo dir)
+    {
+        // Load resource overrides
+        if (!dir.Exists)
+        {
+            yield break;
+        }
+
+        FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories).Where(f => ImageExtensions.Contains(f.Extension.ToLower()) || AudioExtensions.Contains(f.Extension.ToLower()))
+            .ToArray();
+
+        foreach (FileInfo file in files)
+        {
+            if (ImageExtensions.Contains(file.Extension.ToLower()))
+            {
+                try
+                {
+                    string fileName = file.Name;
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                    byte[] bytes = File.ReadAllBytes(file.FullName);
+                    Texture2D tex = new(2, 2);
+                    tex.LoadImage(bytes);
+                    tex.name = fileName;
+
+                    string modGuid = FindPluginName(file.DirectoryName);
+                    if (modGuid != null && modGuid != "plugins")
+                    {
+                        fileName = $"{modGuid}/{fileName}";
+                    }
+
+                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, tex);
+                    LoadedAssets++;
+                    LastAsset = fileName;
+                }
+                catch (Exception e)
+                {
+                    LogError(e);
+                }
+                yield return Tick();
+                GC.Collect();
+            }
+            else if (AudioExtensions.Contains(file.Extension.ToLower()))
+            {
+                string fileName = file.Name;
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                try
+                {
+                    string modGuid = FindPluginName(file.DirectoryName);
+                    if (modGuid != null && modGuid != "plugins")
+                    {
+                        fileName = $"{modGuid}/{fileName}";
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogError(e);
+                }
+
+                try
+                {
+                    if (!Plugin.CacheEnabled.Value ||
+                        !TryLoadAudioFromCache(fileName, out AudioClip clip, out long time, out string chksum) ||
+                        file.LastWriteTimeUtc.Ticks != time ||
+                        Checksum.GetChecksum(File.ReadAllBytes(file.FullName)) != chksum)
+                    {
+                        UnityWebRequest wr = new(file.FullName);
+                        wr.downloadHandler = new DownloadHandlerAudioClip(file.Name, AudioType.UNKNOWN);
+                        wr.SendWebRequest();
+                        while (!wr.isDone) { }
+
+                        clip = DownloadHandlerAudioClip.GetContent(wr);
+                        wr.Dispose();
+                        clip.name = fileName;
+                        string chksum2 = Checksum.GetChecksum(File.ReadAllBytes(file.FullName));
+                        CacheAudioClip(clip, file.LastWriteTimeUtc.Ticks, chksum2);
+                    }
+
+                    clip.name = fileName;
+                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, clip);
+                    LoadedAssets++;
+                    LastAsset = fileName;
+                }
+                catch (Exception e)
+                {
+                    LogError(e);
+                }
+                yield return Tick();
+                GC.Collect();
+            }
+        }
+    }
+
+    private static string FindPluginName(string fileDirectoryName)
+    {
+        DirectoryInfo dir = new(fileDirectoryName);
+        DirectoryInfo child = dir;
+        while (dir != null && dir.Name != "plugins")
+        {
+            child = dir;
+            dir = dir.Parent;
+        }
+
+        if (dir == null)
+        {
+            throw new Exception($"Could not find 'plugins' directory for {fileDirectoryName}");
+        }
+        
+        string manifestPath = Path.Combine(child.FullName, "manifest.txt");
+        if (File.Exists(manifestPath))
+        {
+            string[] lines = File.ReadAllLines(manifestPath);
+            string author = null;
+            string name = null;
+            foreach (string line in lines)
+            {
+                if (line.Trim().ToLower().StartsWith("author:"))
+                {
+                    author = line.Trim().Substring(7).Trim();
+                }
+                else if (line.Trim().ToLower().StartsWith("modname:"))
+                {
+                    name = line.Trim().Substring(8).Trim();
+                }
+            }
+            if (author != null)
+            {
+                return $"{author}-{name}";
+            }
+            if (name != null)
+            {
+                return name;
+            }
+        }
+
+        return child.Name;
+    }
+
+    internal static IEnumerator ImportCharacters(DirectoryInfo dir)
+    {
+        try
+        {
+            if (!dir.Exists)
+            {
+                yield break;
+            }
+
+            FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
+                .Where(f => f.Extension.ToLower() == ".character")
+                .ToArray();
+            foreach (FileInfo file in files)
+            {
+                try
+                {
+                    string json = File.ReadAllText(file.FullName);
+                    BetterCharacterDataFile character = JsonConvert.DeserializeObject<BetterCharacterDataFile>(json);
+                    if (character == null)
+                    {
+                        LogError($"Failed to import character from {file.FullName}.");
+                        continue;
+                    }
+
+                    string name = file.Name;
+                    string guid = Directory.GetParent(file.DirectoryName!)?.Name;
+                    if (guid != null && guid != "plugins")
+                    {
+                        name = $"{guid}/{name}";
+                    }
+
+                    character._guid = name;
+
+                    ImportedCharacters.Add(character);
+                    FilesToDeleteOnSave.Add(file.FullName);
+                    LoadedAssets++;
+                    LastAsset = name;
+                }
+                catch (Exception e)
+                {
+                    LogError(e);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+        }
+        yield return Tick();
+    }
+
+    internal static int CountFiles(List<DirectoryInfo> dirs, LoadContent.ContentType type)
+    {
+        int count = 0;
+        foreach (DirectoryInfo dir in dirs)
+        {
+            List<string> extensions = new();
+            if ((type & ContentType.Costume) != 0)
+            {
+                extensions.AddRange(ImageExtensions);
+            }
+
+            if ((type & ContentType.Audio) != 0)
+            {
+                extensions.AddRange(AudioExtensions);
+            }
+
+            if ((type & ContentType.Mesh) != 0)
+            {
+                extensions.AddRange(AssetBundleExtensions);
+            }
+
+            if ((type & ContentType.Promo) != 0)
+            {
+                extensions.AddRange(PromoExtensions);
+            }
+
+            if ((type & ContentType.CharacterImports) != 0)
+            {
+                extensions.Add(".character");
+            }
+
+            count += dir
+                .GetFiles("*", SearchOption.AllDirectories)
+                .Count(f => extensions.Contains(f.Extension.ToLower()));
+        }
+
+        return count;
+    }
+    
+    internal static IEnumerator Tick()
+    {
+        if (_nextProgressUpdate + 10000000 >= DateTime.Now.Ticks)
+        {
+            _nextProgressUpdate = DateTime.Now.Ticks - 10000000;
+        }
+        while (_nextProgressUpdate >= DateTime.Now.Ticks)
+        {
+            _nextProgressUpdate += 10000000 / 30;
+            yield return null;
+        }
     }
 }

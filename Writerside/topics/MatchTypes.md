@@ -1,8 +1,17 @@
 # ⚙️ Match Types
 
+<show-structure for="chapter" depth="2"/>
+
+<link-summary>
+API reference for adding custom match types.
+</link-summary>
+
+## Namespace
+`WECCL.API`
+
 ## Methods
-`CustomMatch.RegisterCustomPreset(string Name, bool PositiveValue)` will return you a match preset ID. Adding match preset to the positive end will also make them appear in career matches.
-`Content.CustomMatch.RegisterCustomCage(string Name, bool PositiveValue)` will return you a cage ID.
+`int? CustomMatch.RegisterCustomPreset(string Name, bool PositiveValue)` will return you a match preset ID. Adding match preset to the positive end will also make them appear in career matches.  
+`int? Content.CustomMatch.RegisterCustomCage(string Name, bool PositiveValue)` will return you a cage ID.
 
 ## Example
 ```C#

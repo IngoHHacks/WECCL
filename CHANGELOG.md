@@ -2,6 +2,69 @@
 
 ## GV 1.60+:
 
+### Release 1.7.14
+- Fixed an IndexOutOfRangeException when exporting characters.
+
+### Release 1.7.13
+- Fix for custom buttons.
+
+### Release 1.7.12
+- Fixed fed limits not being applied correctly.
+
+### Release 1.7.11
+- Fixed an error when deleting a character from the character search screen.
+- Incorrect costume indexes will now only be fixed if out of bounds; mismatching indexes will not be fixed, as they are
+  likely intentional.
+
+### Release 1.7.10
+- Fixed character importing issues.
+- Added support for custom buttons in the mod config menu.
+- Added a "reset imported characters" button to the mod config menu to clear the imported characters list.
+
+### Release 1.7.9
+- Added WECCL events to the mod API for other mods to listen to.
+- Currently, the only events are CharacterEvents when a character is added or removed.
+- Renamed Wrestling Empire Custom Content Loader to WECCL in logs.
+- Log messages now show the source of the log message.
+- The loading bar now has different colors per content type.
+- Fixed the prefix priority screen.
+- The prefix priority screen and warning screen now support controllers properly.
+- Added a warning screen whenever an exception occurs.
+- Fixed a bug where the contents of the first menu in the config editor would be copied to the previously selected menu.
+- Question of today: How do you pronounce WECCL?
+- A) Weckle
+- B) Weasel
+- C) W E C C L
+- D) Maybelline
+- Answer: I don't care. I'm just happy you're using my mod. <3
+
+### Release 1.7.8
+- Fixed an infinite loop in the mod config menu.
+
+### Release 1.7.7
+- You can now right click the music menu in the editor to show a list to select from.
+- Editor lists (moves, music) can now be scrolled with the mouse wheel.
+
+### Release 1.7.6
+- Some tweaks to the save file repairer.
+- Mod options are now sorted alphabetically.
+- The mod options menu now remembers the last selected tab.
+- Fixed some issues with mod option menu.
+
+### Release 1.7.5
+- Fixed an issue with custom themes not being stored in the save file correctly.
+- Custom themes are now sorted alphabetically in the editor.
+- Fixed aliases not working.
+- `Assets`, `Overrides`, and `Import` folders no longer get created in the WECCL folder since this is redundant.
+
+### Release 1.7.4
+- Generated characters from the character search screen now work correctly.
+- The main menu now shows the WECCL version.
+
+### Release 1.7.3
+- Promos can now be assigned to categories, including vanilla categories.
+- Promos can now be set to play during wrestler career mode.
+
 ### Release 1.7.2
 - Fixed some issues with the save file repairer and importing characters.
 

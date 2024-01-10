@@ -3,7 +3,7 @@ using Random = UnityEngine.Random;
 
 namespace WECCL.Content;
 
-public static class Animations
+internal static class Animations
 {
     public static void DoCustomAnimation(UnmappedPlayer player, int animationId, float fwdSpeedMultiplier = 4f)
     {

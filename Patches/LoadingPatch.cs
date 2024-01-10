@@ -13,6 +13,10 @@ public class LoadingPatch
     private static Text _text;
     private static Text _text2;
 
+    /*
+     * Patch:
+     * - Adds a loading bar for modded content.
+     */
     [HarmonyPatch(typeof(Scene_Loading), nameof(Scene_Loading.Update))]
     [HarmonyPrefix]
     public static bool Scene_Loading_Update(Scene_Loading __instance)
@@ -42,7 +46,7 @@ public class LoadingPatch
             _text2.rectTransform.sizeDelta = new Vector2(10000f, 100f);
         }
 
-        if (_modsLoaded)
+        if (ModsLoaded)
         {
             if (!_uncolor)
             {
@@ -52,21 +56,86 @@ public class LoadingPatch
                 _uncolor = true;
             }
 
-            _text.text = $"Vanilla content: {__instance.loadProgress * 100f:0.0}%";
+            _text.text = $"Vanilla Content: {__instance.loadProgress * 100f:0.0}%";
             _text2.text = "";
             return true;
         }
 
         __instance.gLoader.SetActive(true);
-        _progressGradual = UnmappedGlobals.IFDOICDHAFC(_progressGradual, _progress, 0.2f, 0.01f);
+        ProgressGradual = MappedGlobals.PursueValue(ProgressGradual, _progress, 0.2f, 0.01f);
         __instance.gLoadMeter.transform.localScale =
-            new Vector3(_progressGradual, 1f, 1f);
-        __instance.gLoadMeter.GetComponent<Image>().color =
-            new Color(0f, 0.9f, 0f, 1f);
-        _text.text = $"Modded content: {_loadedAssets}/{_totalAssets} - {_progress * 100f:0.0}%";
-        _text.color = new Color(0f, 0.9f, 0f, 1f);
-        _text2.text = _lastItemLoaded;
-        _text2.color = new Color(0f, 0.5f, 0f, 1f);
+            new Vector3(ProgressGradual, 1f, 1f);
+        __instance.gLoadMeter.GetComponent<Image>().color = ForegroundColor();
+        if (LoadedAssets > 0)
+        {
+            _text.text =
+                $"Custom {LoadingPhase.ToString().Replace("_", " ")}: {LoadedAssets}/{TotalAssets} - {_progress * 100f:0.0}%";
+            _text.color = ForegroundColor();
+            _text2.text = LastAsset;
+            _text2.color = BackgroundColor();
+        }
+        else
+        {
+            _text.text = $"Custom Content: 0/{TotalAssets} - 0.0%";
+            _text.color = new Color(1f, 1f, 1f, 1f);
+            _text2.text = "";
+            _text2.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+        }
+
         return false;
+    }
+
+    public static Color ForegroundColor()
+    {
+        switch (LoadingPhase)
+        {
+            case LoadPhase.None:
+            case LoadPhase.Counting:
+            case LoadPhase.Finalizing:
+                return new Color(1f, 1f, 1f, 1f);
+            case LoadPhase.Libraries:
+                return new Color(0.9f, 0f, 0f, 1f);
+            case LoadPhase.Promos:
+                return new Color(0.9f, 0.5f, 0f, 1f);
+            case LoadPhase.Audio:
+                return new Color(0.9f, 0.9f, 0f, 1f);
+            case LoadPhase.Costumes:
+                return new Color(0f, 0.9f, 0f, 1f);
+            case LoadPhase.Asset_Bundles:
+                return new Color(0f, 0.5f, 0.9f, 1f);
+            case LoadPhase.Overrides:
+                return new Color(0.5f, 0f, 0.9f, 1f);
+            case LoadPhase.Characters:
+                return new Color(0.9f, 0f, 0.9f, 1f);
+            default:
+                return new Color(0.5f, 0.5f, 0.5f, 1f);
+        }
+    }
+    
+    public static Color BackgroundColor()
+    {
+        switch (LoadingPhase)
+        {
+            case LoadPhase.None:
+            case LoadPhase.Counting:
+            case LoadPhase.Finalizing:
+                return new Color(0.5f, 0.5f, 0.5f, 1f);
+            case LoadPhase.Libraries:
+                return new Color(0.5f, 0f, 0f, 1f);
+            case LoadPhase.Promos:
+                return new Color(0.5f, 0.25f, 0f, 1f);
+            case LoadPhase.Audio:
+                return new Color(0.5f, 0.5f, 0f, 1f);
+            case LoadPhase.Costumes:
+                return new Color(0f, 0.5f, 0f, 1f);
+            case LoadPhase.Asset_Bundles:
+                return new Color(0f, 0.25f, 0.5f, 1f);
+            case LoadPhase.Overrides:
+                return new Color(0.25f, 0f, 0.5f, 1f);
+            case LoadPhase.Characters:
+                return new Color(0.5f, 0f, 0.5f, 1f);
+            default:
+                return new Color(0.5f, 0.5f, 0.5f, 1f);
+        }
     }
 }

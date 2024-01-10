@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
+using WECCL.API.Events;
 using WECCL.Content;
 using WECCL.Saves;
 
@@ -10,16 +11,16 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class SaveFilePatch
 {
-    private static int[] fedCharCount;
+    private static int[] _fedCharCount;
 
     /*
-     * SaveSystem.NJMFCPGCKNL is called when the game restores the default data
-     * This patch resets the character and federation counts.
-     * It also resets the star (wrestler) and booker to 1 if they are greater than the new character count.
+     * Patch
+     * - Resets the character and federation counts when default data is loaded.
+     * - Resets the star (wrestler) and booker to 1 if they are greater than the new character count when default data is loaded.
      */
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.NJMFCPGCKNL))]
     [HarmonyPrefix]
-    public static void SaveSystem_NJMFCPGCKNL()
+    public static void SaveSystem_NJMFCPGCKNL_Pre()
     {
         if (SceneManager.GetActiveScene().name == "Loading")
         {
@@ -47,12 +48,13 @@ internal class SaveFilePatch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
+            LogError(e);
         }
     }
     
     /*
-     * SaveData.CDLIDDFKFEL is the inner function called by SaveFile.NJMFCPGCKNL.
+     * Patch:
+     * - Fixes corrupted save data before rosters are loaded.
      */
     [HarmonyPatch(typeof(SaveData), nameof(SaveData.CDLIDDFKFEL))]
     [HarmonyPrefix]
@@ -64,9 +66,14 @@ internal class SaveFilePatch
         }
     }
     
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.NJMFCPGCKNL))]
+    /*
+     * Patch:
+     * - Clears the previously imported characters list after default data is loaded.
+     * - Fixes corrupted save data after default data is loaded.
+     */
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.NJMFCPGCKNL))]
     [HarmonyPostfix]
-    public static void SaveSystem_Post()
+    public static void SaveSystem_NJMFCPGCKNL_Post()
     {
         if (SceneManager.GetActiveScene().name == "Loading")
         {
@@ -81,14 +88,17 @@ internal class SaveFilePatch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
+            LogError(e);
         }
     }
     
-    // Transpiler for BONMDGJIBFP to change the save file name to 'ModdedSave.bytes' (or whatever the user has set)
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.BONMDGJIBFP))]
+    /*
+     * Patch:
+     * - Changes the save file name to 'ModdedSave.bytes' (or whatever the user has set) during user load.
+     */
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.BONMDGJIBFP))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> SaveData_BONMDGJIBFP_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> SaveSystem_BONMDGJIBFP(IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
         {
@@ -100,10 +110,13 @@ internal class SaveFilePatch
         }
     }
     
-    // Transpiler for OIIAHNGBNIF to change the save file name to 'ModdedSave.bytes' (or whatever the user has set)
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.OIIAHNGBNIF))]
+    /*
+     * Patch:
+     * - Changes the save file name to 'ModdedSave.bytes' (or whatever the user has set) during user save.
+     */
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.OIIAHNGBNIF))]
     [HarmonyTranspiler]
-    public static IEnumerable<CodeInstruction> SaveData_OIIAHNGBNIF_Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> SaveSystem_OIIAHNGBNIF_Trans(IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
         {
@@ -128,7 +141,7 @@ internal class SaveFilePatch
             string save = Locations.SaveFile.FullName;
             if (!File.Exists(save))
             {
-                string vanillaSave = Locations.SaveFileVanilla.FullName;
+                string  vanillaSave = Locations.SaveFileVanilla.FullName;
                 if (File.Exists(vanillaSave))
                 {
                     File.Copy(vanillaSave, save);
@@ -142,25 +155,29 @@ internal class SaveFilePatch
             FileStream fileStream = new(save, FileMode.Open);
             SaveData data = new BinaryFormatter().Deserialize(fileStream) as SaveData;
             Characters.no_chars = data!.savedChars.Length - 1;
-            fedCharCount = new int[Characters.no_feds + 1];
+            _fedCharCount = new int[Characters.no_feds + 1];
             foreach (Character c in data.savedChars)
             {
                 if (c != null)
                 {
-                    fedCharCount[c.fed]++;
+                    _fedCharCount[c.fed]++;
                 }
             }
 
-            Characters.fedLimit = Math.Max(Plugin.BaseFedLimit.Value, fedCharCount.Max() + 1);
+            Characters.fedLimit = Math.Max(Plugin.BaseFedLimit.Value, _fedCharCount.Max() + 1);
             Array.Resize(ref Characters.c, Characters.no_chars + 1);
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
+            for (int i = 0; i <= Characters.no_feds; i++)
+            {
+                Array.Resize(ref Characters.fedData[i].roster, Characters.fedLimit + 1);
+            }
 
             fileStream.Close();
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError(e);
+            LogError(e);
         }
     }
 
@@ -185,24 +202,6 @@ internal class SaveFilePatch
             }
         }
 
-        if (fedCharCount != null && GLPGLJAJJOP.APPDIBENDAH.savedFeds != null)
-        {
-            for (int i = 0; i <= Characters.no_feds; i++)
-            {
-                int count = Math.Max(fedCharCount[i] + 1, Plugin.BaseFedLimit.Value + 1);
-                if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[i] != null)
-                {
-                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].size = fedCharCount[i];
-                    if (count > GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster.Length)
-                    {
-                        Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster, count);
-                    }
-                }
-
-                Array.Resize(ref Characters.fedData[i].roster, count);
-            }
-        }
-
         try
         {
             SaveRemapper.FixBrokenSaveData();
@@ -222,20 +221,21 @@ internal class SaveFilePatch
                     bool previouslyImported = CheckIfPreviouslyImported(nameWithGuid);
                     if (previouslyImported)
                     {
-                        Plugin.Log.LogInfo(
+                        LogInfo(
                             $"Character with name {file.CharacterData.name ?? "null"} was previously imported. Skipping.");
                         continue;
                     }
                     if (!overrideMode.Contains("append"))
                     {
-                        Plugin.Log.LogInfo(
+                        LogInfo(
                             $"Importing character {file.CharacterData.name ?? "null"} with id {file.CharacterData.id.ToString() ?? "null"} using mode {overrideMode}");
                     }
                     else
                     {
-                        Plugin.Log.LogInfo(
+                        LogInfo(
                             $"Appending character {file.CharacterData.name ?? "null"} to next available id using mode {overrideMode}");
                     }
+                    
 
                     Character importedCharacter = null;
                     if (!overrideMode.Contains("merge"))
@@ -264,7 +264,7 @@ internal class SaveFilePatch
 
                             if (id == -1)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Could not find character with id {importedCharacter.id} and name {importedCharacter.name} using override mode {overrideMode}. Skipping.");
                                 break;
                             }
@@ -293,52 +293,65 @@ internal class SaveFilePatch
                                 GLPGLJAJJOP.APPDIBENDAH.savedFeds[oldCharacter.fed].BIDMDHABIGJ(id);
                             }
 
-                            Plugin.Log.LogInfo(
+                            LogInfo(
                                 $"Imported character with id {id} and name {name}, overwriting character with name {oldCharacterName}.");
                             break;
                         case "append":
-                            Plugin.Log.LogInfo($"Appending character {importedCharacter.name ?? "null"} to next available id.");
+                            LogInfo($"Appending character {importedCharacter.name ?? "null"} to next available id.");
                             int id2 = Characters.no_chars + 1;
                             importedCharacter.id = id2;
-                            if (GLPGLJAJJOP.APPDIBENDAH.savedChars.Length <= id2)
+                            CharacterEvents.InvokeBeforeCharacterAdded(id2, importedCharacter, CharacterAddedEvent.Source.Import);
+                            try
                             {
-                                Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedChars, id2 + 1);
-                                Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, id2 + 1);
-                                Array.Resize(ref Characters.c, id2 + 1);
-                                Array.Resize(ref Progress.charUnlock, id2 + 1);
-                                GLPGLJAJJOP.APPDIBENDAH.charUnlock[id2] = 1;
-                                Progress.charUnlock[id2] = 1;
-                            }
-                            else
-                            {
-                                Plugin.Log.LogWarning(
-                                    $"The array of characters is larger than the number of characters. This should not happen. The character {GLPGLJAJJOP.APPDIBENDAH.savedChars[id2].name} will be overwritten.");
-                            }
-
-                            GLPGLJAJJOP.APPDIBENDAH.savedChars[id2] = importedCharacter;
-                            if (importedCharacter.fed != 0)
-                            {
-                                if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 1 ==
-                                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length)
+                                if (GLPGLJAJJOP.APPDIBENDAH.savedChars.Length <= id2)
                                 {
-                                    Array.Resize(
-                                        ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster,
-                                        GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 2);
-                                    if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length >
-                                        Characters.fedLimit)
-                                    {
-                                        Characters.fedLimit++;
-                                    }
+                                    Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedChars, id2 + 1);
+                                    Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, id2 + 1);
+                                    Array.Resize(ref Characters.c, id2 + 1);
+                                    Array.Resize(ref Progress.charUnlock, id2 + 1);
+                                    GLPGLJAJJOP.APPDIBENDAH.charUnlock[id2] = 1;
+                                    Progress.charUnlock[id2] = 1;
+                                }
+                                else
+                                {
+                                    LogWarning(
+                                        $"The array of characters is larger than the number of characters. This should not happen. The character {GLPGLJAJJOP.APPDIBENDAH.savedChars[id2].name} will be overwritten.");
                                 }
 
-                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size++;
-                                GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed]
-                                    .roster[GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size] = id2;
+                                GLPGLJAJJOP.APPDIBENDAH.savedChars[id2] = importedCharacter;
+                                if (importedCharacter.fed != 0)
+                                {
+                                    if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 1 ==
+                                        GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length)
+                                    {
+                                        Array.Resize(
+                                            ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster,
+                                            GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size + 2);
+                                        if (GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].roster.Length >
+                                            Characters.fedLimit)
+                                        {
+                                            Characters.fedLimit++;
+                                        }
+                                    }
+
+                                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size++;
+                                    GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed]
+                                        .roster[GLPGLJAJJOP.APPDIBENDAH.savedFeds[importedCharacter.fed].size] = id2;
+                                }
+
+                                Characters.no_chars++;
+                                LogInfo(
+                                    $"Imported character with id {id2} and name {importedCharacter.name}. Incremented number of characters to {Characters.no_chars}.");
+                                CharacterEvents.InvokeAfterCharacterAdded(id2, importedCharacter,
+                                    CharacterAddedEvent.Source.Import);
+                            }
+                            catch (Exception e)
+                            {
+                                CharacterEvents.InvokeAfterCharacterAddedFailure(id2, importedCharacter,
+                                    CharacterAddedEvent.Source.Import);
+                                throw new Exception($"Error while appending character {importedCharacter.name ?? "null"} to next available id.", e);
                             }
 
-                            Characters.no_chars++;
-                            Plugin.Log.LogInfo(
-                                $"Imported character with id {id2} and name {importedCharacter.name}. Incremented number of characters to {Characters.no_chars}.");
                             break;
                         case "merge-id":
                         case "merge-name":
@@ -361,7 +374,7 @@ internal class SaveFilePatch
 
                             if (id3 == -1)
                             {
-                                Plugin.Log.LogWarning(
+                                LogWarning(
                                     $"Could not find character with id {file.CharacterData.id?.ToString() ?? "null"} and name {file.FindName ?? file.CharacterData.name ?? "null"} using override mode {overrideMode}. Skipping.");
                                 break;
                             }
@@ -392,7 +405,7 @@ internal class SaveFilePatch
                                 GLPGLJAJJOP.APPDIBENDAH.savedFeds[oldCharacter2.fed].BIDMDHABIGJ(id3);
                             }
 
-                            Plugin.Log.LogInfo(
+                            LogInfo(
                                 $"Imported character with id {id3} and name {file.CharacterData.name ?? "null"}, merging with existing character: {oldCharacter2.name}.");
                             break;
                         default:
@@ -404,20 +417,32 @@ internal class SaveFilePatch
                 }
                 catch (Exception e)
                 {
-                    Plugin.Log.LogError($"Error while importing character {nameWithGuid}.");
-                    Plugin.Log.LogError(e);
+                    LogError($"Error while importing character {nameWithGuid}.");
+                    LogError(e);
                 }
+            }
+            
+            for (int i = 0; i <= Characters.no_feds; i++)
+            {
+                
+                Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedFeds[i].roster, Characters.fedLimit + 1);
+                Array.Resize(ref Characters.fedData[i].roster, Characters.fedLimit + 1);
             }
 
             GLPGLJAJJOP.APPDIBENDAH.CDLIDDFKFEL(FIHDANPPMGC);
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError("Error while importing characters.");
-            Plugin.Log.LogError(e);
+            LogError("Error while importing characters.");
+            LogError(e);
         }
     }
 
+    /*
+     * Patch:
+     * - Increases the character limit if the user has set it to be higher than the default during roster reset.
+     * - Also increases the character limit if there are more characters than the limit.
+     */
     [HarmonyPatch(typeof(Roster), nameof(Roster.PIMGMPBCODM))]
     [HarmonyPostfix]
     public static void Roster_PIMGMPBCODM(Roster __instance)
@@ -445,12 +470,11 @@ internal class SaveFilePatch
 #pragma warning restore Harmony003
 
     /*
-     * SaveData.OIIAHNGBNIF is called when the player saves the game.
-     * This patch saves the current custom content map and exports all characters.
+     * - Saves the current custom content map and exports all characters during user save.
      */
-    [HarmonyPatch(typeof(GLPGLJAJJOP), nameof(GLPGLJAJJOP.OIIAHNGBNIF))]
+    [HarmonyPatch(typeof(UnmappedSaveSystem), nameof(UnmappedSaveSystem.OIIAHNGBNIF))]
     [HarmonyPostfix]
-    public static void SaveData_OIIAHNGBNIF(int FIHDANPPMGC)
+    public static void SaveSystem_OIIAHNGBNIF_Post(int FIHDANPPMGC)
     {
         SaveCurrentMap();
         CharacterMappings.CharacterMap.Save();
@@ -458,7 +482,7 @@ internal class SaveFilePatch
 
         if (NonSavedData.DeletedCharacters.Count > 0)
         {
-            Plugin.Log.LogInfo($"Saving {NonSavedData.DeletedCharacters.Count} characters to purgatory.");
+            LogInfo($"Saving {NonSavedData.DeletedCharacters.Count} characters to purgatory.");
             foreach (Character character in NonSavedData.DeletedCharacters)
             {
                 BetterCharacterData moddedCharacter = BetterCharacterData.FromRegularCharacter(character, Characters.c);
@@ -508,6 +532,10 @@ internal class SaveFilePatch
         return ContentMappings.Load();
     }
     
+    /*
+     * Patch:
+     * - Increases the character limit if the user has set it to be higher than the default during user progress save.
+     */
     [HarmonyPatch(typeof(SaveData), nameof(SaveData.PLCEMOKLLCP))]
     [HarmonyPrefix]
     public static void SaveData_PLCEMOKLLCP(SaveData __instance, int NAOMGHCFPKK = 1)
@@ -518,6 +546,10 @@ internal class SaveFilePatch
         }
     }
     
+    /*
+     * Patch:
+     * - Increases the character limit if the user has set it to be higher than the default during user progress load.
+     */
     [HarmonyPatch(typeof(SaveData), nameof(SaveData.PEDMCEBEOCE))]
     [HarmonyPrefix]
     public static void SaveData_PEDMCEBEOCE(SaveData __instance, int IPBOLLAFINB = 1)

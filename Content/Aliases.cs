@@ -1,12 +1,12 @@
 namespace WECCL.Content;
 
-public class Aliases
+internal class Aliases
 {
     public static Dictionary<string, string> AliasMap = new();
 
     public static void Load()
     {
-        DirectoryInfo aliasLoc = Locations.Assets;
+        DirectoryInfo aliasLoc = Locations.Root;
         foreach (FileInfo file in aliasLoc.GetFiles("*.aliases", SearchOption.AllDirectories))
         {
             string[] lines = File.ReadAllLines(file.FullName);

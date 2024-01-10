@@ -1,10 +1,12 @@
 using Newtonsoft.Json;
 using System.Reflection;
 using WECCL.Content;
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace WECCL.Saves;
 
-public class BetterCharacterData
+internal class BetterCharacterData
 {
     public int? absent;
 
@@ -25,6 +27,8 @@ public class BetterCharacterData
     public int? contract;
 
     public BetterCostumeData[] costumeC;
+
+    public int? cuffed;
 
     public int? dead;
 
@@ -86,6 +90,8 @@ public class BetterCharacterData
 
     public float?[] oldStat = new float?[7];
 
+    public int? player;
+    
     public int? platform;
 
     public int? possessive;
@@ -116,8 +122,11 @@ public class BetterCharacterData
 
     public int?[] taunt = new int?[4];
 
+    public int? team;
+
+    public string teamName;
+
     public int? toilet;
-    public string VERSION = "1.0.0";
 
     public float? voice;
 
@@ -130,6 +139,8 @@ public class BetterCharacterData
     public float? y;
 
     public float? z;
+    
+    public string VERSION = "1.0.1";
 
     public static BetterCharacterData FromRegularCharacter(Character character, Character[] allCharacters)
     {
@@ -144,7 +155,7 @@ public class BetterCharacterData
         bcd.relationshipC = new string[character.relationship.Length];
         for (int i = 0; i < character.relationship.Length; i++)
         {
-            if (character.relationship[i] > allCharacters.Length)
+            if (character.relationship[i] >= allCharacters.Length)
             {
                 bcd.relationshipC[i] = "0";
                 continue;
@@ -173,7 +184,8 @@ public class BetterCharacterData
 
     public Character ToRegularCharacter(Character[] allCharacters)
     {
-        Character character = JsonConvert.DeserializeObject<Character>(JsonConvert.SerializeObject(this))!;
+        Character character = JsonConvert.DeserializeObject<Character>(JsonConvert.SerializeObject(this),
+            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore })!;
         character.costume = new Costume[this.costumeC.Length];
         for (int i = 0; i < this.costumeC.Length; i++)
         {
@@ -205,7 +217,7 @@ public class BetterCharacterData
             catch (Exception)
             {
                 character.relationship[i] = int.Parse(split[1]);
-                Plugin.Log.LogWarning("Failed to find character with name " + name + ", using id instead.");
+                LogWarning("Failed to find character with name " + name + ", using id instead.");
             }
         }
 
@@ -219,7 +231,7 @@ public class BetterCharacterData
             }
             catch (Exception)
             {
-                Plugin.Log.LogWarning("Failed to find music from name " + this.musicC + ", setting to 0.");
+                LogWarning("Failed to find music from name " + this.musicC + ", setting to 0.");
                 character.music = 0;
             }
         }

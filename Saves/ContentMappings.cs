@@ -42,13 +42,13 @@ internal class ContentMappings
     public VanillaCounts VanillaCounts { get; set; }
     
     public float GameVersion { get; set; } = Plugin.PluginVersion;
-
+    
     public void Save()
     {
         string path = Locations.ContentMappings.FullName;
         string json = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(path, json);
-        Plugin.Log.LogDebug($"Saved custom content map to {path}.");
+        LogDebug($"Saved custom content map to {path}.");
     }
 
     public static ContentMappings Load()
@@ -67,7 +67,7 @@ internal class ContentMappings
         }
         catch (Exception e)
         {
-            Plugin.Log.LogError($"Unable to load custom content map: {e}");
+            LogError($"Unable to load custom content map: {e}");
             return new ContentMappings();
         }
     }

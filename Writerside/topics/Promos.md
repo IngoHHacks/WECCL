@@ -42,7 +42,10 @@ the tag team partners of 1 and 2 respectively. Other values are not supported.
 </deflist>
 
 ### Optional Metadata
-<deflist type="narrow">
+<deflist type="medium">
+<def title="category">
+The category of the promo. Must be a string. Defaults to `Custom`.
+</def>
 <def title="use_names">
 Whether to use character names in `surprise_entrants`, `speaker`, `target` and commands instead of their ids. Their names can be used even if they are not selected in the `characters` field.
 Must be <code>True</code> or <code>False</code>. Defaults to <code>False</code>.
@@ -53,7 +56,46 @@ Sets the given wrestlers (and their managers) as surprise entrants, who will onl
 <def title="next_promo">
 Sets another custom promo to happen once this one ends. Must be a title of another custom promo. This allows you to have surprise entrants have voice lines once they enter the ring.
 </def>
+<def title ="career_probability">
+Sets the probability of this promo happening in wrestler career mode. Must be a string followed by a float and optional parameters.
+See below for a list of supported settings.
+</def>
 </deflist>
+
+Probability settings:
+<deflist collapsible="true">
+<def title="career_probability: Disabled" collapsible="true">
+<p>
+Disables the promo in wrestler career mode.<br/>
+Example: <code>career_probability: Disabled</code>
+</p>
+</def>
+<def title="career_probability: Absolute (probability)" collapsible="true">
+<p>
+The promo will happen with the given probability whenever no other promo is scheduled.<br/>
+You can use <code>Absolute!</code> to allow it to override 'basic' vanilla promos (promos that are randomly assigned before the match starts). Note that the <code>!</code> group is distinct from the <code>absolute</code> group and takes precedence.<br/>
+Absolute promos take precedence over relative and grouped relative promos.<br/>
+Example: <code>career_probability: Absolute 0.5</code>
+</p>
+</def>
+<def title="career_probability: Relative (probability)" collapsible="true">
+<p>
+Relative probability of the promo happening, weighted based on other non-absolute custom promos.<br/>
+You can use <code>Relative!</code> to allow it to override 'basic' vanilla promos, same as <code>absolute!</code>.<br/>
+Example: <code>career_probability: Relative 0.5</code>
+</p>
+</def>
+<def title="career_probability: GroupedRelative (probability) (group)" collapsible="true">
+<p>
+Relative probability of the promo happening, weighted based on other non-absolute custom promos with the same group.<br/>
+Group can be any string, but it is recommended to prefix it with your author name and mod name to avoid conflicts.<br/>
+You can use <code>GroupedRelative!</code> to allow it to override 'basic' vanilla promos, same as <code>absolute!</code>.<br/>
+Note the lack of space in <code>GroupedRelative</code>.<br/>
+Example: <code>career_probability: GroupedRelative 0.5 MyName_MyMod_MyPromoGroup</code>
+</p>
+</def>
+</deflist>
+
 
 ### Dialog Lines
 <deflist type="narrow">

@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public class AnimationData
+internal class AnimationData
 {
     public string Name { get; set; }
     public List<MoveType> Types { get; set; } = new();

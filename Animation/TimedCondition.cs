@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public class TimedCondition : AnimationEvent
+internal class TimedCondition : AnimationEvent
 {
     public AnimationCondition Condition { get; set; }
     

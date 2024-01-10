@@ -3,7 +3,7 @@ using WECCL.Content;
 
 namespace WECCL.Animation;
 
-public static class AnimationActions
+internal static class AnimationActions
 {
     public static Dictionary<string, AnimationAction> Actions { get; set; } = new();
     public static Dictionary<string, AnimationCondition> Conditions { get; set; } = new();

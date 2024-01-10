@@ -1,6 +1,6 @@
 namespace WECCL.Content;
 
-public enum Limb
+internal enum Limb
 {
     Base,
     Hips,

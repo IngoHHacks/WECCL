@@ -3,7 +3,7 @@ using Random = UnityEngine.Random;
 
 namespace WECCL.Content;
 
-public static class Secrets
+internal static class Secrets
 {
     // Easter eggs
     // Feel free to add your own easter eggs here!
@@ -159,6 +159,16 @@ public static class Secrets
 
         if (DateTime.Now.Month == 12 && DateTime.Now.Day >= 24 && DateTime.Now.Day <= 26)
         {
+            if (DateTime.Now.Day == 24)
+            {
+                if (DateTime.Now.Hour >= 18)
+                {
+                    return
+                        "Merry Christmas Eve! Go spend some time with your family instead of playing this mod.";
+                }
+                return
+                    "Merry Christmas Eve (well, technically it's not quite Christmas Eve yet, but close enough)! Go spend some time with your family instead of playing this mod.";
+            }
             return "Merry Christmas! Go spend some time with your family instead of playing this mod.";
         }
 

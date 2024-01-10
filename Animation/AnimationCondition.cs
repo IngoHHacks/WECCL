@@ -1,6 +1,6 @@
 ﻿namespace WECCL.Animation;
 
-public class AnimationCondition
+internal class AnimationCondition
 {
     public string Name { get; set; }
     

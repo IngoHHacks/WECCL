@@ -4,7 +4,7 @@ using static WECCL.Utils.NumberFormatUtils;
 
 namespace WECCL.Content;
 
-public static class CustomContent
+internal static class CustomContent
 {
     internal static readonly List<NamedAudioClip> CustomClips = new();
 
@@ -76,7 +76,7 @@ public static class CustomContent
         }
         else
         {
-            Plugin.Log.LogWarning($"Duplicate texture override for {name}!");
+            LogWarning($"Duplicate texture override for {name}!");
         }
 
         if (!Prefixes.Contains(prefix))
@@ -100,7 +100,7 @@ public static class CustomContent
         }
         else
         {
-            Plugin.Log.LogWarning($"Duplicate audio override for {name}!");
+            LogWarning($"Duplicate audio override for {name}!");
         }
 
         if (!Prefixes.Contains(prefix))
@@ -124,7 +124,7 @@ public static class CustomContent
         }
         else
         {
-            Plugin.Log.LogWarning($"Duplicate mesh override for {name}!");
+            LogWarning($"Duplicate mesh override for {name}!");
         }
 
         if (!Prefixes.Contains(prefix))

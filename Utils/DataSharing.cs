@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace WECCL.Utils;
 
-public static class DataSharing
+internal static class DataSharing
 {
     private const string URL = "https://ingoh.net/weccl/data.php";
 
@@ -19,7 +19,7 @@ public static class DataSharing
     private static string GenerateUUID()
     {
         string uuid = Guid.NewGuid().ToString();
-        Plugin.Log.LogDebug("Generated Data UUID: " + uuid);
+        LogDebug("Generated Data UUID: " + uuid);
         File.WriteAllText(Path.Combine(Plugin.PersistentDataPath, "uuid.txt"), uuid, Encoding.UTF8);
         return uuid;
     }
@@ -28,7 +28,7 @@ public static class DataSharing
     {
         if (!File.Exists(Path.Combine(Plugin.PersistentDataPath, "uuid.txt"))) return null;
         string uuid = File.ReadAllText(Path.Combine(Plugin.PersistentDataPath, "uuid.txt"), Encoding.UTF8);
-        Plugin.Log.LogDebug("Loaded Data UUID: " + uuid);
+        LogDebug("Loaded Data UUID: " + uuid);
         return uuid;
     }
     
@@ -82,10 +82,10 @@ public static class DataSharing
                     writer.Write(json);
                 }
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Plugin.Log.LogDebug("Data sent! Server response: " + response.StatusCode);
+                LogDebug("Data sent! Server response: " + response.StatusCode);
             } catch (Exception e)
             {
-                Plugin.Log.LogDebug("Error sending data to server: " + e);
+                LogDebug("Error sending data to server: " + e);
             }
         });
         thread.Start();

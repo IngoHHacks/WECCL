@@ -7,6 +7,11 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class PromoPatch
 {
+    
+    /*
+     * Patch:
+     * - Runs promo script of custom promos.
+     */
     [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.KMFBNADPGMF))]
     [HarmonyPrefix]
     public static void Promo_KMFBNADPGMF()
@@ -144,7 +149,7 @@ internal class PromoPatch
             catch (Exception e)
             {
                 line = line.Replace(match.Value, "INVALID");
-                Plugin.Log.LogError(e);
+                LogError(e);
             }
         }
 
@@ -176,7 +181,7 @@ internal class PromoPatch
             catch (Exception e)
             {
                 line = line.Replace(match.Value, "INVALID");
-                Plugin.Log.LogError(e);
+                LogError(e);
             }
         }
 
@@ -200,18 +205,26 @@ internal class PromoPatch
         {
             return;
         }
-
-        UnmappedPromo.LOKLOANCDPO++;
-        Array.Resize(ref UnmappedPromo.ALPFKHEBGII, UnmappedPromo.LOKLOANCDPO + 1);
-        ResizeArray(ref UnmappedPromo.KIDIEPFFPOO, UnmappedPromo.LOKLOANCDPO + 1,
-            Math.Max(40, CustomContent.PromoData.Count));
-        Array.Resize(ref UnmappedPromo.FNMHOMDBCJE, UnmappedPromo.LOKLOANCDPO + 1);
-        UnmappedPromo.FNMHOMDBCJE[UnmappedPromo.LOKLOANCDPO] = CustomContent.PromoData.Count;
-        UnmappedPromo.ALPFKHEBGII[UnmappedPromo.LOKLOANCDPO] = "Custom";
-        UnmappedPromo.KIDIEPFFPOO[UnmappedPromo.LOKLOANCDPO, 0] = 0;
-        for (int i = 0; i < CustomContent.PromoData.Count; i++)
+        
+        foreach (PromoData promo in CustomContent.PromoData)
         {
-            UnmappedPromo.KIDIEPFFPOO[UnmappedPromo.LOKLOANCDPO, i + 1] = 1000000 + i;
+            var cl = UnmappedPromo.KIDIEPFFPOO.GetLength(1);
+            if (!MappedPromo.libraryName.Contains(promo.Category))
+            {
+                MappedPromo.no_categories++;
+                Array.Resize(ref UnmappedPromo.ALPFKHEBGII, MappedPromo.no_categories + 1);
+                Array.Resize(ref UnmappedPromo.FNMHOMDBCJE, MappedPromo.no_categories + 1);
+                ResizeArray(ref UnmappedPromo.KIDIEPFFPOO, MappedPromo.no_categories + 1, cl);
+                MappedPromo.libraryName[MappedPromo.no_categories] = promo.Category;
+                MappedPromo.library[MappedPromo.no_categories, 0] = 0;
+            }
+            int cat = Array.IndexOf(MappedPromo.libraryName, promo.Category);
+            MappedPromo.librarySize[cat]++;
+            if (cl <= MappedPromo.librarySize[cat])
+            {
+                ResizeArray(ref UnmappedPromo.KIDIEPFFPOO, MappedPromo.no_categories + 1, 2 * cl);
+            }
+            MappedPromo.library[cat, MappedPromo.librarySize[cat]] = promo._id;
         }
     }
 
@@ -230,7 +243,10 @@ internal class PromoPatch
         original = newArray;
     }
 
-
+    /*
+     * Patch:
+     * Sets promo properties for custom promos.
+     */
     [HarmonyPatch(typeof(UnmappedPromo), nameof(UnmappedPromo.GGCFFJNAKFM))]
     [HarmonyPostfix]
     public static void Promo_GGCFFJNAKFM(int NJPKCMBLMLG)
@@ -247,9 +263,13 @@ internal class PromoPatch
         UnmappedPromo.JPOHPEOOIMK = CustomContent.PromoData[index].Characters;
     }
 
-    [HarmonyPatch(typeof(NJBJIIIACEP), nameof(NJBJIIIACEP.BGIDMGILIEG))]
+    /*
+     * Patch:
+     * Enables surprise entrants for custom promos.
+     */
+    [HarmonyPatch(typeof(UnmappedPlayers), nameof(UnmappedPlayers.BGIDMGILIEG))]
     [HarmonyPostfix]
-    public static void NJBJIIIACEP_BGIDMGILIEG()  //setting up surprises
+    public static void Players_BGIDMGILIEG()  //setting up surprises
     {
         if (FFCEGMEAIBP.NJPKCMBLMLG < 1000000 || UnmappedMenus.FAKHAFKOBPB != 50)
         {
@@ -285,39 +305,39 @@ internal class PromoPatch
   
     public static void RespawnSurprise(UnmappedPlayer __instance)
     {
-            __instance.AHBNKMMMGFI = -1;  //setting surprise entrants
-            OGAJMOPCPLJ diaocefccae;
-            int num2;
-            do
+        __instance.AHBNKMMMGFI = -1;  //setting surprise entrants
+        OGAJMOPCPLJ diaocefccae;
+        int num2;
+        do
+        {
+            diaocefccae = UnmappedBlocks.FBEMAEDLBLN[UnmappedGlobals.PMEEFNOLAGF(1, UnmappedBlocks.BAOOLJCLBIH, 0)]; //resetting their spawns in case they spawn in ring
+            num2 = 1;
+            if (World.location == 9 && diaocefccae.OCPIPKGHABK() > 50f)
             {
-                diaocefccae = UnmappedBlocks.FBEMAEDLBLN[UnmappedGlobals.PMEEFNOLAGF(1, UnmappedBlocks.BAOOLJCLBIH, 0)]; //resetting their spawns in case they spawn in ring
-                num2 = 1;
-                if (World.location == 9 && diaocefccae.OCPIPKGHABK() > 50f)
-                {
-                    num2 = 0;
-                }
-                if (diaocefccae.AHBNKMMMGFI == 0)
-                {
-                    num2 = 0;
-                }
+                num2 = 0;
             }
-            while (num2 == 0);
-            __instance.NJDGEELLAKG = diaocefccae.APJMFOCJLNJ();
-            __instance.BMFDFFLPBOJ = diaocefccae.OCPIPKGHABK();
-            __instance.MPFFANIIEDG = diaocefccae.AAPMLHAGBGF;
-            __instance.EKOHAKPAOGN = World.KJOEBADBOME(__instance.NJDGEELLAKG, __instance.FNNBCDPJBIO, __instance.BMFDFFLPBOJ);
-            if (UnmappedBlocks.MDLFHNCMFDO(__instance.NJDGEELLAKG, __instance.BMFDFFLPBOJ, 0f) > 0)
+            if (diaocefccae.AHBNKMMMGFI == 0)
             {
-                __instance.EKOHAKPAOGN = World.ringGround;
+                num2 = 0;
             }
+        }
+        while (num2 == 0);
+        __instance.NJDGEELLAKG = diaocefccae.APJMFOCJLNJ();
+        __instance.BMFDFFLPBOJ = diaocefccae.OCPIPKGHABK();
+        __instance.MPFFANIIEDG = diaocefccae.AAPMLHAGBGF;
+        __instance.EKOHAKPAOGN = World.KJOEBADBOME(__instance.NJDGEELLAKG, __instance.FNNBCDPJBIO, __instance.BMFDFFLPBOJ);
+        if (UnmappedBlocks.MDLFHNCMFDO(__instance.NJDGEELLAKG, __instance.BMFDFFLPBOJ, 0f) > 0)
+        {
+            __instance.EKOHAKPAOGN = World.ringGround;
+        }
+        __instance.FNNBCDPJBIO = __instance.EKOHAKPAOGN;
+        if (__instance.FNNBCDPJBIO < __instance.EKOHAKPAOGN)
+        {
             __instance.FNNBCDPJBIO = __instance.EKOHAKPAOGN;
-            if (__instance.FNNBCDPJBIO < __instance.EKOHAKPAOGN)
-            {
-                __instance.FNNBCDPJBIO = __instance.EKOHAKPAOGN;
-            }
-            __instance.NELODEMHJHN = 0;  //seat
-            __instance.PCNHIIPBNEK[0].SetActive(false);
-            __instance.IFOCOECLBAF.SetActive(false);
+        }
+        __instance.NELODEMHJHN = 0;  //seat
+        __instance.PCNHIIPBNEK[0].SetActive(false);
+        __instance.IFOCOECLBAF.SetActive(false);
     }
     public static void RespawnTogetherWith(UnmappedPlayer manager, UnmappedPlayer wrestler)
     {
@@ -333,9 +353,13 @@ internal class PromoPatch
 
     }
 
-    [HarmonyPatch(typeof(FFCEGMEAIBP), nameof(FFCEGMEAIBP.CDKIEOBHCKE))]
+    /*
+     * Patch:
+     * - Overrides 'comment' for promos with guest partners to hide the names.
+     */
+    [HarmonyPatch(typeof(UnmappedMatch), nameof(UnmappedMatch.CDKIEOBHCKE))]
     [HarmonyPostfix]
-    public static void FFCEGMEAIBP_CDKIEOBHCKE(string LLGKFOKJILF, string EBKFKAKBBKI = "", string GMGANODNCGH = "")  //mimicking "Guest Partner" promo behaviour to hide the names
+    public static void Match_CDKIEOBHCKE(string LLGKFOKJILF, string EBKFKAKBBKI = "", string GMGANODNCGH = "")
     {
         if (Mathf.Abs(FFCEGMEAIBP.NJPKCMBLMLG) < 1000000 || UnmappedMenus.FAKHAFKOBPB != 50 || FFCEGMEAIBP.OLJFOJOLLOM <= 0 || FFCEGMEAIBP.LPBCEGPJNMF == 0)
         {
@@ -355,9 +379,13 @@ internal class PromoPatch
         }
     }
 
-    [HarmonyPatch(typeof(FFCEGMEAIBP), nameof(FFCEGMEAIBP.FGFMHFNMLMA))]
+    /*
+     * Patch:
+     * - Releases surprise entrants.
+     */
+    [HarmonyPatch(typeof(UnmappedMatch), nameof(UnmappedMatch.FGFMHFNMLMA))]
     [HarmonyPrefix]
-    public static void FFCEGMEAIBP_FGFMHFNMLMA()  //releasing surprise entrants
+    public static void Match_FGFMHFNMLMA()
     {
         if (FFCEGMEAIBP.NJPKCMBLMLG > -1000000)
         {
@@ -418,6 +446,53 @@ internal class PromoPatch
 
                         CustomContent.PromoData[next].NameToID.Add(person.EMDMDLNJFKP.name, i);
                     }
+                }
+            }
+        }
+    }
+    
+    /*
+     * Patch:
+     * - Assigns custom promos to matches in wrestler career mode.
+     */
+    [HarmonyPatch(typeof(Progress), nameof(Progress.EEANPLJLLMA))]
+    [HarmonyPrefix]
+    public static void Progress_EEANPLJLLMA_Pre()
+    {
+        if (CustomContent.PromoData.Count == 0 || Progress.promo[Progress.date] != 0)
+        {
+            return;
+        }
+
+        PromoData.AssignPromo(true);
+    }
+    
+    /*
+     * Patch:
+     * - Second patch for assigning custom promos to matches in wrestler career mode.
+     */
+    [HarmonyPatch(typeof(Progress), nameof(Progress.EEANPLJLLMA))]
+    [HarmonyPostfix]
+    public static void Progress_EEANPLJLLMA_Post()
+    {
+        if (CustomContent.PromoData.Count == 0 || Progress.promo[Progress.date] != 0)
+        {
+            return;
+        }
+
+        if (PromoData.AssignPromo())
+        {
+            MappedMatch.promo = 0;
+            if (Progress.promo[Progress.date] != 0)
+            {
+                MappedMatch.promo = Mathf.Abs(Progress.promo[Progress.date]);
+                MappedPromo.variable = Progress.promoVariable[Progress.date];
+                MappedPromo.star = Characters.star;
+                MappedPromo.opponent = Progress.opponent[Progress.date];
+                if (Progress.promo[Progress.date] < 0)
+                {
+                    MappedPromo.star = Progress.opponent[Progress.date];
+                    MappedPromo.opponent = Characters.star;
                 }
             }
         }
