@@ -11,11 +11,11 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.7.14";
+    public const string PluginVer = "1.8.0";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.61f;
+    public const float PluginVersion = 1.62f;
     public static readonly float GameVersion = MappedGlobals.optVersion;
 
     public const bool PreRelease = false;

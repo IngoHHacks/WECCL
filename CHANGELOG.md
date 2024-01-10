@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.8.0
+- Fixed the new arena introduced in GV 1.62 being broken.
+
 ### Release 1.7.14
 - Fixed an IndexOutOfRangeException when exporting characters.
 

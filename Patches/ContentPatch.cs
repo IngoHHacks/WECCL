@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using WECCL.Content;
@@ -173,7 +175,7 @@ internal class ContentPatch
                     {
                         continue;
                     }
-
+                    
                     if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name) ||
                         ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)", "").Trim() + "_" +
                                                               material.mainTexture))
