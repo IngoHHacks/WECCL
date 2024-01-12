@@ -2,6 +2,11 @@
 
 ## GV 1.60+:
 
+### Release 1.8.3
+- Fixed an issue with restoring the default save file if the roster size is smaller than the default roster size.
+- It is no longer possible to delete the last character in all rosters.
+- Fixed an issue from the previous release where overrides would not be loaded due to case sensitivity, for real this time. The last fix only fixed the issue for ¼ of the cases.
+
 ### Release 1.8.2
 - Fixed an issue from the previous release where overrides would not be loaded due to case sensitivity.
 

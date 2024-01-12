@@ -45,6 +45,15 @@ internal class SaveFilePatch
             Array.Resize(ref Progress.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.charUnlock, Characters.no_chars + 1);
             Array.Resize(ref GLPGLJAJJOP.APPDIBENDAH.savedChars, Characters.no_chars + 1);
+            
+            for (int i = 1; i <= Characters.no_chars; i++)
+            {
+                if (GLPGLJAJJOP.APPDIBENDAH.savedChars[i] == null)
+                {
+                    Characters.c[i] = MappedCharacters.CopyClass(Characters.c[1]);
+                    GLPGLJAJJOP.APPDIBENDAH.savedChars[i] = MappedCharacters.CopyClass(GLPGLJAJJOP.APPDIBENDAH.savedChars[1]);
+                }
+            }
         }
         catch (Exception e)
         {

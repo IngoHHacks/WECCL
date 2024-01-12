@@ -101,11 +101,11 @@ internal class ContentPatch
         {
             if (__result == null) // Manual overrides
             {
-                if (Regex.IsMatch(name, @"Fed[0-9]+_Texture[0-9]+"))  // Missing fed belt textures
+                if (Regex.IsMatch(name.ToLower(), @"fed[0-9]+_texture[0-9]+"))  // Missing fed belt textures
                 {
                     __result = new Texture2D(512, 256);
                 }
-                else if (Regex.IsMatch(name, @"Fed[0-9]+_Sprite[0-9]+"))   // Missing fed belt sprites
+                else if (Regex.IsMatch(name.ToLower(), @"fed[0-9]+_sprite[0-9]+"))   // Missing fed belt sprites
                 {
                     __result = Sprite.Create(new Texture2D(256, 64), new Rect(0, 0, 256, 64), new Vector2(0.5f, 0.5f), 50);
                 }
@@ -116,18 +116,18 @@ internal class ContentPatch
                 if ((texture.width != overrideTexture.width || texture.height != overrideTexture.height) && !Plugin.UseFullQualityTextures.Value)
                 {
                     overrideTexture = ResizeTexture(overrideTexture, texture.width, texture.height);
-                    SetHighestPriorityTextureOverride(name, overrideTexture);
+                    SetHighestPriorityTextureOverride(name.ToLower(), overrideTexture);
                 }
 
                 __result = overrideTexture;
             }
             else if (__result is Sprite sprite)
             {
-                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name);
+                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name.ToLower());
                 if (sprite.texture.width != overrideTexture.width || sprite.texture.height != overrideTexture.height)
                 {
                     overrideTexture = ResizeTexture(overrideTexture, sprite.texture.width, sprite.texture.height);
-                    SetHighestPriorityTextureOverride(name, overrideTexture);
+                    SetHighestPriorityTextureOverride(name.ToLower(), overrideTexture);
                 }
 
                 Vector2 relativePivot = new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height);
@@ -147,7 +147,7 @@ internal class ContentPatch
         {
             if (__result is AudioClip)
             {
-                __result = GetHighestPriorityAudioOverride(name);
+                __result = GetHighestPriorityAudioOverride(name.ToLower());
             }
             else
             {

@@ -300,6 +300,13 @@ internal class SearchScreenPatch
         {
             if (Characters.foc > 0 && MappedMenus.foc > 0)
             {
+                if (Characters.no_chars == 1)
+                {
+                    MappedSound.Play(MappedSound.block);
+                    LogInfo("You can't delete the last wrestler!");
+                    return;
+                }
+                
                 MappedSound.Play(MappedSound.death[3]);
                 LogInfo("Deleting wrestler " + Characters.c[Characters.foc].name);
                 CharacterUtils.DeleteCharacter(Characters.foc);
