@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.8.2
+- Fixed an issue from the previous release where overrides would not be loaded due to case sensitivity.
+
 ### Release 1.8.1
 - Files will no longer be cached if less than 10 GB of free space is available on the drive.
 - The cache folder is no longer hidden (that was a bad idea).

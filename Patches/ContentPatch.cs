@@ -112,7 +112,7 @@ internal class ContentPatch
             }
             if (__result is Texture2D texture)
             {
-                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name);
+                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name.ToLower());
                 if ((texture.width != overrideTexture.width || texture.height != overrideTexture.height) && !Plugin.UseFullQualityTextures.Value)
                 {
                     overrideTexture = ResizeTexture(overrideTexture, texture.width, texture.height);

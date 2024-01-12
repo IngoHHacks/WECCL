@@ -11,7 +11,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.8.1";
+    public const string PluginVer = "1.8.2";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
@@ -60,7 +60,7 @@ public class Plugin : BaseUnityPlugin
             PluginPath = Path.GetDirectoryName(this.Info.Location) ?? string.Empty;
             
             PersistentDataOverride = this.Config.Bind("General", "PersistentDataOverride", "",
-                "Override the persistent data path, which is used for storing the cache and mappings. This is useful if you want to use a different drive for the cache and mappings, since they can get quite large. Note that this will not move the existing cache and mappings, so you will have to move them manually. Leave this empty to use the default persistent data path: " + Path.Combine(Application.persistentDataPath, "WECCL"));
+                "Override the persistent data path, which is used for storing the cache and mappings. This is useful if you want to use a different drive for the cache and mappings, since they can get quite large. Note that this will not move the existing cache and mappings, so you will have to move them manually. Leave this empty to use the default persistent data path: " + Path.Combine(Application.persistentDataPath, "WECCL").Replace('/', '\\'));
             
             PersistentDataPath = string.IsNullOrEmpty(PersistentDataOverride.Value) ? Path.Combine(Application.persistentDataPath, "WECCL") : PersistentDataOverride.Value;
             if (!Directory.Exists(PersistentDataPath))
