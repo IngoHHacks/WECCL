@@ -449,7 +449,12 @@ internal class ArenaPatch
                 }
                 num3 = World.crowdTexture[i];
                 num = NAEEIFNFBBO.PMEEFNOLAGF(1, CrowdCount - 1);
-                if (i <= Mathf.RoundToInt(num2 * (World.crowdSize * 1.25f)) || (World.arenaShape > 0 && World.crowdSize > 0.75f))
+                float num4 = 1.25f;
+                if (World.arenaShape == 5)
+                {
+                    num4 = 2f;
+                }
+                if (i <= Mathf.RoundToInt(num2 * (World.crowdSize * num4)) || (World.arenaShape > 0 && World.crowdSize > 0.75f) || (World.arenaShape >= 5 && World.crowdSize > 0.5f))
                 {
                     if (World.crowdTexture[i] < 0)
                     {
@@ -534,8 +539,8 @@ internal class ArenaPatch
         }
 
         //Signs here
-        int num4 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
         int num5 = 35;
+        int num6 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
 
         if (World.location > VanillaCounts.Data.NoLocations)
         {
@@ -573,48 +578,48 @@ internal class ArenaPatch
                 continue;
             }
 
-            int num6 = 0;
+            int num7 = 0;
             if (UnmappedGlobals.GNCLMNEDIPL > 0 && World.crowdSize > 0f && World.crowdSize <= 1f)
             {
                 if ((i <= 18 && World.crowdSize >= 0.25f) || World.crowdSize >= 0.6f)
                 {
-                    num6 = 1;
+                    num7 = 1;
                 }
 
                 if (World.crowdSize < 0.7f && (i == 21 || i == 31 || i == 35))
                 {
-                    num6 = 0;
+                    num7 = 0;
                 }
 
                 if (UnmappedMenus.FAKHAFKOBPB == 50 && UnmappedGlobals.GNCLMNEDIPL == 1 &&
                     UnmappedGlobals.PMEEFNOLAGF(0, 1) == 0)
                 {
-                    num6 = 0;
+                    num7 = 0;
                 }
             }
 
-            if (num6 > 0)
+            if (num7 > 0)
             {
                 transformSigns.gameObject.SetActive(true);
                 if (UnmappedMenus.FAKHAFKOBPB == 50 && JNHFFNPHMOC == 0)
                 {
                     if (UnmappedGlobals.GNCLMNEDIPL >= 2)
                     {
-                        num4 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
+                        num6 = UnmappedGlobals.PMEEFNOLAGF(1, SignCount);
                     }
                     if (World.location > VanillaCounts.Data.NoLocations)
                     {
                         //This lets us keep any materials etc on the original object but change the texture.
                         Material originalMaterial = transformSigns.gameObject.GetComponent<Renderer>().sharedMaterial;
                         Material newMaterial = new Material(originalMaterial);
-                        Texture texture = signTextures[num4];
+                        Texture texture = signTextures[num6];
                         newMaterial.SetTexture("_MainTex", texture);
                         transformSigns.gameObject.GetComponent<Renderer>().material = newMaterial;
                     }
                     else
                     {
                         transformSigns.gameObject.GetComponent<Renderer>().sharedMaterial =
-                            UnmappedTextures.LILJCAEGEIP[num4];
+                            UnmappedTextures.LILJCAEGEIP[num6];
                     }
                 }
             }
