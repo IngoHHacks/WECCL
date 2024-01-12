@@ -11,11 +11,11 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.7.14";
+    public const string PluginVer = "1.8.2";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.61f;
+    public const float PluginVersion = 1.62f;
     public static readonly float GameVersion = MappedGlobals.optVersion;
 
     public const bool PreRelease = false;
@@ -46,6 +46,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> DebugRender { get; set; }
     internal static ConfigEntry<string> DataSharingLevel { get; set; }
     internal static ConfigEntry<string> SaveFileName { get; set; }
+    internal static ConfigEntry<string> PersistentDataOverride { get; set; }
 
     public static float CharactersVersion => Characters.latestVersion;
 
@@ -57,7 +58,11 @@ public class Plugin : BaseUnityPlugin
             Log = this.Logger;
             Instance = this;
             PluginPath = Path.GetDirectoryName(this.Info.Location) ?? string.Empty;
-            PersistentDataPath = Path.Combine(Application.persistentDataPath, "WECCL");
+            
+            PersistentDataOverride = this.Config.Bind("General", "PersistentDataOverride", "",
+                "Override the persistent data path, which is used for storing the cache and mappings. This is useful if you want to use a different drive for the cache and mappings, since they can get quite large. Note that this will not move the existing cache and mappings, so you will have to move them manually. Leave this empty to use the default persistent data path: " + Path.Combine(Application.persistentDataPath, "WECCL").Replace('/', '\\'));
+            
+            PersistentDataPath = string.IsNullOrEmpty(PersistentDataOverride.Value) ? Path.Combine(Application.persistentDataPath, "WECCL") : PersistentDataOverride.Value;
             if (!Directory.Exists(PersistentDataPath))
             {
                 Directory.CreateDirectory(PersistentDataPath);

@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using WECCL.Content;
@@ -95,7 +97,7 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void AssetBundle_LoadAsset(ref Object __result, string name)
     {
-        if (ResourceOverridesTextures.ContainsKey(name))
+        if (ResourceOverridesTextures.ContainsKey(name.ToLower()))
         {
             if (__result == null) // Manual overrides
             {
@@ -110,7 +112,7 @@ internal class ContentPatch
             }
             if (__result is Texture2D texture)
             {
-                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name);
+                Texture2D overrideTexture = GetHighestPriorityTextureOverride(name.ToLower());
                 if ((texture.width != overrideTexture.width || texture.height != overrideTexture.height) && !Plugin.UseFullQualityTextures.Value)
                 {
                     overrideTexture = ResizeTexture(overrideTexture, texture.width, texture.height);
@@ -141,7 +143,7 @@ internal class ContentPatch
             }
         }
 
-        if (ResourceOverridesAudio.ContainsKey(name))
+        if (ResourceOverridesAudio.ContainsKey(name.ToLower()))
         {
             if (__result is AudioClip)
             {
@@ -173,7 +175,7 @@ internal class ContentPatch
                     {
                         continue;
                     }
-
+                    
                     if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name) ||
                         ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)", "").Trim() + "_" +
                                                               material.mainTexture))

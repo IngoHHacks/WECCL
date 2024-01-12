@@ -547,6 +547,12 @@ internal static class LoadContent
         {
             return;
         }
+        
+        // Don't cache if less than 10GB of space is available
+        if (new DriveInfo(Path.GetPathRoot(Locations.Cache.FullName)).AvailableFreeSpace < 10000000000)
+        {
+            return;
+        }
 
         float[] floatArray = new float[clip.samples * clip.channels];
         clip.GetData(floatArray, 0);
@@ -936,7 +942,7 @@ internal static class LoadContent
                         fileName = $"{modGuid}/{fileName}";
                     }
 
-                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, tex);
+                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/").ToLower(), fileName, tex);
                     LoadedAssets++;
                     LastAsset = fileName;
                 }
@@ -984,7 +990,7 @@ internal static class LoadContent
                     }
 
                     clip.name = fileName;
-                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/"), fileName, clip);
+                    AddResourceOverride(fileNameWithoutExtension.Replace(".", "/").ToLower(), fileName, clip);
                     LoadedAssets++;
                     LastAsset = fileName;
                 }

@@ -491,7 +491,11 @@ internal class ArenaPatch
                         val.gameObject.SetActive(true);
                         if (Mathf.Abs(World.crowdTexture[i]) != Mathf.Abs(num3))
                         {
-                            val.gameObject.GetComponent<Renderer>().sharedMaterial = PFKAPGFJKHH.OAAOONFNNBI[World.crowdTexture[i]];
+                            var renderer = val.gameObject.GetComponent<Renderer>();
+                            if (renderer != null)
+                            {
+                                renderer.sharedMaterial = UnmappedTextures.OAAOONFNNBI[World.crowdTexture[i]];
+                            }
                         }
                     }
                     else if (LIPNHOMGGHF.FAKHAFKOBPB == 50)
@@ -507,6 +511,10 @@ internal class ArenaPatch
             if (World.location <= VanillaCounts.Data.NoLocations)
             {
                 Transform val2 = World.gArena.transform.Find("Seats/Seats" + i.ToString("00"));
+                if (val2 == null)
+                {
+                    val2 = World.gArena.transform.Find("Seats/Crowd" + i.ToString("00"));
+                }
                 if (val2 != null)
                 {
                     if (World.crowdTexture[i] <= 0 && NAEEIFNFBBO.GNCLMNEDIPL >= 2)
