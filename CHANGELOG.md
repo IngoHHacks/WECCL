@@ -2,6 +2,11 @@
 
 ## GV 1.60+:
 
+### Release 1.8.4
+- Fixed distant crowd not appearing.
+- Haha, you thought I fixed the case sensitivity issue in the previous release? Well, WRONG! Turns out I only fixed it for 4 out of 6 cases. Now the issue is fixed for real, I hope. 
+- Mat Dickie, if you're reading this, remember that it's not 2003 anymore. We have lists now. You don't need to use damn arrays for everything. I'm sure you're a great guy, but please, for the love of god, use lists. I'm begging you.
+
 ### Release 1.8.3
 - Fixed an issue with restoring the default save file if the roster size is smaller than the default roster size.
 - It is no longer possible to delete the last character in all rosters.

@@ -176,17 +176,17 @@ internal class ContentPatch
                         continue;
                     }
                     
-                    if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name) ||
-                        ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)", "").Trim() + "_" +
-                                                              material.mainTexture))
+                    if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name.ToLower()) ||
+                        ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)", "").Trim().ToLower() + "_" +
+                                                              material.mainTexture.ToString().ToLower()))
                     {
-                        Texture2D tex = GetHighestPriorityTextureOverride(material.mainTexture.name);
+                        Texture2D tex = GetHighestPriorityTextureOverride(material.mainTexture.name.ToLower());
                         if ((material.mainTexture.width != tex.width ||
                             material.mainTexture.height != tex.height) &&
                              !Plugin.UseFullQualityTextures.Value)
                         {
                             tex = ResizeTexture(tex, material.mainTexture.width, material.mainTexture.height);
-                            SetHighestPriorityTextureOverride(material.mainTexture.name, tex);
+                            SetHighestPriorityTextureOverride(material.mainTexture.name.ToLower(), tex);
                         }
 
                         material.mainTexture = tex;
@@ -202,9 +202,9 @@ internal class ContentPatch
                     continue;
                 }
 
-                if (ResourceOverridesAudio.ContainsKey(audioSource.clip.name))
+                if (ResourceOverridesAudio.ContainsKey(audioSource.clip.name.ToLower()))
                 {
-                    audioSource.clip = GetHighestPriorityAudioOverride(audioSource.clip.name);
+                    audioSource.clip = GetHighestPriorityAudioOverride(audioSource.clip.name.ToLower());
                 }
             }
         }
@@ -218,9 +218,9 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void Image(ref Image __instance)
     {
-        if (__instance.m_Sprite != null && ResourceOverridesTextures.ContainsKey(__instance.m_Sprite.name))
+        if (__instance.m_Sprite != null && ResourceOverridesTextures.ContainsKey(__instance.m_Sprite.name.ToLower()))
         {
-            Texture2D overrideTexture = GetHighestPriorityTextureOverride(__instance.m_Sprite.name);
+            Texture2D overrideTexture = GetHighestPriorityTextureOverride(__instance.m_Sprite.name.ToLower());
             if (__instance.m_Sprite.texture.width != overrideTexture.width ||
                 __instance.m_Sprite.texture.height != overrideTexture.height)
             {
