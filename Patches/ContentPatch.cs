@@ -97,7 +97,7 @@ internal class ContentPatch
     [HarmonyPostfix]
     public static void AssetBundle_LoadAsset(ref Object __result, string name)
     {
-        if (ResourceOverridesTextures.ContainsKey(name))
+        if (ResourceOverridesTextures.ContainsKey(name.ToLower()))
         {
             if (__result == null) // Manual overrides
             {
@@ -143,7 +143,7 @@ internal class ContentPatch
             }
         }
 
-        if (ResourceOverridesAudio.ContainsKey(name))
+        if (ResourceOverridesAudio.ContainsKey(name.ToLower()))
         {
             if (__result is AudioClip)
             {

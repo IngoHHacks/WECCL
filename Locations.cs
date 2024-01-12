@@ -26,8 +26,10 @@ public static class Locations
         if (Plugin.CacheEnabled.Value && !Cache.Exists)
         {
             Cache.Create();
-            Cache.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
-            Cache.Refresh();
+        }
+        else if (Plugin.CacheEnabled.Value && Cache.Attributes.HasFlag(FileAttributes.Hidden))
+        {
+            Cache.Attributes &= ~FileAttributes.Hidden;
         }
         else if (!Plugin.CacheEnabled.Value && Cache.Exists)
         {
