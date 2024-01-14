@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using WECCL.Content;
+using WECCL.Internal;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -597,7 +598,7 @@ internal class ArenaPatch
                     num7 = 0;
                 }
             }
-            Console.WriteLine(num7);
+            
             if (num7 > 0)
             {
                 transformSigns.gameObject.SetActive(value: true);
