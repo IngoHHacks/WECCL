@@ -2,8 +2,10 @@
 
 ## GV 1.60+:
 
-### Release 1.8.4
+### Release 1.8.5
 - Fixed distant crowd not appearing.
+
+### Release 1.8.4
 - Haha, you thought I fixed the case sensitivity issue in the previous release? Well, WRONG! Turns out I only fixed it for 4 out of 6 cases. Now the issue is fixed for real, I hope. 
 - Mat Dickie, if you're reading this, remember that it's not 2003 anymore. We have lists now. You don't need to use damn arrays for everything. I'm sure you're a great guy, but please, for the love of god, use lists. I'm begging you.
 
