@@ -9,7 +9,9 @@ public class MatchTypePatch
     private static float OldPresetMin;
     private static float OldCageMax;
     private static float OldCageMin;
-   
+    private static float OldRewardMax;
+    private static float OldRewardMin;
+
     /*
      * Patch:
      * - Adds custom match types from the selection menu.
@@ -86,6 +88,43 @@ public class MatchTypePatch
             }
         }
     }
+
+    /*
+     * Patch:
+     * - Adds custom cages to the selection menu.
+     */
+    [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.ODONMLDCHHF))]
+    [HarmonyPrefix]
+    private static void Menu_ODONMLDCHHF_Pre3(UnmappedMenu __instance, float __result, ref float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
+    {
+        if (SceneManager.GetActiveScene().name != "Match_Setup") return;
+        if (LIPNHOMGGHF.CHLJMEPFJOK == 2)
+        {
+            if (LIPNHOMGGHF.FKANHDIMMBJ[5] == __instance)
+            {
+                ChangeHardcodedPrefix(ref OldRewardMin, ref JBPAELFIDOP, CustomMatch.CustomRewardsNeg.Count, ref OldRewardMax, ref LKBOHHGFJFO, CustomMatch.CustomRewardsPos.Count, ref CAAJBNHEFJJ);
+            }
+        }
+    }
+
+    /*
+     * Patch:
+     * - Second patch for custom cages to the selection menu.
+     */
+    [HarmonyPatch(typeof(UnmappedMenu), nameof(UnmappedMenu.ODONMLDCHHF))]
+    [HarmonyPostfix]
+    private static void Menu_ODONMLDCHHF_Post3(UnmappedMenu __instance, ref float __result, float CAAJBNHEFJJ, float OEGLNPMNEOE, float NOGFHHECJBM, ref float JBPAELFIDOP, ref float LKBOHHGFJFO, int LKJHMOHMKCM)
+    {
+        if (SceneManager.GetActiveScene().name != "Match_Setup") return;
+        if (LIPNHOMGGHF.CHLJMEPFJOK == 2)
+        {
+            if (LIPNHOMGGHF.FKANHDIMMBJ[5] == __instance)
+            {
+                ChangeHardcodedPostfix(ref __result, OldRewardMin, OldRewardMax);
+            }
+        }
+    }
+
     private static void ChangeHardcodedPrefix(ref float OldMin, ref float GameMin, int NegativesCount, ref float OldMax, ref float GameMax, int PositivesCount, ref float CurrentValue)
     {
         OldMax = GameMax;

@@ -5,6 +5,8 @@ public class CustomMatch
     internal static Dictionary<string, int> CustomPresetsNeg = new();
     internal static Dictionary<string, int> CustomCagesPos = new();
     internal static Dictionary<string, int> CustomCagesNeg = new();
+    internal static Dictionary<string, int> CustomRewardsPos = new();
+    internal static Dictionary<string, int> CustomRewardsNeg = new();
 
     /// <summary>
     /// <para>Use this to register your custom match preset and get a preset ID.</para>
@@ -77,6 +79,29 @@ public class CustomMatch
             {
                 LogInfo("REGISTERED " + Name + " as cage " + -value);
                 CustomCagesNeg.Add(Name, -value);
+            }
+            return -value;
+        }
+    }
+
+    public static int? RegisterCustomReward(string Name, bool PositiveValue)
+    {
+        int value;
+        if (PositiveValue)
+        {
+            if (RegisterHardcodedElement(Name, CustomRewardsPos, "Reward", out value))
+            {
+                LogInfo("REGISTERED " + Name + " as reward " + value);
+                CustomRewardsPos.Add(Name, value);
+            }
+            return value;
+        }
+        else
+        {
+            if (RegisterHardcodedElement(Name, CustomRewardsNeg, "Reward", out value))
+            {
+                LogInfo("REGISTERED " + Name + " as reward " + -value);
+                CustomRewardsNeg.Add(Name, -value);
             }
             return -value;
         }

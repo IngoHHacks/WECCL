@@ -626,12 +626,10 @@ internal class ArenaPatch
             }
             else if (UnmappedMenus.FAKHAFKOBPB == 50)
             {
-                Console.WriteLine("Destroy sign object called");
                 Object.Destroy(transformSigns.gameObject);
             }
             else
             {
-                Console.WriteLine("Set active false called");
                 transformSigns.gameObject.SetActive(value: false);
             }
         }
