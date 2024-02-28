@@ -4,6 +4,7 @@
 
 ### Release 1.9.0
 - Fixed the new TV Studio arena not showing up.
+- Fixed crowd sign scaling with crowd size.
 
 ### Release 1.8.6
 - Fixed career mode character not resetting correctly when restoring default save file.  
