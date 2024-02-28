@@ -2,6 +2,14 @@
 
 ## GV 1.60+:
 
+### Release 1.9.0
+- Fixed the new TV Studio arena not showing up.
+
+### Release 1.8.6
+- Fixed career mode character not resetting correctly when restoring default save file.  
+- Fixed custom laces.
+- Content is now loaded alphabetically (folders first, then files) to make remapping more predictable and less likely to break.
+
 ### Release 1.8.5
 - Fixed distant crowd not appearing.
 

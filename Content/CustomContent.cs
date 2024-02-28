@@ -40,7 +40,7 @@ internal static class CustomContent
         { "body_pattern", new CostumeData("body_pattern", typeof(Texture2D)) },
         { "legs_kneepad", new CostumeData("legs_kneepad", "kneepads", typeof(Texture2D)) },
         { "legs_pattern", new CostumeData("legs_pattern", typeof(Texture2D)) },
-        { "legs_laces", new CostumeData("legs_laces", "lace", typeof(Texture2D)) },
+        { "legs_laces", new CostumeData("legs_laces", "laces", typeof(Texture2D)) },
         { "face_headwear", new CostumeData("face_headwear", "shape28;shape31", typeof(Mesh)) },
         { "arms_elbow_pad", new CostumeData("arms_elbow_pad", "pad", typeof(Texture2D)) },
         { "arms_wristband", new CostumeData("arms_wristband", "wristband", typeof(Texture2D)) }

@@ -35,6 +35,11 @@ internal class SaveFilePatch
             {
                 Characters.star = 1;
             }
+            
+            if (Characters.wrestler > 350)
+            {
+                Characters.wrestler = 1;
+            }
 
             if (Characters.booker > 350)
             {

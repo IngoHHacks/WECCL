@@ -11,11 +11,11 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.8.5";
+    public const string PluginVer = "1.9.0";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.62f;
+    public const float PluginVersion = 1.63f;
     public static readonly float GameVersion = MappedGlobals.optVersion;
 
     public const bool PreRelease = false;
@@ -155,11 +155,11 @@ public class Plugin : BaseUnityPlugin
             {
                 if (GameVersion > PluginVersion)
                 {
-                    LogWarning($"Your game version ({GameVersion}) is newer than the plugin version ({PluginVersion}). Keep in mind that this plugin may not work as intended on this version. Check the Steam Workshop page for updates.");
+                    LogWarning($"Your game version ({GameVersion}) is newer than WECCL's target version ({PluginVersion}). Keep in mind that it may not work as intended on this version. Check the Steam Workshop page for updates.");
                 }
                 else
                 {
-                    LogWarning($"Your game version ({GameVersion}) is older than the plugin version ({PluginVersion}). Keep in mind that this plugin may not work as intended on this version. Check for updates in the game's properties on Steam.");
+                    LogWarning($"Your game version ({GameVersion}) is older than WECCL's target version ({PluginVersion}). Keep in mind that it may not work as intended on this version. Check for updates in the game's properties on Steam.");
                 }
             }
 

@@ -108,7 +108,7 @@ internal static class LoadContent
         VanillaCounts.Data.NoFeds = Characters.no_feds;
         
         LoadingPhase = LoadPhase.Libraries;
-        foreach (DirectoryInfo dir in AllModsLibrariesDirs)
+        foreach (DirectoryInfo dir in AllModsLibrariesDirs.OrderBy(x => x.Name))
         {
             yield return LoadLibraries(dir);
         }
@@ -116,22 +116,22 @@ internal static class LoadContent
         if (Plugin.EnableCustomContent.Value)
         {
             LoadingPhase = LoadPhase.Promos;
-            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
+            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadPromos(modAssetsDir);
             }
             LoadingPhase = LoadPhase.Audio;
-            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
+            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadAudioClips(modAssetsDir);
             }
             LoadingPhase = LoadPhase.Costumes;
-            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
+            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadCostumes(modAssetsDir);
             }
             LoadingPhase = LoadPhase.Asset_Bundles;
-            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs)
+            foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadAssetBundles(modAssetsDir);
             }
@@ -475,7 +475,7 @@ internal static class LoadContent
 
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
             .Where(f => AudioExtensions.Contains(f.Extension.ToLower())).ToArray();
-        foreach (FileInfo file in files)
+        foreach (FileInfo file in files.OrderBy(x => x.Name))
         {
             string fileName = file.Name;
             try
@@ -616,7 +616,7 @@ internal static class LoadContent
 
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
             .Where(f => ImageExtensions.Contains(f.Extension.ToLower())).ToArray();
-        foreach (FileInfo file in files)
+        foreach (FileInfo file in files.OrderBy(x => x.Name).OrderBy(x => x.Name))
         {
             string fileName = file.Name;
             foreach (KeyValuePair<string, CostumeData> pair in CustomCostumes)
@@ -703,7 +703,7 @@ internal static class LoadContent
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
             .Where(f => f.Extension.ToLower() == ".dll").ToArray();
 
-        foreach (FileInfo file in files)
+        foreach (FileInfo file in files.OrderBy(x => x.Name))
         {
             string fileName = file.Name;
             try
@@ -730,7 +730,7 @@ internal static class LoadContent
 
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
             .Where(f => PromoExtensions.Contains(f.Extension.ToLower())).ToArray();
-        foreach (FileInfo file in files)
+        foreach (FileInfo file in files.OrderBy(x => x.Name))
         {
             try
             {
@@ -766,7 +766,7 @@ internal static class LoadContent
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
             .Where(f => AssetBundleExtensions.Contains(f.Extension.ToLower())).ToArray();
 
-        foreach (FileInfo file in files)
+        foreach (FileInfo file in files.OrderBy(x => x.Name))
         {
             string fileName = file.Name;
             if (file.Directory?.Name == "arena")
@@ -923,7 +923,7 @@ internal static class LoadContent
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories).Where(f => ImageExtensions.Contains(f.Extension.ToLower()) || AudioExtensions.Contains(f.Extension.ToLower()))
             .ToArray();
 
-        foreach (FileInfo file in files)
+        foreach (FileInfo file in files.OrderBy(x => x.Name))
         {
             if (ImageExtensions.Contains(file.Extension.ToLower()))
             {
@@ -1061,7 +1061,7 @@ internal static class LoadContent
             FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories)
                 .Where(f => f.Extension.ToLower() == ".character")
                 .ToArray();
-            foreach (FileInfo file in files)
+            foreach (FileInfo file in files.OrderBy(x => x.Name))
             {
                 try
                 {
