@@ -274,7 +274,15 @@ internal class ContentPatch
                     Dictionary<string, string> meta = c.Item3;
                     if (mesh != null)
                     {
-                        __instance.PCNHIIPBNEK[limb].GetComponent<MeshFilter>().mesh = mesh;
+                        //if (limb == 14 || limb == 15 || limb == 18 || limb == 28 || limb == 31)
+                        //{
+                            __instance.PCNHIIPBNEK[limb].GetComponent<MeshFilter>().mesh = mesh;
+                        //}
+                        //else
+                        //{
+                            //Feel it needs something like below but can't get it working
+                        //    __instance.PCNHIIPBNEK[limb].GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
+                        //}
                         if (meta.ContainsKey("scale"))
                         {
                             if (meta["scale"].Contains(","))

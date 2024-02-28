@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using WECCL.Content;
+using WECCL.Internal;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -597,10 +598,10 @@ internal class ArenaPatch
                     num7 = 0;
                 }
             }
-
+            
             if (num7 > 0)
             {
-                transformSigns.gameObject.SetActive(true);
+                transformSigns.gameObject.SetActive(value: true);
                 if (UnmappedMenus.FAKHAFKOBPB == 50 && JNHFFNPHMOC == 0)
                 {
                     if (UnmappedGlobals.GNCLMNEDIPL >= 2)
@@ -629,27 +630,29 @@ internal class ArenaPatch
             }
             else
             {
-                transformSigns.gameObject.SetActive(false);
-            }
-            if (World.arenaShape < 5)
-            {
-                return false;
-            }
-            Transform transform4 = World.gArena.transform.Find("ExtendedCrowd");
-            if (transform4 != null)
-            {
-                int num8 = 0;
-                if (World.crowdSize > 0.5f)
-                {
-                    num8 = 1;
-                }
-                if (World.crowdSize > 0.65f)
-                {
-                    num8 = 2;
-                }
-                transform4.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", PFKAPGFJKHH.BLPBAIJJCAL[num8]);
+                transformSigns.gameObject.SetActive(value: false);
             }
         }
+
+        if (World.arenaShape < 5)
+        {
+            return false;
+        }
+        Transform transform4 = World.gArena.transform.Find("ExtendedCrowd");
+        if (transform4 != null)
+        {
+            int num8 = 0;
+            if (World.crowdSize > 0.5f)
+            {
+                num8 = 1;
+            }
+            if (World.crowdSize > 0.65f)
+            {
+                num8 = 2;
+            }
+            transform4.gameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", PFKAPGFJKHH.BLPBAIJJCAL[num8]);
+        }
+
         return false;
     }
 
