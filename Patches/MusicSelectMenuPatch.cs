@@ -138,7 +138,7 @@ internal class MusicSelectMenuPatch
     {
         MappedMenus.listReturnPage = MappedMenus.page;
         //MappedMenus.listReturnFoc = MappedMenus.foc;
-        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1 && MappedMenus.foc == 8)
         {
             MappedMenus.listSource = Enumerable.Range(0, MappedSound.no_themes).ToArray();
         }
@@ -153,7 +153,7 @@ internal class MusicSelectMenuPatch
     public static bool Menus_LFEHAGOEBNK(ref string __result, int KJELLNJFNGO)
     {
         var cyc = KJELLNJFNGO;
-        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1 && MappedMenus.listReturnFoc == 8)
         {
             if (cyc > VanillaCounts.Data.MusicCount)
             {
@@ -189,7 +189,7 @@ internal class MusicSelectMenuPatch
         {
             return true;
         }
-        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1 && MappedMenus.listReturnFoc == 8)
         {
             MappedCharacter character = MappedCharacters.c[charID];
             for (int i = 0; i <= MappedMenus.listSize; i++)
@@ -218,7 +218,7 @@ internal class MusicSelectMenuPatch
         {
             return true;
         }
-        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1 && MappedMenus.listReturnFoc == 8)
         {
             MappedCharacter character = MappedCharacters.c[charID];
             character.music = MappedMenus.listID[MappedMenus.listFoc];
@@ -234,7 +234,7 @@ internal class MusicSelectMenuPatch
     [HarmonyPostfix]
     public static void Menus_OGOMMBJBBDB_Post()
     {
-        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1)
+        if (MappedMenus.listReturnPage == 0 && MappedMenus.tab == 1 && MappedMenus.listReturnFoc == 8)
         {
             var music = MappedMenus.listID[MappedMenus.listFoc];
             if (MappedSound.musicPlaying != music)

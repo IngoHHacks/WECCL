@@ -300,7 +300,42 @@ internal class ArenaPatch
                 freezeAnnouncers = false;
             }
 
+            World.ground = 0f;
+
             GameObject[] objects = Object.FindObjectsOfType<GameObject>();
+
+            float ceilingHeightFloat = 0;
+            string ceilingHeight = "ceilingHeight";
+            GameObject[] ceilingHeightObj = objects.Where(obj => obj.name.StartsWith(ceilingHeight)).ToArray();
+            if (ceilingHeightObj.Length > 0)
+            {
+                string[] ceilingHeights =
+                    ceilingHeightObj.Select(obj => obj.name.Substring(ceilingHeight.Length)).ToArray();
+
+                foreach (string height in ceilingHeights)
+                {
+                    float parsedDistance;
+                    if (float.TryParse(height, out parsedDistance))
+                    {
+                        ceilingHeightFloat = parsedDistance;
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.LogError("Failed to parse ceilingHeight: " + height);
+                    }
+                }
+            }
+
+            if (ceilingHeightFloat > 0)
+            {
+                World.ceiling = ceilingHeightFloat;
+            }
+            else
+            {
+                World.ceiling = 100f;
+            }
+
+            
             float camDistanceFloat = new();
 
             string desiredName = "camDistance";
@@ -324,8 +359,6 @@ internal class ArenaPatch
                 }
             }
 
-            World.ground = 0f;
-            World.ceiling = 100f;
             if (camDistanceFloat != 0)
             {
                 World.camNorth = camDistanceFloat;
