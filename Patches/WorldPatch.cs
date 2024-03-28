@@ -226,59 +226,67 @@ public class WorldPatch
             {
                 MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
 
-                Bounds bounds = meshCollider.sharedMesh.bounds;
-
-                Vector3 center = bounds.center;
-                Vector3 extents = bounds.extents;
-
-                // Calculate the 8 corners of the bounding box
-                Vector3[] corners = new Vector3[8];
-                corners[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
-                corners[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
-                corners[2] = center + new Vector3(extents.x, -extents.y, extents.z);
-                corners[3] = center + new Vector3(extents.x, -extents.y, -extents.z);
-                corners[4] = center + new Vector3(-extents.x, extents.y, -extents.z);
-                corners[5] = center + new Vector3(-extents.x, extents.y, extents.z);
-                corners[6] = center + new Vector3(extents.x, extents.y, extents.z);
-                corners[7] = center + new Vector3(extents.x, extents.y, -extents.z);
-
-                // Get the 8 corners of the bounding box as world position
-                Vector3[] worldCorners = new Vector3[corners.Length];
-                for (int i = 0; i < corners.Length; i++)
+                if (meshCollider != null)
                 {
-                    worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
-                }
+                    Bounds bounds = meshCollider.sharedMesh.bounds;
 
-                UnmappedBlocks.FACCLLDILBH++;
-                int peifijckaoc = UnmappedBlocks.FACCLLDILBH;
-                UnmappedBlocks.DFLLBNMHHIH();
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].AMJOGFHEBKI = 0f;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].FNNBCDPJBIO = worldCorners[0].y;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].NALEIJHPOHN = worldCorners[1].y - worldCorners[0].y;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].GMFOALGKLJK = 1;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].HHFIFJPHINJ = "Barrier";
-                GameObject arenaObject = GetTopLevelParent(gameObject);
-                if (arenaObject.transform.rotation == Quaternion.Euler(0f, 180f, 0f))
-                {
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[4].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[4].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[7].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[7].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[3].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[3].z - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[0].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[0].z - 2.5f;
+                    Vector3 center = bounds.center;
+                    Vector3 extents = bounds.extents;
+
+                    // Calculate the 8 corners of the bounding box
+                    Vector3[] corners = new Vector3[8];
+                    corners[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
+                    corners[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
+                    corners[2] = center + new Vector3(extents.x, -extents.y, extents.z);
+                    corners[3] = center + new Vector3(extents.x, -extents.y, -extents.z);
+                    corners[4] = center + new Vector3(-extents.x, extents.y, -extents.z);
+                    corners[5] = center + new Vector3(-extents.x, extents.y, extents.z);
+                    corners[6] = center + new Vector3(extents.x, extents.y, extents.z);
+                    corners[7] = center + new Vector3(extents.x, extents.y, -extents.z);
+
+                    // Get the 8 corners of the bounding box as world position
+                    Vector3[] worldCorners = new Vector3[corners.Length];
+                    for (int i = 0; i < corners.Length; i++)
+                    {
+                        worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
+                    }
+
+                    UnmappedBlocks.FACCLLDILBH++;
+                    int peifijckaoc = UnmappedBlocks.FACCLLDILBH;
+                    UnmappedBlocks.DFLLBNMHHIH();
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].AMJOGFHEBKI = 0f;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].FNNBCDPJBIO = worldCorners[0].y;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].NALEIJHPOHN = worldCorners[1].y - worldCorners[0].y;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].GMFOALGKLJK = 1;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].HHFIFJPHINJ = "Barrier";
+                    GameObject arenaObject = GetTopLevelParent(gameObject);
+                    if (arenaObject.transform.rotation == Quaternion.Euler(0f, 180f, 0f))
+                    {
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[4].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[4].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[7].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[7].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[3].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[3].z - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[0].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[0].z - 2.5f;
+                    }
+                    else
+                    {
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[3].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[3].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[0].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[0].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[4].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[4].z - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[7].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[7].z - 2.5f;
+                    }
                 }
                 else
                 {
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[3].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[3].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[0].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[0].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[4].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[4].z - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[7].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[7].z - 2.5f;
+                    string warning = "Barrier_Climbables with name '" + gameObject.name + "' is missing a meshCollider and won't work as expected.";
+                    LogWarning(warning);
                 }
             }
 
@@ -287,60 +295,67 @@ public class WorldPatch
                          select t.gameObject).ToArray())
             {
                 MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
-
-                Bounds bounds = meshCollider.sharedMesh.bounds;
-
-                Vector3 center = bounds.center;
-                Vector3 extents = bounds.extents;
-
-                // Calculate the 8 corners of the bounding box
-                Vector3[] corners = new Vector3[8];
-                corners[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
-                corners[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
-                corners[2] = center + new Vector3(extents.x, -extents.y, extents.z);
-                corners[3] = center + new Vector3(extents.x, -extents.y, -extents.z);
-                corners[4] = center + new Vector3(-extents.x, extents.y, -extents.z);
-                corners[5] = center + new Vector3(-extents.x, extents.y, extents.z);
-                corners[6] = center + new Vector3(extents.x, extents.y, extents.z);
-                corners[7] = center + new Vector3(extents.x, extents.y, -extents.z);
-
-                // Get the 8 corners of the bounding box as world position
-                Vector3[] worldCorners = new Vector3[corners.Length];
-                for (int i = 0; i < corners.Length; i++)
+                if (meshCollider != null)
                 {
-                    worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
-                }
-              
-                UnmappedBlocks.FACCLLDILBH++;
-                int peifijckaoc = UnmappedBlocks.FACCLLDILBH;
-                UnmappedBlocks.DFLLBNMHHIH();
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].AMJOGFHEBKI = 0f;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].FNNBCDPJBIO = worldCorners[0].y;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].NALEIJHPOHN = worldCorners[1].y - worldCorners[0].y;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].GMFOALGKLJK = 1;
-                UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].HHFIFJPHINJ = "Cage";
-                GameObject arenaObject = GetTopLevelParent(gameObject);
-                if (arenaObject.transform.rotation == Quaternion.Euler(0f, 180f, 0f))
-                {
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[4].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[4].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[7].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[7].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[3].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[3].z - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[0].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[0].z - 2.5f;
+                    Bounds bounds = meshCollider.sharedMesh.bounds;
+
+                    Vector3 center = bounds.center;
+                    Vector3 extents = bounds.extents;
+
+                    // Calculate the 8 corners of the bounding box
+                    Vector3[] corners = new Vector3[8];
+                    corners[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
+                    corners[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
+                    corners[2] = center + new Vector3(extents.x, -extents.y, extents.z);
+                    corners[3] = center + new Vector3(extents.x, -extents.y, -extents.z);
+                    corners[4] = center + new Vector3(-extents.x, extents.y, -extents.z);
+                    corners[5] = center + new Vector3(-extents.x, extents.y, extents.z);
+                    corners[6] = center + new Vector3(extents.x, extents.y, extents.z);
+                    corners[7] = center + new Vector3(extents.x, extents.y, -extents.z);
+
+                    // Get the 8 corners of the bounding box as world position
+                    Vector3[] worldCorners = new Vector3[corners.Length];
+                    for (int i = 0; i < corners.Length; i++)
+                    {
+                        worldCorners[i] = meshCollider.transform.TransformPoint(corners[i]);
+                    }
+
+                    UnmappedBlocks.FACCLLDILBH++;
+                    int peifijckaoc = UnmappedBlocks.FACCLLDILBH;
+                    UnmappedBlocks.DFLLBNMHHIH();
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].AMJOGFHEBKI = 0f;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].FNNBCDPJBIO = worldCorners[0].y;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].NALEIJHPOHN = worldCorners[1].y - worldCorners[0].y;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].GMFOALGKLJK = 1;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].HHFIFJPHINJ = "Cage";
+                    GameObject arenaObject = GetTopLevelParent(gameObject);
+                    if (arenaObject.transform.rotation == Quaternion.Euler(0f, 180f, 0f))
+                    {
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[4].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[4].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[7].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[7].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[3].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[3].z - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[0].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[0].z - 2.5f;
+                    }
+                    else
+                    {
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[3].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[3].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[0].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[0].z + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[4].x - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[4].z - 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[7].x + 2.5f;
+                        UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[7].z - 2.5f;
+                    }
                 }
                 else
                 {
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[1] = worldCorners[3].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[1] = worldCorners[3].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[4] = worldCorners[0].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[4] = worldCorners[0].z + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[3] = worldCorners[4].x - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[3] = worldCorners[4].z - 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].EONCNOGEOFC[2] = worldCorners[7].x + 2.5f;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].MKOCPPCIKEM[2] = worldCorners[7].z - 2.5f;
+                    string warning = "Fence_Climbables with name '" + gameObject.name + "' is missing a meshCollider and won't work as expected.";
+                    LogWarning(warning);
                 }
             }
 
