@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.9.1
+- Added support for custom height limits for custom arenas.
+- Barriers and fences without MeshColliders will now give a warning instead of breaking the game.
+
 ### Release 1.9.0
 - Fixed the new TV Studio arena not showing up.
 - Fixed crowd sign scaling with crowd size.
