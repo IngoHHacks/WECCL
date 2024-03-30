@@ -17,7 +17,7 @@ internal static class Animations
         }
     }
 
-    public static void StartAnimation(this MappedPlayer player, float speed, int buildupFrames, float forwardMomentum = 0f)
+    public static void WindUp(this MappedPlayer player, float speed, int buildupFrames, float forwardMomentum = 0f)
     {
         player.CockAttack(forwardMomentum, speed, buildupFrames); // negative speed is absolute, positive adds randomness
     }
@@ -25,7 +25,9 @@ internal static class Animations
     {
         player.animFile[0] = file;
         player.frame[0] = frame;
-        player.transition[0] = speed == -1 ? player.s : speed == -2 ? 3f + player.animTim * 3f : speed;
+        if (speed >= 0) {
+            player.transition[0] = speed;
+        }
     }
     
     public static void SetGrappleAnimation(this MappedPlayer player, int file, float frame, float speed = -1)
@@ -34,7 +36,9 @@ internal static class Animations
         player.frameA = frame;
         player.fileB = file;
         player.frameB = frame;
-        player.t = speed == -1 ? player.s : speed == -2 ? 3f + player.animTim * 3f : speed;
+        if (speed >= 0) {
+            player.t = speed;
+        }
     }
 
     public static void EnableHitbox(this MappedPlayer player, float distance, float damage, Limb limb, float angle = 0f,

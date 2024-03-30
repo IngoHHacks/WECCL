@@ -18,25 +18,49 @@ The move files must be in a subfolder named `animation`. The following files are
 `(move_name).receive` (for grappling moves) is an asset bundle containing a single AnimationClip for the opponent's animation.
 All files must be in the same folder.
 
+## Important Notes
+- Moves use interpolation between frames. Using keyframes or other animation features may not work as expected. Blame Mat Dickie for this.
+- All moves must have a `StopAnimation` event at the end.
+- All grapple moves must have an `EndGrapple` event at the end, unless transitioning to another grapple move.
+- Some events only work for strike moves, and some only work for grapple moves.
+- Frame ranges are inclusive. Animations always run at 30 FPS, regardless of the actual FPS of the game.
+- Strike moves usually have a `WindUp` event at the start, which makes the actual animation range start at frame 100. It is not required to have a `WindUp` event for strike moves.
+
 ## Animation File
 Asset bundles can be created through Unity. For more information on how to create asset bundles, see [Creating Asset Bundles](AssetBundles.md).
 
 ## Move Meta File
 The move meta file should contain the metadata of the move and a list of events.  
-An example meta file is shown below:
+Example strike move meta file:
 ```
 name: Big Punch
 types: BigAttack
 forwardspeedmultiplier: 1.5
-0-99 SetAnimation * 1 -2
-0-99 StartAnimation -10 5 0.5
-101- SetAnimation * 2
+0-99 SetAnimation * 1 3
+0-99 WindUp -10 5 0.5
+101- SetAnimation * 2 3
 110-129 EnableHitbox 8 1000 R_Hand 10 1
 110 PlayAudio -1
 130 HitConnected?
  130 StrengthCheck?
   130 SetAnimationId 9|10
 140 StopAnimation
+```
+Example grapple move meta file:
+```
+Name: Neck Stretch
+Types: FrontGrapple
+1-5 SetAnimation * 0 5
+6-10 SetAnimation * 1 5
+11-20 SetAnimation * 2 5
+21-30 SetAnimation * 3 5
+21 DealDamage 200
+21 DealStun -150
+21 StretchSound -0.2 0.5
+21 OppPainSound 0.5
+0- Sync 0 5 0 180
+31 StopAnimation
+31 EndGrapple
 ```
 
 ### Move Metadata
@@ -79,9 +103,10 @@ Examples:
 <p></p>
 
 <list>
-<li><control>Parameters:</control> <code>[file: int|*] [frame: int] [speed: float = -1]</code></li>
+<li><control>Parameters:</control> <code>[file: int|*] [frame: int] [frames: float = -1]</code></li>
 <li>Plays an animation.</li>
 <li><control>Note:</control> If <code>file</code> is <code>*</code>, the animation from the move file is played. Otherwise, the vanilla animation file is used.</li>
+<li><control>Note:</control> <code>frames</code> determines the speed of the animation. Lower values make the animation faster. Negative values are ignored and use the default speed (set by <code>TransitionFrames</code>). Typical values are 3-10. Can be a float.</li>
 </list>
 </chapter>
 <chapter title="SetAnimationId" id="setanimationid">
@@ -94,7 +119,7 @@ Examples:
 <list>
 <li>No parameters.</li>
 <li>Stops the animation.</li>
-<li><control>Note:</control> Required unless looping (which is not supported yet).</li>
+<li><control>Note:</control> Required.</li>
 </list>
 </chapter>
 <chapter title="TransitionFrames" id="transitionframes">
@@ -211,11 +236,12 @@ Examples:
 
 <chapter title="Animation Commands" id="strike-animation-commands" collapsible="true" default-state="expanded">
 
-<chapter title="StartAnimation" id="startanimation">
+<chapter title="WindUp" id="windup">
 <p></p>
 <list>
 <li><control>Parameters:</control> <code>[speed: float] [buildupFrames: int] [forwardMomentum: float = 0]</code></li>
 <li>Performs the windup animation of the move.</li>
+<li><control>Note:</control> <code>speed</code> is the minimum speed of the animation. Some randomization is applied. Set it to a negative value to disable randomization (the absolute value is used).</li>
 </list>
 </chapter>
 
@@ -272,7 +298,7 @@ Examples:
 <list>
 <li>No parameters.</li>
 <li>Ends the grapple.</li>
-<li><control>Note:</control> Required unless looping (which is not supported yet).</li>
+<li><control>Note:</control> Required unless transitioning to another grapple move.</li>
 </list>
 </chapter>
 
@@ -440,8 +466,8 @@ Conditions have no parameters.
 </chapter>
 
 ### Parameters
-`int` is an integer. Supports `|` and `-` operators.
-`float` is a float. Supports `|` and `-` operators.
+`int` is an integer (whole number). Supports `|` and `-` operators.
+`float` is a float (decimal number). Supports `|` and `-` operators.
 `*` is a literal `*`.
 `Limb` is a limb name, see [Limb Names](Limbs.md).
 ### Operators

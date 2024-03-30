@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.9.2
+- Negative move speed (third argument of `SetAnimation`) now copies the default speed (set by `TransitionFrames`) instead.
+- Renamed `StartAnimation` to `WindUp` in custom moves (since it's not actually the start of the animation).
+
 ### Release 1.9.1
 - Added support for custom height limits for custom arenas.
 - Barriers and fences without MeshColliders will now give a warning instead of breaking the game.

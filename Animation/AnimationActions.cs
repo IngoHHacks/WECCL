@@ -11,12 +11,12 @@ internal static class AnimationActions
     [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
     public static void Initialize()
     {
-        Actions["startanimation"] = new AnimationAction("StartAnimation", (p, args) =>
+        Actions["windup"] = new AnimationAction("WindUp", (p, args) =>
         {
             float speed = AnimationParser.ParseFloat(args["speed"]).Value.Value;
             int buildupFrames = AnimationParser.ParseInt(args["buildupframes"]).Value.Value;
             float forwardMomemtum = AnimationParser.ParseFloat(args["forwardmomentum"]).Value.Value;
-            p.StartAnimation(speed, buildupFrames, forwardMomemtum);
+            p.WindUp(speed, buildupFrames, forwardMomemtum);
         },  new AnimationArgument<float?>("speed", AnimationParser.ParseFloat),
             new AnimationArgument<int?>("buildupframes", AnimationParser.ParseInt),
             new AnimationArgument<float?>("forwardmomentum",AnimationParser.ParseFloat, "0"));
