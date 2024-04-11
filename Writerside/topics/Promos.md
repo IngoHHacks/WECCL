@@ -138,42 +138,57 @@ The following commands are supported:
 Commands and names are case-insensitive.
 
 ### Special Arguments
-`$name#`, `@him/his/etc#`, `$promotion#`, `$$belt(#1)_(#2)`, `$$champ(#1)_(#2)`, `$$moveFront(#1)_(#2)`, `$$moveBack(#1)_(#2)`, `$$moveGround(#1)_(#2)`, `$$moveAttack(#1)_(#2)`, `$$moveCrush(#1)_(#2)`, `$$taunt(#1)_(#2)` are special arguments that will be replaced with the corresponding value.
-
+`$name#1`, `@him/his/etc#1`, `$promotion#1`, etc. are special arguments that will be replaced with the corresponding value.  
+The full list of special arguments can be found below. Keep in mind that '#1', '#2', etc. should be replaced with the corresponding number or id.
 <deflist type="medium">
-<def title="$name#">
+<def title="$name#1">
 The name of the character with the corresponding id.
 </def>
-<def title="@him/his/etc#">
-The pronoun  id, e.g. <code>@his1 friend</code> -> <code>his friend</code> or <code>her friend</code> depending on wrestler #'s gender.
+<def title="@him/his/etc#1">
+The pronoun  id, e.g. <code>@his1 friend</code> -> <code>his friend</code> or <code>her friend</code> depending on wrestler #1's gender.
 Supported pronouns are <code>He, he, His, his, Male, male, Man, man, Guy, guy, Boy, boy</code>
 </def>
-<def title="$promotion#">
-The name of promotion #.
+<def title="$promotion#1">
+The name of promotion #1.
 </def>
-<def title="$$belt(#1)_(#2)">
+<def title="$belt#1_#2">
 The name of promotion #1's belt #2.
 </def>
-<def title="$$champ(#1)_(#2)">
+<def title="$champ#1_#2">
 The name of promotion #1's champion of belt #2.
 </def>
-<def title="$$moveFront(#1)_(#2)">
+<def title="$moveFront#1_#2">
 The name of character #1's front move number #2.
 </def>
-<def title="$$moveBack(#1)_(#2)">
+<def title="$moveBack#1_#2">
 The name of character #1's back move number #2.
 </def>
-<def title="$$moveGround(#1)_(#2)">
+<def title="$moveGround#1_#2">
 The name of character #1's ground move number #2.
 </def>
-<def title="$$moveAttack(#1)_(#2)">
+<def title="$moveAttack#1_#2">
 The name of character #1's attack move number #2.
 </def>
-<def title="$$moveCrush(#1)_(#2)">
+<def title="$moveCrush#1_#2">
 The name of character #1's crush move number #2.
 </def>
-<def title="$$taunt(#1)_(#2)">
+<def title="$taunt#1_#2">
 The name of character #1's taunt number #2.
+</def>
+<def title="$location">
+The name of the current location.
+</def>
+<def title="$prop#1">
+The name of the prop held by character #1.
+</def>
+<def title="$stat#1_#2">
+The value of character #1's stat number #2.
+</def>
+<def title="$match">
+The name of the current match type.
+</def>
+<def title="$date(#1)">
+The current date. The #1 parameter is optional and increases/decreases the date by that many weeks.
 </def>
 </deflist>
 

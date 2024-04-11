@@ -130,8 +130,8 @@ internal class PromoPatch
 
     private static string ReplaceVars(string line)
     {
-        //No number variables, dunno what symbol should be prefix, left $ as prefix
-        MatchCollection matches = Regex.Matches(line, @"\$([a-zA-Z]+)(\W|$)");
+        // Replace $variables
+        MatchCollection matches = Regex.Matches(line, @"\$\$?([a-zA-Z]+)(\W|$)");
         foreach (Match match in matches)
         {
             try
@@ -140,6 +140,8 @@ internal class PromoPatch
                 string varValue = varName switch
                 {
                     "location" => MappedWorld.DescribeLocation(World.location),
+                    "date" => MappedProgress.DescribeDate(MappedProgress.date, MappedProgress.year),
+                    "match" => MappedMatch.DescribeMatch(2),
                     _ => "UNKNOWN"
                 };
                 line = line.Replace(match.Value, varValue + match.Groups[2].Value);
@@ -150,22 +152,40 @@ internal class PromoPatch
                 LogError(e);
             }
         }
-
-        // Special case for $name#
-        matches = Regex.Matches(line, @"\$([a-zA-Z]+)(\d+)(\W|$)");
+        matches = Regex.Matches(line, @"\$\$?([a-zA-Z]+)-?(\d+)(\W|$)");
         foreach (Match match in matches)
         {
             try
             {
                 string varName = match.Groups[1].Value.ToLower();
                 int varIndex = int.Parse(match.Groups[2].Value);
-                string varValue = varName switch
+                string varValue;
+                if (varName == "date")
                 {
-                    "name" => MappedPromo.c[varIndex].name,
-                    "promotion" => MappedPromo.fed[varIndex].name,
-                    "prop" => MappedWeapons.Describe(MappedPromo.c[varIndex].prop),
-                    _ => "UNKNOWN"
-                };
+                    var date = MappedProgress.date + varIndex;
+                    var year = MappedProgress.year;
+                    while (date > 48)
+                    {
+                        date -= 48;
+                        year++;
+                    }
+                    while (date < 1)
+                    {
+                        date += 48;
+                        year--;
+                    }
+                    varValue = MappedProgress.DescribeDate(date, year);
+                }
+                else
+                {
+                    varValue = varName switch
+                    {
+                        "name" => MappedPromo.c[varIndex].name,
+                        "promotion" => MappedPromo.fed[varIndex].name,
+                        "prop" => MappedWeapons.Describe(MappedPromo.c[varIndex].prop),
+                        _ => "UNKNOWN"
+                    };
+                }
                 line = line.Replace(match.Value, varValue + match.Groups[3].Value);
             }
             catch (Exception e)
@@ -174,9 +194,8 @@ internal class PromoPatch
                 LogError(e);
             }
         }
-
         matches = Regex.Matches(line,
-            @"\$\$([a-zA-Z]+)(\d+)_(\d+)(\W|$)"); //probably can simplify and merge with the $name
+            @"\$\$?([a-zA-Z]+)-?(\d+)_-?(\d+)(\W|$)");
         foreach (Match match in matches)
         {
             try

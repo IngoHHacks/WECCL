@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.9.3
+- Added promo variables: `$location`, `$prop#1`, `$stat#1_#2`, `$match`, and `$date(#1)`.
+- Promo variables with 2 arguments no longer require two '$' symbols (e.g. `$stat#1_#2` instead of `$$stat#1_#2`). The old format is still supported, but may be removed in the future.
+
 ### Release 1.9.2
 - Negative move speed (third argument of `SetAnimation`) now copies the default speed (set by `TransitionFrames`) instead.
 - Renamed `StartAnimation` to `WindUp` in custom moves (since it's not actually the start of the animation).
