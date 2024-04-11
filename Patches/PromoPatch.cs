@@ -130,8 +130,29 @@ internal class PromoPatch
 
     private static string ReplaceVars(string line)
     {
+        //No number variables, dunno what symbol should be prefix, left $ as prefix
+        MatchCollection matches = Regex.Matches(line, @"\$([a-zA-Z]+)(\W|$)");
+        foreach (Match match in matches)
+        {
+            try
+            {
+                string varName = match.Groups[1].Value.ToLower();
+                string varValue = varName switch
+                {
+                    "location" => MappedWorld.DescribeLocation(World.location),
+                    _ => "UNKNOWN"
+                };
+                line = line.Replace(match.Value, varValue + match.Groups[2].Value);
+            }
+            catch (Exception e)
+            {
+                line = line.Replace(match.Value, "INVALID");
+                LogError(e);
+            }
+        }
+
         // Special case for $name#
-        MatchCollection matches = Regex.Matches(line, @"\$([a-zA-Z]+)(\d+)(\W|$)");
+        matches = Regex.Matches(line, @"\$([a-zA-Z]+)(\d+)(\W|$)");
         foreach (Match match in matches)
         {
             try
@@ -142,6 +163,7 @@ internal class PromoPatch
                 {
                     "name" => MappedPromo.c[varIndex].name,
                     "promotion" => MappedPromo.fed[varIndex].name,
+                    "prop" => MappedWeapons.Describe(MappedPromo.c[varIndex].prop),
                     _ => "UNKNOWN"
                 };
                 line = line.Replace(match.Value, varValue + match.Groups[3].Value);
@@ -173,6 +195,7 @@ internal class PromoPatch
                     "moveattack" => MappedAnims.DescribeMove(MappedPromo.c[varIndex1].moveAttack[varIndex2]),
                     "movecrush" => MappedAnims.DescribeMove(MappedPromo.c[varIndex1].moveCrush[varIndex2]),
                     "taunt" => ((MappedTaunt) MappedAnims.taunt[MappedPromo.c[varIndex1].taunt[varIndex2]]).name,
+                    "stat" => MappedPromo.c[varIndex1].stat[varIndex2].ToString("0"),
                     _ => "UNKNOWN"
                 };
 
