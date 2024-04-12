@@ -49,6 +49,7 @@ public static class Locations
         var animationController = AssetBundle.LoadFromFile(Path.Combine(Data.FullName, "animationcontroller")).LoadAllAssets<RuntimeAnimatorController>().FirstOrDefault();
         if (animationController == null) throw new Exception("Failed to load data. Please make sure you copied the 'Data' folder alongside the plugin if installed manually.");
         AO.AnimationController = animationController;
+        HubLocationPrefab = AssetBundle.LoadFromFile(Path.Combine(Data.FullName, "hub")).LoadAllAssets<GameObject>().First();
     }
 }
 

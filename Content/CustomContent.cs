@@ -53,6 +53,8 @@ internal static class CustomContent
     internal static readonly List<GameObject>  CustomArenaPrefabs = new();
     internal static readonly List<AnimationData> CustomAnimations = new();
     internal static readonly List<PromoData> PromoData = new();
+    
+    internal static GameObject HubLocationPrefab;
 
     public static bool HasConflictingOverrides;
 

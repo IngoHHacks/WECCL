@@ -1192,29 +1192,6 @@ internal class ArenaPatch
         }
     }
 
-    private static bool _z3Reduced = false;
-
-
-    [HarmonyPatch(typeof(UnmappedDoor), nameof(UnmappedDoor.GBLDMIAPNEP))]
-    [HarmonyPrefix]
-    public static void Door_GBLDMIAPNEP(OGAJMOPCPLJ __instance, float MMBJPONJJGM, float FNFJENPGCHM, float GJGFOKOEANG = 0f)
-    {
-        if (World.location > VanillaCounts.Data.NoLocations)
-        {
-            //Force set these to 20 / -20 to match original arena so it can trigger (Think its related to size of the door in original as custom arenas seem to have these a values of around 1.5 instead).
-            __instance.EONCNOGEOFC[1] = 20;
-            __instance.EONCNOGEOFC[2] = 20;
-            __instance.EONCNOGEOFC[3] = -20;
-            __instance.EONCNOGEOFC[4] = -20;
-            if (!_z3Reduced)
-            {
-                //Also once only per map load, set this value to 5 less as otherwise the wrestlers needed to stand on a near exact spot to exit which the AI would almost never do.
-                __instance.MKOCPPCIKEM[3] -= 5;
-                _z3Reduced = true;
-            }
-        }
-    }
-    
     private static int stored_ECGKBJEKPPJ;
     private static bool ifStatementOnePassed;
     private static bool ifStatementTwoPassed;
@@ -1327,7 +1304,6 @@ internal class ArenaPatch
     [HarmonyPrefix]
     public static void Weapons_HHCPHNIJDKG_Pre()
     {
-        _z3Reduced = false;
         //Reset these to null so loading custom map second time onwards doesn't force all outside ring weapons to a weapon spawn point
         newWeaponPosition = null;
         newWeaponRotation = null;

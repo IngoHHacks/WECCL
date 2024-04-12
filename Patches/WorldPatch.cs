@@ -1,3 +1,4 @@
+using TMPro;
 using WECCL.Content;
 using Object = UnityEngine.Object;
 
@@ -30,7 +31,15 @@ public class WorldPatch
                 }
 
                 MappedWorld.GetArenaShape();
-                World.gArena = Object.Instantiate(CustomArenaPrefabs[World.location - VanillaCounts.Data.NoLocations - 1]);
+                if (World.location >= 999999)
+                {
+                    World.gArena = Object.Instantiate(HubLocationPrefab);
+                }
+                else
+                {
+                    World.gArena =
+                        Object.Instantiate(CustomArenaPrefabs[World.location - VanillaCounts.Data.NoLocations - 1]);
+                }
 
                 if (MappedMenus.screen == 60)
                 {
@@ -119,6 +128,7 @@ public class WorldPatch
      * Patch:
      * - Creates the 'blocks' (collision boxes) when loading a custom arena.
      * - Renders the debug collision boxes if the user has enabled them in the config.
+     * - Replaces two Airport doors to lead to the 'hub' location.
      */
     [HarmonyPatch(typeof(UnmappedBlocks), nameof(UnmappedBlocks.NALPMNNGKAE))]
     [HarmonyPostfix]
@@ -376,79 +386,79 @@ public class WorldPatch
                 .ToArray();
             foreach (GameObject door in doors)
             {
-                Vector3[] corners = new Vector3[4];
-                Vector3 center = door.transform.position;
-                Vector3 localScale = door.transform.localScale;
-                float up = localScale.y;
-                float right = localScale.x;
-                float forward = localScale.z;
-                corners[0] = center + new Vector3(right, 0, forward);
-                corners[1] = center + new Vector3(right, 0, -forward);
-                corners[2] = center + new Vector3(-right, 0, forward);
-                corners[3] = center + new Vector3(-right, 0, -forward);
+                CreateDoor(door);
+            }
 
-                float yTop = center.y + up;
-                float yBottom = center.y - up;
-
-                Vector3[] xSorted = new Vector3[4];
-                Vector3[] zSorted = new Vector3[4];
-
-                Array.Copy(corners, xSorted, 4);
-                Array.Copy(corners, zSorted, 4);
-
-                Array.Sort(xSorted, (a, b) =>
+            if (World.location >= 999999)
+            {
+                // Hub world stuff
+                var prevDoor = World.gArena
+                    .GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject != null && t.gameObject.name.Equals("Prev")).gameObject;
+                var prev = CreateDoor(prevDoor);
+                if (World.location == 999999)
                 {
-                    return a.x.CompareTo(b.x);
-                });
-                Array.Sort(zSorted, (a, b) =>
-                {
-                    return a.z.CompareTo(b.z);
-                });
-
-                Vector3 topRight = corners[0];
-                Vector3 bottomRight = corners[0];
-                Vector3 bottomLeft = corners[0];
-                Vector3 topLeft = corners[0];
-
-                if (zSorted[3].x > zSorted[2].x)
-                {
-                    topRight = zSorted[3];
-                    bottomRight = zSorted[2];
+                    prev.destination = 15;
+                    prev.destinationX = -15;
+                    prev.destinationZ = -85;
                 }
                 else
                 {
-                    topRight = zSorted[2];
-                    bottomRight = zSorted[3];
+                    prev.destination = World.location - 1;
+                    prev.destinationX = 0;
+                    prev.destinationZ = -100;
                 }
-
-                if (zSorted[1].x < zSorted[0].x)
+                var nextDoor = World.gArena
+                    .GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject != null && t.gameObject.name.Equals("Next")).gameObject;
+                var next = CreateDoor(nextDoor);
+                if (World.location - 999999 >= (CustomArenaPrefabs.Count - 1) / 10)
                 {
-                    bottomLeft = zSorted[1];
-                    topLeft = zSorted[0];
+                    next.destination = 15;
+                    next.destinationX = 15;
+                    next.destinationZ = -85;
                 }
                 else
                 {
-                    bottomLeft = zSorted[0];
-                    topLeft = zSorted[1];
+                    next.destination = World.location + 1;
+                    next.destinationX = 0;
+                    next.destinationZ = 100;
                 }
-
-                // Create door
-                UnmappedBlocks.ODIELGHNFHA();
-                UnmappedBlocks.FBEMAEDLBLN[0] = UnmappedBlocks.FBEMAEDLBLN[UnmappedBlocks.BAOOLJCLBIH];
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[1] = topRight.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[1] = topRight.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[4] = bottomRight.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[4] = bottomRight.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[3] = bottomLeft.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[3] = bottomLeft.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[2] = topLeft.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[2] = topLeft.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].NALEIJHPOHN = yTop - yBottom;
-                UnmappedBlocks.FBEMAEDLBLN[0].AAPMLHAGBGF = door.transform.rotation.eulerAngles.y;
-                UnmappedBlocks.FBEMAEDLBLN[0].MGBMJJFIMEF = 1f;
-                UnmappedBlocks.FBEMAEDLBLN[0].CBBOMMJEMEF = UnmappedSound.FBEMAEDLBLN[1];
-                UnmappedBlocks.FBEMAEDLBLN[0].AHJOJFOLALM = int.Parse(door.name.Substring(4));
-                UnmappedBlocks.FBEMAEDLBLN[0].JPODJNJDNBA = door.transform.rotation.eulerAngles.y + 180f;
+                var locDoors = World.gArena
+                    .GetComponentsInChildren<Transform>().Where(t => t.gameObject != null && t.gameObject.name.StartsWith("Loc") && !t.gameObject.name.StartsWith("LocName")).Select(t => t.gameObject).ToArray();
+                
+                var offset = (World.location - 999999) * 10;
+                foreach (GameObject locDoor in locDoors)
+                {
+                    var loc = CreateDoor(locDoor);
+                    if (offset + int.Parse(locDoor.name.Substring(3)) >= CustomArenaPrefabs.Count)
+                    {
+                        var locName = World.gArena
+                            .GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject != null && t.gameObject.name.Equals("LocName" + locDoor.name.Substring(3))).gameObject;
+                        locName.SetActive(false);
+                        loc.destination = 15;
+                        loc.destinationX = 15;
+                        loc.destinationZ = -85;
+                    }
+                    else
+                    {
+                        var locName = World.gArena
+                            .GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject != null && t.gameObject.name.Equals("LocName" + locDoor.name.Substring(3))).gameObject;
+                        locName.SetActive(true);
+                        locName.GetComponent<TextMeshPro>().text = CustomArenaPrefabs[offset + int.Parse(locDoor.name.Substring(3)) - 1].name;
+                        loc.destination = VanillaCounts.Data.NoLocations + offset +
+                            int.Parse(locDoor.name.Substring(3));
+                        loc.destinationX = 0;
+                        loc.destinationZ = 0;
+                        var firstExit = CustomArenaPrefabs[offset + int.Parse(locDoor.name.Substring(3)) - 1].GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject != null && t.gameObject.name.StartsWith("Exit"))?.gameObject;
+                        if (firstExit != null)
+                        {
+                            var pos = firstExit.transform.position + (firstExit.transform.forward *
+                                                                      Mathf.Max(20, Mathf.Max(firstExit.transform.localScale.x,
+                                                                          firstExit.transform.localScale.z)));
+                            loc.destinationX = pos.x;
+                            loc.destinationZ = pos.z;
+                        }
+                    }
+                }
             }
         }
 
@@ -552,6 +562,162 @@ public class WorldPatch
                 }
             }
         }
+
+        if (World.location == 15)
+        {
+            ((MappedDoor)MappedBlocks.door[1]).destination = 999999;
+            ((MappedDoor)MappedBlocks.door[1]).destinationX = 0;
+            ((MappedDoor)MappedBlocks.door[1]).destinationZ = 100;
+            ((MappedDoor)MappedBlocks.door[2]).destination = 999999;
+            ((MappedDoor)MappedBlocks.door[2]).destinationX = 0;
+            ((MappedDoor)MappedBlocks.door[2]).destinationZ = 100;
+        }
+    }
+
+    private static MappedDoor CreateDoor(GameObject door)
+    {
+        Vector3[] corners = new Vector3[4];
+        Vector3 center = door.transform.position;
+        Vector3 localScale = door.transform.localScale;
+        float up = localScale.y;
+        float right = localScale.x;
+        float forward = localScale.z;
+        corners[0] = center + new Vector3(right, 0, forward);
+        corners[1] = center + new Vector3(right, 0, -forward);
+        corners[2] = center + new Vector3(-right, 0, forward);
+        corners[3] = center + new Vector3(-right, 0, -forward);
+        
+        Vector3 topRight = corners[0];
+        Vector3 bottomRight = corners[0];
+        Vector3 bottomLeft = corners[0];
+        Vector3 topLeft = corners[0];
+        
+        float yTop = center.y + up;
+        float yBottom = center.y;
+        
+        Vector3[] xSorted = new Vector3[4];
+        Vector3[] zSorted = new Vector3[4];
+
+        Array.Copy(corners, xSorted, 4);
+        Array.Copy(corners, zSorted, 4);
+
+        Array.Sort(xSorted, (a, b) =>
+        {
+            return a.x.CompareTo(b.x);
+        });
+        Array.Sort(zSorted, (a, b) =>
+        {
+            return a.z.CompareTo(b.z);
+        });
+        if (zSorted[3].x > zSorted[2].x)
+        {
+            topRight = zSorted[3];
+            bottomRight = zSorted[2];
+        }
+        else
+        {
+            topRight = zSorted[2];
+            bottomRight = zSorted[3];
+        }
+
+        if (zSorted[1].x < zSorted[0].x)
+        {
+            bottomLeft = zSorted[1];
+            topLeft = zSorted[0];
+
+        }
+        else
+        {
+            bottomLeft = zSorted[0];
+            topLeft = zSorted[1];
+        }
+
+        return PlaceDoor(topRight, bottomRight, bottomLeft, topLeft, yTop, yBottom, door);
+    }
+    
+    private static MappedDoor PlaceDoor(Vector3 topRight, Vector3 bottomRight, Vector3 bottomLeft, Vector3 topLeft,
+        float yTop, float yBottom, GameObject door)
+    {
+        MappedBlocks.AddDoor();
+        MappedBlocks.door[0] = MappedBlocks.door[MappedBlocks.no_doors];
+        var i = ((MappedDoor)MappedBlocks.door[0]);
+        i.pointX[1] = topRight.x;
+        i.pointZ[1] = topRight.z;
+        i.pointX[4] = bottomRight.x;
+        i.pointZ[4] = bottomRight.z;
+        i.pointX[3] = bottomLeft.x;
+        i.pointZ[3] = bottomLeft.z;
+        i.pointX[2] = topLeft.x;
+        i.pointZ[2] = topLeft.z;
+        i.height = yTop - yBottom;
+        i.angle = door.transform.rotation.eulerAngles.y;
+        i.friction = 0f;
+        i.sound = MappedSound.door[1];
+        i.destination = GetNumSuffix(door.name);
+        i.destinationX = 0;
+        i.destinationZ = 0;
+        i.destinationAngle = door.transform.rotation.eulerAngles.y + 180f;
+        
+        if (i.height < 10)
+        {
+            i.height = 10;
+        }
+        float minX = float.MaxValue;
+        float maxX = float.MinValue;
+        float minZ = float.MaxValue;
+        float maxZ = float.MinValue;
+        for (int j = 1; j <= 4; j++)
+        {
+            minX = Mathf.Min(minX, i.pointX[j]);
+            maxX = Mathf.Max(maxX, i.pointX[j]);
+            minZ = Mathf.Min(minZ, i.pointZ[j]);
+            maxZ = Mathf.Max(maxZ, i.pointZ[j]);
+        }
+        float midX = (minX + maxX) / 2f;
+        float midZ = (minZ + maxZ) / 2f;
+        if (maxX - minX < 20)
+        {
+            for (int k = 1; k <= 4; k++)
+            {
+                if (i.pointX[k] < midX)
+                {
+                    i.pointX[k] = midX - 10f;
+                }
+                else
+                {
+                    i.pointX[k] = midX + 10f;
+                }
+            }
+        }
+        if (maxZ - minZ < 20)
+        {
+            for (int l = 1; l <= 4; l++)
+            {
+                if (i.pointZ[l] < midZ)
+                {
+                    i.pointZ[l] = midZ - 10f;
+                }
+                else
+                {
+                    i.pointZ[l] = midZ + 10f;
+                }
+            }
+        }
+        return MappedBlocks.door[0];
+    }
+    
+    private static int GetNumSuffix(string name)
+    {
+        if (!char.IsDigit(name[name.Length - 1]))
+        {
+            return 2;
+        }
+        var i = name.Length - 1;
+        while (char.IsDigit(name[i]))
+        {
+            i--;
+        }
+        return int.Parse(name.Substring(i + 1));
     }
 
     public static GameObject GetTopLevelParent(GameObject childObject)
@@ -715,6 +881,10 @@ public class WorldPatch
     public static bool World_COMEDPJDBKM(ref int __result, int HJANGKEJCJE)
     {
         __result = 1;
+        if (HJANGKEJCJE >= 999999)
+        {
+            return false;
+        }
         if (World.mapVersion < 2f)
         {
             if ((HJANGKEJCJE >= 17 && HJANGKEJCJE <= VanillaCounts.Data.NoLocations && HJANGKEJCJE != 21 && HJANGKEJCJE != 27) ||
