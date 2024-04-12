@@ -59,7 +59,14 @@ internal class ArenaPatch
             { "Van", 23 },
             { "Vending Machine", 24 },
             { "Computer Desk", 25 },
-            { "Piano", 26 }
+            { "Piano", 26 },
+            { "School Desk", 27 },
+            { "Metal Table", 28 },
+            { "Armchair", 29 },
+            { "Sofa", 30 },
+            { "Picnic Table", 31 },
+            { "Easel", 32 },
+            { "Stretcher", 33 }
             // Note, left Motorcycle, Bicycle, Car and Van here even though from testing they do not work.
             // If they ever have the models added they would become valid instantly but not included in documentation as to avoid confusion
         };
@@ -137,7 +144,9 @@ internal class ArenaPatch
             { "Gift", 65 },
             { "Chainsaw", 66 },
             { "Handcuffs", 67 },
-            { "Rubber Chicken", 68 }
+            { "Rubber Chicken", 68 },
+            { "Pillow", 69 },
+            { "Cigarette", 70 }
             //Not all items the game has values for work, EG chainsaw and American Football are ones I tested that did not appear ingame.
         };
     }
