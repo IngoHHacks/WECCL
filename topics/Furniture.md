@@ -24,7 +24,7 @@ List of furniture names and IDs.
 14: Stool  
 15: Round Table  
 16: Barrel  
-17: Coffin 
+17: Coffin  
 18: Wheelchair  
 19: Folding Chair  
 20: Motorcycle  
