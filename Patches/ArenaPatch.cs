@@ -125,7 +125,7 @@ internal class ArenaPatch
             { "Hotdog", 46 },
             { "Apple", 47 },
             { "Orange", 48 },
-            { "Bannana", 49 },
+            { "Banana", 49 },
             { "Crutch", 50 },
             { "Backpack", 51 },
             { "Shovel", 52 },

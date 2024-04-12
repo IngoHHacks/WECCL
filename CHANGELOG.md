@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.9.4
+- Added support for new furniture and weapon types that were added in newer versions of the game.
+- Renamed `Bannana` weapon type to `Banana`. The old name will no longer work! (I'm assuming nobody used it yet anyway.)
+
 ### Release 1.9.3
 - Added promo variables: `$location`, `$prop#1`, `$stat#1_#2`, `$match`, and `$date(#1)`.
 - Promo variables with 2 arguments no longer require two '$' symbols (e.g. `$stat#1_#2` instead of `$$stat#1_#2`). The old format is still supported, but may be removed in the future.
