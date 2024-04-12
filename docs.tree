@@ -30,6 +30,8 @@
         <toc-element topic="Taunts.md"/>
         <toc-element topic="CrowdAudio.md"/>
         <toc-element topic="Limbs.md"/>
+        <toc-element topic="Weapons.md"/>
+        <toc-element topic="Furniture.md"/>
     </toc-element>
     <toc-element topic="Paths.md"/>
 </instance-profile>

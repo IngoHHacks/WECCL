@@ -37,10 +37,10 @@ There is functionality in place to automatically assign collision to the arena, 
 
 ### Fixed Furniture
 - **Announcer Desk and Chairs:** Use `AnnouncerDeskBundle` (and `AnnouncerDeskBundle2` for multiples) to spawn a desk with office chairs at the specified location.
-- **Other Furniture:** Create objects named `GameObject:FurnitureName` to spawn specific furniture items at that location. Valid furniture names include: Table, Office Chair, Announce Desk, Steps, Desk, Bench, Ladder, Wooden Crate, Cardboard Box, Trashcan, Toilet, Bed, Snooker Table, Stool, Round Table, Barrel, Coffin, Wheelchair, Folding Chair, Vending Machine, Computer Desk, Piano.
+- **Other Furniture:** Create objects named `GameObject:FurnitureName` to spawn specific furniture items at that location. See [Furniture](Furniture.md) for a list of furniture names.
 
 ### Weapon Spawns
-- **Fixed weapon spawns:** Use `WeaponObject:WeaponName` to spawn specific weapons. Valid weapon names include: Belt, Microphone, Camera, Bell, Explosive, Baseball Bat, Chair, Cage Piece, Wooden Board, Table Piece, Table Leg, Barbed Bat, Cardboard, Ladder Piece, Plank, Pipe, Nightstick, Cane, Step, Dumbbell, Weight, Trashcan Lid, Skateboard, Water Bottle, Milk Bottle, Beer Bottle, Light Tube, Hammer, Console, Briefcase, Brass Knuckles, Extinguisher, Trophy, Gun, Broom, Sign, Picture, Glass Pane, Guitar, Tennis Racket, Phone, Cue, Tombstone, Cash, Burger, Pizza, Hotdog, Apple, Orange, Banana, Crutch, Backpack, Shovel, Book, Magazine, Tablet, Thumbtacks, Football, Basketball, American Football, Baseball, Tennis Ball, Beach Ball, Tyre, Large Gift, Gift, Chainsaw, Handcuffs, Rubber Chicken.
+- **Fixed weapon spawns:** Use `WeaponObject:WeaponName` to spawn specific weapons. See [Weapons](Weapons.md) for a list of weapon names.
 - Use `WeaponObject:Random` for random weapon spawns.
 
 ### Additional Options
