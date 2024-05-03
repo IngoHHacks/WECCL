@@ -11,11 +11,10 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.9.4";
+    public const string PluginVer = "1.10.0";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
-    public const float PluginCharacterVersion = 1.56f;
-    public const float PluginVersion = 1.64f;
+    public const float PluginVersion = 1.65f;
     public static readonly float GameVersion = MappedGlobals.optVersion;
 
     public const bool PreRelease = false;
@@ -47,8 +46,6 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<string> DataSharingLevel { get; set; }
     internal static ConfigEntry<string> SaveFileName { get; set; }
     internal static ConfigEntry<string> PersistentDataOverride { get; set; }
-
-    public static float CharactersVersion => Characters.latestVersion;
 
     private void Awake()
     {
@@ -145,11 +142,6 @@ public class Plugin : BaseUnityPlugin
                 }
             }
 #pragma warning restore CS0162 // Unreachable code detected
-
-            if (CharactersVersion != PluginCharacterVersion)
-            {
-                throw new Exception($"Unsupported game version: {CharactersVersion}");
-            }
             
             if (GameVersion != PluginVersion)
             {
@@ -198,10 +190,6 @@ public class Plugin : BaseUnityPlugin
 
     private void OnEnable()
     {
-        if (CharactersVersion != PluginCharacterVersion)
-        {
-            return;
-        }
         string save = Locations.SaveFile.FullName;
         if (!File.Exists(save))
         {
@@ -235,11 +223,6 @@ public class Plugin : BaseUnityPlugin
 
     private void OnDisable()
     {
-        if (CharactersVersion != PluginCharacterVersion)
-        {
-            return;
-        }
-
         Harmony.UnpatchSelf();
         this.Logger.LogInfo($"Unloaded {PluginName}!");
     }

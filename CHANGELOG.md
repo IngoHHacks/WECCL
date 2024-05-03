@@ -2,7 +2,10 @@
 
 ## GV 1.60+:
 
-### Release 1.9.4
+### Release 1.10.0
+- UPDATE TO GAME VERSION 1.65
+
+Release 1.9.4
 - Added support for new furniture and weapon types that were added in newer versions of the game.
 - Renamed `Bannana` weapon type to `Banana`. The old name will no longer work! (I'm assuming nobody used it yet anyway.)
 
