@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using WECCL.Content;
 using WECCL.Animation;
 using WECCL.API;
@@ -11,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.10.0";
+    public const string PluginVer = "1.10.1";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginVersion = 1.65f;
@@ -161,8 +162,6 @@ public class Plugin : BaseUnityPlugin
                 Log./* Keep Log here */LogInfo(egg);
             }
 
-            CreateBackups();
-
             Locations.MoveLegacyLocations();
             Locations.CreateDirectories();
 
@@ -239,22 +238,40 @@ public class Plugin : BaseUnityPlugin
         {
             return;
         }
+        string charmap = Locations.CharacterMappings.FullName;
+        string contentmap = Locations.ContentMappings.FullName;
+        string metadata = Locations.Meta.FullName;
 
         string backup = Path.Combine(Application.persistentDataPath, "backups",
-            DateTime.Now.ToString($"Save-yyyy-MM-dd_HH-mm-ss") + ".bytes");
+            DateTime.Now.ToString($"Save-yyyy-MM-dd_HH-mm-ss") + ".zip");
         string bd = Path.GetDirectoryName(backup);
         if (!Directory.Exists(bd))
         {
             Directory.CreateDirectory(bd!);
         }
         
-        if (Directory.GetFiles(bd, "Save-*.bytes").Length == 0)
+        if (Directory.GetFiles(bd, "Save-*.*").Length == 0)
         {
-            File.Copy(save, Path.Combine(bd, "InitialSave.bytes"));
+            var initial = Path.Combine(bd, "InitialSave.zip");
+            // Put everything in the initial save zip
+            using (ZipArchive archive = ZipFile.Open(initial, ZipArchiveMode.Create))
+            {
+                archive.CreateEntryFromFile(save, Path.GetFileName(save));
+                archive.CreateEntryFromFile(charmap, Path.GetFileName(charmap));
+                archive.CreateEntryFromFile(contentmap, Path.GetFileName(contentmap));
+                archive.CreateEntryFromFile(metadata, Path.GetFileName(metadata));
+            }
         }
-
-        File.Copy(save, backup);
-        string[] files = Directory.GetFiles(bd, "Save-*.bytes");
+        
+        using (ZipArchive archive = ZipFile.Open(backup, ZipArchiveMode.Create))
+        {
+            archive.CreateEntryFromFile(save, Path.GetFileName(save));
+            archive.CreateEntryFromFile(charmap, Path.GetFileName(charmap));
+            archive.CreateEntryFromFile(contentmap, Path.GetFileName(contentmap));
+            archive.CreateEntryFromFile(metadata, Path.GetFileName(metadata));
+        }
+        
+        string[] files = Directory.GetFiles(bd, "Save-*.*");
         if (MaxBackups.Value < 0)
         {
             return;

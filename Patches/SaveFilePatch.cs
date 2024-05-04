@@ -490,6 +490,7 @@ internal class SaveFilePatch
     [HarmonyPostfix]
     public static void SaveSystem_OIIAHNGBNIF_Post(int FIHDANPPMGC)
     {
+        Plugin.CreateBackups();
         SaveCurrentMap();
         CharacterMappings.CharacterMap.Save();
         MetaFile.Data.Save();

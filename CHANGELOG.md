@@ -2,10 +2,17 @@
 
 ## GV 1.60+:
 
+### Release 1.10.1
+- Fixed character remapping not working correctly.
+- Fixed an issue with saving.
+- Backups now contain mappings and meta files.
+- Backups are now created whenever the game is saved (before writing the save file), instead of only when the game is launched.
+- The saving issue was caused by Mat. I'm sure of it. He's a great guy, but he's always up to something. I'm watching you, Mat.
+
 ### Release 1.10.0
 - UPDATE TO GAME VERSION 1.65
 
-Release 1.9.4
+### Release 1.9.4
 - Added support for new furniture and weapon types that were added in newer versions of the game.
 - Renamed `Bannana` weapon type to `Banana`. The old name will no longer work! (I'm assuming nobody used it yet anyway.)
 

@@ -18,8 +18,8 @@ internal class SaveRemapper
             return;
         }
 
-        int oldVersion = Mathf.RoundToInt(ContentMappings.ContentMap.GameVersion * 100);
-        int newVersion = Mathf.RoundToInt(Plugin.PluginVersion * 100);
+        int oldVersion = Mathf.RoundToInt(savedMap.GameVersion * 100);
+        int newVersion = Mathf.RoundToInt(Plugin.GameVersion * 100);
 
         VersionDiff versionDiff = null;
 

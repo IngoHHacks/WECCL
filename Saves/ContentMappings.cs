@@ -41,7 +41,7 @@ internal class ContentMappings
 
     public VanillaCounts VanillaCounts { get; set; }
     
-    public float GameVersion { get; set; } = Plugin.PluginVersion;
+    public float GameVersion { get; set; } = Plugin.GameVersion;
     
     public void Save()
     {

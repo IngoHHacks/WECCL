@@ -73,6 +73,8 @@ internal class ContentPatch
         VanillaCounts.Data.MaterialCounts = UnmappedTextures.BFEEOEOEFPG.ToList();
         VanillaCounts.Data.FleshCounts = UnmappedTextures.HJHFIPCDPBD.ToList();
         VanillaCounts.Data.ShapeCounts = UnmappedTextures.ONGGFJMFJDP.ToList();
+        VanillaCounts.Data.MaterialCounts[28] = VanillaCounts.Data.ShapeCounts[28];
+        VanillaCounts.Data.MaterialCounts[31] = VanillaCounts.Data.ShapeCounts[31];
         VanillaCounts.Data.BodyFemaleCount = UnmappedTextures.DAKBNPKLNGC;
         VanillaCounts.Data.FaceFemaleCount = UnmappedTextures.GFKAKKGLBOI;
         VanillaCounts.Data.SpecialFootwearCount = UnmappedTextures.ABKAOIHDJPA;
