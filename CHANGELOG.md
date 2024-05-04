@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.10.2
+- Fixed some issues with the new backup system.
+
 ### Release 1.10.1
 - Fixed character remapping not working correctly.
 - Fixed an issue with saving.

@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.10.1";
+    public const string PluginVer = "1.10.2";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginVersion = 1.65f;
@@ -250,25 +250,43 @@ public class Plugin : BaseUnityPlugin
             Directory.CreateDirectory(bd!);
         }
         
-        if (Directory.GetFiles(bd, "Save-*.*").Length == 0)
+        if (Directory.GetFiles(bd, "Save-*.*").Length == 0 && !File.Exists(Path.Combine(bd, "InitialSave.zip")))
         {
             var initial = Path.Combine(bd, "InitialSave.zip");
             // Put everything in the initial save zip
             using (ZipArchive archive = ZipFile.Open(initial, ZipArchiveMode.Create))
             {
                 archive.CreateEntryFromFile(save, Path.GetFileName(save));
-                archive.CreateEntryFromFile(charmap, Path.GetFileName(charmap));
-                archive.CreateEntryFromFile(contentmap, Path.GetFileName(contentmap));
-                archive.CreateEntryFromFile(metadata, Path.GetFileName(metadata));
+                if (File.Exists(charmap))
+                {
+                    archive.CreateEntryFromFile(charmap, Path.GetFileName(charmap));
+                }
+                if (File.Exists(contentmap))
+                {
+                    archive.CreateEntryFromFile(contentmap, Path.GetFileName(contentmap));
+                }
+                if (File.Exists(metadata))
+                {
+                    archive.CreateEntryFromFile(metadata, Path.GetFileName(metadata));
+                }
             }
         }
         
         using (ZipArchive archive = ZipFile.Open(backup, ZipArchiveMode.Create))
         {
             archive.CreateEntryFromFile(save, Path.GetFileName(save));
-            archive.CreateEntryFromFile(charmap, Path.GetFileName(charmap));
-            archive.CreateEntryFromFile(contentmap, Path.GetFileName(contentmap));
-            archive.CreateEntryFromFile(metadata, Path.GetFileName(metadata));
+            if (File.Exists(charmap))
+            {
+                archive.CreateEntryFromFile(charmap, Path.GetFileName(charmap));
+            }
+            if (File.Exists(contentmap))
+            {
+                archive.CreateEntryFromFile(contentmap, Path.GetFileName(contentmap));
+            }
+            if (File.Exists(metadata))
+            {
+                archive.CreateEntryFromFile(metadata, Path.GetFileName(metadata));
+            }
         }
         
         string[] files = Directory.GetFiles(bd, "Save-*.*");
