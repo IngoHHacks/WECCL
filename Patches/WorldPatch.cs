@@ -326,7 +326,7 @@ public class WorldPatch
                     UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].AMJOGFHEBKI = 0f;
                     UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].FNNBCDPJBIO = worldCorners[0].y;
                     UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].NALEIJHPOHN = worldCorners[1].y - worldCorners[0].y;
-                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].GMFOALGKLJK = 1;
+                    UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].GMFOALGKLJK = 12;
                     UnmappedBlocks.LCJFMEAFLBH[peifijckaoc].HHFIFJPHINJ = "Cage";
                     GameObject arenaObject = GetTopLevelParent(gameObject);
                     if (arenaObject.transform.rotation == Quaternion.Euler(0f, 180f, 0f))

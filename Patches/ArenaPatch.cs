@@ -13,8 +13,6 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class ArenaPatch
 {
-    public static Dictionary<string, int> objectMappings;
-    public static Dictionary<string, int> weaponMappings;
     public static List<string> weaponList;
     public static float yOverride;
     public static bool freezeAnnouncers;
@@ -26,129 +24,6 @@ internal class ArenaPatch
 
     private void Awake()
     {
-        CreateObjectMapping();
-        CreateWeaponMapping();
-    }
-
-    private static void CreateObjectMapping()
-    {
-        objectMappings = new Dictionary<string, int>
-        {
-            { "Table", 1 },
-            { "Office Chair", 2 },
-            { "Announce Desk", 3 },
-            { "Steps", 4 },
-            { "Desk", 5 },
-            { "Bench", 6 },
-            { "Ladder", 7 },
-            { "Wooden Crate", 8 },
-            { "Cardboard Box", 9 },
-            { "Trashcan", 10 },
-            { "Toilet", 11 },
-            { "Bed", 12 },
-            { "Snooker Table", 13 },
-            { "Stool", 14 },
-            { "Round Table", 15 },
-            { "Barrel", 16 },
-            { "Coffin", 17 },
-            { "Wheelchair", 18 },
-            { "Folding Chair", 19 },
-            { "Motorcycle", 20 },
-            { "Bicycle", 21 },
-            { "Car", 22 },
-            { "Van", 23 },
-            { "Vending Machine", 24 },
-            { "Computer Desk", 25 },
-            { "Piano", 26 },
-            { "School Desk", 27 },
-            { "Metal Table", 28 },
-            { "Armchair", 29 },
-            { "Sofa", 30 },
-            { "Picnic Table", 31 },
-            { "Easel", 32 },
-            { "Stretcher", 33 }
-            // Note, left Motorcycle, Bicycle, Car and Van here even though from testing they do not work.
-            // If they ever have the models added they would become valid instantly but not included in documentation as to avoid confusion
-        };
-    }
-
-    private static void CreateWeaponMapping()
-    {
-        weaponMappings = new Dictionary<string, int>
-        {
-            { "Belt", 0 },
-            { "Microphone", 1 },
-            { "Camera", 2 },
-            { "Bell", 3 },
-            { "Explosive", 4 },
-            { "Baseball Bat", 5 },
-            { "Chair", 6 },
-            { "Cage Piece", 7 },
-            { "Wooden Board", 8 },
-            { "Table Piece", 9 },
-            { "Table Leg", 10 },
-            { "Barbed Bat", 11 },
-            { "Cardboard", 12 },
-            { "Ladder Piece", 13 },
-            { "Plank", 14 },
-            { "Pipe", 15 },
-            { "Nightstick", 16 },
-            { "Cane", 17 },
-            { "Step", 18 },
-            { "Dumbbell", 19 },
-            { "Weight", 20 },
-            { "Trashcan Lid", 21 },
-            { "Skateboard", 22 },
-            { "Water Bottle", 23 },
-            { "Milk Bottle", 24 },
-            { "Beer Bottle", 25 },
-            { "Light Tube", 26 },
-            { "Hammer", 27 },
-            { "Console", 28 },
-            { "Briefcase", 29 },
-            { "Brass Knuckles", 30 },
-            { "Extinguisher", 31 },
-            { "Trophy", 32 },
-            { "Gun", 33 },
-            { "Broom", 34 },
-            { "Sign", 35 },
-            { "Picture", 36 },
-            { "Glass Pane", 37 },
-            { "Guitar", 38 },
-            { "Tennis Racket", 39 },
-            { "Phone", 40 },
-            { "Cue", 41 },
-            { "Tombstone", 42 },
-            { "Cash", 43 },
-            { "Burger", 44 },
-            { "Pizza", 45 },
-            { "Hotdog", 46 },
-            { "Apple", 47 },
-            { "Orange", 48 },
-            { "Banana", 49 },
-            { "Crutch", 50 },
-            { "Backpack", 51 },
-            { "Shovel", 52 },
-            { "Book", 53 },
-            { "Magazine", 54 },
-            { "Tablet", 55 },
-            { "Thumbtacks", 56 },
-            { "Football", 57 },
-            { "Basketball", 58 },
-            { "American Football", 59 },
-            { "Baseball", 60 },
-            { "Tennis Ball", 61 },
-            { "Beach Ball", 62 },
-            { "Tyre", 63 },
-            { "Large Gift", 64 },
-            { "Gift", 65 },
-            { "Chainsaw", 66 },
-            { "Handcuffs", 67 },
-            { "Rubber Chicken", 68 },
-            { "Pillow", 69 },
-            { "Cigarette", 70 }
-            //Not all items the game has values for work, EG chainsaw and American Football are ones I tested that did not appear ingame.
-        };
     }
 
     public static void SetCustomArenaShape()
@@ -1112,15 +987,15 @@ internal class ArenaPatch
 
         int GetMapping(string input)
         {
-            if (objectMappings == null)
+            for (int i = 1; i <= HAPFAOIMGOL.JECOJHEMKFP; i++)
             {
-                //Make sure objectMappings is populated before it is used.
-                CreateObjectMapping();
-            }
-
-            if (objectMappings.ContainsKey(input))
-            {
-                return objectMappings[input];
+                if (HAPFAOIMGOL.COMEDPJDBKM(i) > 0)
+                {
+                    if (HAPFAOIMGOL.MKMNNLLMLAJ(i) == input)
+                    {
+                        return i;
+                    }
+                }
             }
 
             return 0;
@@ -1397,15 +1272,15 @@ internal class ArenaPatch
 
     private static int GetWeaponMapping(string input)
     {
-        if (weaponMappings == null)
+        for (int i = 1; i <= JFLEBEBCGFA.JECOJHEMKFP; i++)
         {
-            //Make sure weaponMappings is populated before it is used.
-            CreateWeaponMapping();
-        }
-
-        if (weaponMappings.ContainsKey(input))
-        {
-            return weaponMappings[input];
+            if (JFLEBEBCGFA.COMEDPJDBKM(i) > 0)
+            {
+                if (JFLEBEBCGFA.MKMNNLLMLAJ(i) == input)
+                {
+                    return i;
+                }
+            }
         }
 
         return 0;
