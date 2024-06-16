@@ -3,7 +3,9 @@
 ## GV 1.60+:
 
 ### Release 1.10.3
-- Added fast travel to the pause menu. (As a way to enter/exit custom locations)
+- Added fast travel to the pause menu.
+- Added promo variable: `$team#1`.
+- fence_climbables now allow you to control your movement while climbing.
 - Fixed some issues with animations.
 
 ### Release 1.10.2
