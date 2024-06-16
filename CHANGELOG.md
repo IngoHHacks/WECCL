@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.10.3
+- Added fast travel to the pause menu. (As a way to enter/exit custom locations)
+- Fixed some issues with animations.
+
 ### Release 1.10.2
 - Fixed some issues with the new backup system.
 

@@ -211,8 +211,13 @@ internal class ArenaPatch
     [HarmonyPatch(typeof(World), nameof(World.CIHOMEHEECL))]
     public static void World_CIHOMEHEECL(ref string __result, ref int DHONCJINBMN, string DOEEMNKCGCA)
     {
+        if (MappedMenus.paused != 0 && MappedMenus.page == 5 || DHONCJINBMN <= VanillaCounts.Data.NoLocations)
+        {
+            return;
+        }
+        
         string originalResult = __result;
-        string text = "Location " + DHONCJINBMN;
+        string text;
 
         GameObject arenaName = FindGameObjectWithNameStartingWith("Arena Name:");
         if (arenaName != null)
@@ -221,7 +226,14 @@ internal class ArenaPatch
         }
         else
         {
-            text = originalResult;
+            if (DHONCJINBMN > VanillaCounts.Data.NoLocations)
+            {
+                text = "Custom Arena";
+            }
+            else
+            {
+                text = CustomArenaPrefabs[DHONCJINBMN - VanillaCounts.Data.NoLocations - 1].name;
+            }
         }
 
         __result = text;

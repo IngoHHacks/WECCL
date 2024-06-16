@@ -398,13 +398,13 @@ public class ScreenPatch
 
     /*
      * Patch:
-     * - Loads the menus for the extra screens in Titles.
+     * - Loads the menus for the extra screens.
      */
     [HarmonyPatch(typeof(UnmappedMenus), nameof(UnmappedMenus.ICGNAJFLAHL))]
     [HarmonyPrefix]
-    public static bool Menus_ICGNAJFLAHL(int IPCCBDAFNMC)
+    public static bool Menus_ICGNAJFLAHL_Pre(int IPCCBDAFNMC)
     {
-        if (MappedMenus.screen > 1000)
+        if (MappedMenus.screen > 1000 || (MappedMenus.screen == 50 && (MappedMenus.page == 0 || MappedMenus.page == 5) && MappedMatch.state == 0))
         {
             _newScreen = true;
             MappedMenus.RemoveExisting();
@@ -463,6 +463,34 @@ public class ScreenPatch
                 MappedMenus.Add();
                 ((MappedMenu) MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Bummer", 0f, -280, 1.25f, 1.25f);
             }
+            else if (MappedMenus.screen == 50 && MappedMatch.state == 0)
+            {
+                if (MappedMenus.page == 0)
+                {
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "> Resume >", 0f, 220f, 1.6f, 1.6f);
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Camera", 0f, 100f, 1.6f, 1.6f);
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Map", 0f, 0f, 1.6f, 1.6f);
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Fast Travel", 0, -100f, 1.6f, 1.6f);
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "< Exit <", 0f, -220f, 1.6f, 1.6f);
+                }
+                else
+                {
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(2, "Location", 0f, 120f, 1.6f, 1.6f);
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "> Travel >", 0f, -20f, 1.6f, 1.6f);
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "< Exit <", 0f, -120f, 1.6f, 1.6f);
+                    MappedMenus.Add();
+                    ((MappedMenu)MappedMenus.menu[MappedMenus.no_menus]).Load(1, "Cost: Free", 0f, 50f, 0.8f, 0.8f);
+
+                }
+            }
             
             MappedMenus.MeasureOptions();
             if (MappedMenus.Control() > 0 && MappedMenus.no_menus > 0 && _foc == 0)
@@ -480,10 +508,8 @@ public class ScreenPatch
             MappedControls.keytim = 10f;
             return false;
         }
-
         return true;
     }
-
     private static IEnumerable<string> SortPrev(List<string> prefixes)
     {
         var prev = MetaFile.Data.PrefixPriorityOrder;

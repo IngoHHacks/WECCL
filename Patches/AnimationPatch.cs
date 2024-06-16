@@ -21,6 +21,7 @@ internal class AnimationPatch
     {
         MappedPlayer p = __instance;
         var anim = p.animator;
+        if (anim == null || anim.runtimeAnimatorController == null) return;
         var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
         if (p.anim >= 1000000)
         {
@@ -57,6 +58,7 @@ internal class AnimationPatch
     {
         MappedPlayer p = __instance;
         var anim = p.animator;
+        if (anim == null || anim.runtimeAnimatorController == null) return true;
         var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
         if (p.anim >= 1000000)
         {
