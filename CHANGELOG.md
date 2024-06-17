@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.10.4
+- Fixed an issue where caches are still being created even if caching is disabled.
+
 ### Release 1.10.3
 - Added fast travel to the pause menu.
 - Added promo variable: `$team#1`.

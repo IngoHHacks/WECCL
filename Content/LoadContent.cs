@@ -542,6 +542,12 @@ internal static class LoadContent
 
     private static void CacheAudioClip(AudioClip clip, long ticks, string chksum)
     {
+        // Don't cache if the cache is disabled
+        if (!Plugin.CacheEnabled.Value)
+        {
+            return;
+        }
+        
         // Don't cache clips that are too big
         if (clip.samples * clip.channels * 4 > 2000000000)
         {
