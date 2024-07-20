@@ -794,14 +794,17 @@ internal class SaveRemapper
                 saveData.opponent[index] = 1;
             }
         }
-        for (int index = 1; index < saveData.bookingOpponent.Length; index++)
+        if (saveData.bookingOpponent != null)
         {
-            int opponent = saveData.bookingOpponent[index];
-            if (opponent > numChars)
+            for (int index = 1; index < saveData.bookingOpponent.Length; index++)
             {
-                LogWarning(
-                    $"Booking opponent index {opponent} is out of bounds. Resetting to 1.");
-                saveData.bookingOpponent[index] = 1;
+                int opponent = saveData.bookingOpponent[index];
+                if (opponent > numChars)
+                {
+                    LogWarning(
+                        $"Booking opponent index {opponent} is out of bounds. Resetting to 1.");
+                    saveData.bookingOpponent[index] = 1;
+                }
             }
         }
         foreach (var card in saveData.card)
