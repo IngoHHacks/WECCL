@@ -29,6 +29,8 @@ internal static class LoadContent
     internal static int TotalAssets;
     internal static int LoadedAssets = 0;
     internal static string LastAsset = "";
+    
+    internal static int NumContentMods = 0;
 
     internal enum LoadPhase
     {
@@ -38,7 +40,7 @@ internal static class LoadContent
         Promos,
         Audio,
         Costumes,
-        Asset_Bundles,
+        AssetBundles,
         Overrides,
         Characters,
         Finalizing
@@ -60,33 +62,46 @@ internal static class LoadContent
         List<DirectoryInfo> AllModsOverridesDirs = new();
         List<DirectoryInfo> AllModsLibrariesDirs = new();
         List<DirectoryInfo> AllModsImportDirs = new();
+        List<DirectoryInfo> TopDirs = new();
+        List<DirectoryInfo> SeenTopDirs = new();
 
         foreach (string modPath in Directory.GetDirectories(Path.Combine(Paths.BepInExRootPath, "plugins")))
         {
             FindContent(modPath, ref AllModsAssetsDirs, ref AllModsOverridesDirs, ref AllModsImportDirs,
                 ref AllModsLibrariesDirs);
+            TopDirs.Add(new DirectoryInfo(modPath));
         }
 
+        bool manual = false;
         if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Assets")))
         {
             AllModsAssetsDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Assets")));
+            manual = true;
         }
 
         if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Overrides")))
         {
             AllModsOverridesDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Overrides")));
+            manual = true;
         }
 
         if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Import")))
         {
             AllModsImportDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Import")));
+            manual = true;
         }
 
         if (Directory.Exists(Path.Combine(Paths.BepInExRootPath, "plugins", "Libraries")))
         {
             AllModsLibrariesDirs.Add(new DirectoryInfo(Path.Combine(Paths.BepInExRootPath, "plugins", "Libraries")));
+            manual = true;
         }
        
+        if (manual)
+        {
+            NumContentMods++;
+        }
+        
 
         if (AllModsAssetsDirs.Count > 0)
         {
@@ -111,6 +126,12 @@ internal static class LoadContent
         foreach (DirectoryInfo dir in AllModsLibrariesDirs.OrderBy(x => x.Name))
         {
             yield return LoadLibraries(dir);
+            var sd = SubDirFind(TopDirs, dir);
+            if (sd != null)
+            {
+                SeenTopDirs.Add(sd);
+                TopDirs.Remove(sd);
+            }
         }
 
         if (Plugin.EnableCustomContent.Value)
@@ -119,21 +140,45 @@ internal static class LoadContent
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadPromos(modAssetsDir);
+                var sd = SubDirFind(TopDirs, modAssetsDir);
+                if (sd != null)
+                {
+                    SeenTopDirs.Add(sd);
+                    TopDirs.Remove(sd);
+                }
             }
             LoadingPhase = LoadPhase.Audio;
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadAudioClips(modAssetsDir);
+                var sd = SubDirFind(TopDirs, modAssetsDir);
+                if (sd != null)
+                {
+                    SeenTopDirs.Add(sd);
+                    TopDirs.Remove(sd);
+                }
             }
             LoadingPhase = LoadPhase.Costumes;
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadCostumes(modAssetsDir);
+                var sd = SubDirFind(TopDirs, modAssetsDir);
+                if (sd != null)
+                {
+                    SeenTopDirs.Add(sd);
+                    TopDirs.Remove(sd);
+                }
             }
-            LoadingPhase = LoadPhase.Asset_Bundles;
+            LoadingPhase = LoadPhase.AssetBundles;
             foreach (DirectoryInfo modAssetsDir in AllModsAssetsDirs.OrderBy(x => x.Name))
             {
                 yield return LoadAssetBundles(modAssetsDir);
+                var sd = SubDirFind(TopDirs, modAssetsDir);
+                if (sd != null)
+                {
+                    SeenTopDirs.Add(sd);
+                    TopDirs.Remove(sd);
+                }
             }
         }
 
@@ -145,6 +190,12 @@ internal static class LoadContent
             foreach (DirectoryInfo modOverridesDir in AllModsOverridesDirs)
             {
                 yield return LoadOverrides(modOverridesDir);
+                var sd = SubDirFind(TopDirs, modOverridesDir);
+                if (sd != null)
+                {
+                    SeenTopDirs.Add(sd);
+                    TopDirs.Remove(sd);
+                }
             }
         }
 
@@ -372,13 +423,40 @@ internal static class LoadContent
             {
                 LogDebug($"Importing characters from {modImportDir.Name}...");
                 yield return ImportCharacters(modImportDir);
+                var sd = SubDirFind(TopDirs, modImportDir);
+                if (sd != null)
+                {
+                    SeenTopDirs.Add(sd);
+                    TopDirs.Remove(sd);
+                }
             }
         }
+        NumContentMods += SeenTopDirs.Count;
+        LogInfo($"Loaded {NumContentMods} content mod(s).");
+        
         LoadingPhase = LoadPhase.Finalizing;
 
         LoadPrefixes();
 
         ModsLoaded = true;
+    }
+    
+    private static DirectoryInfo SubDirFind(List<DirectoryInfo> dirs, DirectoryInfo dir)
+    {
+        foreach (var d in dirs)
+        {
+            var current = dir;
+            while (current != null)
+            {
+                if (current.FullName == d.FullName)
+                {
+                    return d;
+                }
+                current = current.Parent;
+            }
+        }
+
+        return null;
     }
 
     private static long _nextProgressUpdate = DateTime.Now.Ticks;

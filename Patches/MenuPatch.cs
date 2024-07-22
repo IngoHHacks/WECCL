@@ -47,8 +47,11 @@ internal class MenuPatch
     public static void Menus_MOKABGFFGLC()
     {
          var text = GameObject.Find("Version").GetComponent<Text>(); 
-         text.text = "WECCL " + Plugin.PluginVerLong + "\t\t Game " + text.text;
+         text.text = "\nWECCL " + Plugin.PluginVerLong + "\t\t Game " + text.text + "\n" +
+                     "Mods Loaded: " + LoadContent.NumContentMods + " Content, " + AllMods.Instance.NumMods + " Code";
          text.horizontalOverflow = HorizontalWrapMode.Overflow;
+         text.verticalOverflow = VerticalWrapMode.Overflow;
+         text.fontSize -= 4;
     }
 
     private static int _location;

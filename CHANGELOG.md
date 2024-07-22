@@ -2,6 +2,11 @@
 
 ## GV 1.60+:
 
+### Release 1.10.5
+- The number of loaded content and code mods is now shown in the main menu.
+- Fixed an issue with certain custom costume parts not being loaded correctly.
+- Fixed issues with loading old save files.
+
 ### Release 1.10.4
 - Fixed an issue where caches are still being created even if caching is disabled.
 

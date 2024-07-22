@@ -101,7 +101,7 @@ public class LoadingPatch
                 return new Color(0.9f, 0.9f, 0f, 1f);
             case LoadPhase.Costumes:
                 return new Color(0f, 0.9f, 0f, 1f);
-            case LoadPhase.Asset_Bundles:
+            case LoadPhase.AssetBundles:
                 return new Color(0f, 0.5f, 0.9f, 1f);
             case LoadPhase.Overrides:
                 return new Color(0.5f, 0f, 0.9f, 1f);
@@ -128,7 +128,7 @@ public class LoadingPatch
                 return new Color(0.5f, 0.5f, 0f, 1f);
             case LoadPhase.Costumes:
                 return new Color(0f, 0.5f, 0f, 1f);
-            case LoadPhase.Asset_Bundles:
+            case LoadPhase.AssetBundles:
                 return new Color(0f, 0.25f, 0.5f, 1f);
             case LoadPhase.Overrides:
                 return new Color(0.25f, 0f, 0.5f, 1f);
