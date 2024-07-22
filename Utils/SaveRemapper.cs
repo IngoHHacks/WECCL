@@ -794,14 +794,17 @@ internal class SaveRemapper
                 saveData.opponent[index] = 1;
             }
         }
-        for (int index = 1; index < saveData.bookingOpponent.Length; index++)
+        if (saveData.bookingOpponent != null)
         {
-            int opponent = saveData.bookingOpponent[index];
-            if (opponent > numChars)
+            for (int index = 1; index < saveData.bookingOpponent.Length; index++)
             {
-                LogWarning(
-                    $"Booking opponent index {opponent} is out of bounds. Resetting to 1.");
-                saveData.bookingOpponent[index] = 1;
+                int opponent = saveData.bookingOpponent[index];
+                if (opponent > numChars)
+                {
+                    LogWarning(
+                        $"Booking opponent index {opponent} is out of bounds. Resetting to 1.");
+                    saveData.bookingOpponent[index] = 1;
+                }
             }
         }
         foreach (var card in saveData.card)
@@ -846,30 +849,36 @@ internal class SaveRemapper
                 saveData.hiChar[index] = 1;
             }
         }
-        foreach (var stockFurniture in saveData.stockFurniture)
+        if (saveData.stockFurniture != null)
         {
-            if (stockFurniture == null)
+            foreach (var stockFurniture in saveData.stockFurniture)
             {
-                continue;
-            }
-            if (stockFurniture.owner > numChars)
-            {
-                LogWarning(
-                    $"Furniture owner index {stockFurniture.owner} is out of bounds. Resetting to 1.");
-                stockFurniture.owner = 1;
+                if (stockFurniture == null)
+                {
+                    continue;
+                }
+                if (stockFurniture.owner > numChars)
+                {
+                    LogWarning(
+                        $"Furniture owner index {stockFurniture.owner} is out of bounds. Resetting to 1.");
+                    stockFurniture.owner = 1;
+                }
             }
         }
-        foreach (var stockWeapon in saveData.stockWeapons)
+        if (saveData.stockWeapons != null)
         {
-            if (stockWeapon == null)
+            foreach (var stockWeapon in saveData.stockWeapons)
             {
-                continue;
-            }
-            if (stockWeapon.owner > numChars)
-            {
-                LogWarning(
-                    $"Weapon owner index {stockWeapon.owner} is out of bounds. Resetting to 1.");
-                stockWeapon.owner = 1;
+                if (stockWeapon == null)
+                {
+                    continue;
+                }
+                if (stockWeapon.owner > numChars)
+                {
+                    LogWarning(
+                        $"Weapon owner index {stockWeapon.owner} is out of bounds. Resetting to 1.");
+                    stockWeapon.owner = 1;
+                }
             }
         }
         foreach (var character in saveData.savedChars)
