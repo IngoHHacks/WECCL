@@ -158,13 +158,19 @@ internal class BetterCostumeData
         Costume costume = JsonConvert.DeserializeObject<Costume>(JsonConvert.SerializeObject(this))!;
         for (int i = 0; i < costume.texture.Length; i++)
         {
+            bool found = false;
             if (i == 3 && this.textureC[i].StartsWith("Custom/"))
             {
                 try
                 {
                     string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
+                    int index = ContentMappings.ContentMap.FaceFemaleNameMap.IndexOf(material);
+                    if(index != -1) 
+                    {
+                        costume.texture[i] = -index - VanillaCounts.Data.FaceFemaleCount - 1;
+                        found = true;
+                    }
+                    
                 }
                 catch
                 {
@@ -177,8 +183,12 @@ internal class BetterCostumeData
                 try
                 {
                     string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.Data.SpecialFootwearCount - 1;
+                    int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
+                    if (index != -1)
+                    {
+                        costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
+                        found = true;
+                    }
                 }
                 catch
                 {
@@ -192,7 +202,11 @@ internal class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.Data.SpecialFootwearCount - 1;
+                    if(index != -1) 
+                    { 
+                        costume.texture[i] = -index - VanillaCounts.Data.SpecialFootwearCount - 1;
+                        found = true;
+                    }
                 }
                 catch
                 {
@@ -206,7 +220,11 @@ internal class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.TransparentHairMaterialNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.Data.TransparentHairMaterialCount - 1;
+                    if (index != -1)
+                    {
+                        costume.texture[i] = -index - VanillaCounts.Data.TransparentHairMaterialCount - 1;
+                        found = true;
+                    }
                 }
                 catch
                 {
@@ -220,7 +238,11 @@ internal class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
+                    if (index != -1)
+                    {
+                        costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
+                        found = true;
+                    }
                 }
                 catch
                 {
@@ -234,7 +256,11 @@ internal class BetterCostumeData
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
+                    if (index != -1)
+                    {
+                        costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
+                        found = true;
+                    }
                 }
                 catch
                 {
@@ -243,13 +269,22 @@ internal class BetterCostumeData
                 }
             }
             //default custom
-            else if (this.textureC[i].StartsWith("Custom/"))
+            if (this.textureC[i].StartsWith("Custom/") && !found)
             {
                 try
                 {
                     string material = this.textureC[i].Substring(7);
                     int index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                    costume.texture[i] = index + VanillaCounts.Data.MaterialCounts[i] + 1;
+                    if (index != -1)
+                    {
+                        costume.texture[i] = index + VanillaCounts.Data.MaterialCounts[i] + 1;
+                        found = true;
+                    }
+                    if (!found)
+                    {
+                        LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
+                        costume.texture[i] = 0;
+                    }
                 }
                 catch
                 {
@@ -257,7 +292,7 @@ internal class BetterCostumeData
                     costume.texture[i] = 0;
                 }
             }
-            else
+            if (this.textureC[i].StartsWith("Vanilla/"))
             {
                 string index = this.textureC[i].Substring(8);
                 costume.texture[i] = int.Parse(index);
@@ -266,13 +301,18 @@ internal class BetterCostumeData
 
         for (int i = 0; i < costume.flesh.Length; i++)
         {
+            bool found = false;
             if (i == 2 && this.fleshC[i].StartsWith("Custom/"))
             {
                 try
                 {
                     string material = this.fleshC[i].Substring(7);
                     int index = ContentMappings.ContentMap.BodyFemaleNameMap.IndexOf(material);
-                    costume.flesh[i] = -index - VanillaCounts.Data.BodyFemaleCount - 1;
+                    if (index != -1)
+                    {
+                        costume.flesh[i] = -index - VanillaCounts.Data.BodyFemaleCount - 1;
+                        found = true;
+                    }
                 }
                 catch
                 {
@@ -281,13 +321,22 @@ internal class BetterCostumeData
                 }
             }
             //default custom
-            else if (this.fleshC[i].StartsWith("Custom/"))
+            if (this.fleshC[i].StartsWith("Custom/") && !found)
             {
                 try
                 {
                     string material = this.fleshC[i].Substring(7);
                     int index = ContentMappings.ContentMap.FleshNameMap[i].IndexOf(material);
-                    costume.flesh[i] = index + VanillaCounts.Data.FleshCounts[i] + 1;
+                    if (index != -1)
+                    {
+                        costume.flesh[i] = index + VanillaCounts.Data.FleshCounts[i] + 1;
+                        found = true;
+                    }
+                    if(!found)
+                    {
+                        LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
+                        costume.flesh[i] = 0;
+                    }
                 }
                 catch
                 {
@@ -295,7 +344,7 @@ internal class BetterCostumeData
                     costume.flesh[i] = 0;
                 }
             }
-            else
+            if (this.fleshC[i].StartsWith("Vanilla/"))
             {
                 string index = this.fleshC[i].Substring(8);
                 costume.flesh[i] = int.Parse(index);
@@ -304,13 +353,18 @@ internal class BetterCostumeData
 
         for (int i = 0; i < costume.shape.Length; i++)
         {
+            bool found = false;
             if (i == 17 && this.shapeC[i].StartsWith("Custom/"))
             {
                 try
                 {
                     string material = this.shapeC[i].Substring(7);
                     int index = ContentMappings.ContentMap.TransparentHairHairstyleNameMap.IndexOf(material);
-                    costume.shape[i] = -index - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
+                    if (index != -1)
+                    {
+                        costume.shape[i] = -index - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
+                        found = true;
+                    }
                 }
                 catch
                 {
@@ -319,13 +373,22 @@ internal class BetterCostumeData
                 }
             }
             //default custom
-            else if (this.shapeC[i].StartsWith("Custom/"))
+            if (this.shapeC[i].StartsWith("Custom/") && !found)
             {
                 try
                 {
                     string material = this.shapeC[i].Substring(7);
                     int index = ContentMappings.ContentMap.ShapeNameMap[i].IndexOf(material);
-                    costume.shape[i] = index + VanillaCounts.Data.ShapeCounts[i] + 1;
+                    if (index != -1)
+                    {
+                        costume.shape[i] = index + VanillaCounts.Data.ShapeCounts[i] + 1;
+                        found = true;
+                    }
+                    if(!found)
+                    {
+                        LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
+                        costume.shape[i] = 0;
+                    }
                 }
                 catch
                 {
@@ -333,7 +396,7 @@ internal class BetterCostumeData
                     costume.shape[i] = 0;
                 }
             }
-            else
+            if (this.shapeC[i].StartsWith("Vanilla/"))
             {
                 string index = this.shapeC[i].Substring(8);
                 costume.shape[i] = int.Parse(index);
