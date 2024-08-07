@@ -53,25 +53,13 @@ internal class BetterCostumeData
                 string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 15 && costume.texture[i] < -VanillaCounts.Data.SpecialFootwearCount)
-            {
-                int index = -costume.texture[i] - VanillaCounts.Data.SpecialFootwearCount - 1;
-                string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
-                bcd.textureC[i] = "Custom/" + material;
-            }
             else if (i == 17 && costume.texture[i] < -VanillaCounts.Data.TransparentHairMaterialCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.TransparentHairMaterialCount - 1;
                 string material = ContentMappings.ContentMap.TransparentHairMaterialNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
-            else if (i == 24 && costume.texture[i] < -VanillaCounts.Data.KneepadCount)
-            {
-                int index = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
-                string material = ContentMappings.ContentMap.KneepadNameMap[index];
-                bcd.textureC[i] = "Custom/" + material;
-            }
-            else if (i == 25 && costume.texture[i] < -VanillaCounts.Data.KneepadCount)
+            else if ((i == 25 || i == 26) && costume.texture[i] < -VanillaCounts.Data.KneepadCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
                 string material = ContentMappings.ContentMap.KneepadNameMap[index];
@@ -156,253 +144,178 @@ internal class BetterCostumeData
     public Costume ToRegularCostume()
     {
         Costume costume = JsonConvert.DeserializeObject<Costume>(JsonConvert.SerializeObject(this))!;
+
         for (int i = 0; i < costume.texture.Length; i++)
         {
-            bool found = false;
-            if (i == 3 && this.textureC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.FaceFemaleNameMap.IndexOf(material);
-                    if(index != -1) 
-                    {
-                        costume.texture[i] = -index - VanillaCounts.Data.FaceFemaleCount - 1;
-                        found = true;
-                    }
-                    
-                }
-                catch
-                {
-                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                    costume.texture[i] = 0;
-                }
-            }
-            else if (i == 14 && this.textureC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
-                        found = true;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                    costume.texture[i] = 0;
-                }
-            }
-            else if (i == 15 && this.textureC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.SpecialFootwearNameMap.IndexOf(material);
-                    if(index != -1) 
-                    { 
-                        costume.texture[i] = -index - VanillaCounts.Data.SpecialFootwearCount - 1;
-                        found = true;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                    costume.texture[i] = 0;
-                }
-            }
-            else if (i == 17 && this.textureC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.TransparentHairMaterialNameMap.IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.texture[i] = -index - VanillaCounts.Data.TransparentHairMaterialCount - 1;
-                        found = true;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                    costume.texture[i] = 0;
-                }
-            }
-            else if (i == 24 && this.textureC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
-                        found = true;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                    costume.texture[i] = 0;
-                }
-            }
-            else if (i == 25 && this.textureC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.KneepadNameMap.IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.texture[i] = -index - VanillaCounts.Data.KneepadCount - 1;
-                        found = true;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                    costume.texture[i] = 0;
-                }
-            }
-            //default custom
-            if (this.textureC[i].StartsWith("Custom/") && !found)
-            {
-                try
-                {
-                    string material = this.textureC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.MaterialNameMap[i].IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.texture[i] = index + VanillaCounts.Data.MaterialCounts[i] + 1;
-                        found = true;
-                    }
-                    if (!found)
-                    {
-                        LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                        costume.texture[i] = 0;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find texture from name {this.textureC[i]}, setting to 0.");
-                    costume.texture[i] = 0;
-                }
-            }
-            if (this.textureC[i].StartsWith("Vanilla/"))
-            {
-                string index = this.textureC[i].Substring(8);
-                costume.texture[i] = int.Parse(index);
-            }
+            costume.texture[i] = ConvertTexture(this.textureC[i], i);
         }
 
         for (int i = 0; i < costume.flesh.Length; i++)
         {
-            bool found = false;
-            if (i == 2 && this.fleshC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.fleshC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.BodyFemaleNameMap.IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.flesh[i] = -index - VanillaCounts.Data.BodyFemaleCount - 1;
-                        found = true;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
-                    costume.flesh[i] = 0;
-                }
-            }
-            //default custom
-            if (this.fleshC[i].StartsWith("Custom/") && !found)
-            {
-                try
-                {
-                    string material = this.fleshC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.FleshNameMap[i].IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.flesh[i] = index + VanillaCounts.Data.FleshCounts[i] + 1;
-                        found = true;
-                    }
-                    if(!found)
-                    {
-                        LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
-                        costume.flesh[i] = 0;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find flesh from name {this.fleshC[i]}, setting to 0.");
-                    costume.flesh[i] = 0;
-                }
-            }
-            if (this.fleshC[i].StartsWith("Vanilla/"))
-            {
-                string index = this.fleshC[i].Substring(8);
-                costume.flesh[i] = int.Parse(index);
-            }
+            costume.flesh[i] = ConvertFlesh(this.fleshC[i], i);
         }
 
         for (int i = 0; i < costume.shape.Length; i++)
         {
-            bool found = false;
-            if (i == 17 && this.shapeC[i].StartsWith("Custom/"))
-            {
-                try
-                {
-                    string material = this.shapeC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.TransparentHairHairstyleNameMap.IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.shape[i] = -index - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
-                        found = true;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
-                    costume.shape[i] = 0;
-                }
-            }
-            //default custom
-            if (this.shapeC[i].StartsWith("Custom/") && !found)
-            {
-                try
-                {
-                    string material = this.shapeC[i].Substring(7);
-                    int index = ContentMappings.ContentMap.ShapeNameMap[i].IndexOf(material);
-                    if (index != -1)
-                    {
-                        costume.shape[i] = index + VanillaCounts.Data.ShapeCounts[i] + 1;
-                        found = true;
-                    }
-                    if(!found)
-                    {
-                        LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
-                        costume.shape[i] = 0;
-                    }
-                }
-                catch
-                {
-                    LogWarning($"Failed to find shape from name {this.shapeC[i]}, setting to 0.");
-                    costume.shape[i] = 0;
-                }
-            }
-            if (this.shapeC[i].StartsWith("Vanilla/"))
-            {
-                string index = this.shapeC[i].Substring(8);
-                costume.shape[i] = int.Parse(index);
-            }
+            costume.shape[i] = ConvertShape(this.shapeC[i], i);
         }
 
         return costume;
     }
+
+    private int ConvertTexture(string texture, int index)
+    {
+
+        if (texture.StartsWith("Custom/"))
+        {
+            string material = texture.Substring(7);
+            try
+            {
+                int? foundIndex = null;
+                switch(index)
+                {
+                    case 3:
+                        foundIndex = FindIndex(ContentMappings.ContentMap.FaceFemaleNameMap, material, VanillaCounts.Data.FaceFemaleCount);
+                        break;
+                    case 14:
+                        foundIndex = FindIndex(ContentMappings.ContentMap.SpecialFootwearNameMap, material, VanillaCounts.Data.SpecialFootwearCount);
+                        break;
+                    case 17:
+                        foundIndex = FindIndex(ContentMappings.ContentMap.TransparentHairMaterialNameMap, material, VanillaCounts.Data.TransparentHairMaterialCount);
+                        break;
+                    case 25:
+                        foundIndex = FindIndex(ContentMappings.ContentMap.KneepadNameMap, material, VanillaCounts.Data.KneepadCount);
+                        break;
+                    case 26:
+                        foundIndex = FindIndex(ContentMappings.ContentMap.KneepadNameMap, material, VanillaCounts.Data.KneepadCount);
+                        break;
+                }
+                if(foundIndex == null)
+                {
+                    foundIndex = FindIndexDefault(ContentMappings.ContentMap.MaterialNameMap[index], material, VanillaCounts.Data.MaterialCounts[index]);
+                }
+                if(foundIndex == null)
+                {
+                    LogWarning($"Failed to find texture from name {texture}, setting to 0.");
+                    return 0;
+                }
+                else
+                {
+                    return foundIndex.Value;
+                }
+            }
+            catch
+            {
+                LogWarning($"Failed to find texture from name {texture}, setting to 0.");
+                return 0;
+            }
+        }
+        else if (texture.StartsWith("Vanilla/"))
+        {
+            return int.Parse(texture.Substring(8));
+        }
+
+        return 0;
+    }
+
+    private int ConvertFlesh(string flesh, int index)
+    {
+        if (flesh.StartsWith("Custom/"))
+        {
+            string material = flesh.Substring(7);
+            try
+            {
+                int? foundIndex = null;
+                if (index == 2)
+                {
+                    foundIndex = FindIndex(ContentMappings.ContentMap.BodyFemaleNameMap, material, VanillaCounts.Data.BodyFemaleCount);
+                }
+                if(foundIndex == null)
+                {
+                    foundIndex = FindIndexDefault(ContentMappings.ContentMap.FleshNameMap[index], material, VanillaCounts.Data.FleshCounts[index]); ;
+                }
+                if(foundIndex == null)
+                {
+                    LogWarning($"Failed to find flesh from name {flesh}, setting to 0.");
+                    return 0;
+                }
+                else
+                {
+                    return foundIndex.Value;
+                }
+
+            }
+            catch
+            {
+                LogWarning($"Failed to find flesh from name {flesh}, setting to 0.");
+                return 0;
+            }
+        }
+        else if (flesh.StartsWith("Vanilla/"))
+        {
+            return int.Parse(flesh.Substring(8));
+        }
+
+        return 0;
+    }
+
+    private int ConvertShape(string shape, int index)
+    {
+        if (shape.StartsWith("Custom/"))
+        {
+            string material = shape.Substring(7);
+            try
+            {
+                int? foundIndex = null;
+                if (index == 17)
+                {
+                    foundIndex = FindIndex(ContentMappings.ContentMap.TransparentHairHairstyleNameMap, material, VanillaCounts.Data.TransparentHairHairstyleCount);
+                }
+                if (foundIndex == null)
+                {
+                    foundIndex = FindIndexDefault(ContentMappings.ContentMap.ShapeNameMap[index], material, VanillaCounts.Data.ShapeCounts[index]);
+                }
+                if (foundIndex == null)
+                {
+                    LogWarning($"Failed to find shape from name {shape}, setting to 0.");
+                    return 0;
+                }
+                else
+                {
+                    return foundIndex.Value;
+                }
+            }
+            catch
+            {
+                LogWarning($"Failed to find shape from name {shape}, setting to 0.");
+                return 0;
+            }
+        }
+        else if (shape.StartsWith("Vanilla/"))
+        {
+            return int.Parse(shape.Substring(8));
+        }
+
+        return 0;
+    }
+
+    private int? FindIndex(List<string> map, string material, int count)
+    {
+        int index = map.IndexOf(material);
+        if (index != -1)
+        {
+            return -index - count - 1;
+        }
+        return null;
+    }
+    private int? FindIndexDefault(List<string> map, string material, int count)
+    {
+        int index = map.IndexOf(material);
+        if (index != -1)
+        {
+            return index + count + 1;
+        }
+        return null;
+    }
+
 }
