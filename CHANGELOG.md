@@ -2,6 +2,9 @@
 
 ## GV 1.60+:
 
+### Release 1.10.6
+- Fixed the new Court location being inaccessible.
+
 ### Release 1.10.5
 - The number of loaded content and code mods is now shown in the main menu.
 - Fixed an issue with certain custom costume parts not being loaded correctly.

@@ -717,7 +717,7 @@ public class WorldPatch
         __result = 1;
         if (World.mapVersion < 2f)
         {
-            if ((HJANGKEJCJE >= 17 && HJANGKEJCJE <= VanillaCounts.Data.NoLocations && HJANGKEJCJE != 21 && HJANGKEJCJE != 27) ||
+            if ((HJANGKEJCJE >= 17 && HJANGKEJCJE <= VanillaCounts.Data.NoLocations && HJANGKEJCJE != 20 && HJANGKEJCJE != 21 && HJANGKEJCJE != 27) ||
                 HJANGKEJCJE - VanillaCounts.Data.NoLocations - 1 >= CustomArenaPrefabs.Count)
             {
                 __result = 0;
