@@ -382,14 +382,11 @@ public class WorldPatch
                     Renderer doorRenderer = door.GetComponent<Renderer>();
                     Bounds bounds = doorRenderer.bounds;
 
-                    // Get the corners of the bounds
                     Vector3[] corners = new Vector3[8];
 
-                    // Calculate min and max points of the bounds
                     Vector3 min = bounds.min; // Minimum corner
                     Vector3 max = bounds.max; // Maximum corner
 
-                    // Define the 8 corners of the bounding box
                     corners[0] = new Vector3(min.x, min.y, min.z); // Bottom-left-front
                     corners[1] = new Vector3(max.x, min.y, min.z); // Bottom-right-front
                     corners[2] = new Vector3(min.x, min.y, max.z); // Bottom-left-back
@@ -399,11 +396,6 @@ public class WorldPatch
                     corners[6] = new Vector3(min.x, max.y, max.z); // Top-left-back
                     corners[7] = new Vector3(max.x, max.y, max.z); // Top-right-back
 
-                    // Optionally, sort corners if needed (not necessarily required since bounds gives the exact size)
-                    // If you need to sort by x, y, z, you can still use Array.Sort if necessary.
-
-                    // Now use the corner points for further processing (e.g., drawing bounding boxes)
-                    // Example of assigning top-right and bottom-left corners (if needed for your specific logic)
                     Vector3 topRight = corners[1]; // Top-right-front
                     Vector3 bottomLeft = corners[2]; // Bottom-left-front
                     Vector3 bottomRight = corners[3];
