@@ -902,6 +902,12 @@ internal class SaveRemapper
                     $"Grudge character index {character.grudge} is out of bounds. Resetting to 1.");
                 character.grudge = 1;
             }
+            if (character.team > numChars)
+            {
+                LogWarning(
+                    $"Team character index {character.team} is out of bounds. Resetting to 1.");
+                character.team = 1;
+            }
         }
 
         foreach (var fedData in saveData.savedFeds)

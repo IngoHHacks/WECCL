@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.10.7
+- Improved handling changing settings with large values in the mod settings tab.
+- Fixed some issues with adding/removing characters.
+
 ### Release 1.10.6
 - Fixed the new Court location being inaccessible.
 

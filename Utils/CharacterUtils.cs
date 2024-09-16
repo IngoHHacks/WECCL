@@ -201,6 +201,14 @@ public class CharacterUtils
                 {
                     character.grudge--;
                 }
+                if (character.team == id)
+                {
+                    character.team = 1;
+                }
+                else if (character.team > id)
+                {
+                    character.team--;
+                }
             }
 
             foreach (MappedRoster fedData in Characters.fedData)
