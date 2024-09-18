@@ -403,7 +403,7 @@ internal class ModTabPatch
                             if (config[config.Keys.ToList()[i - 2]].Description.AcceptableValues is
                                 AcceptableValueList<string> list)
                             {
-                                var strings = list.AcceptableValues.ToList();
+                                var strings = list.AcceptableValues.Distinct().ToList();
                                 int current = strings.IndexOf((string)config[config.Keys.ToList()[i - 2]].BoxedValue);
                                 current = Mathf.RoundToInt(
                                     ((MappedMenu)MappedMenus.menu[i]).ChangeValue(current, 1, 10, 0, strings.Count - 1, 1));
