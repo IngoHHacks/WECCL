@@ -376,79 +376,128 @@ public class WorldPatch
                 .ToArray();
             foreach (GameObject door in doors)
             {
-                Vector3[] corners = new Vector3[4];
-                Vector3 center = door.transform.position;
-                Vector3 localScale = door.transform.localScale;
-                float up = localScale.y;
-                float right = localScale.x;
-                float forward = localScale.z;
-                corners[0] = center + new Vector3(right, 0, forward);
-                corners[1] = center + new Vector3(right, 0, -forward);
-                corners[2] = center + new Vector3(-right, 0, forward);
-                corners[3] = center + new Vector3(-right, 0, -forward);
-
-                float yTop = center.y + up;
-                float yBottom = center.y - up;
-
-                Vector3[] xSorted = new Vector3[4];
-                Vector3[] zSorted = new Vector3[4];
-
-                Array.Copy(corners, xSorted, 4);
-                Array.Copy(corners, zSorted, 4);
-
-                Array.Sort(xSorted, (a, b) =>
+                if (door.GetComponent<Renderer>() != null)
                 {
-                    return a.x.CompareTo(b.x);
-                });
-                Array.Sort(zSorted, (a, b) =>
-                {
-                    return a.z.CompareTo(b.z);
-                });
+                    // Access the door's Renderer component to get the bounds
+                    Renderer doorRenderer = door.GetComponent<Renderer>();
+                    Bounds bounds = doorRenderer.bounds;
 
-                Vector3 topRight = corners[0];
-                Vector3 bottomRight = corners[0];
-                Vector3 bottomLeft = corners[0];
-                Vector3 topLeft = corners[0];
+                    Vector3[] corners = new Vector3[8];
 
-                if (zSorted[3].x > zSorted[2].x)
-                {
-                    topRight = zSorted[3];
-                    bottomRight = zSorted[2];
+                    Vector3 min = bounds.min; // Minimum corner
+                    Vector3 max = bounds.max; // Maximum corner
+
+                    corners[0] = new Vector3(min.x, min.y, min.z); // Bottom-left-front
+                    corners[1] = new Vector3(max.x, min.y, min.z); // Bottom-right-front
+                    corners[2] = new Vector3(min.x, min.y, max.z); // Bottom-left-back
+                    corners[3] = new Vector3(max.x, min.y, max.z); // Bottom-right-back
+                    corners[4] = new Vector3(min.x, max.y, min.z); // Top-left-front
+                    corners[5] = new Vector3(max.x, max.y, min.z); // Top-right-front
+                    corners[6] = new Vector3(min.x, max.y, max.z); // Top-left-back
+                    corners[7] = new Vector3(max.x, max.y, max.z); // Top-right-back
+
+                    Vector3 topRight = corners[1]; // Top-right-front
+                    Vector3 bottomLeft = corners[2]; // Bottom-left-front
+                    Vector3 bottomRight = corners[3];
+                    Vector3 topLeft = corners[0];
+
+                    // Create door and set necessary parameters
+                    UnmappedBlocks.ODIELGHNFHA();
+                    UnmappedBlocks.FBEMAEDLBLN[0] = UnmappedBlocks.FBEMAEDLBLN[UnmappedBlocks.BAOOLJCLBIH];
+                    //Ignore wording on these, corners of X and Z won't line up right way with way Mat did this but this way builds the collision correctly.
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[1] = topRight.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[1] = bottomLeft.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[4] = bottomRight.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[4] = topLeft.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[3] = bottomLeft.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[3] = topRight.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[2] = topLeft.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[2] = bottomRight.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].NALEIJHPOHN = max.y - min.y;
+                    UnmappedBlocks.FBEMAEDLBLN[0].AAPMLHAGBGF = door.transform.rotation.eulerAngles.y;
+                    UnmappedBlocks.FBEMAEDLBLN[0].AHBNKMMMGFI = 1;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MGBMJJFIMEF = 1f;
+                    UnmappedBlocks.FBEMAEDLBLN[0].CBBOMMJEMEF = UnmappedSound.FBEMAEDLBLN[1];
+                    UnmappedBlocks.FBEMAEDLBLN[0].AHJOJFOLALM = int.Parse(door.name.Substring(4));
+                    UnmappedBlocks.FBEMAEDLBLN[0].JPODJNJDNBA = door.transform.rotation.eulerAngles.y + 180f;
                 }
                 else
                 {
-                    topRight = zSorted[2];
-                    bottomRight = zSorted[3];
-                }
+                    //If door is not an invisible cube object, do old method so not to break existing custom maps.
+                    Vector3[] corners = new Vector3[4];
+                    Vector3 center = door.transform.position;
+                    Vector3 localScale = door.transform.localScale;
+                    float up = localScale.y;
+                    float right = localScale.x;
+                    float forward = localScale.z;
+                    corners[0] = center + new Vector3(right, 0, forward);
+                    corners[1] = center + new Vector3(right, 0, -forward);
+                    corners[2] = center + new Vector3(-right, 0, forward);
+                    corners[3] = center + new Vector3(-right, 0, -forward);
 
-                if (zSorted[1].x < zSorted[0].x)
-                {
-                    bottomLeft = zSorted[1];
-                    topLeft = zSorted[0];
-                }
-                else
-                {
-                    bottomLeft = zSorted[0];
-                    topLeft = zSorted[1];
-                }
+                    float yTop = center.y + up;
+                    float yBottom = center.y - up;
 
-                // Create door
-                UnmappedBlocks.ODIELGHNFHA();
-                UnmappedBlocks.FBEMAEDLBLN[0] = UnmappedBlocks.FBEMAEDLBLN[UnmappedBlocks.BAOOLJCLBIH];
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[1] = topRight.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[1] = topRight.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[4] = bottomRight.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[4] = bottomRight.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[3] = bottomLeft.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[3] = bottomLeft.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[2] = topLeft.x;
-                UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[2] = topLeft.z;
-                UnmappedBlocks.FBEMAEDLBLN[0].NALEIJHPOHN = yTop - yBottom;
-                UnmappedBlocks.FBEMAEDLBLN[0].AAPMLHAGBGF = door.transform.rotation.eulerAngles.y;
-                UnmappedBlocks.FBEMAEDLBLN[0].MGBMJJFIMEF = 1f;
-                UnmappedBlocks.FBEMAEDLBLN[0].CBBOMMJEMEF = UnmappedSound.FBEMAEDLBLN[1];
-                UnmappedBlocks.FBEMAEDLBLN[0].AHJOJFOLALM = int.Parse(door.name.Substring(4));
-                UnmappedBlocks.FBEMAEDLBLN[0].JPODJNJDNBA = door.transform.rotation.eulerAngles.y + 180f;
+                    Vector3[] xSorted = new Vector3[4];
+                    Vector3[] zSorted = new Vector3[4];
+
+                    Array.Copy(corners, xSorted, 4);
+                    Array.Copy(corners, zSorted, 4);
+
+                    Array.Sort(xSorted, (a, b) =>
+                    {
+                        return a.x.CompareTo(b.x);
+                    });
+                    Array.Sort(zSorted, (a, b) =>
+                    {
+                        return a.z.CompareTo(b.z);
+                    });
+
+                    Vector3 topRight = corners[0];
+                    Vector3 bottomRight = corners[0];
+                    Vector3 bottomLeft = corners[0];
+                    Vector3 topLeft = corners[0];
+
+                    if (zSorted[3].x > zSorted[2].x)
+                    {
+                        topRight = zSorted[3];
+                        bottomRight = zSorted[2];
+                    }
+                    else
+                    {
+                        topRight = zSorted[2];
+                        bottomRight = zSorted[3];
+                    }
+
+                    if (zSorted[1].x < zSorted[0].x)
+                    {
+                        bottomLeft = zSorted[1];
+                        topLeft = zSorted[0];
+                    }
+                    else
+                    {
+                        bottomLeft = zSorted[0];
+                        topLeft = zSorted[1];
+                    }
+
+                    // Create door
+                    UnmappedBlocks.ODIELGHNFHA();
+                    UnmappedBlocks.FBEMAEDLBLN[0] = UnmappedBlocks.FBEMAEDLBLN[UnmappedBlocks.BAOOLJCLBIH];
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[1] = topRight.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[1] = topRight.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[4] = bottomRight.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[4] = bottomRight.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[3] = bottomLeft.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[3] = bottomLeft.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].EONCNOGEOFC[2] = topLeft.x;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MKOCPPCIKEM[2] = topLeft.z;
+                    UnmappedBlocks.FBEMAEDLBLN[0].NALEIJHPOHN = yTop - yBottom;
+                    UnmappedBlocks.FBEMAEDLBLN[0].AAPMLHAGBGF = door.transform.rotation.eulerAngles.y;
+                    UnmappedBlocks.FBEMAEDLBLN[0].MGBMJJFIMEF = 1f;
+                    UnmappedBlocks.FBEMAEDLBLN[0].CBBOMMJEMEF = UnmappedSound.FBEMAEDLBLN[1];
+                    UnmappedBlocks.FBEMAEDLBLN[0].AHJOJFOLALM = int.Parse(door.name.Substring(4));
+                    UnmappedBlocks.FBEMAEDLBLN[0].JPODJNJDNBA = door.transform.rotation.eulerAngles.y + 180f;
+                }
             }
         }
 
