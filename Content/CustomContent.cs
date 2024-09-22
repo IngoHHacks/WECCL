@@ -1,4 +1,5 @@
 using WECCL.Animation;
+using WECCL.API;
 using WECCL.Saves;
 using static WECCL.Utils.NumberFormatUtils;
 
@@ -52,7 +53,7 @@ internal static class CustomContent
     
     internal static readonly List<GameObject>  CustomArenaPrefabs = new();
     internal static readonly List<AnimationData> CustomAnimations = new();
-    internal static readonly List<PromoData> PromoData = new();
+    internal static readonly List<PromoData> CustomPromoData = new();
 
     public static bool HasConflictingOverrides;
 

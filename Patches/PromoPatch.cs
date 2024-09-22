@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
+using WECCL.API;
 using WECCL.Content;
-using PromoData = WECCL.Content.PromoData;
 
 namespace WECCL.Patches;
 
@@ -16,81 +16,88 @@ internal class PromoPatch
     [HarmonyPrefix]
     public static void Promo_KMFBNADPGMF()
     {
-        int promoId = UnmappedPromo.LODPJDDLEKI - 1000000;
+        int promoId = UnmappedPromo.LODPJDDLEKI - PromoData.BASE_PROMO_OFFSET;
         if (promoId < 0)
         {
             return;
         }
 
-        PromoData promo = CustomContent.PromoData[promoId];
-
-        int page = UnmappedPromo.ODOAPLMOJPD - 1;
-        if (page >= promo.NumLines)
-        {
-            UnmappedPromo.LODPJDDLEKI = 0;
+        PromoData promo;
+        PromoLine promoLine;
+        if (promoId >= PromoData.CODE_PROMO_OFFSET - PromoData.BASE_PROMO_OFFSET) {
+            promo = CodePromoManager.GetPromoData(promoId - PromoData.CODE_PROMO_OFFSET + PromoData.BASE_PROMO_OFFSET);
+            promoLine = CodePromoManager.HandlePage(promoId - PromoData.CODE_PROMO_OFFSET + PromoData.BASE_PROMO_OFFSET);
+            if (promoLine == null)
+            {
+                MappedPromo.script = 0;
+                return;
+            }
         }
         else
         {
-            if (promo.UseCharacterNames)
+            promo = CustomPromoData[promoId];
+            int page = UnmappedPromo.ODOAPLMOJPD - 1;
+            if (page >= promo.NumLines)
             {
-                if (!promo.NameToID.TryGetValue(promo.PromoLines[page].FromName, out int fromid))
-                {
-                    fromid = 0;
-                }
-                if (!promo.NameToID.TryGetValue(promo.PromoLines[page].ToName, out int toid))
-                {
-                    toid = 0;
-                }
-                ExecutePromoLine(promo.PromoLines[page].Line1, promo.PromoLines[page].Line2, fromid,
-                    toid, promo.PromoLines[page].Demeanor, promo.PromoLines[page].TauntAnim, true);
+                MappedPromo.script = 0;
+                return;
             }
-            else
+            promoLine = promo.PromoLines[page];
+        }
+        
+        if (promo.UseCharacterNames)
+        {
+            if (!promo.NameToID.TryGetValue(promoLine.FromName, out int fromid))
             {
-                ExecutePromoLine(promo.PromoLines[page].Line1, promo.PromoLines[page].Line2, promo.PromoLines[page].From,
-                    promo.PromoLines[page].To, promo.PromoLines[page].Demeanor, promo.PromoLines[page].TauntAnim, false);
+                fromid = 0;
             }
+            if (!promo.NameToID.TryGetValue(promoLine.ToName, out int toid))
+            {
+                toid = 0;
+            }
+            ExecutePromoLine(promoLine.Line1, promoLine.Line2, fromid,
+                toid, promoLine.Demeanor, promoLine.TauntAnim, true);
+        }
+        else
+        {
+            ExecutePromoLine(promoLine.Line1, promoLine.Line2, promoLine.From,
+                promoLine.To, promoLine.Demeanor, promoLine.TauntAnim, false);
         }
 
         if (UnmappedPromo.IMJHCHECCED >= 100f && UnmappedPromo.KJPJODMIPGO < UnmappedPromo.ODOAPLMOJPD)
         {
-            if (promo.PromoLines[page].Features != null)
+            if (promoLine.Features != null)
             {
-                foreach (PromoData.AdvFeatures feature in promo.PromoLines[page].Features)
+                foreach (AdvFeatures feature in promoLine.Features)
                 {
-                    PromoData.AdvFeatures.CommandType cmd = feature.Command;
+                    AdvFeatures.CommandType cmd = feature.Command;
                     switch (cmd)
                     {
-                        case PromoData.AdvFeatures.CommandType.SetFace:
-                            promo.GetCharacterForCmd(feature.Args[0]).MFICBPFFDLC(0);
-                            break;
-                        case PromoData.AdvFeatures.CommandType.SetHeel:
-                            promo.GetCharacterForCmd(feature.Args[0]).MFICBPFFDLC(-1);
-                            break;
-                        case PromoData.AdvFeatures.CommandType.SetRealEnemy:
+                        case AdvFeatures.CommandType.SetRealEnemy:
                             promo.GetCharacterForCmd(feature.Args[0])
                                 .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, -1, 0);
                             break;
-                        case PromoData.AdvFeatures.CommandType.SetStoryEnemy:
+                        case AdvFeatures.CommandType.SetStoryEnemy:
                             promo.GetCharacterForCmd(feature.Args[0])
                                 .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, -1);
                             break;
-                        case PromoData.AdvFeatures.CommandType.SetRealFriend:
+                        case AdvFeatures.CommandType.SetRealFriend:
                             promo.GetCharacterForCmd(feature.Args[0])
                                 .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 1, 0);
                             break;
-                        case PromoData.AdvFeatures.CommandType.SetStoryFriend:
+                        case AdvFeatures.CommandType.SetStoryFriend:
                             promo.GetCharacterForCmd(feature.Args[0])
                                 .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 1);
                             break;
-                        case PromoData.AdvFeatures.CommandType.SetRealNeutral:
+                        case AdvFeatures.CommandType.SetRealNeutral:
                             promo.GetCharacterForCmd(feature.Args[0])
                                 .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 0, 0);
                             break;
-                        case PromoData.AdvFeatures.CommandType.SetStoryNeutral:
+                        case AdvFeatures.CommandType.SetStoryNeutral:
                             promo.GetCharacterForCmd(feature.Args[0])
                                 .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, 0);
                             break;
-                        case PromoData.AdvFeatures.CommandType.PlayAudio:
+                        case AdvFeatures.CommandType.PlayAudio:
                             if (feature.Args[0] == "-1")
                             {
                                 UnmappedSound.KIKKPCJGDLM(UnmappedPromo.NNMDEFLLNBF, -1, 1f);
@@ -244,12 +251,12 @@ internal class PromoPatch
     
     public static void PatchPromoInfo()
     {
-        if (CustomContent.PromoData.Count == 0)
+        if (CustomPromoData.Count == 0)
         {
             return;
         }
         
-        foreach (PromoData promo in CustomContent.PromoData)
+        foreach (PromoData promo in CustomPromoData)
         {
             var cl = UnmappedPromo.KIDIEPFFPOO.GetLength(1);
             if (!MappedPromo.libraryName.Contains(promo.Category))
@@ -294,16 +301,16 @@ internal class PromoPatch
     [HarmonyPostfix]
     public static void Promo_GGCFFJNAKFM(int NJPKCMBLMLG)
     {
-        if (NJPKCMBLMLG < 1000000)
+        if (NJPKCMBLMLG < PromoData.BASE_PROMO_OFFSET)
         {
             return;
         }
 
-        int index = NJPKCMBLMLG - 1000000;
+        int index = NJPKCMBLMLG - PromoData.BASE_PROMO_OFFSET;
 
-        UnmappedPromo.NKEDCLBOOMJ = CustomContent.PromoData[index].Title;
-        UnmappedPromo.OLHNMPPACFE = CustomContent.PromoData[index].Description;
-        UnmappedPromo.JPOHPEOOIMK = CustomContent.PromoData[index].Characters;
+        UnmappedPromo.NKEDCLBOOMJ = CustomPromoData[index].Title;
+        UnmappedPromo.OLHNMPPACFE = CustomPromoData[index].Description;
+        UnmappedPromo.JPOHPEOOIMK = CustomPromoData[index].Characters;
     }
 
     /*
@@ -314,33 +321,33 @@ internal class PromoPatch
     [HarmonyPostfix]
     public static void Players_BGIDMGILIEG()  //setting up surprises
     {
-        if (FFCEGMEAIBP.NJPKCMBLMLG < 1000000 || UnmappedMenus.FAKHAFKOBPB != 50)
+        if (FFCEGMEAIBP.NJPKCMBLMLG < PromoData.BASE_PROMO_OFFSET || UnmappedMenus.FAKHAFKOBPB != 50)
         {
             return;
         }
-        int index = FFCEGMEAIBP.NJPKCMBLMLG - 1000000;
+        int index = FFCEGMEAIBP.NJPKCMBLMLG - PromoData.BASE_PROMO_OFFSET;
 
-        UnmappedPromo.NKEDCLBOOMJ = CustomContent.PromoData[index].Title;
-        UnmappedPromo.OLHNMPPACFE = CustomContent.PromoData[index].Description;
-        UnmappedPromo.JPOHPEOOIMK = CustomContent.PromoData[index].Characters;
+        UnmappedPromo.NKEDCLBOOMJ = CustomPromoData[index].Title;
+        UnmappedPromo.OLHNMPPACFE = CustomPromoData[index].Description;
+        UnmappedPromo.JPOHPEOOIMK = CustomPromoData[index].Characters;
 
-        CustomContent.PromoData[index].NameToID = new();
-        CustomContent.PromoData[index].SurpirseExtras = new();
+        CustomPromoData[index].NameToID = new();
+        CustomPromoData[index].SurpirseExtras = new();
         for (int i = 1; i < NJBJIIIACEP.OAAMGFLINOB.Length; i++)
         {
             UnmappedPlayer person = NJBJIIIACEP.OAAMGFLINOB[i];
-            if (CustomContent.PromoData[index].UseCharacterNames)
+            if (CustomPromoData[index].UseCharacterNames)
             {
-                CustomContent.PromoData[index].NameToID.Add(person.EMDMDLNJFKP.name, i);
+                CustomPromoData[index].NameToID.Add(person.EMDMDLNJFKP.name, i);
             }
 
-            if(CustomContent.PromoData[index].IsCharacterSurprise(person))
+            if(CustomPromoData[index].IsCharacterSurprise(person))
             {
                 RespawnSurprise(person);
             }
-            if (CustomContent.PromoData[index].IsCharacterSurprise(NJBJIIIACEP.OAAMGFLINOB[person.FHMLNCBCALP])) //person they are managing
+            if (CustomPromoData[index].IsCharacterSurprise(NJBJIIIACEP.OAAMGFLINOB[person.FHMLNCBCALP])) //person they are managing
             {
-                CustomContent.PromoData[index].SurpirseExtras.Add(i);
+                CustomPromoData[index].SurpirseExtras.Add(i);
                 RespawnTogetherWith(person, NJBJIIIACEP.OAAMGFLINOB[person.FHMLNCBCALP]);
             }
         }
@@ -404,12 +411,12 @@ internal class PromoPatch
     [HarmonyPostfix]
     public static void Match_CDKIEOBHCKE(string LLGKFOKJILF, string EBKFKAKBBKI = "", string GMGANODNCGH = "")
     {
-        if (Mathf.Abs(FFCEGMEAIBP.NJPKCMBLMLG) < 1000000 || UnmappedMenus.FAKHAFKOBPB != 50 || FFCEGMEAIBP.OLJFOJOLLOM <= 0 || FFCEGMEAIBP.LPBCEGPJNMF == 0)
+        if (Mathf.Abs(FFCEGMEAIBP.NJPKCMBLMLG) < PromoData.BASE_PROMO_OFFSET || UnmappedMenus.FAKHAFKOBPB != 50 || FFCEGMEAIBP.OLJFOJOLLOM <= 0 || FFCEGMEAIBP.LPBCEGPJNMF == 0)
         {
             return;
         }
-        int index = Mathf.Abs(FFCEGMEAIBP.NJPKCMBLMLG) - 1000000;
-        if (CustomContent.PromoData[index].SurpriseEntrants.Count == 0 && CustomContent.PromoData[index].SurpriseEntrantsNames.Count == 0)
+        int index = Mathf.Abs(FFCEGMEAIBP.NJPKCMBLMLG) - PromoData.BASE_PROMO_OFFSET;
+        if (CustomPromoData[index].SurpriseEntrants.Count == 0 && CustomPromoData[index].SurpriseEntrantsNames.Count == 0)
         {
             return;
         }
@@ -430,30 +437,30 @@ internal class PromoPatch
     [HarmonyPrefix]
     public static void Match_FGFMHFNMLMA()
     {
-        if (FFCEGMEAIBP.NJPKCMBLMLG > -1000000)
+        if (FFCEGMEAIBP.NJPKCMBLMLG > -PromoData.BASE_PROMO_OFFSET)
         {
             return;
         }
 
-        int index = -FFCEGMEAIBP.NJPKCMBLMLG - 1000000;
-        if(CustomContent.PromoData[index].SurpriseEntrants.Count == 0 && CustomContent.PromoData[index].SurpriseEntrantsNames.Count == 0)
+        int index = -FFCEGMEAIBP.NJPKCMBLMLG - PromoData.BASE_PROMO_OFFSET;
+        if(CustomPromoData[index].SurpriseEntrants.Count == 0 && CustomPromoData[index].SurpriseEntrantsNames.Count == 0)
         {
             return;
         }
 
-        if (CustomContent.PromoData[index].UseCharacterNames)
+        if (CustomPromoData[index].UseCharacterNames)
         {
-            CustomContent.PromoData[index].NameToID.TryGetValue(CustomContent.PromoData[index].SurpriseEntrantsNames.First(), out int first);
+            CustomPromoData[index].NameToID.TryGetValue(CustomPromoData[index].SurpriseEntrantsNames.First(), out int first);
             if (NJBJIIIACEP.OAAMGFLINOB[first].AHBNKMMMGFI == -1)
             {
-                foreach (string name in CustomContent.PromoData[index].SurpriseEntrantsNames)
+                foreach (string name in CustomPromoData[index].SurpriseEntrantsNames)
                 {
-                    if (CustomContent.PromoData[index].NameToID.TryGetValue(name, out int id))
+                    if (CustomPromoData[index].NameToID.TryGetValue(name, out int id))
                     {
                         NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                     }
                 }
-                foreach (int id in CustomContent.PromoData[index].SurpirseExtras)
+                foreach (int id in CustomPromoData[index].SurpirseExtras)
                 {
                     NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                 }
@@ -461,33 +468,33 @@ internal class PromoPatch
         }
         else
         {
-            if (NJBJIIIACEP.OAAMGFLINOB[CustomContent.PromoData[index].SurpriseEntrants.First()].AHBNKMMMGFI == -1)
+            if (NJBJIIIACEP.OAAMGFLINOB[CustomPromoData[index].SurpriseEntrants.First()].AHBNKMMMGFI == -1)
             {
-                foreach (int id in CustomContent.PromoData[index].SurpriseEntrants)
+                foreach (int id in CustomPromoData[index].SurpriseEntrants)
                 {
                     NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                 }
-                foreach (int id in CustomContent.PromoData[index].SurpirseExtras)
+                foreach (int id in CustomPromoData[index].SurpirseExtras)
                 {
                     NJBJIIIACEP.OAAMGFLINOB[id].AHBNKMMMGFI = 0;
                 }
             }
         }
 
-        if(CustomContent.PromoData[index].NextPromo != "")
+        if(CustomPromoData[index].NextPromo != "")
         {
-            int next =  CustomContent.PromoData.FindIndex(a => a.Title == CustomContent.PromoData[index].NextPromo);
+            int next =  CustomPromoData.FindIndex(a => a.Title == CustomPromoData[index].NextPromo);
             if (next != -1)
             {
-                FFCEGMEAIBP.NJPKCMBLMLG = next + 1000000;
-                if (CustomContent.PromoData[next].UseCharacterNames)
+                FFCEGMEAIBP.NJPKCMBLMLG = next + PromoData.BASE_PROMO_OFFSET;
+                if (CustomPromoData[next].UseCharacterNames)
                 {
-                    CustomContent.PromoData[next].NameToID = new();
+                    CustomPromoData[next].NameToID = new();
                     for (int i = 1; i < NJBJIIIACEP.OAAMGFLINOB.Length; i++)
                     {
                         UnmappedPlayer person = NJBJIIIACEP.OAAMGFLINOB[i];
 
-                        CustomContent.PromoData[next].NameToID.Add(person.EMDMDLNJFKP.name, i);
+                        CustomPromoData[next].NameToID.Add(person.EMDMDLNJFKP.name, i);
                     }
                 }
             }
@@ -502,7 +509,7 @@ internal class PromoPatch
     [HarmonyPrefix]
     public static void Progress_EEANPLJLLMA_Pre()
     {
-        if (CustomContent.PromoData.Count == 0 || Progress.promo[Progress.date] != 0)
+        if (CustomPromoData.Count == 0 || Progress.promo[Progress.date] != 0)
         {
             return;
         }
@@ -518,7 +525,7 @@ internal class PromoPatch
     [HarmonyPostfix]
     public static void Progress_EEANPLJLLMA_Post()
     {
-        if (CustomContent.PromoData.Count == 0 || Progress.promo[Progress.date] != 0)
+        if (CustomPromoData.Count == 0 || Progress.promo[Progress.date] != 0)
         {
             return;
         }

@@ -1,7 +1,10 @@
-namespace WECCL.Content;
+namespace WECCL.API.Types;
 
-internal class PromoData
+public class PromoData
 {
+    public const int BASE_PROMO_OFFSET = 1000000;
+    public const int CODE_PROMO_OFFSET = 2000000;
+
     public enum CareerModeProbability
     {
         Disabled,
@@ -295,72 +298,7 @@ internal class PromoData
         return FromString(lines);
     }
 
-    public class PromoLine
-    {
-        public string Line1 { get; set; } = "Line 1";
-        public string Line2 { get; set; } = "Line 2";
-
-        public int From { get; set; } = 1;
-        public int To { get; set; } = 2;
-
-        public string FromName { get; set; } = "";
-        public string ToName { get; set; } = "";
-
-        public float Demeanor { get; set; }
-        public int TauntAnim { get; set; }
-
-        public List<AdvFeatures> Features { get; set; } = new();
-    }
-
-    public class AdvFeatures
-    {
-        public enum CommandType
-        {
-            None,
-            SetFace,
-            SetHeel,
-            SetRealEnemy,
-            SetStoryEnemy,
-            SetRealFriend,
-            SetStoryFriend,
-            SetRealNeutral,
-            SetStoryNeutral,
-            PlayAudio
-        }
-
-        public CommandType Command { get; set; } = CommandType.None;
-        public List<string> Args { get; set; } = new();
-
-        public bool SetCommand(string cmd)
-        {
-            if (Enum.TryParse(cmd, true, out CommandType command))
-            {
-                this.Command = command;
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsValidArgumentCount(out int expected)
-        {
-            if (this.Command == CommandType.None)
-            {
-                expected = -1;
-                return true;
-            }
-
-            if (this.Command is CommandType.SetFace or CommandType.SetHeel or CommandType.PlayAudio)
-            {
-                expected = 1;
-                return this.Args.Count == 1;
-            }
-
-            expected = 2;
-            return this.Args.Count == 2;
-        }
-    }
-
+    
     private class PromoGroup
     {
         internal List<PromoData> PromoDatas { get; set; } = new();
@@ -409,7 +347,7 @@ internal class PromoData
     {
         PromoGroups groups = new();
         // Relative all get added to a single group with weight being the max of all
-        foreach (PromoData promoData in CustomContent.PromoData.Where(x => x.Force == pre))
+        foreach (PromoData promoData in CustomPromoData.Where(x => x.Force == pre))
         {
             groups.Add(promoData);
         }

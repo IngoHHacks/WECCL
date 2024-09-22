@@ -2,6 +2,10 @@
 
 ## GV 1.60+:
 
+### Release 1.11.0
+- Promos can now be added through code using the API.
+- Meshes should work correctly again.
+
 ### Release 1.10.8
 - Looks like custom characters with custom textures have been broken for a long time. Why didn't anyone tell me? Well, it's fixed now. I'm sorry for the inconvenience.
 - Mat Dickie, if you're reading this, not to point fingers, but if only you didn't make special textures have negative values in the texture index, this wouldn't have happened.

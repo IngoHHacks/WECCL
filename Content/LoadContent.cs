@@ -824,8 +824,8 @@ internal static class LoadContent
                     continue;
                 }
 
-                promo._id = 1000000 + CustomContent.PromoData.Count;
-                CustomContent.PromoData.Add(promo);
+                promo._id = 1000000 + CustomPromoData.Count;
+                CustomPromoData.Add(promo);
                 LoadedAssets++;
                 LastAsset = promo.Title ?? file.Name;
             }

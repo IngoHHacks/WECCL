@@ -242,14 +242,37 @@ internal class ContentPatch
         }
     }
 
+    internal static int temp = -1;
+
+    /*
+     * Patch:
+     * - Sets the temp variable to the current limb variable if it's custom, using the value 0 for the original method.
+     */
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.JMOLAPIFDFE))]
+    [HarmonyPrefix]
+    public static void Player_JMOLAPIFDFE_Pre(ref UnmappedPlayer __instance, ref int IKBHGAKKJMM)
+    {
+        if (__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.Data.ShapeCounts[IKBHGAKKJMM] ||
+           (IKBHGAKKJMM == 17 && -__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.Data.TransparentHairHairstyleCount))
+        {
+            temp = __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM];
+            __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] = 1;
+        }
+    }
+
     /*
      * Patch:
      * - Applies custom meshes to the player when the player is loaded.
      */
     [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.JMOLAPIFDFE))]
     [HarmonyPostfix]
-    public static void Player_JMOLAPIFDFE(ref UnmappedPlayer __instance, int IKBHGAKKJMM)
+    public static void Player_JMOLAPIFDFE_Post(ref UnmappedPlayer __instance, int IKBHGAKKJMM)
     {
+        if (temp != -1)
+        {
+            __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] = temp;
+            temp = -1;
+        }
         var limb = IKBHGAKKJMM;
         if ((limb == 4 && __instance.OEGJEBDBGJA.shape[limb] > 50 &&
              __instance.OEGJEBDBGJA.shape[limb] % 10 == 0) || VanillaCounts.Data.ShapeCounts[limb] == 0)
@@ -279,6 +302,7 @@ internal class ContentPatch
                         //if (limb == 14 || limb == 15 || limb == 18 || limb == 28 || limb == 31)
                         //{
                             __instance.PCNHIIPBNEK[limb].GetComponent<MeshFilter>().mesh = mesh;
+                            __instance.PCNHIIPBNEK[limb].GetComponent<MeshRenderer>().material = new Material(Shader.Find("Custom/My Solid"));
                         //}
                         //else
                         //{
