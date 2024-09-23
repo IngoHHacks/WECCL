@@ -341,8 +341,8 @@ internal class ModTabPatch
                         }
                         else if (type == typeof(int))
                         {
-                            int min = int.MinValue;
-                            int max = int.MaxValue;
+                            int min = -1000000000;
+                            int max = 1000000000;
                             if (config[config.Keys.ToList()[i - 2]].Description.AcceptableValues is
                                 AcceptableValueRange<int> range)
                             {
@@ -366,8 +366,8 @@ internal class ModTabPatch
                         }
                         else if (type == typeof(float))
                         {
-                            float min = -float.MaxValue;
-                            float max = float.MaxValue;
+                            float min = -1e38f;
+                            float max = 1e38f;
                             if (config[config.Keys.ToList()[i - 2]].Description.AcceptableValues is
                                 AcceptableValueRange<float> range)
                             {
@@ -383,7 +383,7 @@ internal class ModTabPatch
                                 : def.ToString(CultureInfo.CurrentCulture).Split('.')[1].Length;
                             int dec = Math.Max(2, defDec);
                             float inc = (float)Math.Round(1f / Math.Pow(10, dec), dec);
-                            inc *= Mathf.Pow(10, (int) accel);
+                            inc *= Mathf.Pow(10, (int) accel - 1);
 
                             float current = (float)config[config.Keys.ToList()[i - 2]].BoxedValue;
                             var currentExp = (int)Math.Floor(Math.Log10(Math.Abs(current))) * Math.Sign(current);

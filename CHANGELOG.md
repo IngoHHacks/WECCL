@@ -1,5 +1,10 @@
 # Changelog
 
+### Release 1.11.1
+- Fixed integer menus increasing/decreasing by 10 instead of 1 in the mod settings tab.
+- Fixed some mod tab settings number overflow issues.
+- 1.11.1, that's four ones! I'm sure there's a joke in there somewhere, but I can't think of one right now. I'm sure you'll come up with something clever.
+
 ### Release 1.11.0
 - Promos can now be added through code using the API.
 - Meshes should work correctly again.
