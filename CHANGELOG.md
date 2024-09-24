@@ -1,5 +1,8 @@
 # Changelog
 
+### Release 1.11.2
+- Fixed some hip shapes rendering incorrectly.
+
 ### Release 1.11.1
 - Fixed integer menus increasing/decreasing by 10 instead of 1 in the mod settings tab.
 - Fixed some mod tab settings number overflow issues.

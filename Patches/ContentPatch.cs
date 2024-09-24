@@ -252,6 +252,10 @@ internal class ContentPatch
     [HarmonyPrefix]
     public static void Player_JMOLAPIFDFE_Pre(ref UnmappedPlayer __instance, ref int IKBHGAKKJMM)
     {
+        if (IKBHGAKKJMM == 4 && __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 50 &&
+            __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] % 10 == 0) {
+            return;
+        }
         if (__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.Data.ShapeCounts[IKBHGAKKJMM] ||
            (IKBHGAKKJMM == 17 && -__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.Data.TransparentHairHairstyleCount))
         {
@@ -271,83 +275,77 @@ internal class ContentPatch
         if (temp != -1)
         {
             __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] = temp;
-            temp = -1;
-        }
-        var limb = IKBHGAKKJMM;
-        if ((limb == 4 && __instance.OEGJEBDBGJA.shape[limb] > 50 &&
-             __instance.OEGJEBDBGJA.shape[limb] % 10 == 0) || VanillaCounts.Data.ShapeCounts[limb] == 0)
-        {
-            return;
-        }
-
-        try
-        {
-            if (__instance.OEGJEBDBGJA.shape[limb] > VanillaCounts.Data.ShapeCounts[limb] ||
-                (limb == 17 &&
-                 -__instance.OEGJEBDBGJA.shape[limb] > VanillaCounts.Data.TransparentHairHairstyleCount))
+            var limb = IKBHGAKKJMM;
+            try
             {
-                int shape = __instance.OEGJEBDBGJA.shape[limb] > 0
-                    ? __instance.OEGJEBDBGJA.shape[limb] - VanillaCounts.Data.ShapeCounts[limb] - 1
-                    : -__instance.OEGJEBDBGJA.shape[limb] - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
-                if (CustomCostumes.Values.Any(x => x.InternalPrefix.Contains("shape" + limb)))
+                if (__instance.OEGJEBDBGJA.shape[limb] > VanillaCounts.Data.ShapeCounts[limb] ||
+                    (limb == 17 &&
+                    -__instance.OEGJEBDBGJA.shape[limb] > VanillaCounts.Data.TransparentHairHairstyleCount))
                 {
-                    Tuple<string, Object, Dictionary<string, string>> c = CustomCostumes.Values
-                        .First(x => x.InternalPrefix.Contains("shape" + limb))
-                        .CustomObjects[shape];
-                    ;
-                    Mesh mesh = c.Item2 as Mesh;
-                    Dictionary<string, string> meta = c.Item3;
-                    if (mesh != null)
+                    int shape = __instance.OEGJEBDBGJA.shape[limb] > 0
+                        ? __instance.OEGJEBDBGJA.shape[limb] - VanillaCounts.Data.ShapeCounts[limb] - 1
+                        : -__instance.OEGJEBDBGJA.shape[limb] - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
+                    if (CustomCostumes.Values.Any(x => x.InternalPrefix.Contains("shape" + limb)))
                     {
-                        //if (limb == 14 || limb == 15 || limb == 18 || limb == 28 || limb == 31)
-                        //{
-                            __instance.PCNHIIPBNEK[limb].GetComponent<MeshFilter>().mesh = mesh;
-                            __instance.PCNHIIPBNEK[limb].GetComponent<MeshRenderer>().material = new Material(Shader.Find("Custom/My Solid"));
-                        //}
-                        //else
-                        //{
-                            //Feel it needs something like below but can't get it working
-                        //    __instance.PCNHIIPBNEK[limb].GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
-                        //}
-                        if (meta.ContainsKey("scale"))
+                        Tuple<string, Object, Dictionary<string, string>> c = CustomCostumes.Values
+                            .First(x => x.InternalPrefix.Contains("shape" + limb))
+                            .CustomObjects[shape];
+                        ;
+                        Mesh mesh = c.Item2 as Mesh;
+                        Dictionary<string, string> meta = c.Item3;
+                        if (mesh != null)
                         {
-                            if (meta["scale"].Contains(","))
+                            //if (limb == 14 || limb == 15 || limb == 18 || limb == 28 || limb == 31)
+                            //{
+                                __instance.PCNHIIPBNEK[limb].GetComponent<MeshFilter>().mesh = mesh;
+                                __instance.PCNHIIPBNEK[limb].GetComponent<MeshRenderer>().material = new Material(Shader.Find("Custom/My Solid"));
+                            //}
+                            //else
+                            //{
+                                //Feel it needs something like below but can't get it working
+                            //    __instance.PCNHIIPBNEK[limb].GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
+                            //}
+                            if (meta.ContainsKey("scale"))
                             {
-                                string[] scale = meta["scale"].Split(',');
-                                __instance.PCNHIIPBNEK[limb].transform.localScale = new Vector3(
-                                    float.Parse(scale[0], Nfi), float.Parse(scale[1], Nfi), float.Parse(scale[2], Nfi));
+                                if (meta["scale"].Contains(","))
+                                {
+                                    string[] scale = meta["scale"].Split(',');
+                                    __instance.PCNHIIPBNEK[limb].transform.localScale = new Vector3(
+                                        float.Parse(scale[0], Nfi), float.Parse(scale[1], Nfi), float.Parse(scale[2], Nfi));
+                                }
+                                else
+                                {
+                                    __instance.PCNHIIPBNEK[limb].transform.localScale = new Vector3(
+                                        float.Parse(meta["scale"], Nfi), float.Parse(meta["scale"], Nfi),
+                                        float.Parse(meta["scale"], Nfi));
+                                }
                             }
-                            else
+
+                            if (meta.ContainsKey("position"))
                             {
-                                __instance.PCNHIIPBNEK[limb].transform.localScale = new Vector3(
-                                    float.Parse(meta["scale"], Nfi), float.Parse(meta["scale"], Nfi),
-                                    float.Parse(meta["scale"], Nfi));
+                                string[] position = meta["position"].Split(',');
+                                __instance.PCNHIIPBNEK[limb].transform.localPosition = new Vector3(
+                                    float.Parse(position[0], Nfi), float.Parse(position[1], Nfi),
+                                    float.Parse(position[2], Nfi));
                             }
-                        }
 
-                        if (meta.ContainsKey("position"))
-                        {
-                            string[] position = meta["position"].Split(',');
-                            __instance.PCNHIIPBNEK[limb].transform.localPosition = new Vector3(
-                                float.Parse(position[0], Nfi), float.Parse(position[1], Nfi),
-                                float.Parse(position[2], Nfi));
-                        }
-
-                        if (meta.ContainsKey("rotation"))
-                        {
-                            string[] rotation = meta["rotation"].Split(',');
-                            __instance.PCNHIIPBNEK[limb].transform.localRotation = Quaternion.Euler(
-                                float.Parse(rotation[0], Nfi), float.Parse(rotation[1], Nfi),
-                                float.Parse(rotation[2], Nfi));
+                            if (meta.ContainsKey("rotation"))
+                            {
+                                string[] rotation = meta["rotation"].Split(',');
+                                __instance.PCNHIIPBNEK[limb].transform.localRotation = Quaternion.Euler(
+                                    float.Parse(rotation[0], Nfi), float.Parse(rotation[1], Nfi),
+                                    float.Parse(rotation[2], Nfi));
+                            }
                         }
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            LogError(e);
-            LogError("Limb: " + limb + " (" + __instance.OEGJEBDBGJA.shape[limb] + ")");
+            catch (Exception e)
+            {
+                LogError(e);
+                LogError("Limb: " + limb + " (" + __instance.OEGJEBDBGJA.shape[limb] + ")");
+            }
+            temp = -1;
         }
     }
 

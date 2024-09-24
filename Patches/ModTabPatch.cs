@@ -350,7 +350,7 @@ internal class ModTabPatch
                                 max = range.MaxValue;
                             }
                             
-                            var inc = Mathf.Pow(10, (int) accel);
+                            var inc = Mathf.Pow(10, (int) accel - 1);
                             int current = (int)config[config.Keys.ToList()[i - 2]].BoxedValue;
                             var currentExp = (int)Math.Floor(Math.Log10(Math.Abs(current))) * Math.Sign(current);
                             if (currentExp > 3) {
@@ -383,7 +383,7 @@ internal class ModTabPatch
                                 : def.ToString(CultureInfo.CurrentCulture).Split('.')[1].Length;
                             int dec = Math.Max(2, defDec);
                             float inc = (float)Math.Round(1f / Math.Pow(10, dec), dec);
-                            inc *= Mathf.Pow(10, (int) accel - 1);
+                            inc *= Mathf.Pow(10, (int) accel);
 
                             float current = (float)config[config.Keys.ToList()[i - 2]].BoxedValue;
                             var currentExp = (int)Math.Floor(Math.Log10(Math.Abs(current))) * Math.Sign(current);
