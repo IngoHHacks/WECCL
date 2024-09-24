@@ -1,5 +1,8 @@
 # Changelog
 
+### Release 1.11.3
+- Fixed some more issues with incorrect leg rendering.
+
 ### Release 1.11.2
 - Fixed some hip shapes rendering incorrectly.
 

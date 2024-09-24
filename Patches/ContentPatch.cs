@@ -252,8 +252,7 @@ internal class ContentPatch
     [HarmonyPrefix]
     public static void Player_JMOLAPIFDFE_Pre(ref UnmappedPlayer __instance, ref int IKBHGAKKJMM)
     {
-        if (IKBHGAKKJMM == 4 && __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > 50 &&
-            __instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] % 10 == 0) {
+        if (IKBHGAKKJMM >= 4 && IKBHGAKKJMM <= 7) {
             return;
         }
         if (__instance.OEGJEBDBGJA.shape[IKBHGAKKJMM] > VanillaCounts.Data.ShapeCounts[IKBHGAKKJMM] ||
@@ -379,8 +378,7 @@ internal class ContentPatch
                  MappedTextures.limb <= MappedTextures.no_limbs;
                  MappedTextures.limb++)
             {
-                if ((MappedTextures.limb == 4 && player.costume.shape[MappedTextures.limb] > 50 &&
-                     player.costume.shape[MappedTextures.limb] % 10 == 0) ||
+                if ((MappedTextures.limb >= 4 && MappedTextures.limb <= 7) ||
                     player.model[MappedTextures.limb] == null ||
                     VanillaCounts.Data.ShapeCounts[MappedTextures.limb] == 0)
                 {
