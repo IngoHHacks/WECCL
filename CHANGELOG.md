@@ -1,5 +1,8 @@
 # Changelog
 
+### Release 1.11.4
+- Vanilla skin tones beyond the vanilla texture count are now ignored.
+
 ### Release 1.11.3
 - Fixed some more issues with incorrect leg rendering.
 

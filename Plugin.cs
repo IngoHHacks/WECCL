@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.11.3";
+    public const string PluginVer = "1.11.4";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
     public const float PluginVersion = 1.69f;
@@ -180,6 +180,52 @@ public class Plugin : BaseUnityPlugin
                 }
                 return $"Reset {numRemoved} imported character{(numRemoved == 1 ? "" : "s")}";
             }, true);
+
+            this.RegisterCustomButton("Unlock All Characters", () =>
+            {
+                for (int i = 0; i <Progress.charUnlock.Length; i++)
+                {
+                    Progress.charUnlock[i] = 1;
+                }
+                MappedSaveSystem.request = 1;
+                return "All characters unlocked!";
+            }, true);
+
+            this.RegisterCustomButton("Unlock All Trophies", () =>
+            {
+                for (int i = 0; i < Progress.trophies.GetLength(0); i++)
+                {
+                    for (int j = 0; j < Progress.trophies.GetLength(1); j++)
+                    {
+                        Progress.trophies[i, j] = 1;
+                    }
+                }
+                MappedSaveSystem.request = 1;
+                return "All tropies unlocked!";
+            }, true);
+
+            this.RegisterCustomButton("Unlock Everything", () =>
+            {
+                for (int i = 0; i <Progress.charUnlock.Length; i++)
+                {
+                    Progress.charUnlock[i] = 1;
+                }
+                for (int i = 0; i < Progress.trophies.GetLength(0); i++)
+                {
+                    for (int j = 0; j < Progress.trophies.GetLength(1); j++)
+                    {
+                        Progress.trophies[i, j] = 1;
+                    }
+                }
+                MappedSaveSystem.request = 1;
+                return "Everything unlocked!";
+            }, true);
+            
+            this.RegisterCustomButton("Support Development", () =>
+            {
+                Application.OpenURL("https://ingoh.net/support-weccl");
+                return "Thank you for your support!";
+            });
         }
         catch (Exception e)
         {
