@@ -42,7 +42,7 @@ internal class TimedAction : AnimationEvent
             throw new Exception($"Failed to parse animation action from line: {line}: no action specified");
         }
 
-        string command = split[1].Trim().ToLower();
+        string command = split[1].Trim(new char[] { ' ', '\uFEFF' }).ToLower();
         if (!AnimationActions.Actions.TryGetValue(command, out var action))
         {
             throw new Exception($"Unknown animation action: {command}");
