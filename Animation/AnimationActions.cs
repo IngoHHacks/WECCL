@@ -300,7 +300,9 @@ internal static class AnimationActions
             float angle = AnimationParser.ParseFloat(args["angle"]).Value.Value;
             float speed = AnimationParser.ParseFloat(args["speed"]).Value.Value;
             float inherit = AnimationParser.ParseFloat(args["inherit"]).Value.Value;
-            p.MoveTravel(angle, speed, inherit);
+            float relativeRotation = (p.a + angle) % 360;
+
+            p.MoveTravel(relativeRotation, speed, inherit);
         },  new AnimationArgument<float?>("angle", AnimationParser.ParseFloat),
             new AnimationArgument<float?>("speed", AnimationParser.ParseFloat),
             new AnimationArgument<float?>("inherit", AnimationParser.ParseFloat, "0"));
