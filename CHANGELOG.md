@@ -1,5 +1,11 @@
 # Changelog
 
+### Release 1.12.0
+- Fixed custom content not being remapped correctly after game updates.
+- Fixed animation issues with custom moves.
+- Added back `SetFace` and `SetHeel` promo commands that were accidentally removed.
+- Tweaked old arena doors to have a more reasonable hitbox size.
+
 ### Release 1.11.4
 - Vanilla skin tones beyond the vanilla texture count are now ignored.
 

@@ -73,6 +73,12 @@ internal class PromoPatch
                     AdvFeatures.CommandType cmd = feature.Command;
                     switch (cmd)
                     {
+                        case AdvFeatures.CommandType.SetFace:
+                            promo.GetCharacterForCmd(feature.Args[0]).MFICBPFFDLC(0);
+                            break;
+                        case AdvFeatures.CommandType.SetHeel:
+                            promo.GetCharacterForCmd(feature.Args[0]).MFICBPFFDLC(-1);
+                            break;
                         case AdvFeatures.CommandType.SetRealEnemy:
                             promo.GetCharacterForCmd(feature.Args[0])
                                 .DADEOGCFAAN(promo.GetCharacterForCmd(feature.Args[1]).id, -1, 0);
