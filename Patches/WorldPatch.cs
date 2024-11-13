@@ -424,12 +424,15 @@ public class WorldPatch
                 else
                 {
                     //If door is not an invisible cube object, do old method so not to break existing custom maps.
+                    //Added this to make door 100 times bigger, makes it a bit bigger than wrestler hitbox making it a lot easier to hit the collision to use the door
+                    float distanceMultiplier = 100.0f;
+
                     Vector3[] corners = new Vector3[4];
                     Vector3 center = door.transform.position;
                     Vector3 localScale = door.transform.localScale;
                     float up = localScale.y;
-                    float right = localScale.x;
-                    float forward = localScale.z;
+                    float right = localScale.x * distanceMultiplier;
+                    float forward = localScale.z * distanceMultiplier;
                     corners[0] = center + new Vector3(right, 0, forward);
                     corners[1] = center + new Vector3(right, 0, -forward);
                     corners[2] = center + new Vector3(-right, 0, forward);
