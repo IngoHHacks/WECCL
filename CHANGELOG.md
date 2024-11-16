@@ -1,5 +1,8 @@
 # Changelog
 
+### Release 1.13.0
+- Fixed the GV 1.71 update breaking modded saves.
+
 ### Release 1.12.0
 - Fixed custom content not being remapped correctly after game updates.
 - Fixed animation issues with custom moves.
