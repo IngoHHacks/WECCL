@@ -609,4 +609,33 @@ internal class SaveFilePatch
             Array.Resize(ref Progress.charUnlock, __instance.savedChars.Length);
         }
     }
+    
+    private static int _origCharCount;
+    
+    /*
+     * Patch:
+     * - Adds dummy characters to the "default data" to prevent index out of range exceptions.
+     */
+    [HarmonyPatch(typeof(SaveData), nameof(SaveData.FCMMKIBFKHK))]
+    [HarmonyPrefix]
+    public static void SaveData_FCMMKIBFKHK_Pre()
+    {
+        _origCharCount = GLPGLJAJJOP.DPACJDJFLKM.savedChars.Length - 1;
+        Array.Resize(ref GLPGLJAJJOP.DPACJDJFLKM.savedChars, Characters.no_chars + 1);
+        for (int i = _origCharCount + 1; i <= Characters.no_chars; i++)
+        {
+            GLPGLJAJJOP.DPACJDJFLKM.savedChars[i] = MappedCharacters.CopyClass(GLPGLJAJJOP.DPACJDJFLKM.savedChars[1]);
+        }
+    }
+    
+    /*
+     * Patch:
+     * - Removes the dummy characters from the "default data" after the default data is loaded.
+     */
+    [HarmonyPatch(typeof(SaveData), nameof(SaveData.FCMMKIBFKHK))]
+    [HarmonyPostfix]
+    public static void SaveData_FCMMKIBFKHK_Post()
+    {
+        Array.Resize(ref GLPGLJAJJOP.DPACJDJFLKM.savedChars, _origCharCount + 1);
+    }
 }
