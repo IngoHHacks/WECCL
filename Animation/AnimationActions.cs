@@ -311,7 +311,9 @@ internal static class AnimationActions
         {
             float angle = AnimationParser.ParseFloat(args["angle"]).Value.Value;
 			float travel = AnimationParser.ParseFloat(args["travel"]).Value.Value;
-			p.Advance(angle, travel);
+			float relativeRotation = (p.a + angle) % 360;
+
+			p.Advance(relativeRotation, travel);
 		},  new AnimationArgument<int?>("angle", AnimationParser.ParseInt),
             new AnimationArgument<float?>("travel", AnimationParser.ParseFloat));
         
