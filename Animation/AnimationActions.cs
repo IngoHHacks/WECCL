@@ -310,18 +310,26 @@ internal static class AnimationActions
         Actions["advance"] = new AnimationAction("Advance", (p, args) =>
         {
             float angle = AnimationParser.ParseFloat(args["angle"]).Value.Value;
-            float travel = AnimationParser.ParseFloat(args["travel"]).Value.Value;
-            p.Advance(angle, travel);
-        },  new AnimationArgument<int?>("angle", AnimationParser.ParseInt),
+			float travel = AnimationParser.ParseFloat(args["travel"]).Value.Value;
+			float relativeRotation = (p.a + angle) % 360;
+
+			p.Advance(relativeRotation, travel);
+		},  new AnimationArgument<int?>("angle", AnimationParser.ParseInt),
             new AnimationArgument<float?>("travel", AnimationParser.ParseFloat));
         
         Actions["sellbackfall"] = new AnimationAction("SellBackFall", (p, args) =>
-            p.pV.SellBackFall());
+            p.SellBackFall());
         
         Actions["sellfrontfall"] = new AnimationAction("SellFrontFall", (p, args) =>
-            p.pV.SellFrontFall());
-        
-        Actions["findsmashes"] = new AnimationAction("FindSmashes", (p, args) =>
+            p.SellFrontFall());
+
+		Actions["oppsellbackfall"] = new AnimationAction("OppSellBackFall", (p, args) =>
+			p.pV.SellBackFall());
+
+		Actions["oppsellfrontfall"] = new AnimationAction("OppSellFrontFall", (p, args) =>
+			p.pV.SellFrontFall());
+
+		Actions["findsmashes"] = new AnimationAction("FindSmashes", (p, args) =>
         {
             float rangeOffset = AnimationParser.ParseFloat(args["rangeoffset"]).Value.Value;
             float level = AnimationParser.ParseFloat(args["level"]).Value.Value;
