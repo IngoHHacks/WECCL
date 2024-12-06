@@ -159,6 +159,15 @@ public class CharacterUtils
                 {
                     MappedWeapons.stock[i].owner--;
                 }
+
+                if (MappedWeapons.stock[i].holder == id)
+                {
+                    MappedWeapons.stock[i].holder = 1;
+                }
+                else if (MappedWeapons.stock[i].holder > id)
+                {
+                    MappedWeapons.stock[i].holder--;
+                }
             }
 
             foreach (var character in Characters.c)

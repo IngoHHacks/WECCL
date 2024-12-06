@@ -879,6 +879,12 @@ internal class SaveRemapper
                         $"Weapon owner index {stockWeapon.owner} is out of bounds. Resetting to 1.");
                     stockWeapon.owner = 1;
                 }
+                if (stockWeapon.holder > numChars)
+                {
+                    LogWarning(
+                        $"Weapon holder index {stockWeapon.holder} is out of bounds. Resetting to 1.");
+                    stockWeapon.holder = 1;
+                }
             }
         }
         foreach (var character in saveData.savedChars)

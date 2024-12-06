@@ -122,6 +122,10 @@ internal class BetterCharacterData
 
     public int?[] taunt = new int?[4];
 
+    public int? tauntWave;
+
+    public int? tauntHandshake;
+
     public int? team;
 
     public string teamName;
