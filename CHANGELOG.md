@@ -1,5 +1,9 @@
 # Changelog
 
+### Release 1.13.1
+- Fixed various animation issues.
+- Fixed character deletions causing the save file to be corrupted.
+
 ### Release 1.13.0
 - Fixed the GV 1.71 update breaking modded saves.
 
