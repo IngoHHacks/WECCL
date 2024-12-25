@@ -1,4 +1,4 @@
-namespace HTTCL.API;
+namespace WECCL.API;
 
 public static class Promos
 {
