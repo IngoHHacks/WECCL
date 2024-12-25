@@ -140,7 +140,7 @@ internal class AnimationPatch
         MappedPlayer p = __instance;
         var overrideController = new AnimatorOverrideController(p.animator.runtimeAnimatorController);
         p.animator.runtimeAnimatorController = overrideController;
-        MappedMenus.screenTim = 0;
+        p.InstantTransition(p.animFile[0], p.frame[0], 0);
     }
     
     /*
