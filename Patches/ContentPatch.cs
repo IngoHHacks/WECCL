@@ -177,18 +177,21 @@ internal class ContentPatch
                     {
                         continue;
                     }
-                    
-                    if (ResourceOverridesTextures.ContainsKey(material.mainTexture.name.ToLower()) ||
-                        ResourceOverridesTextures.ContainsKey(gameObject.name.Replace("(Clone)", "").Trim().ToLower() + "_" +
-                                                              material.mainTexture.ToString().ToLower()))
+                    string shortTexName = material.mainTexture.name.ToLower();
+                    string longTexName = gameObject.name.Replace("(Clone)", "").Trim().ToLower() + "_" +
+                                                              material.mainTexture.name.ToLower();
+
+                    if (ResourceOverridesTextures.ContainsKey(shortTexName) ||
+                        ResourceOverridesTextures.ContainsKey(longTexName))
                     {
-                        Texture2D tex = GetHighestPriorityTextureOverride(material.mainTexture.name.ToLower());
+                        string texName = (ResourceOverridesTextures.ContainsKey(shortTexName)) ? shortTexName: longTexName;
+                        Texture2D tex = GetHighestPriorityTextureOverride(texName);
                         if ((material.mainTexture.width != tex.width ||
                             material.mainTexture.height != tex.height) &&
                              !Plugin.UseFullQualityTextures.Value)
                         {
                             tex = ResizeTexture(tex, material.mainTexture.width, material.mainTexture.height);
-                            SetHighestPriorityTextureOverride(material.mainTexture.name.ToLower(), tex);
+                            SetHighestPriorityTextureOverride(texName, tex);
                         }
 
                         material.mainTexture = tex;
