@@ -1,5 +1,9 @@
 # Changelog
 
+### Release 1.14.0
+- Fixed `SetFace` and `SetHeel` promo commands taking two arguments instead of one.
+- Fixed `GameObject_texture.png` files not applying correctly.
+
 ### Release 1.13.1
 - Fixed various animation issues.
 - Fixed character deletions causing the save file to be corrupted.
