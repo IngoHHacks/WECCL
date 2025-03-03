@@ -12,10 +12,10 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "IngoH.WrestlingEmpire.WECCL";
     public const string PluginName = "WECCL";
-    public const string PluginVer = "1.13.1";
+    public const string PluginVer = "1.14.0";
     public const string PluginPatchVer = "";
     public const string PluginVerLong = "v" + PluginVer + PluginPatchVer;
-    public const float PluginVersion = 1.72f;
+    public const float TargetGameVersion = 1.73f;
     public static readonly float GameVersion = MappedGlobals.optVersion;
 
     public const bool PreRelease = false;
@@ -144,15 +144,15 @@ public class Plugin : BaseUnityPlugin
             }
 #pragma warning restore CS0162 // Unreachable code detected
             
-            if (GameVersion != PluginVersion)
+            if (GameVersion != TargetGameVersion)
             {
-                if (GameVersion > PluginVersion)
+                if (GameVersion > TargetGameVersion)
                 {
-                    LogWarning($"Your game version ({GameVersion}) is newer than WECCL's target version ({PluginVersion}). Keep in mind that it may not work as intended on this version. Check the Steam Workshop page for updates.");
+                    LogWarning($"Your game version ({GameVersion}) is newer than WECCL's target version ({TargetGameVersion}). Keep in mind that it may not work as intended on this version. Check the Steam Workshop page for updates.");
                 }
                 else
                 {
-                    LogWarning($"Your game version ({GameVersion}) is older than WECCL's target version ({PluginVersion}). Keep in mind that it may not work as intended on this version. Check for updates in the game's properties on Steam.");
+                    LogWarning($"Your game version ({GameVersion}) is older than WECCL's target version ({TargetGameVersion}). Keep in mind that it may not work as intended on this version. Check for updates in the game's properties on Steam.");
                 }
             }
 
@@ -257,7 +257,7 @@ public class Plugin : BaseUnityPlugin
         {
             LogError(
                 "Failed to patch with Harmony. This is likely caused by the game version being incompatible with the plugin version. The current plugin version is v" +
-                PluginVersion);
+                TargetGameVersion);
 
             LogError(e);
             Harmony.UnpatchSelf();
