@@ -38,7 +38,7 @@ public class AdvFeatures
             return true;
         }
 
-        if (this.Command is CommandType.PlayAudio)
+        if (this.Command is CommandType.PlayAudio || this.Command is CommandType.SetFace || this.Command is CommandType.SetHeel)
         {
             expected = 1;
             return this.Args.Count == 1;
