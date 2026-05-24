@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using WECCL.Content;
 using WECCL.Internal;
 using Object = UnityEngine.Object;
@@ -1684,6 +1685,7 @@ internal class ArenaPatch
     [HarmonyPostfix]
     public static void Weapon_ICGNAJFLAHL(GDFKEAMIOAG __instance)
     {
+        if (SceneManager.GetActiveScene().name == "Select_Char") return;
         if (World.location > VanillaCounts.Data.NoLocations && FFCEGMEAIBP.LOBDMDPMFLK != 0)
         {
             //Exclude Belts and Glass weapons
