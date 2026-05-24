@@ -197,6 +197,9 @@ internal class PromoPatch
                         "promotion" => MappedPromo.fed[varIndex].name,
                         "prop" => MappedWeapons.Describe(MappedPromo.c[varIndex].prop),
                         "team" => MappedPromo.c[varIndex].teamName,
+                        "territory" => Atlas.name[MappedPromo.c[varIndex].home],
+                        "height" => MappedPromo.c[varIndex].DBAHDHJBCLN(),
+                        "weight" => MappedPromo.c[varIndex].LFEPPKMEOEM(),
                         _ => "UNKNOWN"
                     };
                 }

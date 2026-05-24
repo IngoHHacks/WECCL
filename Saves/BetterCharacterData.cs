@@ -28,6 +28,8 @@ internal class BetterCharacterData
 
     public BetterCostumeData[] costumeC;
 
+    public int? costumeChange;
+
     public int? cuffed;
 
     public int? dead;
@@ -144,7 +146,7 @@ internal class BetterCharacterData
 
     public float? z;
     
-    public string VERSION = "1.0.1";
+    public string VERSION = "1.0.2";
 
     public static BetterCharacterData FromRegularCharacter(Character character, Character[] allCharacters)
     {
