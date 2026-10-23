@@ -46,13 +46,19 @@ internal class ContentPatch
             }
 
             string prefix = NONJIHAJAKC.Substring(0, numberIndex);
-            int index = 0;
+            int index;
             if (int.TryParse(NONJIHAJAKC.Substring(numberIndex), out index))
             {
                 if (_internalCostumeCounts.ContainsKey(prefix) && index > _internalCostumeCounts[prefix])
                 {
+                    var customIndex = index - _internalCostumeCounts[prefix] - 1;
+                    if (CustomCostumes.All(c => c.Value.InternalPrefix != prefix) || customIndex < 0 || customIndex >= CustomCostumes.Single(c => c.Value.InternalPrefix == prefix).Value.CustomObjects.Count)
+                    {
+                        LogWarning("Custom costume not found: " + NONJIHAJAKC);
+                        return true;
+                    }
                     __result = CustomCostumes.Single(c => c.Value.InternalPrefix == prefix).Value
-                        .CustomObjects[index - _internalCostumeCounts[prefix] - 1].Item2;
+                        .CustomObjects[customIndex].Item2;
                     return false;
                 }
             }

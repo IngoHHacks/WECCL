@@ -38,42 +38,77 @@ internal class BetterCostumeData
             if (costume.texture[i] > VanillaCounts.Data.MaterialCounts[i])
             {
                 int index = costume.texture[i] - VanillaCounts.Data.MaterialCounts[i] - 1;
+                if (index >= ContentMappings.ContentMap.MaterialNameMap[i].Count || index < 0)
+                {
+                    bcd.textureC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.MaterialNameMap[i][index];
                 bcd.textureC[i] = "Custom/" + material;
             }
             else if (i == 3 && costume.texture[i] < -VanillaCounts.Data.FaceFemaleCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.FaceFemaleCount - 1;
+                if (index >= ContentMappings.ContentMap.FaceFemaleNameMap.Count || index < 0)
+                {
+                    bcd.textureC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.FaceFemaleNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
             else if (i == 14 && costume.texture[i] < -VanillaCounts.Data.SpecialFootwearCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.SpecialFootwearCount - 1;
+                if (index >= ContentMappings.ContentMap.SpecialFootwearNameMap.Count || index < 0)
+                {
+                    bcd.textureC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
             else if (i == 15 && costume.texture[i] < -VanillaCounts.Data.SpecialFootwearCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.SpecialFootwearCount - 1;
+                if (index >= ContentMappings.ContentMap.SpecialFootwearNameMap.Count || index < 0)
+                {
+                    bcd.textureC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
             else if (i == 17 && costume.texture[i] < -VanillaCounts.Data.TransparentHairMaterialCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.TransparentHairMaterialCount - 1;
+                if (index >= ContentMappings.ContentMap.TransparentHairMaterialNameMap.Count || index < 0)
+                {
+                    bcd.textureC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.TransparentHairMaterialNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
             else if (i == 24 && costume.texture[i] < -VanillaCounts.Data.KneepadCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
+                if (index >= ContentMappings.ContentMap.KneepadNameMap.Count || index < 0)
+                {
+                    bcd.textureC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.KneepadNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
             else if (i == 25 && costume.texture[i] < -VanillaCounts.Data.KneepadCount)
             {
                 int index = -costume.texture[i] - VanillaCounts.Data.KneepadCount - 1;
+                if (index >= ContentMappings.ContentMap.KneepadNameMap.Count || index < 0)
+                {
+                    bcd.textureC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.KneepadNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
             }
@@ -96,17 +131,20 @@ internal class BetterCostumeData
                 int index = costume.flesh[i] - VanillaCounts.Data.FleshCounts[i] - 1;
                 if (index >= ContentMappings.ContentMap.FleshNameMap[i].Count || index < 0)
                 {
-                    bcd.fleshC[i] = "Vanilla/" + costume.flesh[i];
+                    bcd.fleshC[i] = "Vanilla/1";
+                    break;
                 }
-                else
-                {
-                    string material = ContentMappings.ContentMap.FleshNameMap[i][index];
-                    bcd.fleshC[i] = "Custom/" + material;
-                }
+                string material = ContentMappings.ContentMap.FleshNameMap[i][index];
+                bcd.fleshC[i] = "Custom/" + material;
             }
             else if (i == 2 && costume.flesh[i] < -VanillaCounts.Data.BodyFemaleCount)
             {
                 int index = -costume.flesh[i] - VanillaCounts.Data.BodyFemaleCount - 1;
+                if (index >= ContentMappings.ContentMap.BodyFemaleNameMap.Count || index < 0)
+                {
+                    bcd.fleshC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.BodyFemaleNameMap[index];
                 bcd.fleshC[i] = "Custom/" + material;
             }
@@ -129,17 +167,20 @@ internal class BetterCostumeData
                 int index = costume.shape[i] - VanillaCounts.Data.ShapeCounts[i] - 1;
                 if (index >= ContentMappings.ContentMap.ShapeNameMap[i].Count || index < 0)
                 {
-                    bcd.shapeC[i] = "Vanilla/" + costume.shape[i];
+                    bcd.shapeC[i] = "Vanilla/1";
+                    break;
                 }
-                else
-                {
-                    string material = ContentMappings.ContentMap.ShapeNameMap[i][index];
-                    bcd.shapeC[i] = "Custom/" + material;
-                }
+                string material = ContentMappings.ContentMap.ShapeNameMap[i][index];
+                bcd.shapeC[i] = "Custom/" + material;
             }
             else if (i == 17 && costume.shape[i] < -VanillaCounts.Data.TransparentHairHairstyleCount)
             {
                 int index = -costume.shape[i] - VanillaCounts.Data.TransparentHairHairstyleCount - 1;
+                if (index >= ContentMappings.ContentMap.TransparentHairHairstyleNameMap.Count || index < 0)
+                {
+                    bcd.shapeC[i] = "Vanilla/1";
+                    break;
+                }
                 string material = ContentMappings.ContentMap.TransparentHairHairstyleNameMap[index];
                 bcd.shapeC[i] = "Custom/" + material;
             }

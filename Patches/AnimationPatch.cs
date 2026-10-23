@@ -8,7 +8,7 @@ namespace WECCL.Patches;
 [HarmonyPatch]
 internal class AnimationPatch
 {
-    
+
     /**
      * Patch:
      * - Overrides the animation controller for custom animations if the animation is set to a custom STRIKE animation.
@@ -22,29 +22,31 @@ internal class AnimationPatch
         MappedPlayer p = __instance;
         var anim = p.animator;
         if (anim == null || anim.runtimeAnimatorController == null) return;
-        var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
+        var controller = (AnimatorOverrideController)anim.runtimeAnimatorController;
         if (p.anim >= 1000000)
         {
             if (CustomAnimations[p.anim - 1000000].ReceiveAnim != null) return;
             var ovr2 = new List<KeyValuePair<AnimationClip, AnimationClip>>();
-            ((AnimatorOverrideController) anim.runtimeAnimatorController).GetOverrides(ovr2);
-            if (!ovr2.Exists(x => x.Value != null) || controller["Assist11"].name != CustomAnimations[p.anim - 1000000].Anim.name)
+            ((AnimatorOverrideController)anim.runtimeAnimatorController).GetOverrides(ovr2);
+            if (!ovr2.Exists(x => x.Value != null) ||
+                controller["Assist11"].name != CustomAnimations[p.anim - 1000000].Anim.name)
             {
                 controller["Assist11"] = CustomAnimations[p.anim - 1000000].Anim;
             }
+
             Animations.DoCustomAnimation(p, p.anim, CustomAnimations[p.anim - 1000000].ForwardSpeedMultiplier);
         }
         else
         {
             List<KeyValuePair<AnimationClip, AnimationClip>> ovr = new();
-            ((AnimatorOverrideController) anim.runtimeAnimatorController).GetOverrides(ovr);
+            ((AnimatorOverrideController)anim.runtimeAnimatorController).GetOverrides(ovr);
             if (p.grappler == 0 && ovr.Exists(x => x.Value != null))
             {
                 controller["Assist11"] = null;
             }
         }
     }
-    
+
     /**
      * Patch:
      * - Overrides the animation controller for custom animations if the animation is set to a custom GRAPPLE animation.
@@ -59,7 +61,7 @@ internal class AnimationPatch
         MappedPlayer p = __instance;
         var anim = p.animator;
         if (anim == null || anim.runtimeAnimatorController == null) return true;
-        var controller = (AnimatorOverrideController) anim.runtimeAnimatorController;
+        var controller = (AnimatorOverrideController)anim.runtimeAnimatorController;
         if (p.anim >= 1000000)
         {
 
@@ -72,18 +74,22 @@ internal class AnimationPatch
             {
                 p.sellTim = 0f;
             }
+
             var ovr1 = new List<KeyValuePair<AnimationClip, AnimationClip>>();
             controller.GetOverrides(ovr1);
-            if (!ovr1.Exists(x => x.Value != null) || controller["Assist11"].name != CustomAnimations[p.anim - 1000000].Anim.name)
+            if (!ovr1.Exists(x => x.Value != null) ||
+                controller["Assist11"].name != CustomAnimations[p.anim - 1000000].Anim.name)
             {
                 controller["Assist11"] = CustomAnimations[p.anim - 1000000].Anim;
             }
+
             var opponent = p.pV;
             if (opponent?.animator.runtimeAnimatorController == null) return true;
-            var oppController = (AnimatorOverrideController) opponent.animator.runtimeAnimatorController;
+            var oppController = (AnimatorOverrideController)opponent.animator.runtimeAnimatorController;
             List<KeyValuePair<AnimationClip, AnimationClip>> ovr2 = new();
             oppController.GetOverrides(ovr2);
-            if (!ovr2.Exists(x => x.Value != null) || oppController["Assist11"].name != CustomAnimations[p.anim - 1000000].ReceiveAnim.name)
+            if (!ovr2.Exists(x => x.Value != null) ||
+                oppController["Assist11"].name != CustomAnimations[p.anim - 1000000].ReceiveAnim.name)
             {
                 oppController["Assist11"] = CustomAnimations[p.anim - 1000000].ReceiveAnim;
             }
@@ -92,15 +98,17 @@ internal class AnimationPatch
             Animations.PerformPostGrappleCode(p);
             return false;
         }
+
         List<KeyValuePair<AnimationClip, AnimationClip>> ovr = new();
-        ((AnimatorOverrideController) p.animator.runtimeAnimatorController).GetOverrides(ovr);
+        ((AnimatorOverrideController)p.animator.runtimeAnimatorController).GetOverrides(ovr);
         if (p.grappler == 0 && ovr.Exists(x => x.Value != null))
         {
             controller["Assist11"] = null;
         }
+
         return true;
     }
-    
+
     /**
      * Patch:
      * - Sets the name of the animation if the animation is set to a custom animation.
@@ -111,12 +119,14 @@ internal class AnimationPatch
     {
         if (NOLKIINBMHA >= 1000000)
         {
-            __result = CustomAnimations[NOLKIINBMHA - 1000000].Name ?? "Custom Animation" + (NOLKIINBMHA - 1000000).ToString("00");
+            __result = CustomAnimations[NOLKIINBMHA - 1000000].Name ??
+                       "Custom Animation" + (NOLKIINBMHA - 1000000).ToString("00");
             return false;
         }
+
         return true;
     }
-    
+
     /**
      * Patch:
      * - Skips AdaptAttack if the animation is set to a custom animation.
@@ -128,7 +138,7 @@ internal class AnimationPatch
         MappedPlayer p = __instance;
         return p.anim < 1000000;
     }
-    
+
     /**
      * Patch:
      * - Assigns the override controller to the player when the model is loaded.
@@ -142,7 +152,7 @@ internal class AnimationPatch
         p.animator.runtimeAnimatorController = overrideController;
         p.InstantTransition(p.animFile[0], p.frame[0], 0);
     }
-    
+
     /*
      * Patch:
      * - Changes the animation length and timing for custom animations.
@@ -152,11 +162,18 @@ internal class AnimationPatch
     public static void Player_FEACEIIIAHK(ref UnmappedPlayer __instance)
     {
         MappedPlayer p = __instance;
-        var assist11 = ((AnimatorOverrideController)p.animator.runtimeAnimatorController)["Assist11"];
-        MappedAnims.length[43] = Mathf.RoundToInt(assist11.length * assist11.frameRate);
-        MappedAnims.timing[43] = 1f / MappedAnims.length[43];
+        try
+        {
+            var assist11 = ((AnimatorOverrideController)p.animator.runtimeAnimatorController)["Assist11"];
+            MappedAnims.length[43] = Mathf.RoundToInt(assist11.length * assist11.frameRate);
+            MappedAnims.timing[43] = 1f / MappedAnims.length[43];
+        }
+        catch
+        {
+            LogWarning("Failed to set custom animation length and timing.");
+        }
     }
-    
+
     /*
      * Patch:
      * - First part lets custom grapple animations play in the editor.
@@ -180,11 +197,14 @@ internal class AnimationPatch
                     {
                         yield return instruction;
                         yield return new CodeInstruction(OpCodes.Call,
-                            AccessTools.Method(typeof(Animations), nameof(Animations.IsGrappleMove), new[] {typeof(int)}));
+                            AccessTools.Method(typeof(Animations), nameof(Animations.IsGrappleMove),
+                                new[] { typeof(int) }));
                     }
                 }
             }
-            if (instruction.opcode == OpCodes.Ldsfld && (FieldInfo)instruction.operand == AccessTools.Field(typeof(NJBJIIIACEP), nameof(NJBJIIIACEP.OAAMGFLINOB)))
+
+            if (instruction.opcode == OpCodes.Ldsfld && (FieldInfo)instruction.operand ==
+                AccessTools.Field(typeof(NJBJIIIACEP), nameof(NJBJIIIACEP.OAAMGFLINOB)))
             {
                 if (flag2 < 4)
                 {
@@ -203,14 +223,17 @@ internal class AnimationPatch
                 {
                     yield return new CodeInstruction(OpCodes.Brfalse, instruction.operand);
                 }
-            } else if (flag2 is 4 or 5) {
+            }
+            else if (flag2 is 4 or 5)
+            {
                 if (flag2 == 4)
                 {
                     if (instruction.opcode == OpCodes.Ldc_I4_0)
                     {
                         flag2 = 5;
                         yield return new CodeInstruction(OpCodes.Call,
-                            AccessTools.Method(typeof(Animations), nameof(Animations.IsRegularMove), new[] {typeof(int)}));
+                            AccessTools.Method(typeof(Animations), nameof(Animations.IsRegularMove),
+                                new[] { typeof(int) }));
                     }
                     else
                     {
@@ -231,5 +254,37 @@ internal class AnimationPatch
                 yield return instruction;
             }
         }
+    }
+
+    /*
+     * Patch:
+     * - Fixes characters without model trying to play animations
+     */
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.NNNNEHCGICG))]
+    [HarmonyPrefix]
+    public static bool Player_NNNNEHCGICG(ref UnmappedPlayer __instance)
+    {
+        if (((MappedPlayer)__instance)?.model[0] == null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /*
+     * Patch:
+     * - Fixes characters without model trying to update orientation
+     */
+    [HarmonyPatch(typeof(UnmappedPlayer), nameof(UnmappedPlayer.FMLIFCHJGDL))]
+    [HarmonyPrefix]
+    public static bool Player_FMLIFCHJGDL(ref UnmappedPlayer __instance)
+    {
+        if (((MappedPlayer)__instance)?.model[0] == null)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

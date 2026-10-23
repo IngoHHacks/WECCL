@@ -1,5 +1,11 @@
 # Changelog
 
+### Release 1.14.2
+- UPDATE TO GAME VERSION 1.80
+- Fixed unused locations being considered available for gameplay and causing issues due to them not existing.
+- Improved error handling for missing content in costumes.
+- Minor improvements to error checking and logging.
+
 ### Release 1.14.1
 - Support for nested texture and RawImage overrides.
 - Auto display newly created character on the search list.

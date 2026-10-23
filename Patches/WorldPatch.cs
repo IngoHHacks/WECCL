@@ -766,16 +766,11 @@ public class WorldPatch
     [HarmonyPrefix]
     public static bool World_COMEDPJDBKM(ref int __result, int HJANGKEJCJE)
     {
-        __result = 1;
-        if (World.mapVersion < 2f)
+        if (HJANGKEJCJE <= VanillaCounts.Data.NoLocations)
         {
-            if ((HJANGKEJCJE >= 17 && HJANGKEJCJE <= VanillaCounts.Data.NoLocations && HJANGKEJCJE != 20 && HJANGKEJCJE != 21 && HJANGKEJCJE != 27) ||
-                HJANGKEJCJE - VanillaCounts.Data.NoLocations - 1 >= CustomArenaPrefabs.Count)
-            {
-                __result = 0;
-            }
+            return true;
         }
-
+        __result = 1;
         return false;
     }
 
