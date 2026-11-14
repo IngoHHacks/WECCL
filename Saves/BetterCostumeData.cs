@@ -41,7 +41,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.MaterialNameMap[i].Count || index < 0)
                 {
                     bcd.textureC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.MaterialNameMap[i][index];
                 bcd.textureC[i] = "Custom/" + material;
@@ -52,7 +52,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.FaceFemaleNameMap.Count || index < 0)
                 {
                     bcd.textureC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.FaceFemaleNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
@@ -63,7 +63,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.SpecialFootwearNameMap.Count || index < 0)
                 {
                     bcd.textureC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
@@ -74,7 +74,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.SpecialFootwearNameMap.Count || index < 0)
                 {
                     bcd.textureC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.SpecialFootwearNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
@@ -85,7 +85,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.TransparentHairMaterialNameMap.Count || index < 0)
                 {
                     bcd.textureC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.TransparentHairMaterialNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
@@ -96,7 +96,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.KneepadNameMap.Count || index < 0)
                 {
                     bcd.textureC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.KneepadNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
@@ -107,7 +107,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.KneepadNameMap.Count || index < 0)
                 {
                     bcd.textureC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.KneepadNameMap[index];
                 bcd.textureC[i] = "Custom/" + material;
@@ -132,7 +132,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.FleshNameMap[i].Count || index < 0)
                 {
                     bcd.fleshC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.FleshNameMap[i][index];
                 bcd.fleshC[i] = "Custom/" + material;
@@ -143,7 +143,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.BodyFemaleNameMap.Count || index < 0)
                 {
                     bcd.fleshC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.BodyFemaleNameMap[index];
                 bcd.fleshC[i] = "Custom/" + material;
@@ -168,7 +168,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.ShapeNameMap[i].Count || index < 0)
                 {
                     bcd.shapeC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.ShapeNameMap[i][index];
                 bcd.shapeC[i] = "Custom/" + material;
@@ -179,7 +179,7 @@ internal class BetterCostumeData
                 if (index >= ContentMappings.ContentMap.TransparentHairHairstyleNameMap.Count || index < 0)
                 {
                     bcd.shapeC[i] = "Vanilla/1";
-                    break;
+                    continue;
                 }
                 string material = ContentMappings.ContentMap.TransparentHairHairstyleNameMap[index];
                 bcd.shapeC[i] = "Custom/" + material;
